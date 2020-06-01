@@ -130,3 +130,6 @@ dmypy.json
 
 # temp files
 ~tmp/
+
+# exe
+*.exe
