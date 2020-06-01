@@ -12,7 +12,7 @@ from pymysql.err import OperationalError
 from ._mysql import MySQL
 
 __database = MySQL(**json.load(open('conf/database.json')))
-__weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+__weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 try:
     __database.update('')
