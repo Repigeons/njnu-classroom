@@ -131,6 +131,7 @@ def core() -> None:
             classroom_info = json.load(open(temp_dir + 'classroom_info_%s.json' % jxl['JXLMC'], encoding='utf8'))
             print('开始查询教学楼:', jxl['JXLMC'])
             for classroom in classroom_info:
+                classroom['jsmph'] = classroom['JASMC'][-3:]
                 print('正在查询教室:', classroom['JASMC'])
                 class_info = get_data.get_class_weekly(
                     cookies=cookies,
@@ -143,7 +144,7 @@ def core() -> None:
                     args_list = []
                     for data in class_info[weekday]:
                         print([
-                            classroom['JASLXDM'],
+                            classroom['jsmph'],
                             classroom['JXLMC'],
                             classroom['JASDM'],
                             classroom['SKZWS'],
@@ -154,7 +155,7 @@ def core() -> None:
                             data['KCM']
                         ])
                         args_list.append({
-                            'jsmph': classroom['JASLXDM'],
+                            'jsmph': classroom['jsmph'],
                             'jxl': classroom['JXLMC'],
                             'jasdm': classroom['JASDM'],
                             'capacity': classroom['SKZWS'],
