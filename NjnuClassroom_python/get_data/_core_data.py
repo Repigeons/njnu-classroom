@@ -69,7 +69,7 @@ def _combine_empty(items: list) -> None:
         else:
             i += 1
     for item in items:
-        item['ZYLXDM'] = '00'
+        item['ZYLXDM'] = '00' if not item['ZYLXDM'] else item['ZYLXDM']
 
 
 def get_class_weekly(cookies: dict, xn_xq_dm: str, jas_dm: str, zc: int, zzc: int) -> list:
