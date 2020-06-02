@@ -131,7 +131,7 @@ def core() -> None:
             classroom_info = json.load(open(temp_dir + 'classroom_info_%s.json' % jxl['JXLMC'], encoding='utf8'))
             print('开始查询教学楼:', jxl['JXLMC'])
             for classroom in classroom_info:
-                classroom['jsmph'] = classroom['JASMC'][-3:]
+                classroom['jsmph'] = classroom['JASMC'].replace(classroom['JXLMC'], '')
                 print('正在查询教室:', classroom['JASMC'])
                 class_info = get_data.get_class_weekly(
                     cookies=cookies,
