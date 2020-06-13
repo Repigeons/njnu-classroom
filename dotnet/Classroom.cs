@@ -21,7 +21,7 @@
         /// 教室门牌号
         /// </summary>
         public string Jsmph { get; set; }
-        
+
         /// <summary>
         /// 教室容纳人数
         /// </summary>
@@ -63,9 +63,6 @@
             if (Jc_js != classroom.Jc_js)
                 // 结束节次 大值优先
                 return Jc_js - classroom.Jc_js;
-            if (Capacity != classroom.Capacity)
-                // 容量 大值优先
-                return Capacity - classroom.Capacity;
             // 门牌号 小值优先
             return string.CompareOrdinal(classroom.Jsmph, Jsmph);
         }
