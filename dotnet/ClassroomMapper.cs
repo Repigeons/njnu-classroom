@@ -10,6 +10,7 @@ namespace dotnet
             Jasdm = (string) reader["jasdm"],
             Jxl = (string) reader["jxl"],
             Jsmph = (string) reader["jsmph"],
+            Capacity = (int) reader["capacity"],
             Zylxdm = (string) reader["zylxdm"],
             Jc_ks = (int) reader["jc_ks"],
             Jc_js = (int) reader["jc_js"],

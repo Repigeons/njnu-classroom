@@ -21,6 +21,11 @@
         /// 教室门牌号
         /// </summary>
         public string Jsmph { get; set; }
+        
+        /// <summary>
+        /// 教室容纳人数
+        /// </summary>
+        public int Capacity { get; set; }
 
         /// <summary>
         /// ？？？
@@ -52,10 +57,16 @@
 
         public int CompareTo(Classroom classroom)
         {
-            if (Jc_js > classroom.Jc_js)
-                return 1;
-            if (Jc_js < classroom.Jc_js)
-                return -1;
+            if (Zylxdm != classroom.Zylxdm)
+                // "00" 优先于 "10"
+                return string.CompareOrdinal(classroom.Zylxdm, Zylxdm);
+            if (Jc_js != classroom.Jc_js)
+                // 结束节次 大值优先
+                return Jc_js - classroom.Jc_js;
+            if (Capacity != classroom.Capacity)
+                // 容量 大值优先
+                return Capacity - classroom.Capacity;
+            // 门牌号 小值优先
             return string.CompareOrdinal(classroom.Jsmph, Jsmph);
         }
     }

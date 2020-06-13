@@ -61,7 +61,7 @@ namespace dotnet
         {
             var rank = 0;
             return
-                $"[{string.Join(",", classrooms.Where(classroom => classroom.Jc_ks <= dqjc && classroom.Jc_js >= dqjc).Select(classroom => $"{{{string.Join(",", new Dictionary<string, string> {{"rank", (++rank).ToString()}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"jc_ks", classroom.Jc_ks.ToString()}, {"jc_js", classroom.Jc_js.ToString()}, {"zylxdm", classroom.Zylxdm}, {"jyytms", classroom.Jyytms}, {"kcm", classroom.Kcm}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]";
+                $"[{string.Join(",", classrooms.Where(classroom => classroom.Jc_ks <= dqjc && classroom.Jc_js >= dqjc).Select(classroom => $"{{{string.Join(",", new Dictionary<string, string> {{"rank", (++rank).ToString()}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"jc_ks", classroom.Jc_ks.ToString()}, {"jc_js", classroom.Jc_js.ToString()}, {"zylxdm", classroom.Zylxdm}, {"capacity", classroom.Capacity.ToString()}, {"jyytms", classroom.Jyytms}, {"kcm", classroom.Kcm}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]";
         }
     }
 }
