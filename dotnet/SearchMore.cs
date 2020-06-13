@@ -45,13 +45,13 @@ namespace dotnet
             var jxl = parameters["jxl"];
             var zylxdm = parameters["zylxdm"];
             var kcm = parameters["kcm"];
+            if (kcm == "#") kcm = "_";
             if (day != "#") days = new[] {days[int.Parse(day)]};
             var jc = $"(`jc_ks`>={jc_ks} AND `jc_js`<={jc_js})";
-            jxl = (jxl == "#") ? "(`jxl` IS NOT NULL)" : $"(`jxl`='{jxl}')";
-            zylxdm = (zylxdm == "#") ? "(`zylxdm` IS NOT NULL)" : $"(`zylxdm`='{zylxdm}')";
+            jxl = jxl == "#" ? "(`jxl` IS NOT NULL)" : $"(`jxl`='{jxl}')";
+            zylxdm = zylxdm == "#" ? "(`zylxdm` IS NOT NULL)" : $"(`zylxdm`='{zylxdm}')";
 
             var classrooms = new List<Classroom>();
-
             for (var d = 0; d < days.Length; d++)
             {
                 Dao.Prepare(
