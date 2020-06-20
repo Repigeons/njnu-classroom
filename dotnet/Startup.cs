@@ -30,7 +30,7 @@ namespace dotnet
                 {
                     case "/":
                         Today.Reset();
-                        context.Response.StatusCode = 206;
+                        context.Response.StatusCode = 202;
                         break;
                     case "/index.json":
                         await Index.ProcessRequest(context, parameters);
