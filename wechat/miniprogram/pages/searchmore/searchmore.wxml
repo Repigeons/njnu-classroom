@@ -1,0 +1,135 @@
+<!--pages/searchmore/searchmore.wxml-->
+<view class="page">
+  <view class="page__bd">
+    <view style="height:8px"></view>
+    <view class="weui-search-bar" style="padding-bottom:0px">
+      <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+          <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
+          <input type="text" class="weui-search-bar__input" placeholder="搜索课程/活动" value="{{keyword}}" focus="{{inputShowed}}" bindinput="onInput" bindtap="showButton" bindconfirm="onSearch"/>
+          <view class="weui-icon-clear" wx:if="{{keyword.length > 0}}" bindtap="clearInput">
+            <icon type="clear" size="14"></icon>
+          </view>
+        </view>
+        <label class="weui-search-bar__label" wx:if="{{!inputShowed}}" bindtap="showInput">
+          <icon class="weui-icon-search" type="search" size="14"></icon>
+          <view class="weui-search-bar__text">搜索未来一周的课程/活动</view>
+        </label>
+      </view>
+      <button class="weui-btn mini-btn" type="default" size="mini" wx:if="{{buttonShowed}}" bindtap="onSearch">搜索</button>
+    </view>
+
+    <!-- 筛选 -->
+    <view wx:if="{{buttonShowed}}">
+      <view class="weui-search-bar" style="padding-top:16px">
+        <view class="weui-search-bar__form">
+          <view class="weui-cell  weui-cell_vcode" style="height:48px"> <!-- 官方高度是56像素 -->
+            <view class="weui-cell__hd" style="font-weight:700">
+              <view class="weui-label">日期</view>
+            </view>
+            <view class="weui-cell__bd" >
+            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
+              <view class="weui-select weui-select_in-select-after">{{rq_array[rq_selected]}}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell  weui-cell_vcode" style="height:48px">
+          <view class="weui-cell__hd" style="font-weight:700">
+            <view class="weui-label">节次</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker value="{{jc_ks_selected}}" bindchange="bindJcKsChange" range="{{jc_ks_array}}">
+              <view class="weui-select weui-select_in-select-after">
+                <text decode="true" style="font-weight:700">从&ensp;</text>
+                <text>{{jc_array[jc_ks_selected]}}</text>
+              </view>
+            </picker>
+          </view>
+          <view class="weui-cell__bd" style="margin-left:1px;padding-left:1px;left:1px">
+            <picker value="{{jc_js_selected+jc_js_array.length-12}}" bindchange="bindJcJsChange" range="{{jc_js_array}}">
+              <view class="weui-select weui-select_in-select-after">
+                <text decode="true" style="font-weight:700">到&ensp;</text>
+                <text>{{jc_array[jc_js_selected]}}</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell  weui-cell_vcode" style="height:48px">
+          <view class="weui-cell__hd" style="font-weight:700">
+            <view class="weui-label">教学楼</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
+              <view class="weui-select weui-select_in-select-after">{{jxl_array[jxl_selected]}}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell  weui-cell_vcode" style="height:48px">
+          <view class="weui-cell__hd"  style="font-weight:700">
+            <view class="weui-label">类型</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker value="{{lx_selected}}" bindchange="bindLxChange" range="{{lx_array}}">
+              <view class="weui-select weui-select_in-select-after">{{lx_array[lx_selected]}}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Result -->
+  <view  wx:if="{{resultsShowed}}">
+    <view class="weui-cells__title">共找到 {{list_length}} 条结果。</view>
+    <view class="weui-panel weui-panel_access">
+      <view class="weui-panel__bd">
+        <view wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+          <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bindtap="showDialog" data-index="{{index}}">
+            <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
+              <image class="weui-media-box__thumb" src="{{iconPath[item.zylxdm]}}"/>
+            </view>
+            <view class="weui-media-box__bd weui-media-box__bd_in-appmsg">
+              <view class="weui-media-box__title">
+                <text>{{item.title}}</text>
+              </view>
+              <view class="weui-media-box__desc">
+                <text decode="true">{{item.jxl}}{{item.classroom}}&emsp;{{rq_array[item.day]}}{{item.jc_ks}}-{{item.jc_js}}节</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- Result -->
+  <!-- Tips -->
+  <view  wx:if="{{!resultsShowed}}">
+    <view style="height:16px"></view>
+      <view class="weui-cells__tips">
+        <text style="font-weight:700">Tips：</text>
+        <text decode="true">使用更多搜索，可以方便地根据课程或活动名称查到其所在的教室以及时间，支持通过筛选缩小搜索范围。点击上方搜索栏开始搜索。\n\n例1：基础英语\n例2：团日活动</text>
+      </view>
+    </view>
+  </view>
+  <!-- Tips -->
+  <!-- Dialog -->
+  <view class="weui-demo-dialog {{dialog.title ? 'weui-demo-dialog_show' : ''}}">
+    <view class="weui-mask" bindtap="closeDialog"></view>
+    <view class="weui-dialog__wrp" bindtap="closeDialog">
+      <view class="weui-dialog">
+        <view class="weui-dialog__hd">
+          <view class="weui-dialog__title">{{dialog.title}}</view>
+        </view>
+        <view class="weui-dialog__bd">
+          <block wx:for="{{dialog.detail}}" wx:for-item="item" wx:key="key">
+            <view>{{item.field}}：{{item.value}}</view>
+          </block>
+        </view>
+        <view class="weui-dialog__ft">
+          <view class="weui-dialog__btn" bindtap="closeDialog"> 关 闭 </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- Dialog -->
+</view>
