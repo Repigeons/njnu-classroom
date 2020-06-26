@@ -1,7 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using ZTxLib.NETCore.DaoTemplate.MySQL;
 
-namespace dotnet
+namespace NjnuClassroom
 {
     public class ClassroomMapper : IRowMapper<Classroom>
     {

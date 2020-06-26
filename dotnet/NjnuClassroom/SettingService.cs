@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 
-namespace dotnet
+namespace NjnuClassroom
 {
     public static class SettingService
     {
-        public static IConfiguration AppSettings { get; private set; }
-        public static IConfiguration DatabaseSettings { get; private set; }
+        public static IConfiguration AppSettings { get; }
+        public static IConfiguration DatabaseSettings { get; }
 
         static SettingService()
         {
@@ -17,7 +17,7 @@ namespace dotnet
                 .Build();
             DatabaseSettings = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .Add(new JsonConfigurationSource {Path = "dbsettings.json", ReloadOnChange = true})
+                .Add(new JsonConfigurationSource {Path = "conf/database.json", ReloadOnChange = true})
                 .Build();
         }
     }

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Primitives;
 using ZTxLib.NETCore.DaoTemplate;
 using ZTxLib.NETCore.DaoTemplate.MySQL;
 
-namespace dotnet
+namespace NjnuClassroom
 {
     internal static class SearchMore
     {

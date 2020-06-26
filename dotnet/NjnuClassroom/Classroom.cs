@@ -1,4 +1,4 @@
-﻿namespace dotnet
+﻿namespace NjnuClassroom
 {
     public class Classroom
     {

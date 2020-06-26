@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ZTxLib.NETCore.DaoTemplate;
 using ZTxLib.NETCore.DaoTemplate.MySQL;
 
-namespace dotnet
+namespace NjnuClassroom
 {
     public static class Today
     {

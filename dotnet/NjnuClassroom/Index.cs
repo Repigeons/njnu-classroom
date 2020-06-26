@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-namespace dotnet
+namespace NjnuClassroom
 {
     internal static class Index
     {
