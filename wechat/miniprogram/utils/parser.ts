@@ -1,5 +1,8 @@
-export const parseKCM = (zylxdm: string, KCM: string) => {
-  let kcxx, pklysz: AnyObject = {'01':'研', '02':'成', '03':'本', '04':'借', '05':'本考', '11':'研考', '12':'成教'}
+import {IClassroomInfo} from '../../typings/IClassroomInfo'
+
+export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
+  let kcxx: Array<string>
+  let pklysz: Record<string, string> = {'01':'研', '02':'成', '03':'本', '04':'借', '05':'本考', '11':'研考', '12':'成教'}
   switch (zylxdm) {
     case '01':
     case '03':
@@ -55,6 +58,7 @@ export const parseKCM = (zylxdm: string, KCM: string) => {
     case '05':
       // 屏蔽占用
       return {
+        title: '',
         PBZYFLAG: true,
       }
       break
@@ -85,15 +89,18 @@ export const parseKCM = (zylxdm: string, KCM: string) => {
       }
       break
     default:
-      return {}
+      return null
   }
 }
 
-export const item2dialog = (item: AnyObject, rq: string) => {
-  const title = item.title
-  const detail = [
-      { field: '教室门牌', value: `${item.jxl}${item.classroom}` },
-      { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
+export const item2dialog = (item: Record<string, any>, rq: string) => {
+  const title: string = item.title
+  const detail: Array<{
+    field: string;
+    value: string;
+  }> = [
+    { field: '教室门牌', value: `${item.jxl}${item.classroom}` },
+    { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
   ]
   if (item.KCMC) detail.push({ field: '课程名称', value: item.KCMC })
   if (item.SKJS) detail.push({ field: '上课教师', value: item.SKJS })

@@ -1,20 +1,16 @@
-export const formatTime = (date: Date) => {
-  const year = date.getFullYear()
-  const month = date.getMonth() + 1
-  const day = date.getDate()
-  const hour = date.getHours()
-  const minute = date.getMinutes()
-  const second = date.getSeconds()
+export const formatTime = (date: Date): string => {
+  const year: number = date.getFullYear()
+  const month: number = date.getMonth() + 1
+  const day: number = date.getDate()
+  const hour: number = date.getHours()
+  const minute: number = date.getMinutes()
+  const second: number = date.getSeconds()
 
-  return (
-    [year, month, day].map(formatNumber).join('/') +
-    ' ' +
-    [hour, minute, second].map(formatNumber).join(':')
-  )
+  return `${[year, month, day].map(formatNumber).join('/')} ${[hour, minute, second].map(formatNumber).join(':')}`
 }
 
-const formatNumber = (n: number) => {
-  const s = n.toString()
+const formatNumber = (n: number): string => {
+  const s: string = n.toString()
   return s[1] ? s : '0' + s
 }
 
@@ -22,10 +18,10 @@ const getSpan = (hour: number, minute: number): number => {
   return hour * 60 + minute
 }
 
-export const jc = (datetime: Date): number => {
+export const getJc = (datetime: Date): number => {
   // 当前时间
-  const span = getSpan(datetime.getHours(), datetime.getMinutes())
-  const jc_list = [
+  const span: number = getSpan(datetime.getHours(), datetime.getMinutes())
+  const jc_list: Array<number> = [
     getSpan(8, 40),
     getSpan(9, 25),
     getSpan(10, 20),
@@ -46,14 +42,19 @@ export const jc = (datetime: Date): number => {
 }
 
  //计算距离，参数分别为第一点的纬度，经度；第二点的纬度，经度
-export const distance = ({ longitude1, latitude1, longitude2, latitude2 }: AnyObject): number => {
-  let Rad = (d: number) => d * Math.PI / 180.0
-  let radLat1 = Rad(latitude1)
-  let radLat2 = Rad(latitude2)
-  let a = radLat1 - radLat2
-  let b = Rad(longitude1) - Rad(longitude2)
+export const getDistance = (e: {
+  longitude1: number
+  latitude1: number
+  longitude2: number
+  latitude2: number
+}): number => {
+  const { longitude1, latitude1, longitude2, latitude2 } = e
+  const Rad = (d: number) => d * Math.PI / 180.0
+  const radLat1 = Rad(latitude1)
+  const radLat2 = Rad(latitude2)
+  const a = radLat1 - radLat2
+  const b = Rad(longitude1) - Rad(longitude2)
   let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a/2),2) + Math.cos(radLat1)*Math.cos(radLat2)*Math.pow(Math.sin(b/2),2)))
   s = s *6378.137  // EARTH_RADIUS
-  s = Math.round(s * 1000000) / 1000  //输出为米
-  return s
+  return Math.round(s * 1000000) / 1000  //输出为米
 }

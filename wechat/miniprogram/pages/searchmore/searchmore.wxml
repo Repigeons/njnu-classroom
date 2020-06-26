@@ -6,21 +6,21 @@
       <view class="weui-search-bar__form">
         <view class="weui-search-bar__box">
           <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
-          <input type="text" class="weui-search-bar__input" placeholder="搜索课程/活动" value="{{keyword}}" focus="{{inputShowed}}" bindinput="onInput" bindtap="showButton" bindconfirm="onSearch"/>
+          <input type="text" class="weui-search-bar__input" placeholder="搜索课程/活动" value="{{keyword}}" focus="{{showInput}}" bindinput="onInput" bindtap="showButton" bindconfirm="onSearch"/>
           <view class="weui-icon-clear" wx:if="{{keyword.length > 0}}" bindtap="clearInput">
             <icon type="clear" size="14"></icon>
           </view>
         </view>
-        <label class="weui-search-bar__label" wx:if="{{!inputShowed}}" bindtap="showInput">
+        <label class="weui-search-bar__label" wx:if="{{!showInput}}" bindtap="showInput">
           <icon class="weui-icon-search" type="search" size="14"></icon>
           <view class="weui-search-bar__text">搜索未来一周的课程/活动</view>
         </label>
       </view>
-      <button class="weui-btn mini-btn" type="default" size="mini" wx:if="{{buttonShowed}}" bindtap="onSearch">搜索</button>
+      <button class="weui-btn mini-btn" type="default" size="mini" wx:if="{{showButton}}" bindtap="onSearch">搜索</button>
     </view>
 
     <!-- 筛选 -->
-    <view wx:if="{{buttonShowed}}">
+    <view wx:if="{{showButton}}">
       <view class="weui-search-bar" style="padding-top:16px">
         <view class="weui-search-bar__form">
           <view class="weui-cell  weui-cell_vcode" style="height:48px"> <!-- 官方高度是56像素 -->
@@ -59,8 +59,8 @@
             <view class="weui-label">教学楼</view>
           </view>
           <view class="weui-cell__bd">
-            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
-              <view class="weui-select weui-select_in-select-after">{{jxl_array[jxl_selected]}}</view>
+            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
+              <view class="weui-select weui-select_in-select-after">{{jxl_name_array[jxl_selected]}}</view>
             </picker>
           </view>
         </view>
@@ -69,8 +69,8 @@
             <view class="weui-label">类型</view>
           </view>
           <view class="weui-cell__bd">
-            <picker value="{{lx_selected}}" bindchange="bindLxChange" range="{{lx_array}}">
-              <view class="weui-select weui-select_in-select-after">{{lx_array[lx_selected]}}</view>
+            <picker value="{{lx_selected}}" bindchange="bindLxChange" range="{{lx_name_array}}">
+              <view class="weui-select weui-select_in-select-after">{{lx_name_array[lx_selected]}}</view>
             </picker>
           </view>
         </view>
@@ -79,7 +79,7 @@
   </view>
 
   <!-- Result -->
-  <view  wx:if="{{resultsShowed}}">
+  <view  wx:if="{{showResult}}">
     <view class="weui-cells__title">共找到 {{list_length}} 条结果。</view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__bd">
@@ -103,7 +103,7 @@
   </view>
   <!-- Result -->
   <!-- Tips -->
-  <view  wx:if="{{!resultsShowed}}">
+  <view  wx:if="{{!showResult}}">
     <view style="height:16px"></view>
       <view class="weui-cells__tips">
         <text style="font-weight:700">Tips：</text>

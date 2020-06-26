@@ -3,7 +3,17 @@
 interface IAppOption {
   globalData: {
     server: string,
-    jxl: Array<AnyObject>,
-    lx: Array<AnyObject>,
+    jxl: Array<IJxl>,
+    lx: Array<ILx>,
   }
+}
+
+interface IJxl {
+  name: string,
+  pos: [number, number]
+}
+
+interface ILx {
+  dm: string,
+  name: string
 }
