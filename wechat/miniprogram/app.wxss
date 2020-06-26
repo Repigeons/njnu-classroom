@@ -1,3 +1,4 @@
+@import 'style/weui.wxss';
 /**app.wxss**/
 
 page {
@@ -5,7 +6,6 @@ page {
   font-size: 16px;
   font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
 }
-/*
 .page__hd {
   padding: 40px;
 }
@@ -42,4 +42,3 @@ page {
 .weui-cell_example:before{
   left:52px;
 }
-*/

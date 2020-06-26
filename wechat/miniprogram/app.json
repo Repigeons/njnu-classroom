@@ -31,9 +31,5 @@
     }
   },
   "style": "v2",
-  "sitemapLocation": "sitemap.json",
-  "useExtendedLib": {
-    "kbone": true,
-    "weui": true
-  }
+  "sitemapLocation": "sitemap.json"
 }

@@ -5,7 +5,7 @@
 	},
 	"miniprogramRoot": "miniprogram/",
 	"compileType": "miniprogram",
-	"libVersion": "2.8.2",
+	"libVersion": "2.11.2",
 	"projectname": "NjnuClassroom",
 	"scripts": {
 		"beforeCompile": "npm run tsc",
