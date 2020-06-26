@@ -50,7 +50,7 @@ python Main.py
 (1)安装PyInstaller，命令为
 > pip3 install pyinstaller
 
-(2)激活虚拟环境（参考[#4](#4、部署方法)）
+(2)激活虚拟环境（参考[#4](#4部署方法)）
 > (略)
 
 (3)编译项目，命令为
