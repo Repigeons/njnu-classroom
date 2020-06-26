@@ -1,9 +1,10 @@
-﻿# [NjnuClassroom](../README.md)
+﻿# [NjnuClassroom 南师教室](../README.md)
 ## 第一部分 数据采集器
 
 
 ### 1、简介
-该部分为“南师教室”项目的数据采集部分。
+该部分为“南师教室”项目的数据采集部分，主要用于从"南京师范大学一站式事务中心"爬取教室数据并存入数据库，应作为计划任务每日定时执行。
+该部分采用基于Python的爬虫技术，获取一站式事务中心提供的数据，对数据进行统一化处理并存入数据库。
 
 
 ### 2、开发语言及环境
@@ -77,3 +78,20 @@ python Main.py
     ├── _base_info.py       # 获取基础信息
     └── _core_data.py       # 获取核心数据
 ```
+
+
+### 7、附录
+7.1 项目中使用到的api地址
+- 查询当前学年学期
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do
+- 查询当前周次和总周次
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do
+- 查询总教学周次
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do
+- 获取教学楼信息
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxkxjs1.do
+- 获取教室信息
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxkxjs1.do
+- 获取指定周次的数据
+> http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do
+* 以上仅为简单枚举，具体用法(请求头及请求参数请参考源码及注释)

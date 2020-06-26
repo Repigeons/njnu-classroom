@@ -1,10 +1,10 @@
-﻿# [NjnuClassroom](../README.md)
+﻿# [NjnuClassroom 南师教室](../README.md)
 ## 第二部分 数据服务器
 
 
 ### 1、简介
-该部分为“南师教室”项目的服务端部分，
-采用基于 .NET Core 的api-service开发模式。
+该部分为“南师教室”项目的服务端部分，主要用于提取并整理数据库中的数据，接受客户端发送的查询请求，根据请求内容返回相应数据。
+该部分采用基于 .NET Core 的 api-service 开发模式，响应数据格式为"`application/json`"格式。
 
 
 ### 2、开发语言及环境
