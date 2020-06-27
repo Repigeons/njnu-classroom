@@ -41,7 +41,8 @@ Page({
       '11': '/images/yanjiusheng.png',
     },
     dialog: {},
-    list: Array<IClassroomRow>()
+    list: Array<IClassroomRow>(),
+    result_size: new Number()
   },
 
   /**
@@ -122,6 +123,7 @@ Page({
           }
           this.setData({
             list: data.slice(0, perPage),
+            result_size: data.length,
             showResult: true
           })
           wx.setStorage({
