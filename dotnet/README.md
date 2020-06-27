@@ -30,9 +30,9 @@ dotnet为跨平台模块化框架，支持运行在包括Windows, Linux, MacOS�
 
 当然，我们更建议使用Docker容器进行部署，参考[配置文件](./Dockerfile)。部署方法及相关命令如下：
 - 拉取依赖
-> docker pull mcr.microsoft.com/dotnet/core/njnuclassroom_aspnetcoreaspnet:3.1
+> docker pull mcr.microsoft.com/dotnet/core/aspnet:3.1
 - 拉取镜像
-> docker pull repigeons/
+> docker pull repigeons/njnuclassroom_aspnetcore
 - 或自行构建镜像
 > docker build -t njnuclassroom_aspnetcore .
 - 启动容器 (参数: --rm关闭后自动销毁 -d后台运行 -p端口映射)
