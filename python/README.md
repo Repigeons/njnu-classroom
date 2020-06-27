@@ -81,7 +81,7 @@ python Main.py
 
 
 ### 7、附录
-7.1 项目中使用到的api地址
+#### 7.1 项目中使用到的api地址
 - 查询当前学年学期
 > http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do
 - 查询当前周次和总周次
