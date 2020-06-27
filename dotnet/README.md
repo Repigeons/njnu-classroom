@@ -28,6 +28,20 @@ dotnet为跨平台模块化框架，支持运行在包括Windows, Linux, MacOS�
 可以在 终端/命令行 中通过以下命令启动
 > dotnet NjnuClassroom.dll
 
+当然，我们更建议使用Docker容器进行部署，参考[配置文件](./Dockerfile)。部署方法及相关命令如下：
+- 拉取依赖(可选)
+> docker pull mcr.microsoft.com/dotnet/core/aspnet:3.1
+- 构造镜像
+> docker build -t njnuclassroom_aspnetcore .
+- 启动容器 (参数: -d后台运行 --rm关闭后自动销毁 -p端口映射)
+> njnuclassroom_aspnetcore=$(docker run -d --rm -p 5000:80 njnuclassroom_aspnetcore)
+- 查看日志
+> docker logs $njnuclassroom_aspnetcore
+- 关闭容器
+> docker stop $njnuclassroom_aspnetcore
+- 销毁容器
+> docker rm $njnuclassroom_aspnetcore
+
 此外，在Windows环境下，亦可以将其部署于IIS进行托管，或直接运行经过编译的NjnuClassroom.exe。
 
 
