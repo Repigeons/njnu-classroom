@@ -1,4 +1,4 @@
-﻿# [NjnuClassroom 南师教室](../README.md)
+# [NjnuClassroom 南师教室](../README.md)
 ## 第一部分 数据采集器
 
 

@@ -1,4 +1,4 @@
-﻿# [NjnuClassroom 南师教室](../README.md)
+# [NjnuClassroom 南师教室](../README.md)
 ## 第二部分 数据服务器
 
 
@@ -29,18 +29,20 @@ dotnet为跨平台模块化框架，支持运行在包括Windows, Linux, MacOS�
 > dotnet NjnuClassroom.dll
 
 当然，我们更建议使用Docker容器进行部署，参考[配置文件](./Dockerfile)。部署方法及相关命令如下：
-- 拉取依赖(可选)
-> docker pull mcr.microsoft.com/dotnet/core/aspnet:3.1
-- 构造镜像
+- 拉取依赖
+> docker pull mcr.microsoft.com/dotnet/core/njnuclassroom_aspnetcoreaspnet:3.1
+- 拉取镜像
+> docker pull repigeons/
+- 或自行构建镜像
 > docker build -t njnuclassroom_aspnetcore .
-- 启动容器 (参数: -d后台运行 --rm关闭后自动销毁 -p端口映射)
-> njnuclassroom_aspnetcore=$(docker run -d --rm -p 5000:80 njnuclassroom_aspnetcore)
+- 启动容器 (参数: --rm关闭后自动销毁 -d后台运行 -p端口映射)
+> docker run --name="njnuclassroom_aspnetcore" --rm -d -p 5000:80 njnuclassroom_aspnetcore
 - 查看日志
-> docker logs $njnuclassroom_aspnetcore
+> docker logs njnuclassroom_aspnetcore
 - 关闭容器
-> docker stop $njnuclassroom_aspnetcore
+> docker stop njnuclassroom_aspnetcore
 - 销毁容器
-> docker rm $njnuclassroom_aspnetcore
+> docker rm njnuclassroom_aspnetcore
 
 此外，在Windows环境下，亦可以将其部署于IIS进行托管，或直接运行经过编译的NjnuClassroom.exe。
 
