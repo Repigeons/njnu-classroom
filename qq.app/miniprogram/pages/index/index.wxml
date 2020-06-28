@@ -1,0 +1,68 @@
+<!--index.wxml-->
+<view class="page">
+  <view class="page__bd">
+    <view class="weui-cells__title">请选择想要查询的教学楼和时间：</view>
+    <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell  weui-cell_vcode">
+        <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-label">教学楼</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
+            <view class="weui-select weui-select_in-select-after">{{jxl_name_array[jxl_selected]}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft">
+          <view class="weui-vcode-btn" bindtap="dingwei">重新定位</view>
+        </view>
+        </view>
+        <view class="weui-cell  weui-cell_vcode">
+          <view class="weui-cell__hd" style="font-weight:700">
+            <view class="weui-label">日期</view>
+          </view>
+          <view class="weui-cell__bd">
+          <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
+            <view class="weui-select weui-select_in-select-after">{{rq_array[rq_selected]}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft">
+          <view class="weui-vcode-btn" bindtap="dangqianriqi">当前日期</view>
+        </view>
+      </view>
+      <view class="weui-cell  weui-cell_vcode">
+        <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-label">节次</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker value="{{jc_selected}}" bindchange="bindJcChange" range="{{jc_array}}">
+            <view class="weui-select weui-select_in-select-after">{{jc_array[jc_selected]}}</view>
+          </picker>
+        </view>
+        <view class="weui-cell__ft">
+          <view class="weui-vcode-btn" bindtap="dangqianjieci">当前节次</view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cells__title">共找到 {{classroomList.length}} 条结果，已按照推荐程度排列。</view>
+    <block wx:for="{{classroomList}}" wx:key="key">
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_example">
+          <view class="weui-cell__hd">
+            <view wx:if="{{item.zylxdm=='00'}}">
+              <image src="../../images/kong.png" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;"></image>
+            </view>
+            <view wx:else>
+              <image src="../../images/yan.png" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;"></image>
+            </view>
+          </view>
+          <view class="weui-cell__bd">
+            <text style="font-weight:700">{{item.classroom}}教室</text>
+            <text style="font-size:14px" decode="true">&ensp;【{{item.jc_ks}}-{{item.jc_js}}节】</text>
+            <text style="font-size:14px" decode="true">&ensp;容量：{{item.capacity}}</text>
+            <text style="font-size:14px" wx:if="{{item.zylxdm=='10'}}">（研究生课）</text>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

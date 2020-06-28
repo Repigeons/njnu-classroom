@@ -1,0 +1,32 @@
+{
+	"description": "项目配置文件",
+	"packOptions": {
+		"ignore": []
+	},
+	"miniprogramRoot": "miniprogram/",
+	"compileType": "miniprogram",
+	"libVersion": "2.4.0",
+	"projectname": "NjnuClassroom",
+	"scripts": {
+		"beforeCompile": "npm run tsc",
+		"beforePreview": "npm run tsc",
+		"beforeUpload": "npm run tsc"
+	},
+	"setting": {
+		"newFeature": true,
+		"urlCheck": true,
+		"es6": true,
+		"postcss": false,
+		"minified": true,
+		"remoteDebugLogEnable": false,
+		"uploadWithSourceMap": true,
+		"nodeModules": true,
+		"autoAudits": false,
+		"uglifyFileName": true,
+		"useAlphaLib": true,
+		"scriptsEnable": true
+	},
+	"appid": "wxd9dd3261d8915de7",
+	"qqappid": "1110565565",
+	"condition": {}
+}

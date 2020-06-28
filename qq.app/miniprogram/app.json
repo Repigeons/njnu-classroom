@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/searchmore/searchmore"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "南师教室",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#000",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "images/kjs.png",
+        "selectedIconPath": "images/kjs_1.png",
+        "text": "空教室"
+      },
+      {
+        "pagePath": "pages/searchmore/searchmore",
+        "iconPath": "images/gdss.png",
+        "selectedIconPath": "images/gdss_1.png",
+        "text": "更多搜索"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于计算离你最近的教学楼"
+    }
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
