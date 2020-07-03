@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace NjnuClassroom
         public static async Task ProcessRequest(HttpContext context,
             ImmutableDictionary<string, StringValues> parameters)
         {
+            string[] week = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
             string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 
             if (new[] {"day", "jc_ks", "jc_js", "jxl", "zylxdm", "kcm"}.Any(key => !parameters.ContainsKey(key)))
@@ -70,7 +72,7 @@ namespace NjnuClassroom
                 );
                 foreach (var classroom in new DataList<Classroom>(new ClassroomMapper(), Dao))
                 {
-                    classroom.Day = d;
+                    classroom.Day = (day == "#") ? d : int.Parse(day);
                     classrooms.Add(classroom);
                 }
             }
