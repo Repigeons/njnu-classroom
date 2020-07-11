@@ -43,7 +43,8 @@
         </view>
       </view>
     </view>
-    <view class="weui-cells__title">共找到 {{classroomList.length}} 条结果，已按照推荐程度排列。</view>
+    <view wx:if="{{service=='on'}}" class="weui-cells__title">共找到 {{classroomList.length}} 条结果，已按照推荐程度排列。</view>
+    <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_example">

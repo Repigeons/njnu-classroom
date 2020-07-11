@@ -8,6 +8,7 @@ const jxl: Array<IJxl> = app.globalData.jxl
 
 Page({
   data: {
+    service: 'on',
     jxl_name_array: new Array<string>(),
     jxl_selected: 0,
 

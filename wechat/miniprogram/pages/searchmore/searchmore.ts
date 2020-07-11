@@ -11,6 +11,7 @@ const perPage: number = 50
 
 Page({
   data: {
+    service: 'on',
     // 筛选
     rq_array: ['所有', '周日', '周一', '周二', '周三', '周四', '周五', '周六'],
     rq_selected: 0,
