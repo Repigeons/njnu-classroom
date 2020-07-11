@@ -60,8 +60,15 @@ namespace NjnuClassroom
         private static string Format(IEnumerable<Classroom> classrooms, short dqjc)
         {
             var rank = 0;
-            return
+            var data =
                 $"[{string.Join(",", classrooms.Where(classroom => classroom.Jc_ks <= dqjc && classroom.Jc_js >= dqjc).Select(classroom => $"{{{string.Join(",", new Dictionary<string, string> {{"rank", (++rank).ToString()}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"jc_ks", classroom.Jc_ks.ToString()}, {"jc_js", classroom.Jc_js.ToString()}, {"zylxdm", classroom.Zylxdm}, {"capacity", classroom.Capacity.ToString()}, {"jyytms", classroom.Jyytms}, {"kcm", classroom.Kcm}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]";
+            return
+                "{" +
+                "\"status\": 0," +
+                "\"message\": \"ok\"," +
+                $"\"service\": \"{SettingService.ConfigurationSettings["service"]}\"," +
+                $"\"data\": {data}" +
+                "}";
         }
     }
 }

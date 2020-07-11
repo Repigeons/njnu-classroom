@@ -7,6 +7,7 @@ namespace NjnuClassroom
     public static class SettingService
     {
         public static IConfiguration AppSettings { get; }
+        public static IConfiguration ConfigurationSettings { get; }
         public static IConfiguration DatabaseSettings { get; }
 
         static SettingService()
@@ -15,10 +16,17 @@ namespace NjnuClassroom
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .Add(new JsonConfigurationSource {Path = "appsettings.json", ReloadOnChange = true})
                 .Build();
+            
+            ConfigurationSettings = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .Add(new JsonConfigurationSource {Path = "conf/config.json", ReloadOnChange = true})
+                .Build();
+            
             DatabaseSettings = new ConfigurationBuilder()
                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
                 .Add(new JsonConfigurationSource {Path = "conf/database.json", ReloadOnChange = true})
-                .Build();
+                .Build()
+                .GetSection(ConfigurationSettings["environment"]);
         }
     }
 }
