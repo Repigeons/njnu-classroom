@@ -114,7 +114,8 @@ Page({
           kcm: this.data.keyword
         },
         success: res => {
-          const data = res.data as Array<IClassroomRow>
+          let resData = res.data as Record<string,any>
+          let data = resData.data as Array<IClassroomRow>
           for (let i = 0; i < data.length; i++) {
             let info = parseKcm(data[i].zylxdm, data[i].kcm)
             if (info == null) continue
@@ -123,6 +124,7 @@ Page({
             data[i].day = `${+data[i].day + 1}`
           }
           this.setData({
+            service: resData.service,
             list: data.slice(0, perPage),
             result_size: data.length,
             showResult: true
