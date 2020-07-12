@@ -8,6 +8,7 @@ const jxl: Array<IJxl> = app.globalData.jxl
 
 Page({
   data: {
+    service: 'on',
     jxl_name_array: new Array<string>(),
     jxl_selected: 0,
 
@@ -124,11 +125,24 @@ Page({
         jxl: jxl[this.data.jxl_selected].name,
         dqjc: +this.data.jc_selected + 1
       },
-      success: res => this.setData({ classroomList: res.data }),
+      success: res => {
+        let resData = res.data as Record<string,any>
+        console.log(resData)
+        this.setData({
+          service: resData.service,
+          classroomList: resData.data
+        })
+      },
       fail: err => {
         console.error(err)
         this.setData({ classroomList: [] })
       }
+    })
+  },
+
+  onShareAppMessage() {
+    qq.showShareMenu({
+      showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
     })
   },
 })

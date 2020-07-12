@@ -80,7 +80,8 @@
 
   <!-- Result -->
   <view  wx:if="{{showResult}}">
-    <view class="weui-cells__title">共找到 {{result_size}} 条结果。</view>
+    <view wx:if="{{service=='on'}}" class="weui-cells__title">共找到 {{result_size}} 条结果。</view>
+    <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <view class="weui-panel weui-panel_access">
       <view class="weui-panel__bd">
         <view wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">

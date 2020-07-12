@@ -2,18 +2,18 @@
 
 interface IAppOption {
   globalData: {
-    server: string,
-    jxl: Array<IJxl>,
-    lx: Array<ILx>,
+    readonly server: string,
+    readonly jxl: Array<IJxl>,
+    readonly lx: Array<ILx>,
   }
 }
 
 interface IJxl {
-  name: string,
-  pos: [number, number]
+  readonly name: string,
+  readonly pos: [number, number]
 }
 
 interface ILx {
-  dm: string,
-  name: string
+  readonly dm: string,
+  readonly name: string
 }
