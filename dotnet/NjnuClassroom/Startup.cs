@@ -18,25 +18,37 @@ namespace NjnuClassroom
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            SettingService.SetEnv(env);
             app.Use(async (context, next) =>
             {
+                context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
-                var parameters = (context.Request.Method == "GET")
-                    ? context.Request.Query.ToImmutableDictionary()
-                    : context.Request.Form.ToImmutableDictionary();
-
                 switch (context.Request.Path)
                 {
                     case "/":
+                        if (context.Request.Method != "POST")
+                            break;
                         Today.Reset();
                         context.Response.StatusCode = 202;
                         break;
                     case "/index.json":
-                        await Index.ProcessRequest(context, parameters);
+                        if (context.Request.Method != "GET")
+                            break;
+                        await Index.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
                         break;
                     case "/searchmore.json":
-                        await SearchMore.ProcessRequest(context, parameters);
+                        if (context.Request.Method != "GET")
+                            break;
+                        await SearchMore.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
                         break;
                     default:
                         await next();

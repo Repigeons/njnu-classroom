@@ -8,17 +8,6 @@ namespace NjnuClassroom
     public static class Today
     {
         /// <summary>
-        /// Data Access Object
-        /// </summary>
-        private static readonly Dao Dao = new Dao(new DataSource(
-            SettingService.DatabaseSettings["host"],
-            short.Parse(SettingService.DatabaseSettings["port"]),
-            SettingService.DatabaseSettings["user"],
-            SettingService.DatabaseSettings["password"],
-            SettingService.DatabaseSettings["database"]
-        ));
-
-        /// <summary>
         /// 更新时间
         /// </summary>
         public static DateTime Updated { get; private set; } = DateTime.Today.AddDays(-1);
@@ -63,10 +52,11 @@ namespace NjnuClassroom
         /// </summary>
         public static void Reset(string name, int day)
         {
+            var dao = SettingService.Dao;
             var jxl = Buildings[name];
             jxl[day].Clear();
             string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
-            Dao.Prepare(
+            dao.Prepare(
                 "SELECT * FROM `${day}` WHERE `jxl`=#{jxl} AND `zylxdm` in ('00','10') ORDER BY `zylxdm`",
                 concat: new[]
                 {
@@ -77,7 +67,7 @@ namespace NjnuClassroom
                     new KvPair("jxl", name),
                 }
             );
-            jxl[day].AddRange(new DataList<Classroom>(new ClassroomMapper(), Dao));
+            jxl[day].AddRange(new DataList<Classroom>(new ClassroomMapper(), dao));
             jxl[day].Sort((x, y) => -x.CompareTo(y));
         }
     }

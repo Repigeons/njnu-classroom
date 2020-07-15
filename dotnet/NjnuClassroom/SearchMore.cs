@@ -12,17 +12,6 @@ namespace NjnuClassroom
     internal static class SearchMore
     {
         /// <summary>
-        /// Data Access Object
-        /// </summary>
-        private static readonly Dao Dao = new Dao(new DataSource(
-            SettingService.DatabaseSettings["host"],
-            short.Parse(SettingService.DatabaseSettings["port"]),
-            SettingService.DatabaseSettings["user"],
-            SettingService.DatabaseSettings["password"],
-            SettingService.DatabaseSettings["database"]
-        ));
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
@@ -31,6 +20,7 @@ namespace NjnuClassroom
         public static async Task ProcessRequest(HttpContext context,
             ImmutableDictionary<string, StringValues> parameters)
         {
+            var dao = SettingService.Dao;
             string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 
             if (new[] {"day", "jc_ks", "jc_js", "jxl", "zylxdm", "kcm"}.Any(key => !parameters.ContainsKey(key)))
@@ -54,7 +44,7 @@ namespace NjnuClassroom
             var classrooms = new List<Classroom>();
             for (var d = 0; d < days.Length; d++)
             {
-                Dao.Prepare(
+                dao.Prepare(
                     "SELECT * FROM `${day}` WHERE ${jc} AND ${jxl} AND ${zylxdm} AND (`jyytms` LIKE #{kcm} OR `kcm` LIKE #{kcm})",
                     concat: new[]
                     {
@@ -68,7 +58,7 @@ namespace NjnuClassroom
                         new KvPair("kcm", $"%{kcm}%"),
                     }
                 );
-                foreach (var classroom in new DataList<Classroom>(new ClassroomMapper(), Dao))
+                foreach (var classroom in new DataList<Classroom>(new ClassroomMapper(), dao))
                 {
                     classroom.Day = (day == "#") ? d : int.Parse(day);
                     classrooms.Add(classroom);
@@ -91,10 +81,10 @@ namespace NjnuClassroom
                 ? $"[{string.Join(",", classrooms.Select(classroom => $"{{{string.Join(",", new Dictionary<string, object> {{"id", ++id}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"day", classroom.Day}, {"jc_ks", classroom.Jc_ks}, {"jc_js", classroom.Jc_js}, {"zylxdm", classroom.Zylxdm}, {"jyytms", classroom.Jyytms.Replace('\r', '\n').Replace("\n", "")}, {"kcm", classroom.Kcm.Replace('\r', '\n').Replace("\n", "")}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]"
                 : "[]";
             return "{" +
-                   "\"status\": 0," +
-                   "\"message\": \"ok\"," +
-                   $"\"service\": \"{service}\"," +
-                   $"\"data\": {data}" +
+                   "\"status\":0," +
+                   "\"message\":\"ok\"," +
+                   $"\"service\":\"{service}\"," +
+                   $"\"data\":{data}" +
                    "}";
         }
     }
