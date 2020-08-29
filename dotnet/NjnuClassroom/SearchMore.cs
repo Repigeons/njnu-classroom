@@ -20,6 +20,12 @@ namespace NjnuClassroom
         public static async Task ProcessRequest(HttpContext context,
             ImmutableDictionary<string, StringValues> parameters)
         {
+            if (SettingService.ConfigurationSettings["service"] == "off")
+            {
+                await context.Response.WriteAsync(Format(null));
+                return;
+            }
+
             var dao = SettingService.Dao;
             string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
 

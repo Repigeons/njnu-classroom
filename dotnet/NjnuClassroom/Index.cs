@@ -19,6 +19,12 @@ namespace NjnuClassroom
         public static async Task ProcessRequest(HttpContext context,
             ImmutableDictionary<string, StringValues> parameters)
         {
+            if (SettingService.ConfigurationSettings["service"] == "off")
+            {
+                await context.Response.WriteAsync(Format(null, -1));
+                return;
+            }
+
             var jxl = parameters["jxl"];
             if (string.IsNullOrEmpty(jxl))
             {
