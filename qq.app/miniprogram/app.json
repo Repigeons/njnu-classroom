@@ -10,9 +10,6 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#666",
-    "selectedColor": "#000",
-    "backgroundColor": "#fff",
     "list": [
       {
         "pagePath": "pages/index/index",

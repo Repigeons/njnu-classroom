@@ -127,7 +127,7 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        console.log(resData)
+        // console.log(resData)
         this.setData({
           service: resData.service,
           classroomList: resData.data
@@ -137,12 +137,6 @@ Page({
         console.error(err)
         this.setData({ classroomList: [] })
       }
-    })
-  },
-
-  onShareAppMessage() {
-    qq.showShareMenu({
-      showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
     })
   },
 })

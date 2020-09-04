@@ -109,7 +109,7 @@ Page({
           day: (this.data.rq_selected == 0) ? '#' : this.data.rq_selected - 1,
           jc_ks: this.data.jc_ks_selected + 1,
           jc_js: this.data.jc_js_selected + 1,
-          jxl: (this.data.jxl_selected == 0) ? '#' : jxl[this.data.jxl_selected].name,
+          jxl: (this.data.jxl_selected == 0) ? '#' : jxl[this.data.jxl_selected - 1].name,
           zylxdm: lx[this.data.lx_selected].dm,
           kcm: this.data.keyword
         },
@@ -216,11 +216,5 @@ Page({
 
   closeDialog(): void {
     this.setData({dialog: {}})
-  },
-
-  onShareAppMessage() {
-    qq.showShareMenu({
-      showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
-    })
-  },
+  }
 })
