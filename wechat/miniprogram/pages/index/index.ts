@@ -127,7 +127,7 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        console.log(resData)
+        // console.log(resData)
         this.setData({
           service: resData.service,
           classroomList: resData.data
