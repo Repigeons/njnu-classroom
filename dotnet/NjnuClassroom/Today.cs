@@ -34,6 +34,8 @@ namespace NjnuClassroom
                     new List<Classroom>(), new List<Classroom>(), new List<Classroom>()
                 });
             }
+
+            Reset();
         }
 
         /// <summary>

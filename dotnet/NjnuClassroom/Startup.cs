@@ -34,10 +34,11 @@ namespace NjnuClassroom
                 context.Response.ContentType = "application/json";
                 switch (context.Request.Path)
                 {
-                    case "/":
+                    case "/reset":
                         if (context.Request.Method != "POST")
                             break;
                         Today.Reset();
+                        Overview.Reset();
                         context.Response.StatusCode = 202;
                         break;
                     case "/index.json":
@@ -49,6 +50,11 @@ namespace NjnuClassroom
                         if (context.Request.Method != "GET")
                             break;
                         await SearchMore.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
+                        break;
+                    case "/overview.json":
+                        if (context.Request.Method != "GET")
+                            break;
+                        await Overview.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
                         break;
                     default:
                         await next();
