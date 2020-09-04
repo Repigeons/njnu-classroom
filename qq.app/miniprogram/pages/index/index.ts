@@ -119,7 +119,7 @@ Page({
    */
   submit(): void {
     wx.request({
-      url: `${app.globalData.server}/index.json`,
+      url: `${app.globalData.server}/api/index.json`,
       data: {
         day: this.data.rq_selected,
         jxl: jxl[this.data.jxl_selected].name,
@@ -137,6 +137,12 @@ Page({
         console.error(err)
         this.setData({ classroomList: [] })
       }
+    })
+  },
+
+  onShareAppMessage(): void {
+    qq.showShareMenu({
+      showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
     })
   },
 })

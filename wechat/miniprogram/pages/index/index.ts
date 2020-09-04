@@ -119,7 +119,7 @@ Page({
    */
   submit(): void {
     wx.request({
-      url: `${app.globalData.server}/index.json`,
+      url: `${app.globalData.server}/api/index.json`,
       data: {
         day: this.data.rq_selected,
         jxl: jxl[this.data.jxl_selected].name,

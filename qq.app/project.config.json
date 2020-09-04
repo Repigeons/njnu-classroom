@@ -10,7 +10,7 @@
 	"scripts": {
 		"beforeCompile": "npm run tsc",
 		"beforePreview": "npm run tsc",
-		"beforeUpload": "npm run tsc"
+		"beforeUpload": ""
 	},
 	"setting": {
 		"urlCheck": true,
@@ -37,7 +37,8 @@
 		},
 		"useIsolateContext": true,
 		"useCompilerModule": false,
-		"userConfirmedUseCompilerModuleSwitch": false
+		"userConfirmedUseCompilerModuleSwitch": false,
+		"scriptsEnable": true
 	},
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
