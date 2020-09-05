@@ -109,10 +109,9 @@ def preparing() -> None:
         # save classrooms info to static directory
         try:
             config = json.load(open('conf/config.json'))
-            json.dump(
-                classrooms,
-                open(f"{config['staticPath']}/classrooms.json", 'w', encoding='utf8'),
-                ensure_ascii=False
+            utils.dump_static_json(
+                classrooms=classrooms,
+                filename=f"{config['staticPath']}/classrooms.json"
             )
         except FileNotFoundError:
             print('配置文件缺失')
