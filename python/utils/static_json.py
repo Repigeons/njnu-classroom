@@ -14,22 +14,17 @@ def dump(classrooms: list, filename: str) -> None:
     :return:None
     """
 
-    buildings = []
-    details = {}
+    result = {}
     for classroom in classrooms:
-        if classroom['JXLMC'] not in buildings:
-            buildings.append(classroom['JXLMC'])
-            details[classroom['JXLMC']] = []
-        details[classroom['JXLMC']].append({
+        if classroom['JXLMC'] not in result:
+            result[classroom['JXLMC']] = []
+        result[classroom['JXLMC']].append({
             'JXLMC': classroom['JXLMC'],
             'JSMPH': classroom['JASMC'].replace(classroom['JXLMC'], ''),
             'JASDM': classroom['JASDM']
         })
     json.dump(
-        {
-            'buildings': buildings,
-            'details': details
-        },
+        result,
         open(filename, 'w', encoding='utf8'),
         ensure_ascii=False
     )
