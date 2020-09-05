@@ -25,11 +25,7 @@ App<IAppOption>({
   onLaunch() {
     wx.request({
       url: `${this.globalData.server}/classrooms.json`,
-      success: (res) => {
-        let resData = res.data as Record<string, Array<object>>
-        this.globalData.classrooms = resData
-        console.log(this.globalData.classrooms)
-      }
+      success: (res) =>  this.globalData.classrooms = res.data as Record<string, Array<object>>
     })
   }
 })
