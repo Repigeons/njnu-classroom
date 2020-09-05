@@ -4,12 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using ZTxLib.NETCore.DaoTemplate;
 using ZTxLib.NETCore.DaoTemplate.MySQL;
 
 namespace NjnuClassroom
 {
-    internal static class SearchMore
+    public static class Overview
     {
         /// <summary>
         /// 
@@ -32,52 +31,16 @@ namespace NjnuClassroom
                 return;
             }
 
-            var dao = SettingService.Dao;
-            string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
-
-            if (new[] {"day", "jc_ks", "jc_js", "jxl", "zylxdm", "kcm"}.Any(key => !parameters.ContainsKey(key)))
+            if (!parameters.ContainsKey("jasdm"))
             {
                 context.Response.StatusCode = 400;
                 return;
             }
 
-            var day = parameters["day"];
-            var jc_ks = parameters["jc_ks"];
-            var jc_js = parameters["jc_js"];
-            var jxl = parameters["jxl"];
-            var zylxdm = parameters["zylxdm"];
-            var kcm = parameters["kcm"];
-            if (kcm == "#") kcm = "_";
-            if (day != "#") days = new[] {days[int.Parse(day)]};
-            var jc = $"(`jc_ks`>={jc_ks} AND `jc_js`<={jc_js})";
-            jxl = jxl == "#" ? "(`jxl` IS NOT NULL)" : $"(`jxl`='{jxl}')";
-            zylxdm = zylxdm == "#" ? "(`zylxdm` IS NOT NULL)" : $"(`zylxdm`='{zylxdm}')";
+            var jasdm = parameters["jasdm"];
 
-            var classrooms = new List<Classroom>();
-            for (var d = 0; d < days.Length; d++)
-            {
-                dao.Prepare(
-                    "SELECT * FROM `${day}` WHERE ${jc} AND ${jxl} AND ${zylxdm} AND (`jyytms` LIKE #{kcm} OR `kcm` LIKE #{kcm})",
-                    concat: new[]
-                    {
-                        new KvPair("day", days[d]),
-                        new KvPair("jc", jc),
-                        new KvPair("jxl", jxl),
-                        new KvPair("zylxdm", zylxdm),
-                    },
-                    parameter: new[]
-                    {
-                        new KvPair("kcm", $"%{kcm}%"),
-                    }
-                );
-                foreach (var classroom in new DataList<Classroom>(new Classroom.RowMapper(), dao))
-                {
-                    classroom.Day = (day == "#") ? d : int.Parse(day);
-                    classrooms.Add(classroom);
-                }
-            }
-
-            await context.Response.WriteAsync(Format(classrooms));
+            //TODO
+            await context.Response.WriteAsync(Format(Buildings[jasdm]));
         }
 
         /// <summary>
@@ -96,6 +59,38 @@ namespace NjnuClassroom
                    $"\"service\":\"on\"," +
                    $"\"data\":{data}" +
                    "}";
+        }
+
+        /// <summary>
+        /// 教学楼
+        /// </summary>
+        private static readonly Dictionary<string, List<Classroom>> Buildings =
+            new Dictionary<string, List<Classroom>>();
+
+        /// <summary>
+        /// 初始化教室信息
+        /// </summary>
+        static Overview() => Reset();
+
+        /// <summary>
+        /// 重置教室信息
+        /// </summary>
+        public static void Reset()
+        {
+            Buildings.Clear();
+            var dao = SettingService.Dao;
+            string[] days = {"sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"};
+            for (var day = 0; day < 7; day++)
+            {
+                dao.Prepare($"SELECT * FROM `{days[day]}`");
+                foreach (var classroom in new DataList<Classroom>(new Classroom.RowMapper(), dao))
+                {
+                    classroom.Day = day;
+                    if (!Buildings.ContainsKey(classroom.Jasdm))
+                        Buildings.Add(classroom.Jasdm, new List<Classroom>());
+                    Buildings[classroom.Jasdm].Add(classroom);
+                }
+            }
         }
     }
 }

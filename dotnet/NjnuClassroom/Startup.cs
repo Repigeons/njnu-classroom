@@ -30,25 +30,42 @@ namespace NjnuClassroom
             SettingService.SetEnv(env);
             app.Use(async (context, next) =>
             {
-                context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
                 switch (context.Request.Path)
                 {
-                    case "/":
+                    case "/reset":
                         if (context.Request.Method != "POST")
+                        {
+                            context.Response.StatusCode = 400;
                             break;
-                        Today.Reset();
+                        }
+                        Index.Reset();
+                        Overview.Reset();
                         context.Response.StatusCode = 202;
                         break;
                     case "/index.json":
                         if (context.Request.Method != "GET")
+                        {
+                            context.Response.StatusCode = 400;
                             break;
+                        }
                         await Index.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
                         break;
                     case "/searchmore.json":
                         if (context.Request.Method != "GET")
+                        {
+                            context.Response.StatusCode = 400;
                             break;
+                        }
                         await SearchMore.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
+                        break;
+                    case "/overview.json":
+                        if (context.Request.Method != "GET")
+                        {
+                            context.Response.StatusCode = 400;
+                            break;
+                        }
+                        await Overview.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
                         break;
                     default:
                         await next();

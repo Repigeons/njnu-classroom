@@ -20,5 +20,12 @@ App<IAppOption>({
       { dm: '05', name: '其他' },
       { dm: '10', name: '研究生课程' },
     ],
+    classrooms: {}
   },
+  onLaunch() {
+    wx.request({
+      url: `${this.globalData.server}/classrooms.json`,
+      success: (res) =>  this.globalData.classrooms = res.data as Record<string, Array<object>>
+    })
+  }
 })

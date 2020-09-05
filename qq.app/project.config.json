@@ -5,7 +5,7 @@
 	},
 	"miniprogramRoot": "miniprogram/",
 	"compileType": "miniprogram",
-	"libVersion": "2.11.2",
+	"libVersion": "2.12.2",
 	"projectname": "NjnuClassroom",
 	"scripts": {
 		"beforeCompile": "npm run tsc",
@@ -13,7 +13,7 @@
 		"beforeUpload": ""
 	},
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"enhance": false,
 		"postcss": true,
@@ -36,13 +36,12 @@
 			"outputPath": ""
 		},
 		"useIsolateContext": true,
-		"useCompilerModule": true,
+		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false,
 		"scriptsEnable": true
 	},
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"appid": "wx42f3e578c5411a23",
 	"qqappid": "1110565565",
 	"condition": {}
 }

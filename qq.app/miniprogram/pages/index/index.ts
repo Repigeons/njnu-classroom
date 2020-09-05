@@ -119,7 +119,7 @@ Page({
    */
   submit(): void {
     wx.request({
-      url: `${app.globalData.server}/index.json`,
+      url: `${app.globalData.server}/api/index.json`,
       data: {
         day: this.data.rq_selected,
         jxl: jxl[this.data.jxl_selected].name,
@@ -127,7 +127,7 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        console.log(resData)
+        // console.log(resData)
         this.setData({
           service: resData.service,
           classroomList: resData.data
@@ -140,7 +140,7 @@ Page({
     })
   },
 
-  onShareAppMessage() {
+  onShareAppMessage(): void {
     qq.showShareMenu({
       showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
     })

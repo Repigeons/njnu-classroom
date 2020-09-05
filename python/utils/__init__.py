@@ -6,5 +6,5 @@
 # @FileName :  __init__.py
 """"""
 from ._db_manager import truncate, save
-# from ._mysql import MySQL
 from ._get_cookie import get_cookie_dict
+from .static_json import dump as dump_static_json

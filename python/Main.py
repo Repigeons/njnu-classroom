@@ -92,17 +92,35 @@ def preparing() -> None:
 
     # get classroom info
     try:
-        utils.truncate()
+        classrooms = []
         for jxl in jxl_info:
+            classroom_info = get_data.get_classroom_info(
+                cookies=cookies,
+                xn_xq_dm=time_info['XNXQDM'],
+                jxl_dm=jxl['JXLDM']
+            )
+            classrooms.extend(classroom_info)
             json.dump(
-                get_data.get_classroom_info(
-                    cookies=cookies,
-                    xn_xq_dm=time_info['XNXQDM'],
-                    jxl_dm=jxl['JXLDM']
-                ),
-                open(temp_dir + 'classroom_info_%s.json' % jxl['JXLMC'], 'w', encoding='utf8'),
+                classroom_info,
+                open(temp_dir + f"classroom_info_{jxl['JXLMC']}.json", 'w', encoding='utf8'),
                 ensure_ascii=False
             )
+
+        # save classrooms info to static directory
+        try:
+            config = json.load(open('conf/config.json'))
+            utils.dump_static_json(
+                classrooms=classrooms,
+                filename=f"{config['staticPath']}/classrooms.json"
+            )
+        except FileNotFoundError:
+            print('配置文件缺失')
+            print('Exit with code', 1)
+            exit(1)
+        except JSONDecodeError:
+            print('配置文件解析失败')
+            print('Exit with code', 1)
+            exit(1)
     except JSONDecodeError:
         print('cookies无效')
         print('Exit with code', 2)
@@ -120,6 +138,7 @@ def core() -> None:
     :return:None
     """
 
+    utils.truncate()
     # load stored info
     cookies = json.load(open(temp_dir + 'cookies.json'))
     time_info = json.load(open(temp_dir + 'time_info.json'))
