@@ -86,8 +86,8 @@
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 2">
       <block wx:for="{{bar_list}}" wx:key="_">
         <view class="rp-bar rp-bar_{{item.usage}}"
-          style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*((item.day+6)%7)}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px"
-          data-item="{{item}}" bindtap="logItem"
+          style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*item.day}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px"
+          bindtap="logItem" data-item="{{item}}"
         ></view>
       </block>
       <!--以下为示例内容--><!--

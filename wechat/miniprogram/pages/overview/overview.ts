@@ -82,7 +82,7 @@ Page({
   /**
    * 选择教室
    */
-  bindJsChange(e: any): void {
+  bindJsChange(e: AnyObject): void {
     const js_selected = e.detail.value
     this.setData({ js_selected })
     wx.setStorage({
@@ -113,6 +113,7 @@ Page({
               resData.data[i].usage = 'others'
               break;
           }
+          resData.data[i].day = (+resData.data[i].day + 6) % 7
         }
         this.setData({ bar_list: resData.data })
       }
