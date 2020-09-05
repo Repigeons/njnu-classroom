@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/overview/overview",
     "pages/searchmore/searchmore"
   ],
   "window": {
@@ -16,6 +17,12 @@
         "iconPath": "images/kjs.png",
         "selectedIconPath": "images/kjs_1.png",
         "text": "空教室"
+      },
+      {
+        "pagePath": "pages/overview/overview",
+        "iconPath": "images/jsgl.png",
+        "selectedIconPath": "images/jsgl_1.png",
+        "text": "教室概览"
       },
       {
         "pagePath": "pages/searchmore/searchmore",

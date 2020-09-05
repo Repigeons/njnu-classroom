@@ -1,0 +1,53 @@
+/* pages/overview/overview.wxss */
+
+.rp-label {
+  text-align: center;
+  width: 60px;
+}
+
+.rp-no_padding {
+  padding: unset;
+}
+
+.rp-bd_left {
+  text-align: right;
+  padding-right: 15px;
+}
+
+.rp-bd_right {
+  text-align: left;
+  padding-left: 25px;
+  letter-spacing: 1px;
+}
+
+.rp-title_cell {
+  position: relative;
+  background-color:#d2d2d2;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  text-align: center;
+}
+
+.rp-line {
+  position: absolute;
+  background-color:#d2d2d2;
+  height: 2px;
+}
+
+.rp-midline {
+  position: absolute;
+  background-color:#898989;
+  height: 2px;
+}
+
+.rp-bar {
+  position: absolute;
+  background-color:#00a500;
+  opacity: 0.50;
+}
+
+.rp-timeText {
+  position: absolute;
+  text-align: center;
+  color: #c9c9c9;
+}

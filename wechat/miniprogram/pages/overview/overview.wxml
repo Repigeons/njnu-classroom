@@ -1,0 +1,103 @@
+<!--pages/overview/overview.wxml-->
+<view class="page">
+  <view class="page__bd">
+
+    <view class="weui-search-bar" style="padding-top:8px">
+      <view class="weui-search-bar__form">
+        <view class="weui-cell  weui-cell_vcode rp-no_padding" style="height:40px"> <!-- 官方高度是56像素 -->
+          <view class="weui-cell__hd" style="font-weight:700">
+            <view class="weui-label rp-label">←</view>
+          </view>
+          <view class="weui-cell__bd rp-bd_left">
+            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
+              <view class="weui-select weui-select_in-select-after rp-no_padding">学行楼{{rq_array[rq_selected]}}</view>
+            </picker>
+          </view>
+          <view class="weui-cell__bd rp-bd_right">
+            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
+              <view class="weui-select weui-select_in-select-after rp-no_padding">101{{rq_array[rq_selected]}}</view>
+            </picker>
+          </view>
+          <view class="weui-cell__ft" style="font-weight:700">
+            <view class="weui-label rp-label">→</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view style="position:absolute; top: {{topBorder}}px; left: {{leftBorder+cellWidth+1}}px; z-index: -1">
+      <view style="height:{{cellHeight+1}}px">
+        <block wx:for="一二三四五六日" wx:for-item="col">
+          <view class="rp-title_cell" style="height:{{cellHeight}}px; width:{{cellWidth}}px; display:inline-block; line-height:{{cellHeight}}px;">
+            <text>周{{col}}</text>
+          </view>
+        </block>
+      </view>
+      <!--
+      <block wx:for="0123456789ab" wx:for-index="row">
+        <view style="height:{{cellHeight+1}}px">
+          <block wx:for="01234567" wx:for-index="col">
+            <view class="rp-test_cell" style="height:{{cellHeight}}px;width:{{cellWidth}}px;"></view>
+          </block>
+        </view>
+      </block>
+      -->
+    </view>
+
+    <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder}}px; height:{{(cellHeight+1)*12}}px; z-index: -1">
+      <block wx:for="{{jc_array}}" wx:for-index="jc">
+        <view class="rp-title_cell" style="height:{{cellHeight}}px; width:{{cellWidth}}px; display:block; line-height:{{cellHeight}}px;">
+          <text>{{jc_array[jc]}}</text>
+        </view>
+      </block>
+    </view>
+
+    <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder}}px; z-index: 0">
+      <view class="rp-line" style="left: {{cellWidth}}px;width:{{(cellWidth+1)*7}}px; top: {{(cellHeight+1)*2-2}}px"></view>
+      <view class="rp-line" style="left: {{cellWidth}}px;width:{{(cellWidth+1)*7}}px; top: {{(cellHeight+1)*3-2}}px"></view>
+      <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*5-3}}px"></view>
+      <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*5}}px"></view>
+      <view class="rp-line" style="left: {{cellWidth}}px;width:{{(cellWidth+1)*7}}px; top: {{(cellHeight+1)*7-2}}px"></view>
+      <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*9-3}}px"></view>
+      <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*9}}px"></view>
+    </view> 
+
+    <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 1">
+      <view class="rp-timeText" style="width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*2}}px;line-height:{{(cellHeight+1)*2}}px; font-size:{{cellHeight*0.6}}px">
+        <text>08:00~09:40</text>
+      </view>
+      <view class="rp-timeText" style="top:{{(cellHeight+1)*2}}px; width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*1}}px;line-height:{{(cellHeight+1)*1}}px; font-size:{{cellHeight*0.6}}px">
+        <text>09:40~10:35</text>
+      </view>
+      <view class="rp-timeText" style="top:{{(cellHeight+1)*3}}px; width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*2}}px;line-height:{{(cellHeight+1)*2}}px; font-size:{{cellHeight*0.6}}px">
+        <text>10:35~12:00</text>
+      </view>
+      <view class="rp-timeText" style="top:{{(cellHeight+1)*5}}px; width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*2}}px;line-height:{{(cellHeight+1)*2}}px; font-size:{{cellHeight*0.6}}px">
+        <text>13:30~15:10</text>
+      </view>
+      <view class="rp-timeText" style="top:{{(cellHeight+1)*7}}px; width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*2}}px;line-height:{{(cellHeight+1)*2}}px; font-size:{{cellHeight*0.6}}px">
+        <text>15:10~16:35</text>
+      </view>
+      <view class="rp-timeText" style="top:{{(cellHeight+1)*9}}px; width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*3}}px;line-height:{{(cellHeight+1)*3}}px; font-size:{{cellHeight*0.6}}px">
+        <text>18:30~20:50</text>
+      </view>
+    </view>
+
+    <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 2">
+      <!--以下为示例内容-->
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*5}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*9}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*3}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*7}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*1-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*11}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*7-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*2}}px; top: {{(cellHeight+1)*5}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*1-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*3}}px; top: {{(cellHeight+1)*2}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*7-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*3}}px; top: {{(cellHeight+1)*5}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*5-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*4}}px; top: {{(cellHeight+1)*0}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*4}}px; top: {{(cellHeight+1)*9}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*5}}px; top: {{(cellHeight+1)*0}}px"></view>
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*6}}px; top: {{(cellHeight+1)*0}}px"></view>
+    </view>
+
+  </view>
+</view>
