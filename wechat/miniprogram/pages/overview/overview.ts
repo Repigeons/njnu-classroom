@@ -68,11 +68,8 @@ Page({
     for (let i=0; i< list.length; i++) {
       js_array.push(list[i]['JSMPH'])
     }
-    this.setData({
-      jxl_selected,
-      js_array,
-      js_selected: 0
-    })
+    this.setData({ jxl_selected, js_array })
+    this.bindJsChange({detail:{value:0}})
     wx.setStorage({
       key: 'last_overview',
       data: {
