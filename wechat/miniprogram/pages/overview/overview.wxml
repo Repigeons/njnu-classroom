@@ -9,13 +9,13 @@
             <view class="weui-label rp-label">←</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
-            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
-              <view class="weui-select weui-select_in-select-after rp-no_padding">学行楼{{rq_array[rq_selected]}}</view>
+            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
+              <view class="weui-select weui-select_in-select-after rp-no_padding">{{jxl_array[jxl_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__bd rp-bd_right">
-            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
-              <view class="weui-select weui-select_in-select-after rp-no_padding">101{{rq_array[rq_selected]}}</view>
+            <picker value="{{js_selected}}" bindchange="bindJsChange" range="{{js_array}}">
+              <view class="weui-select weui-select_in-select-after rp-no_padding">{{js_array[js_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__ft" style="font-weight:700">
@@ -27,7 +27,7 @@
 
     <view style="position:absolute; top: {{topBorder}}px; left: {{leftBorder+cellWidth+1}}px; z-index: -1">
       <view style="height:{{cellHeight+1}}px">
-        <block wx:for="一二三四五六日" wx:for-item="col">
+        <block wx:for="一二三四五六日" wx:for-item="col" wx:key="_">
           <view class="rp-title_cell" style="height:{{cellHeight}}px; width:{{cellWidth}}px; display:inline-block; line-height:{{cellHeight}}px;">
             <text>周{{col}}</text>
           </view>
@@ -45,9 +45,9 @@
     </view>
 
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder}}px; height:{{(cellHeight+1)*12}}px; z-index: -1">
-      <block wx:for="{{jc_array}}" wx:for-index="jc">
+      <block wx:for="____________" wx:for-index="jc" wx:key="_">
         <view class="rp-title_cell" style="height:{{cellHeight}}px; width:{{cellWidth}}px; display:block; line-height:{{cellHeight}}px;">
-          <text>{{jc_array[jc]}}</text>
+          <text>{{jc+1}}</text>
         </view>
       </block>
     </view>
@@ -60,7 +60,7 @@
       <view class="rp-line" style="left: {{cellWidth}}px;width:{{(cellWidth+1)*7}}px; top: {{(cellHeight+1)*7-2}}px"></view>
       <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*9-3}}px"></view>
       <view class="rp-midline" style="width:{{(cellWidth+1)*8}}px; top: {{(cellHeight+1)*9}}px"></view>
-    </view> 
+    </view>
 
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 1">
       <view class="rp-timeText" style="width:{{cellWidth*7+7}}px; height:{{(cellHeight+1)*2}}px;line-height:{{(cellHeight+1)*2}}px; font-size:{{cellHeight*0.6}}px">
@@ -84,8 +84,14 @@
     </view>
 
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 2">
-      <!--以下为示例内容-->
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*5}}px"></view>
+      <block wx:for="{{bar_list}}" wx:key="_">
+        <view class="rp-bar rp-bar_{{item.usage}}"
+          style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*((item.day+6)%7)}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px"
+          data-item="{{item}}" bindtap="logItem"
+        ></view>
+      </block>
+      <!--以下为示例内容--><!--
+      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(jc_js-jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*(day-1)}}px; top: {{(cellHeight+1)*(jc_ks-1)}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*9}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*3}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*7}}px"></view>
@@ -97,6 +103,7 @@
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*4}}px; top: {{(cellHeight+1)*9}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*5}}px; top: {{(cellHeight+1)*0}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*6}}px; top: {{(cellHeight+1)*0}}px"></view>
+      -->
     </view>
 
   </view>

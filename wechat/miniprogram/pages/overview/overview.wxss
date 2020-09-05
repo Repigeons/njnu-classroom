@@ -40,14 +40,25 @@
   height: 2px;
 }
 
-.rp-bar {
-  position: absolute;
-  background-color:#00a500;
-  opacity: 0.50;
-}
-
 .rp-timeText {
   position: absolute;
   text-align: center;
   color: #c9c9c9;
+}
+
+.rp-bar {
+  position: absolute;
+  opacity: 0.50;
+}
+
+.rp-bar_empty {
+  background-color:#00a500;
+}
+
+.rp-bar_class {
+  background-color:#00f;
+}
+
+.rp-bar_others {
+  background-color:#f00;
 }
