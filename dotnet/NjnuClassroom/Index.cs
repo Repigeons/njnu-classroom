@@ -23,7 +23,13 @@ namespace NjnuClassroom
         {
             if (SettingService.ConfigurationSettings["service"] == "off")
             {
-                await context.Response.WriteAsync(Format(null, -1));
+                await context.Response.WriteAsync(
+                    "{" +
+                    "\"status\":1," +
+                    "\"message\":\"service off\"," +
+                    $"\"service\":\"off\"," +
+                    $"\"data\":[]" +
+                    "}");
                 return;
             }
 
@@ -69,13 +75,12 @@ namespace NjnuClassroom
         {
             var rank = 0;
             var service = SettingService.ConfigurationSettings["service"];
-            var data = service == "on"
-                ? $"[{string.Join(",", classrooms.Where(classroom => classroom.Jc_ks <= dqjc && classroom.Jc_js >= dqjc).Select(classroom => $"{{{string.Join(",", new Dictionary<string, string> {{"rank", (++rank).ToString()}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"jc_ks", classroom.Jc_ks.ToString()}, {"jc_js", classroom.Jc_js.ToString()}, {"zylxdm", classroom.Zylxdm}, {"capacity", classroom.Capacity.ToString()}, {"jyytms", classroom.Jyytms}, {"kcm", classroom.Kcm}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]"
-                : "[]";
+            var data =
+                $"[{string.Join(",", classrooms.Where(classroom => classroom.Jc_ks <= dqjc && classroom.Jc_js >= dqjc).Select(classroom => $"{{{string.Join(",", new Dictionary<string, string> {{"rank", (++rank).ToString()}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"jc_ks", classroom.Jc_ks.ToString()}, {"jc_js", classroom.Jc_js.ToString()}, {"zylxdm", classroom.Zylxdm}, {"capacity", classroom.Capacity.ToString()}, {"jyytms", classroom.Jyytms}, {"kcm", classroom.Kcm}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]";
             return "{" +
                    "\"status\":0," +
                    "\"message\":\"ok\"," +
-                   $"\"service\":\"{service}\"," +
+                   $"\"service\":\"on\"," +
                    $"\"data\":{data}" +
                    "}";
         }

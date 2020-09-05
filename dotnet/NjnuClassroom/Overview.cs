@@ -21,7 +21,13 @@ namespace NjnuClassroom
         {
             if (SettingService.ConfigurationSettings["service"] == "off")
             {
-                await context.Response.WriteAsync(Format(null));
+                await context.Response.WriteAsync(
+                    "{" +
+                    "\"status\":1," +
+                    "\"message\":\"service off\"," +
+                    $"\"service\":\"off\"," +
+                    $"\"data\":[]" +
+                    "}");
                 return;
             }
 
@@ -45,14 +51,12 @@ namespace NjnuClassroom
         private static string Format(IEnumerable<Classroom> classrooms)
         {
             var id = 0;
-            var service = SettingService.ConfigurationSettings["service"];
-            var data = service == "on"
-                ? $"[{string.Join(",", classrooms.Select(classroom => $"{{{string.Join(",", new Dictionary<string, object> {{"id", ++id}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"day", classroom.Day}, {"jc_ks", classroom.Jc_ks}, {"jc_js", classroom.Jc_js}, {"zylxdm", classroom.Zylxdm}, {"jyytms", classroom.Jyytms.Replace('\r', '\n').Replace("\n", "")}, {"kcm", classroom.Kcm.Replace('\r', '\n').Replace("\n", "")}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]"
-                : "[]";
+            var data =
+                $"[{string.Join(",", classrooms.Select(classroom => $"{{{string.Join(",", new Dictionary<string, object> {{"id", ++id}, {"jxl", classroom.Jxl}, {"classroom", classroom.Jsmph}, {"day", classroom.Day}, {"jc_ks", classroom.Jc_ks}, {"jc_js", classroom.Jc_js}, {"zylxdm", classroom.Zylxdm}, {"jyytms", classroom.Jyytms.Replace('\r', '\n').Replace("\n", "")}, {"kcm", classroom.Kcm.Replace('\r', '\n').Replace("\n", "")}}.Select(obj => $"\"{obj.Key}\":\"{obj.Value}\""))}}}"))}]";
             return "{" +
                    "\"status\":0," +
                    "\"message\":\"ok\"," +
-                   $"\"service\":\"{service}\"," +
+                   $"\"service\":\"on\"," +
                    $"\"data\":{data}" +
                    "}";
         }
@@ -62,7 +66,7 @@ namespace NjnuClassroom
         /// </summary>
         private static readonly Dictionary<string, List<Classroom>> Buildings =
             new Dictionary<string, List<Classroom>>();
-        
+
         /// <summary>
         /// 初始化教室信息
         /// </summary>
