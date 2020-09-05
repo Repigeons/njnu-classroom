@@ -64,7 +64,7 @@ namespace NjnuClassroom
                         new KvPair("kcm", $"%{kcm}%"),
                     }
                 );
-                foreach (var classroom in new DataList<Classroom>(new ClassroomMapper(), dao))
+                foreach (var classroom in new DataList<Classroom>(new Classroom.RowMapper(), dao))
                 {
                     classroom.Day = (day == "#") ? d : int.Parse(day);
                     classrooms.Add(classroom);

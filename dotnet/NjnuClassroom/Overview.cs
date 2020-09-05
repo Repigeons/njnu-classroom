@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using ZTxLib.NETCore.DaoTemplate;
 using ZTxLib.NETCore.DaoTemplate.MySQL;
 
 namespace NjnuClassroom
 {
     public static class Overview
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
         public static async Task ProcessRequest(HttpContext context,
             ImmutableDictionary<string, StringValues> parameters)
         {
@@ -33,6 +37,11 @@ namespace NjnuClassroom
             await context.Response.WriteAsync(Format(Buildings[jasdm]));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="classrooms"></param>
+        /// <returns></returns>
         private static string Format(IEnumerable<Classroom> classrooms)
         {
             var id = 0;
@@ -48,11 +57,20 @@ namespace NjnuClassroom
                    "}";
         }
 
+        /// <summary>
+        /// 教学楼
+        /// </summary>
         private static readonly Dictionary<string, List<Classroom>> Buildings =
             new Dictionary<string, List<Classroom>>();
-
+        
+        /// <summary>
+        /// 初始化教室信息
+        /// </summary>
         static Overview() => Reset();
 
+        /// <summary>
+        /// 重置教室信息
+        /// </summary>
         public static void Reset()
         {
             Buildings.Clear();
@@ -61,7 +79,7 @@ namespace NjnuClassroom
             for (var day = 0; day < 7; day++)
             {
                 dao.Prepare($"SELECT * FROM `{days[day]}`");
-                foreach (var classroom in new DataList<Classroom>(new ClassroomMapper(), dao))
+                foreach (var classroom in new DataList<Classroom>(new Classroom.RowMapper(), dao))
                 {
                     classroom.Day = day;
                     if (!Buildings.ContainsKey(classroom.Jasdm))

@@ -37,7 +37,7 @@ namespace NjnuClassroom
                     case "/reset":
                         if (context.Request.Method != "POST")
                             break;
-                        Today.Reset();
+                        Index.Reset();
                         Overview.Reset();
                         context.Response.StatusCode = 202;
                         break;
