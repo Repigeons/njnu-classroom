@@ -5,6 +5,7 @@ interface IAppOption {
     readonly server: string,
     readonly jxl: Array<IJxl>,
     readonly lx: Array<ILx>,
+    classrooms: Record<string, Array<object>>
   }
 }
 
