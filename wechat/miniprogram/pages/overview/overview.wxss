@@ -11,7 +11,7 @@
 
 .rp-bd_left {
   text-align: right;
-  padding-right: 15px;
+  padding-right: 25px;
 }
 
 .rp-bd_right {
@@ -48,17 +48,39 @@
 
 .rp-bar {
   position: absolute;
-  opacity: 0.50;
+  opacity: 0.8;
+  border-radius: 5px;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
 .rp-bar_empty {
-  background-color:#00a500;
+  background-color:#5dc45d;
 }
 
 .rp-bar_class {
-  background-color:#00f;
+  background-color:rgb(21, 121, 235);
 }
 
 .rp-bar_others {
-  background-color:#f00;
+  background-color:rgb(214, 132, 78);
+}
+
+.weui-demo-dialog{
+  visibility: hidden;
+  opacity: 0;
+}
+
+.weui-demo-dialog_show{
+  visibility: visible;
+  opacity:1;
+}
+
+.weui-dialog__bd {
+  text-align: left;
+  margin: 5px 0 15px 0;
+  padding: 0 20px 0 24px;
 }

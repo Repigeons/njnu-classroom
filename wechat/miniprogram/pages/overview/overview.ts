@@ -1,6 +1,8 @@
 // index.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
+import { parseKcm, item2dialog } from '../../utils/parser'
+import { IClassroomRow } from '../../../typings/IClassroomInfo'
 
 Page({
   data: {
@@ -13,6 +15,8 @@ Page({
     jxl_selected: 0,
     js_array: [''],
     js_selected: 0,
+    dialog: {},
+    bar_list: Array<IClassroomRow>(),
   },
 
   /**
@@ -100,25 +104,55 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string, AnyObject>
-        for (let i=0; i<resData.data.length; i++) {
-          switch (resData.data[i].zylxdm) {
+        let data = resData.data as Array<IClassroomRow>
+        for (let i = 0; i < data.length; i++) {
+          switch (data[i].zylxdm) {
             case '00':
-              resData.data[i].usage = 'empty'
+              data[i].usage = 'empty'
               break;
             case '01':
+            //TODO 服务端给的研究生课程类型是10而不是01，请检查原因
+            case '10':
             case '03':
-              resData.data[i].usage = 'class'
+              data[i].usage = 'class'
               break;
             default:
-              resData.data[i].usage = 'others'
+              data[i].usage = 'others'
               break;
           }
-          resData.data[i].day = (+resData.data[i].day + 6) % 7
+          data[i].day2 = `${+data[i].day + 1}`
+          data[i].day = `${(+data[i].day + 6) % 7}`
+
+          let info = parseKcm(data[i].zylxdm, data[i].kcm)
+          if (info == null) continue
+          for (let k in info)
+            data[i][k] = info[k]
         }
-        this.setData({ bar_list: resData.data })
+        console.log(data)
+
+        this.setData({ bar_list: data })
       }
     })
   },
+
+  /**
+   * 显示详细信息
+   */
+
+  showDialog(e: AnyObject): void {
+    const rq_array = ['所有', '周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const index: number = e.currentTarget.dataset.index
+    const item = this.data.bar_list[index]
+    const rq: string = rq_array[+item.day2]
+    this.setData({dialog: item2dialog(item, rq)})
+    // console.log(item)
+  },
+
+  closeDialog(): void {
+    this.setData({dialog: {}})
+  },
+  
+
   logItem(e: AnyObject): void {
     console.log(e.currentTarget.dataset.item)
   }

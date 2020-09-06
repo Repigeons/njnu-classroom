@@ -5,21 +5,23 @@
     <view class="weui-search-bar" style="padding-top:8px">
       <view class="weui-search-bar__form">
         <view class="weui-cell  weui-cell_vcode rp-no_padding" style="height:40px"> <!-- 官方高度是56像素 -->
-          <view class="weui-cell__hd" style="font-weight:700">
-            <view class="weui-label rp-label">←</view>
+          <view class="weui-cell__hd" style="font-weight:700; color:unset;">
+            <view class="weui-label rp-label">◀</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
             <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
-              <view class="weui-select weui-select_in-select-after rp-no_padding">{{jxl_array[jxl_selected]}}</view>
+              <view class="weui-select weui-select_in-select-after rp-no_padding" style="font-weight:700">{{jxl_array[jxl_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__bd rp-bd_right">
             <picker value="{{js_selected}}" bindchange="bindJsChange" range="{{js_array}}">
-              <view class="weui-select weui-select_in-select-after rp-no_padding">{{js_array[js_selected]}}</view>
+              <view decode="true" class="weui-select weui-select_in-select-after rp-no_padding" style="font-weight:700">
+                <text decode="true">&emsp;{{js_array[js_selected]}}</text>
+              </view>
             </picker>
           </view>
-          <view class="weui-cell__ft" style="font-weight:700">
-            <view class="weui-label rp-label">→</view>
+          <view class="weui-cell__ft" style="font-weight:700; color:unset;">
+            <view class="weui-label rp-label">▶</view>
           </view>
         </view>
       </view>
@@ -84,11 +86,11 @@
     </view>
 
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 2">
-      <block wx:for="{{bar_list}}" wx:key="_">
+      <block wx:for="{{bar_list}}" wx:for-index="index" wx:key="_">
         <view class="rp-bar rp-bar_{{item.usage}}"
-          style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*item.day}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px"
-          bindtap="logItem" data-item="{{item}}"
-        ></view>
+          style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*item.day}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px; font-size:{{cellWidth*0.3-2}}px"
+          bindtap="showDialog" data-index="{{index}}"
+        ><block wx:if="{{item.usage=='class'}}"><text>{{bar_list[index]['KCMC']}}</text></block></view>
       </block>
       <!--以下为示例内容--><!--
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(jc_js-jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*(day-1)}}px; top: {{(cellHeight+1)*(jc_ks-1)}}px"></view>
@@ -107,4 +109,26 @@
     </view>
 
   </view>
+
+  <!-- Dialog -->
+  <view class="weui-demo-dialog {{dialog.title ? 'weui-demo-dialog_show' : ''}}">
+    <view class="weui-mask" bindtap="closeDialog"></view>
+    <view class="weui-dialog__wrp" bindtap="closeDialog">
+      <view class="weui-dialog" style="z-index: 9">
+        <view class="weui-dialog__hd">
+          <view class="weui-dialog__title">{{dialog.title}}</view>
+        </view>
+        <view class="weui-dialog__bd">
+          <block wx:for="{{dialog.detail}}" wx:for-item="item" wx:key="key">
+            <view>{{item.field}}：{{item.value}}</view>
+          </block>
+        </view>
+        <view class="weui-dialog__ft">
+          <view class="weui-dialog__btn" bindtap="closeDialog"> 关 闭 </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- Dialog -->
+
 </view>
