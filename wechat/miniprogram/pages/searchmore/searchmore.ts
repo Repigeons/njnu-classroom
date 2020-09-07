@@ -211,7 +211,6 @@ Page({
     const item: IClassroomRow = this.data.list[index]
     const rq: string = this.data.rq_array[+item.day]
     this.setData({dialog: item2dialog(item, rq)})
-    // console.log(item)
   },
 
   closeDialog(): void {

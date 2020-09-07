@@ -111,9 +111,9 @@ Page({
               data[i].usage = 'empty'
               break;
             case '01':
-            //TODO 服务端给的研究生课程类型是10而不是01，请检查原因
-            case '10':
             case '03':
+            case '10':
+            case '11':
               data[i].usage = 'class'
               break;
             default:
@@ -128,33 +128,33 @@ Page({
           for (let k in info)
             data[i][k] = info[k]
         }
-        console.log(data)
-
         this.setData({ bar_list: data })
       }
     })
   },
 
+  bindFormer(): void {
+    let value = (this.data.js_selected - 1 + this.data.js_array.length) % this.data.js_array.length
+    this.bindJsChange({detail:{value}})
+  },
+
+  bindLatter(): void {
+    let value = (this.data.js_selected + 1) % this.data.js_array.length
+    this.bindJsChange({detail:{value}})
+  },
+
   /**
    * 显示详细信息
    */
-
   showDialog(e: AnyObject): void {
     const rq_array = ['所有', '周日', '周一', '周二', '周三', '周四', '周五', '周六']
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
     const rq: string = rq_array[+item.day2]
     this.setData({dialog: item2dialog(item, rq)})
-    // console.log(item)
   },
 
   closeDialog(): void {
     this.setData({dialog: {}})
   },
-  
-
-  logItem(e: AnyObject): void {
-    console.log(e.currentTarget.dataset.item)
-  }
-
 })

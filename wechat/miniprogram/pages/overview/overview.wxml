@@ -6,7 +6,7 @@
       <view class="weui-search-bar__form">
         <view class="weui-cell  weui-cell_vcode rp-no_padding" style="height:40px"> <!-- 官方高度是56像素 -->
           <view class="weui-cell__hd" style="font-weight:700; color:unset;">
-            <view class="weui-label rp-label">◀</view>
+            <view class="weui-label rp-label" bindtap="bindFormer">◀</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
             <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
@@ -21,7 +21,7 @@
             </picker>
           </view>
           <view class="weui-cell__ft" style="font-weight:700; color:unset;">
-            <view class="weui-label rp-label">▶</view>
+            <view class="weui-label rp-label" bindtap="bindLatter">▶</view>
           </view>
         </view>
       </view>
@@ -35,15 +35,6 @@
           </view>
         </block>
       </view>
-      <!--
-      <block wx:for="0123456789ab" wx:for-index="row">
-        <view style="height:{{cellHeight+1}}px">
-          <block wx:for="01234567" wx:for-index="col">
-            <view class="rp-test_cell" style="height:{{cellHeight}}px;width:{{cellWidth}}px;"></view>
-          </block>
-        </view>
-      </block>
-      -->
     </view>
 
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder}}px; height:{{(cellHeight+1)*12}}px; z-index: -1">
@@ -92,7 +83,8 @@
           bindtap="showDialog" data-index="{{index}}"
         ><block wx:if="{{item.usage=='class'}}"><text>{{bar_list[index]['KCMC']}}</text></block></view>
       </block>
-      <!--以下为示例内容--><!--
+      <!--
+        以下为示例内容
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(jc_js-jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*(day-1)}}px; top: {{(cellHeight+1)*(jc_ks-1)}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*9}}px"></view>
       <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*3}}px"></view>
