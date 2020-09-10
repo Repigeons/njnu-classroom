@@ -21,11 +21,36 @@
 }
 
 .rp-title_cell {
-  position: relative;
-  background-color:#d2d2d2;
+  position: absolute;
+  background-color:#e5e5e5;
   margin-bottom: 1px;
   margin-right: 1px;
+  display: flex;
   text-align: center;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.rp-title_cell_jc{
+  position:absolute; 
+  font-weight:600; 
+  color:#000
+}
+
+.rp-title_cell_time{
+  position:absolute; 
+  letter-spacing:1; 
+  color:#535353;
+}
+
+.rp-title_cell_xq{
+  font-weight:600;
+  color:#000
+}
+
+.rp-title_cell_highlight {
+  background-color: #b8ced9;
 }
 
 .rp-line {
@@ -40,20 +65,18 @@
   height: 2px;
 }
 
-.rp-timeText {
-  position: absolute;
-  text-align: center;
-  color: #c9c9c9;
-}
-
 .rp-bar {
   position: absolute;
-  opacity: 0.8;
-  border-radius: 5px;
+  transition: height .6s;
+  transition: top .6s;
+  opacity: 0.75;
+  border-radius: 8px;
   display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  word-break:break-all;
   color: #ffffff;
 }
 

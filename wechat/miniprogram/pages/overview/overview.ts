@@ -3,6 +3,7 @@
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../utils/parser'
 import { IClassroomRow } from '../../../typings/IClassroomInfo'
+import { getJc } from '../../utils/util'
 
 Page({
   data: {
@@ -10,7 +11,14 @@ Page({
     cellWidth: 0,
     leftBorder: 8,
     topBorder: 56,
-    // jc_array: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+    barRatio: 0.8,
+    dqjc: 1,
+    dqxq: new Date().getDay(),
+    time_array: [
+      ['08:00', '08:40'], ['08:45', '09:25'], ['09:40', '10:20'], ['10:35', '11:15'], ['11:20', '12:00'],
+      ['13:30', '14:10'], ['14:15', '14:55'], ['15:10', '15:50'], ['15:55', '16:35'],
+      ['18:30', '19:10'], ['19:20', '20:00'], ['20:10', '20:50'],
+    ],
     jxl_array: [''],
     jxl_selected: 0,
     js_array: [''],
@@ -24,6 +32,7 @@ Page({
    * 生成教学楼名（仅用于列表显示）
    */
   onLoad(): void {
+    console.log(new Date().getDay())
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
@@ -37,6 +46,7 @@ Page({
   },
 
   onShow(): void {
+    this.setData({ dqjc: getJc(new Date()) })
     wx.getStorage({
       key: 'last_overview',
       success: res => {
@@ -105,6 +115,7 @@ Page({
       success: res => {
         let resData = res.data as Record<string, AnyObject>
         let data = resData.data as Array<IClassroomRow>
+        let kcmclimit = 0
         for (let i = 0; i < data.length; i++) {
           switch (data[i].zylxdm) {
             case '00':
@@ -122,13 +133,15 @@ Page({
           }
           data[i].day2 = `${+data[i].day + 1}`
           data[i].day = `${(+data[i].day + 6) % 7}`
-
           let info = parseKcm(data[i].zylxdm, data[i].kcm)
           if (info == null) continue
           for (let k in info)
             data[i][k] = info[k]
+          kcmclimit=(this.data.cellHeight * (parseInt(data[i].jc_js) - parseInt(data[i].jc_ks) + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
+          data[i].shortkcmc= data[i].title.length > kcmclimit ? data[i].title.substring(0, kcmclimit - 3) + '...' : data[i].title
         }
         this.setData({ bar_list: data })
+        //console.log(resData.data)
       }
     })
   },
@@ -152,6 +165,7 @@ Page({
     const item = this.data.bar_list[index]
     const rq: string = rq_array[+item.day2]
     this.setData({dialog: item2dialog(item, rq)})
+    //console.log((this.data.cellHeight*(parseInt(item.jc_js)-parseInt(item.jc_ks)+1))/(this.data.cellWidth*0.45-3))
   },
 
   closeDialog(): void {
