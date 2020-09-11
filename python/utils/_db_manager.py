@@ -53,8 +53,8 @@ def save_to_pro():
     for day in __weekdays:
         while True:
             try:
-                __database_pro.update(f"truncate table `kcb.{day}`")
-                __database_pro.update(f"insert into `kcb.{day}` select * from `kcb_dev.{day}`")
+                __database_pro.update(f"truncate table `kcb`.`{day}`")
+                __database_pro.update(f"insert into `kcb`.`{day}` select * from `kcb_dev`.`{day}`")
                 break
             except DatabaseError:
                 continue
