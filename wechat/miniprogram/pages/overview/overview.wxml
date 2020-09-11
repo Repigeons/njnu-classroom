@@ -27,8 +27,8 @@
       </view>
     </view>
 
-    <view class="rp-title_cell" style="position:absolute; top: {{topBorder}}px; left: {{leftBorder}}px; height:{{cellHeight}}px; width: {{cellWidth}}px; background-color:{{empty?'#5dc45d':'#d2d2d2'}}">
-      <text class="rp-title_cell_empty" style="top: {{cellHeight*0.15}}px; font-size:{{cellHeight*0.4}}px; line-height:{{cellHeight*0.3}}px">{{empty}}</text>
+    <view class="rp-title_cell" style="position:absolute; top: {{topBorder}}px; left: {{leftBorder}}px; height:{{cellHeight}}px; width: {{cellWidth}}px; background-color:{{empty?'#81CE81':'#d2d2d2'}}">
+      <text class="rp-title_cell_empty" style="font-size:{{cellHeight*0.3}}px; line-height:{{cellHeight*0.35}}px">{{empty?'空教室':'非空\n教室'}}</text>
     </view>
 
     <view style="position:absolute; top: {{topBorder}}px; left: {{leftBorder+cellWidth+1}}px; z-index: -1">

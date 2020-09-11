@@ -49,6 +49,10 @@
   color:#000
 }
 
+.rp-title_cell_empty{
+  font-weight:600;
+}
+
 .rp-title_cell_highlight {
   background-color: #b8ced9;
 }
