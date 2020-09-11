@@ -58,7 +58,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
     case '05':
       // 屏蔽占用
       return {
-        title: '',
+        title: '教室资源屏蔽',
         PBZYFLAG: true,
       }
       break
