@@ -85,11 +85,11 @@
 }
 
 .rp-bar_class {
-  background-color:rgb(21, 121, 235);
+  background-color:#1579eb;
 }
 
 .rp-bar_others {
-  background-color:rgb(214, 132, 78);
+  background-color:#d6844e;
 }
 
 .weui-demo-dialog{

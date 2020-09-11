@@ -13,7 +13,8 @@ Page({
     topBorder: 56,
     barRatio: 0.8,
     dqjc: 1,
-    dqxq: new Date().getDay(),
+    // 周日~0
+    day: new Date().getDay(),
     time_array: [
       ['08:00', '08:40'], ['08:45', '09:25'], ['09:40', '10:20'], ['10:35', '11:15'], ['11:20', '12:00'],
       ['13:30', '14:10'], ['14:15', '14:55'], ['15:10', '15:50'], ['15:55', '16:35'],
@@ -25,6 +26,7 @@ Page({
     js_selected: 0,
     dialog: {},
     bar_list: Array<IClassroomRow>(),
+    empty: true,
   },
 
   /**
@@ -40,11 +42,11 @@ Page({
   },
 
   onShow(): void {
-    let jxl_array = []
+    let jxl_array = [], dqjc = getJc(new Date())
     for (let key in app.globalData.classrooms) {
       jxl_array.push(key)
     }
-    this.setData({ jxl_array, dqjc: getJc(new Date()) })
+    this.setData({ jxl_array, dqjc })
     wx.getStorage({
       key: 'last_overview',
       success: res => {
@@ -112,34 +114,40 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string, AnyObject>
-        let data = resData.data as Array<IClassroomRow>
+        let bar_list = resData.data as Array<IClassroomRow>
+        console.log(bar_list)
         let kcmclimit = 0
-        for (let i = 0; i < data.length; i++) {
-          switch (data[i].zylxdm) {
+        for (let i = 0; i < bar_list.length; i++) {
+          switch (bar_list[i].zylxdm) {
             case '00':
-              data[i].usage = 'empty'
+              bar_list[i].usage = 'empty'
               break;
             case '01':
             case '03':
             case '10':
             case '11':
-              data[i].usage = 'class'
+              bar_list[i].usage = 'class'
               break;
             default:
-              data[i].usage = 'others'
+              bar_list[i].usage = 'others'
               break;
           }
-          data[i].day2 = `${+data[i].day + 1}`
-          data[i].day = `${(+data[i].day + 6) % 7}`
-          let info = parseKcm(data[i].zylxdm, data[i].kcm)
+          if (+bar_list[i].day == this.data.day)
+          if (+bar_list[i].jc_ks <= this.data.dqjc+1)
+          if (+bar_list[i].jc_js >= this.data.dqjc+1) {
+            this.setData({ empty: bar_list[i].zylxdm == '00' })
+          }
+          // day1: 周一~0
+          bar_list[i].day1 = (+bar_list[i].day + 6) % 7
+          let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
           if (info == null) continue
-          for (let k in info)
-            data[i][k] = info[k]
-          kcmclimit=(this.data.cellHeight * (parseInt(data[i].jc_js) - parseInt(data[i].jc_ks) + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
-          data[i].shortkcmc= data[i].title.length > kcmclimit ? data[i].title.substring(0, kcmclimit - 3) + '...' : data[i].title
+          for (let k in info) {
+            bar_list[i][k] = info[k]
+          }
+          kcmclimit = (this.data.cellHeight * (parseInt(bar_list[i].jc_js) - parseInt(bar_list[i].jc_ks) + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
+          bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
         }
-        this.setData({ bar_list: data })
-        //console.log(resData.data)
+        this.setData({ bar_list })
       }
     })
   },
@@ -158,10 +166,10 @@ Page({
    * 显示详细信息
    */
   showDialog(e: AnyObject): void {
-    const rq_array = ['所有', '周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const rq_array = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
-    const rq: string = rq_array[+item.day2]
+    const rq: string = rq_array[+item.day]
     this.setData({dialog: item2dialog(item, rq)})
     //console.log((this.data.cellHeight*(parseInt(item.jc_js)-parseInt(item.jc_ks)+1))/(this.data.cellWidth*0.45-3))
   },

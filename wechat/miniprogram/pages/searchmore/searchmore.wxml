@@ -94,7 +94,7 @@
                   <text>{{item.title}}</text>
                 </view>
                 <view class="weui-media-box__desc">
-                  <text decode="true">{{item.jxl}}{{item.classroom}}&emsp;{{rq_array[item.day]}}{{item.jc_ks}}-{{item.jc_js}}节</text>
+                  <text decode="true">{{item.jxl}}{{item.classroom}}&emsp;{{rq_array[item.dayIndex]}}{{item.jc_ks}}-{{item.jc_js}}节</text>
                 </view>
               </view>
             </view>
