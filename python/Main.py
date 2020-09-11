@@ -184,7 +184,7 @@ def core() -> None:
                             'jyytms': data['JYYTMS'],
                             'kcm': data['KCM']
                         })
-                    utils.save(weekday, args_list)
+                    utils.insert(weekday, args_list)
     except JSONDecodeError:
         print('cookies无效')
         print('Exit with code', 2)
@@ -197,6 +197,13 @@ def core() -> None:
 
 # 主函数
 if __name__ == '__main__':
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('-env', default='dev', type=str, help='developing environment or production environment')
+    args = parser.parse_args()
+
+    # Runnable main
     preparing()
 
     print('基础信息采集完成')
@@ -204,6 +211,9 @@ if __name__ == '__main__':
     time.sleep(10)
 
     core()
+
+    if args.env == 'pro':
+        utils.save_to_pro()
 
     print()
     print('--------------------------------------------------')
