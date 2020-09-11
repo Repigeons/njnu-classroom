@@ -23,9 +23,13 @@ App<IAppOption>({
     classrooms: {}
   },
   onLaunch() {
+    this.globalData.classrooms = wx.getStorageSync('classrooms')
     wx.request({
       url: `${this.globalData.server}/classrooms.json`,
-      success: (res) =>  this.globalData.classrooms = res.data as Record<string, Array<AnyObject>>
+      success: res =>  {
+        this.globalData.classrooms = res.data as Record<string, Array<AnyObject>>
+        wx.setStorageSync('classrooms', res.data)
+      }
     })
   }
 })

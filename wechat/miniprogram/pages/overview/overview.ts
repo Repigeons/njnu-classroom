@@ -32,21 +32,19 @@ Page({
    * 生成教学楼名（仅用于列表显示）
    */
   onLoad(): void {
-    console.log(new Date().getDay())
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
-    
+
+    this.setData({ cellHeight, cellWidth })
+  },
+
+  onShow(): void {
     let jxl_array = []
     for (let key in app.globalData.classrooms) {
       jxl_array.push(key)
     }
-
-    this.setData({ cellHeight, cellWidth, jxl_array })
-  },
-
-  onShow(): void {
-    this.setData({ dqjc: getJc(new Date()) })
+    this.setData({ jxl_array, dqjc: getJc(new Date()) })
     wx.getStorage({
       key: 'last_overview',
       success: res => {
