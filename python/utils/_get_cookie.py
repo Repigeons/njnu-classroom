@@ -7,6 +7,13 @@
 """"""
 from selenium import webdriver
 
+__phantomjs = 'phantomjs'
+
+
+def set_phantomjs(phantomjs: str):
+    global __phantomjs
+    __phantomjs = phantomjs
+
 
 def get_cookie_dict(account: dict) -> dict:
     """
@@ -15,10 +22,10 @@ def get_cookie_dict(account: dict) -> dict:
     :param account:dict{username, password, gid}
     :return:dict{_WEU, MOD_AUTH_CAS}
     """
-
+    global __phantomjs
     username, password, gid = account.values()
 
-    browser = webdriver.PhantomJS()
+    browser = webdriver.PhantomJS(__phantomjs)
     url = 'http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=' + gid
     browser.get(url)
 

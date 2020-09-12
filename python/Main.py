@@ -206,7 +206,10 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('-env', default='dev', type=str, help='developing environment or production environment')
+    parser.add_argument('-phantomjs', default='phantomjs', type=str, help='phantomjs path')
     args = parser.parse_args()
+
+    utils.set_phantomjs(args.phantomjs)
 
     # Runnable main
     try:
