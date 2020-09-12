@@ -11,6 +11,7 @@ import os
 import shutil
 import time
 from json.decoder import JSONDecodeError
+from sys import exit
 
 import get_data
 import utils
@@ -109,6 +110,10 @@ def preparing() -> None:
         # save classrooms info to static directory
         try:
             config = json.load(open('conf/config.json'))
+            if not os.path.exists(config['staticPath']):
+                print('static目录不存在')
+                print('Exit with code', 1)
+                exit(1)
             utils.dump_static_json(
                 classrooms=classrooms,
                 filename=f"{config['staticPath']}/classrooms.json"
@@ -204,21 +209,29 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Runnable main
-    preparing()
+    try:
+        preparing()
 
-    print('基础信息采集完成')
-    print('即将开始采集详细信息')
-    time.sleep(10)
+        print('基础信息采集完成')
+        print('即将开始采集详细信息')
+        time.sleep(10)
 
-    core()
+        core()
 
-    if args.env == 'pro':
-        utils.save_to_pro()
+        if args.env == 'pro':
+            utils.save_to_pro()
 
-    print()
-    print('--------------------------------------------------')
-    print(datetime.datetime.now().strftime('[%Y-%m-%d %X]'), '本轮具体课程信息收集工作成功完成。')
-    print()
+        print()
+        print('--------------------------------------------------')
+        print(datetime.datetime.now().strftime('[%Y-%m-%d %X]'), '本轮具体课程信息收集工作成功完成。')
+        print()
+
+    except SystemExit as systemExit:
+        shutil.rmtree(temp_dir)
+        raise systemExit
+    except KeyboardInterrupt as keyboardInterrupt:
+        shutil.rmtree(temp_dir)
+        raise keyboardInterrupt
 
 # 收尾：清理临时文件夹
 shutil.rmtree(temp_dir)

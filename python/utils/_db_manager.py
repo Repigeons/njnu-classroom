@@ -6,6 +6,7 @@
 # @FileName :  _db_manager
 """"""
 import json
+from sys import exit
 
 from pymysql import DatabaseError
 
