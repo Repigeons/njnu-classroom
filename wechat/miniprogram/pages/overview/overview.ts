@@ -115,7 +115,6 @@ Page({
       success: res => {
         let resData = res.data as Record<string, AnyObject>
         let bar_list = resData.data as Array<IClassroomRow>
-        console.log(bar_list)
         let kcmclimit = 0
         for (let i = 0; i < bar_list.length; i++) {
           switch (bar_list[i].zylxdm) {
@@ -171,7 +170,6 @@ Page({
     const item = this.data.bar_list[index]
     const rq: string = rq_array[+item.day]
     this.setData({dialog: item2dialog(item, rq)})
-    //console.log((this.data.cellHeight*(parseInt(item.jc_js)-parseInt(item.jc_ks)+1))/(this.data.cellWidth*0.45-3))
   },
 
   closeDialog(): void {
