@@ -96,17 +96,17 @@
   background-color:#d6844e;
 }
 
-.weui-demo-dialog{
+.rp-dialog {
   visibility: hidden;
   opacity: 0;
 }
 
-.weui-demo-dialog_show{
+.rp-dialog_show {
   visibility: visible;
   opacity:1;
 }
 
-.weui-dialog__bd {
+.rp-dialog__bd {
   text-align: left;
   margin: 5px 0 15px 0;
   padding: 0 20px 0 24px;

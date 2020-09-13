@@ -100,14 +100,14 @@
   <!--~ body -->
 
   <!-- Dialog -->
-  <view class="weui-demo-dialog {{dialog.title ? 'weui-demo-dialog_show' : ''}}">
+  <view class="rp-dialog {{dialog.title ? 'rp-dialog_show' : ''}}">
     <view class="weui-mask" bindtap="closeDialog"></view>
     <view class="weui-dialog__wrp" bindtap="closeDialog">
       <view class="weui-dialog" style="z-index: 9">
         <view class="weui-dialog__hd">
           <view class="weui-dialog__title">{{dialog.title}}</view>
         </view>
-        <view class="weui-dialog__bd">
+        <view class="weui-dialog__bd rp-dialog__bd">
           <block wx:for="{{dialog.detail}}" wx:for-item="item" wx:key="_">
             <view>{{item.field}}：{{item.value}}</view>
           </block>
