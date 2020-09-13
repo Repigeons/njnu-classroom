@@ -175,4 +175,12 @@ Page({
   closeDialog(): void {
     this.setData({dialog: {}})
   },
+
+  onShareAppMessage() {
+    return {
+      title: '教室概览',
+      path: 'pages/overview/overview',
+      image: 'images/logo.png'
+    }
+  }
 })

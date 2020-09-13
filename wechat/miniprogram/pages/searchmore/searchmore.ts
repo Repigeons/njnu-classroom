@@ -215,5 +215,13 @@ Page({
 
   closeDialog(): void {
     this.setData({dialog: {}})
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '更多搜索',
+      path: 'pages/searchmore/searchmore',
+      image: 'images/logo.png'
+    }
   }
 })

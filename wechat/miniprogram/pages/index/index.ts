@@ -139,4 +139,12 @@ Page({
       }
     })
   },
+
+  onShareAppMessage() {
+    return {
+      title: '空教室查询',
+      path: 'pages/index/index',
+      image: 'images/logo.png'
+    }
+  }
 })
