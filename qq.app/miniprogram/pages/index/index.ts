@@ -140,9 +140,11 @@ Page({
     })
   },
 
-  onShareAppMessage(): void {
-    qq.showShareMenu({
-      showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
-    })
-  },
+  onShareAppMessage() {
+    return {
+      title: '空教室查询',
+      path: 'pages/index/index',
+      image: 'images/logo.png'
+    }
+  }
 })

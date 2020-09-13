@@ -121,7 +121,7 @@ Page({
             if (info == null) continue
             for (let k in info)
               data[i][k] = info[k]
-            data[i].day = `${+data[i].day + 1}`
+            data[i].dayIndex = +data[i].day + 1
           }
           this.setData({
             service: resData.service,
@@ -209,12 +209,19 @@ Page({
   showDialog(e: AnyObject): void {
     const index: number = e.currentTarget.dataset.index
     const item: IClassroomRow = this.data.list[index]
-    const rq: string = this.data.rq_array[+item.day]
+    const rq: string = this.data.rq_array[item.dayIndex]
     this.setData({dialog: item2dialog(item, rq)})
-    // console.log(item)
   },
 
   closeDialog(): void {
     this.setData({dialog: {}})
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '更多搜索',
+      path: 'pages/searchmore/searchmore',
+      image: 'images/logo.png'
+    }
   }
 })

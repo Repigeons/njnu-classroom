@@ -58,7 +58,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
     case '05':
       // 屏蔽占用
       return {
-        title: '',
+        title: '教室资源屏蔽',
         PBZYFLAG: true,
       }
       break
@@ -111,8 +111,8 @@ export const item2dialog = (item: Record<string, any>, rq: string) => {
   if (item.JYDW) detail.push({ field: '借用单位', value: item.JYDW })
   if (item.JYRXM) detail.push({ field: '借用人姓名', value: item.JYRXM })
   if (item.FZLS) detail.push({ field: '负责老师', value: item.FZLS })
-  if (item.LXDH) detail.push({ field: '联系电话', value: item.LXDH })
+  // if (item.LXDH) detail.push({ field: '联系电话', value: item.LXDH })
   if (item.JYYTMS) detail.push({ field: '借用说明', value: item.JYYTMS })
-  if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
+  else if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
   return { title, detail }
 }
