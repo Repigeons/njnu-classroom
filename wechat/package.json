@@ -1,14 +1,24 @@
 {
-  "name": "miniprogram-ts-quickstart",
-  "version": "1.0.0",
-  "description": "",
+  "name": "NjnuClassroom",
+  "version": "2.4.1",
+  "description": "南师教室",
+  "keywords": [
+    "NjnuClassroom",
+    "Nanjing Normal University"
+  ],
+  "license": "GPL-3.0 License",
+  "author": "Repigeons",
+  "contributors": [
+    "Zhou-Tx <z.t.x@foxmail.com>",
+    "ZzDaniel <zz.daniel@foxmail.com>"
+  ],
+  "repository": "github:repigeons/NjnuClassroom",
+  "homepage": "https://repigeons.github.io/NjnuClassroom.html",
+  "bugs": "https://github.com/Repigeons/NjnuClassroom/issues",
   "scripts": {
     "compile": "./node_modules/typescript/bin/tsc",
     "tsc": "node ./node_modules/typescript/lib/tsc.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "",
   "dependencies": {
     "weui-miniprogram": "^1.0.3"
   },
