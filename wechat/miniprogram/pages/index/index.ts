@@ -9,7 +9,7 @@ const jxl: Array<IJxl> = app.globalData.jxl
 Page({
   data: {
     service: 'on',
-    jxl_name_array: new Array<string>(),
+    jxl_name_array: Array<string>(),
     jxl_selected: 0,
 
     rq_array: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],

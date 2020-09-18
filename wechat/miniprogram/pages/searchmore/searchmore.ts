@@ -17,13 +17,14 @@ Page({
     rq_selected: 0,
 
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
-    jc_js_array: new Array<string>(), jc_ks_array: new Array<string>(),
+    jc_js_array: Array<string>(),
+     jc_ks_array: Array<string>(),
     jc_ks_selected: 0, jc_js_selected: 11,
     
-    jxl_name_array: new Array<string>(),
+    jxl_name_array: Array<string>(),
     jxl_selected: 0,
     
-    lx_name_array: new Array<string>(),
+    lx_name_array: Array<string>(),
     lx_selected: 0,
 
     keyword: '',
@@ -43,7 +44,7 @@ Page({
     },
     dialog: {},
     list: Array<IClassroomRow>(),
-    result_size: new Number()
+    result_size: 0
   },
 
   /**
