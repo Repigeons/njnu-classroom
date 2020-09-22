@@ -68,7 +68,7 @@ create table wednesday
     DEFAULT CHARSET = utf8mb4
     comment '星期三';
 
-create table thusday
+create table thursday
 (
     id       int auto_increment primary key,
     jsmph    varchar(32)          not null comment '教室门牌号',
