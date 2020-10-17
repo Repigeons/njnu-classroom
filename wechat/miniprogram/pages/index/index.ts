@@ -17,18 +17,42 @@ Page({
 
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
     jc_selected: 0,
+
+    notice: { id: '', title: '', text: '' },
   },
 
   /**
    * 生命周期函数--监听页面加载
    * 生成教学楼名（仅用于列表显示）
    */
-  onLoad(): void {
+  onLoad(options: Record<string, string>): void {
+    // 公告系统
+    wx.request({
+      url: 'https://classroom.njnu.xyz/notice.json',
+      success: res => {
+        const data = res.data as Record<string, string>
+        const id = data.id
+        const text = data.text
+        let notice = wx.getStorageSync('notice')
+        this.setData({
+          notice: {
+            id: (id==notice) ? '' : id,
+            title: `${id} 公告`,
+            text: text
+          }
+        })
+      }
+    })
+
+    // 加载
     let jxl_name_array: Array<string> = []
     for (let i = 0; i < jxl.length; i++) {
       jxl_name_array.push(jxl[i].name)
     }
     this.setData({jxl_name_array})
+
+    if (options.page == 'index') {
+    }
   },
 
   /**
@@ -140,10 +164,23 @@ Page({
     })
   },
 
+  DoNotShow(): void {
+    wx.setStorage({
+      key: 'notice',
+      data: this.data.notice.id,
+      success: () => this.setData({notice: {id: '', title: '', text: ''}})
+    })
+  },
+
+  closeDialog(): void {
+    this.setData({notice: {id: '', title: '', text: ''}})
+  },
+
   onShareAppMessage() {
     return {
       title: '空教室查询',
-      path: 'pages/index/index',
+      path: 'pages/index/index'
+      + `?page=index`,
       image: 'images/logo.png'
     }
   }

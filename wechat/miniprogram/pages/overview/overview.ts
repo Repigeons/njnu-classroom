@@ -33,12 +33,15 @@ Page({
    * 生命周期函数--监听页面加载
    * 生成教学楼名（仅用于列表显示）
    */
-  onLoad(): void {
+  onLoad(options: Record<string, string>): void {
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
 
     this.setData({ cellHeight, cellWidth })
+
+    if (options.page == 'overview') {
+    }
   },
 
   onShow(): void {
@@ -173,13 +176,16 @@ Page({
   },
 
   closeDialog(): void {
-    this.setData({dialog: {}})
+    this.setData({notice: {}})
   },
 
   onShareAppMessage() {
     return {
       title: '教室概览',
-      path: 'pages/overview/overview',
+      path: 'pages/overview/overview'
+      + `?page=overview`
+      + `&jxl_selected=${this.data.jxl_selected}`
+      + `&js_selected=${this.data.js_selected}`,
       image: 'images/logo.png'
     }
   }

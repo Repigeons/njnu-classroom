@@ -30,7 +30,7 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "useMultiFrameRuntime": true,
+    "useMultiFrameRuntime": false,
     "useApiHook": true,
     "babelSetting": {
       "ignore": [],
@@ -48,5 +48,45 @@
   "simulatorPluginLibVersion": {},
   "appid": "wx42f3e578c5411a23",
   "qqappid": "1110565565",
-  "condition": {}
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "plugin": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "gamePlugin": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": -1,
+      "list": [
+        {
+          "id": 0,
+          "name": "searchmore(share)",
+          "pathName": "pages/searchmore/searchmore",
+          "query": "keyword=魔术&rq_selected=7&jc_ks_selected=0&jc_js_selected=11&jxl_selected=0&lx_selected=0&showInput=true",
+          "scene": null
+        },
+        {
+          "id": -1,
+          "name": "searchmore",
+          "pathName": "pages/searchmore/searchmore",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
 }

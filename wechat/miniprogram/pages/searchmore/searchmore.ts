@@ -18,7 +18,7 @@ Page({
 
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
     jc_js_array: Array<string>(),
-     jc_ks_array: Array<string>(),
+    jc_ks_array: Array<string>(),
     jc_ks_selected: 0, jc_js_selected: 11,
     
     jxl_name_array: Array<string>(),
@@ -52,7 +52,7 @@ Page({
    * 生成教学楼名、类型吗（仅用于列表显示）
    * 初始化可选节次数组
    */
-  onLoad(): void {
+  onLoad(options: Record<string, string>): void {
     const jxl_name_array: Array<string> = ['所有']
     const lx_name_array: Array<string> = []
     for (let i = 0; i < jxl.length; i++)
@@ -62,6 +62,19 @@ Page({
     this.setData({jxl_name_array, lx_name_array})
 
     this.updateJcArray()
+    
+    if (options.page == 'searchmore') {
+      this.setData({
+        keyword: options.keyword,
+        rq_selected: +options.rq_selected,
+        jc_ks_selected: +options.jc_ks_selected,
+        jc_js_selected: +options.jc_js_selected,
+        jxl_selected: +options.jxl_selected,
+        lx_selected: +options.lx_selected,
+        showInput: options.showInput=='true',
+      })
+      this.onSearch()
+    }
   },
 
   /**
@@ -221,7 +234,15 @@ Page({
   onShareAppMessage() {
     return {
       title: '更多搜索',
-      path: 'pages/searchmore/searchmore',
+      path: 'pages/searchmore/searchmore'
+      + `?page=searchmore`
+      + `&keyword=${this.data.keyword}`
+      + `&rq_selected=${this.data.rq_selected}`
+      + `&jc_ks_selected=${this.data.jc_ks_selected}`
+      + `&jc_js_selected=${this.data.jc_js_selected}`
+      + `&jxl_selected=${this.data.jxl_selected}`
+      + `&lx_selected=${this.data.lx_selected}`
+      + `&showInput=${this.data.showInput}`,
       image: 'images/logo.png'
     }
   }
