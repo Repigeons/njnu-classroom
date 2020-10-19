@@ -18,7 +18,13 @@ Page({
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
     jc_selected: 0,
 
+    classroomList: Array(),
+
     notice: { id: '', title: '', text: '' },
+
+    layer_buttons: Array(),
+    layer_display: false,
+    layer_index: 0,
   },
 
   /**
@@ -43,6 +49,26 @@ Page({
         })
       }
     })
+
+    this.setData({
+      layer_buttons: [{
+        text: '上报错误',
+        tap: () => {
+          wx.request({
+            url: `${app.globalData.server}/api/feedback`,
+            method: 'POST',
+            header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: {
+                day: this.data.rq_selected,
+                jxl: jxl[this.data.jxl_selected].name,
+                dqjc: +this.data.jc_selected + 1,
+                resultList: JSON.stringify(this.data.classroomList),
+                index: this.data.layer_index,
+            },
+        })
+      }
+    }]
+  })
 
     // 加载
     let jxl_name_array: Array<string> = []
@@ -170,6 +196,14 @@ Page({
       data: this.data.notice.id,
       success: () => this.setData({notice: {id: '', title: '', text: ''}})
     })
+  },
+
+  showLayer(e: AnyObject): void {
+    let index: number = e.currentTarget.dataset.index;
+    this.setData({
+        layer_index: index,
+        layer_display: true,
+    });
   },
 
   closeDialog(): void {

@@ -1,0 +1,8 @@
+<!--components/layer.wxml-->
+<view class="layer_container">
+  <block wx:for="{{buttons}}" wx:key="key">
+    <text class="layer_button" data-button_index="{{index}}"
+    bindtap="tap" bindlongpress="longpress"
+    >{{item.text}}</text>
+  </block>
+</view>
