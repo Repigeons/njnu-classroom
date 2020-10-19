@@ -6,8 +6,8 @@
 # @FileName :  app.py
 """"""
 import json
+import logging
 from wsgiref.simple_server import make_server
-
 from flask import Flask, jsonify, request
 
 import config
@@ -107,14 +107,14 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-host', default='localhost', type=str, help='host to listen on')
     parser.add_argument('-port', default=8000, type=int, help='port to listen on')
+    parser.add_argument('-logger', default=None, type=str, help='outputting log file')
     args = parser.parse_args()
 
     if config.env == 'dev':
-        app.run(
-            host=args.host,
-            port=args.port,
-            debug=True
-        )
+        app.run(host=args.host, port=args.port, debug=True)
     else:
+        if args.logger is not None:
+            app.logger.addHandler(logging.FileHandler(args.logger))
+
         make_server(host=args.host, port=args.port, app=app).serve_forever()
         app.run()
