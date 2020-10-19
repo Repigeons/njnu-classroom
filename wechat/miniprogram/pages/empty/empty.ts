@@ -65,6 +65,9 @@ Page({
                 resultList: JSON.stringify(this.data.classroomList),
                 index: this.data.layer_index,
             },
+            success: () => {
+              this.setData({ layer_display: false })
+            }
         })
       }
     }]
