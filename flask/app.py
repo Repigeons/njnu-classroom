@@ -9,6 +9,7 @@ import json
 import logging
 from wsgiref.simple_server import make_server
 from flask import Flask, jsonify, request
+from flask.logging import default_handler
 
 import config
 import handler as request_handler
@@ -113,8 +114,10 @@ if __name__ == '__main__':
     if config.env == 'dev':
         app.run(host=args.host, port=args.port, debug=True)
     else:
+        app.logger.addHandler(default_handler)
         if args.logger is not None:
-            app.logger.addHandler(logging.FileHandler(args.logger))
+            logger_handler = logging.FileHandler(args.logger)
+            app.logger.addHandler(logger_handler)
 
         make_server(host=args.host, port=args.port, app=app).serve_forever()
         app.run()
