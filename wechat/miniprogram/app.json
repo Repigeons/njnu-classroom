@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/empty/empty",
     "pages/overview/overview",
     "pages/searchmore/searchmore"
   ],
@@ -16,7 +16,7 @@
     "backgroundColor": "#fff",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/empty/empty",
         "iconPath": "images/kjs.png",
         "selectedIconPath": "images/kjs_1.png",
         "text": "空教室"

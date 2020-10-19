@@ -1,4 +1,4 @@
-// index.ts
+// overview.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../utils/parser'

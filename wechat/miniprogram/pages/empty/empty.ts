@@ -1,4 +1,4 @@
-// index.ts
+// empty.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { getDistance, getJc } from '../../utils/util.js'
@@ -169,7 +169,7 @@ Page({
    */
   submit(): void {
     wx.request({
-      url: `${app.globalData.server}/api/index.json`,
+      url: `${app.globalData.server}/api/empty.json`,
       data: {
         day: this.data.rq_selected,
         jxl: jxl[this.data.jxl_selected].name,

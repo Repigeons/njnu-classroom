@@ -1,4 +1,4 @@
-/* pages/index/index.wxss */
+/* pages/empty/empty.wxss */
 
 .rp-dialog {
   visibility: hidden;
