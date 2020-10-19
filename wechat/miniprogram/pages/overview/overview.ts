@@ -134,19 +134,19 @@ Page({
               bar_list[i].usage = 'others'
               break;
           }
-          if (+bar_list[i].day == this.data.day)
-          if (+bar_list[i].jc_ks <= this.data.dqjc+1)
-          if (+bar_list[i].jc_js >= this.data.dqjc+1) {
+          if (bar_list[i].day == this.data.day)
+          if (bar_list[i].jc_ks <= this.data.dqjc + 1)
+          if (bar_list[i].jc_js >= this.data.dqjc + 1) {
             this.setData({ empty: bar_list[i].zylxdm == '00' })
           }
           // day1: 周一~0
-          bar_list[i].day1 = (+bar_list[i].day + 6) % 7
+          bar_list[i].day1 = (bar_list[i].day + 6) % 7
           let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
           if (info == null) continue
           for (let k in info) {
             bar_list[i][k] = info[k]
           }
-          kcmclimit = (this.data.cellHeight * (parseInt(bar_list[i].jc_js) - parseInt(bar_list[i].jc_ks) + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
+          kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
           bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
         }
         this.setData({ bar_list })
@@ -171,7 +171,7 @@ Page({
     const rq_array = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
-    const rq: string = rq_array[+item.day]
+    const rq: string = rq_array[item.day]
     this.setData({dialog: item2dialog(item, rq)})
   },
 

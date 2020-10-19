@@ -34,7 +34,7 @@ Page({
   onLoad(options: Record<string, string>): void {
     // 公告系统
     wx.request({
-      url: 'https://classroom.njnu.xyz/notice.json',
+      url: `${app.globalData.server}/notice.json`,
       success: res => {
         const data = res.data as Record<string, string>
         const id = data.id
@@ -61,17 +61,17 @@ Page({
             data: {
                 day: this.data.rq_selected,
                 jxl: jxl[this.data.jxl_selected].name,
-                dqjc: +this.data.jc_selected + 1,
+                dqjc: this.data.jc_selected + 1,
                 resultList: JSON.stringify(this.data.classroomList),
                 index: this.data.layer_index,
             },
             success: () => {
               this.setData({ layer_display: false })
             }
-        })
-      }
-    }]
-  })
+          })
+        }
+      }]
+    })
 
     // 加载
     let jxl_name_array: Array<string> = []
@@ -176,7 +176,7 @@ Page({
       data: {
         day: this.data.rq_selected,
         jxl: jxl[this.data.jxl_selected].name,
-        dqjc: +this.data.jc_selected + 1
+        dqjc: this.data.jc_selected + 1
       },
       success: res => {
         let resData = res.data as Record<string,any>

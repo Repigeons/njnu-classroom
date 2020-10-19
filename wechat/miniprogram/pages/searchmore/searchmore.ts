@@ -135,7 +135,7 @@ Page({
             if (info == null) continue
             for (let k in info)
               data[i][k] = info[k]
-            data[i].dayIndex = +data[i].day + 1
+            data[i].dayIndex = data[i].day + 1
           }
           this.setData({
             service: resData.service,
