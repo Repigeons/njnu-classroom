@@ -55,9 +55,6 @@ namespace NjnuClassroom
         /// </summary>
         public string Kcm { get; set; }
 
-        public void set_jcJs(int jcJs) => Jc_js = jcJs;
-        public void set_zylxdm(string zylxdm) => Zylxdm = (zylxdm == "10") ? "10" : Zylxdm;
-
         public int CompareTo(Classroom classroom)
         {
             if (Zylxdm != classroom.Zylxdm)

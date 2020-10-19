@@ -36,7 +36,7 @@ namespace NjnuClassroom
                     case "/reset":
                         if (context.Request.Method != "POST")
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = 405;
                             break;
                         }
                         Index.Reset();
@@ -46,7 +46,7 @@ namespace NjnuClassroom
                     case "/index.json":
                         if (context.Request.Method != "GET")
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = 405;
                             break;
                         }
                         await Index.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
@@ -54,7 +54,7 @@ namespace NjnuClassroom
                     case "/searchmore.json":
                         if (context.Request.Method != "GET")
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = 405;
                             break;
                         }
                         await SearchMore.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
@@ -62,7 +62,7 @@ namespace NjnuClassroom
                     case "/overview.json":
                         if (context.Request.Method != "GET")
                         {
-                            context.Response.StatusCode = 400;
+                            context.Response.StatusCode = 405;
                             break;
                         }
                         await Overview.ProcessRequest(context, context.Request.Query.ToImmutableDictionary());
