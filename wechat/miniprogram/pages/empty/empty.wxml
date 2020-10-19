@@ -1,5 +1,5 @@
 <!--pages/empty/empty.wxml-->
-<view class="page">
+<view class="page" bindtouchstart="hideLayer">
   <view class="page__bd">
     <view class="weui-cells__title">请选择想要查询的教学楼和时间：</view>
     <view class="weui-cells weui-cells_after-title">
@@ -46,7 +46,7 @@
     <view wx:if="{{service=='on'}}" class="weui-cells__title">共找到 {{classroomList.length}} 条结果，已按照推荐程度排列。</view>
     <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
-      <view class="weui-cells weui-cells_after-title" bindtap="showLayer" bindlongpress="showLayer" data-index="{{index}}">
+      <view class="weui-cells weui-cells_after-title" bindlongpress="showLayer" data-index="{{index}}">
         <view class="weui-cell weui-cell_example">
           <view class="weui-cell__hd">
             <view wx:if="{{item.zylxdm=='00'}}">
@@ -65,6 +65,9 @@
         </view>
       </view>
     </block>
+    <view class="weui-cells__title">
+      如发现结果存在错误，可长按错误的条目提交上报。
+    </view>
   </view>
 
   <!-- Notice Dialog -->
@@ -85,7 +88,7 @@
     </view>
   </view>
   <!-- Notice Dialog -->
-
 </view>
+
 <rp-layer class="rp-layer" buttons="{{layer_buttons}}" wx:if="{{layer_display}}"
 style="top:{{260 + layer_index * 56}}px"></rp-layer>

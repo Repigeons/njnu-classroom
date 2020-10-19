@@ -202,11 +202,15 @@ Page({
   },
 
   showLayer(e: AnyObject): void {
-    let index: number = e.currentTarget.dataset.index;
+    let index: number = e.currentTarget.dataset.index
     this.setData({
         layer_index: index,
-        layer_display: true,
-    });
+        layer_display: true
+    })
+  },
+
+  hideLayer():void {
+    this.setData({ layer_display: false })
   },
 
   closeDialog(): void {
