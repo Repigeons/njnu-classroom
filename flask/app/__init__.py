@@ -5,5 +5,5 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py.py
 """"""
-from .config import __config as config
+from .config import __config as config, __env as env
 from .app import app

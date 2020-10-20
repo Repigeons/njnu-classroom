@@ -5,7 +5,6 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Classroom.py
 """"""
-import json
 
 
 class Classroom:

@@ -17,6 +17,6 @@ __mail_server = SMTP(**__mail_config['sender'])
 def _send_email(subject: str, message: str):
     __mail_server.send(
         subject, message, 'plain',
-        'Repigeons<zz.daniel@foxmail.com>',
+        'Repigeons<info@njnu.xyz>',
         *__mail_config['receivers']
     )

@@ -8,6 +8,6 @@
 import json
 import os
 
-env = 'pro' if os.getenv('FLASK_ENV') == 'production' else 'dev'
+__env = 'pro' if os.getenv('FLASK_ENV') == 'production' else 'dev'
 
 __config = json.load(open('conf/config.json'))

@@ -10,7 +10,7 @@ import json
 import app
 from ._mysql import MySQL
 
-__database_config = json.load(open('conf/database.json'))[app.config.env]
+__database_config = json.load(open('conf/database.json'))[app.env]
 
 _database = MySQL(
     host=__database_config['host'],
