@@ -54,7 +54,7 @@ Page({
 
     this.setData({
       layer_buttons: [{
-        text: '上报错误',
+        text: '提交错误',
         tap: () => this.setData({
           layer_display: false,
           confirm_display: true,

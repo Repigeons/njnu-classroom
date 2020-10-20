@@ -43,7 +43,9 @@
         </view>
       </view>
     </view>
-    <view wx:if="{{service=='on'}}" class="weui-cells__title">共找到 {{classroomList.length}} 条结果，已按照推荐程度排列。</view>
+    <view wx:if="{{service=='on'}}" class="weui-cells__title">
+      共找到 {{classroomList.length}} 条结果{{classroomList.length ? "，已按照推荐程度排列" : ""}}。
+    </view>
     <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
       <view class="weui-cells weui-cells_after-title" bindlongpress="showLayer" data-index="{{index}}">
@@ -66,7 +68,7 @@
       </view>
     </block>
     <view class="weui-cells__title">
-      ※ 如果发现某一条目与事实情况不符，可长按相应条目上报。
+      ※ 如果发现某一条目与事实情况不符，可长按相应条目提交错误。
     </view>
   </view>
 
