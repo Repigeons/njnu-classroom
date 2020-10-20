@@ -66,7 +66,7 @@
       </view>
     </block>
     <view class="weui-cells__title">
-      如发现结果存在错误，可长按错误的条目上报。
+      ※ 如果发现某一条目与事实情况不符，可长按相应条目上报。
     </view>
   </view>
 
@@ -91,10 +91,10 @@
 </view>
 
 <rp-layer class="rp-layer" wx:if="{{layer_display}}"
-buttons="{{layer_buttons}}" BackColor="#000" ForeColor="#fff"
-style="top:{{255 + layer_index * 56}}px"></rp-layer>
+buttons="{{layer_buttons}}" BackColor="#434343" ForeColor="#fff"
+style="top:{{258 + layer_index * 56}}px"></rp-layer>
 
 <rp-layer class="rp-layer" wx:if="{{confirm_display}}"
-buttons="{{confirm_buttons}}" BackColor="#000" ForeColor="#fff"
-style="top:{{255 + layer_index * 56}}px"></rp-layer>
+buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
+style="top:{{258 + layer_index * 56}}px"></rp-layer>
 

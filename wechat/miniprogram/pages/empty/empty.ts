@@ -82,7 +82,6 @@ Page({
         {
           text: '取消',
           tap: () => this.setData({
-            layer_display: true,
             confirm_display: false,
           })
         }
