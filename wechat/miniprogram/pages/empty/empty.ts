@@ -20,7 +20,7 @@ Page({
 
     classroomList: Array(),
 
-    notice: { id: '', title: '', text: '' },
+    notice: { timestamp: 0, date: '', title: '', text: '' },
 
     confirm_buttons: Array<ILayerButton>(),
     confirm_display: false,
@@ -36,22 +36,26 @@ Page({
   onLoad(options: Record<string, string>): void {
     // 公告系统
     wx.request({
-      url: `${app.globalData.server}/notice.json`,
+      url: `${app.globalData.server}/notice.json?${Math.random()}`,
       success: res => {
-        const data = res.data as Record<string, string>
-        const id = data.id
-        const text = data.text
-        let notice = wx.getStorageSync('notice')
+        const data = res.data as Record<string, any>
+        const date = data.date as string
+        const timestamp = data.timestamp as number
+        const text = data.text as string
+        let notice = wx.getStorageSync('notice') as number
         this.setData({
           notice: {
-            id: (id==notice) ? '' : id,
-            title: `${id} 公告`,
+            timestamp: (timestamp==notice) ? 0 : timestamp,
+            date: date,
+            title: '公告',
             text: text
           }
         })
+        console.log(this.data.notice)
       }
     })
 
+    // 上报错误
     this.setData({
       layer_buttons: [{
         text: '提交错误',
@@ -86,7 +90,7 @@ Page({
       ]
     })
 
-    // 加载
+    // 加载数据
     let jxl_name_array: Array<string> = []
     for (let i = 0; i < jxl.length; i++) {
       jxl_name_array.push(jxl[i].name)
@@ -210,8 +214,8 @@ Page({
   DoNotShow(): void {
     wx.setStorage({
       key: 'notice',
-      data: this.data.notice.id,
-      success: () => this.setData({notice: {id: '', title: '', text: ''}})
+      data: this.data.notice.timestamp,
+      success: () => this.setData({notice: {timestamp: 0, date: '', title: '', text: ''}})
     })
   },
 
@@ -231,7 +235,7 @@ Page({
   },
 
   closeDialog(): void {
-    this.setData({notice: {id: '', title: '', text: ''}})
+    this.setData({notice: {timestamp: 0, date: '', title: '', text: ''}})
   },
 
   onShareAppMessage() {

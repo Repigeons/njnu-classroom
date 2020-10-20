@@ -3,7 +3,7 @@
 # @Time     :  2020/10/20 0020
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  main.py
+# @FileName :  Main.py
 """"""
 import logging
 from wsgiref.simple_server import make_server

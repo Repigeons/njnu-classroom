@@ -73,15 +73,15 @@
   </view>
 
   <!-- Notice Dialog -->
-  <view class="rp-dialog {{notice.id ? 'rp-dialog_show' : ''}}">
+  <view class="rp-dialog {{notice.timestamp ? 'rp-dialog_show' : ''}}">
     <view class="weui-mask" bindtap="closeDialog"></view>
     <view class="weui-dialog__wrp" bindtap="closeDialog">
       <view class="weui-dialog">
         <view class="weui-dialog__hd">
-          <view class="weui-dialog__title">{{notice.title}}</view>
+          <view class="weui-dialog__title">{{notice.date}} {{notice.title}}</view>
         </view>
         <view class="weui-dialog__bd rp-dialog__bd">
-          <view>{{notice.text}}</view>
+          <text decode="true">{{notice.text}}</text>
         </view>
         <view class="weui-dialog__ft">
           <view class="weui-dialog__btn" bindtap="DoNotShow"> 不再显示 </view>
