@@ -66,7 +66,7 @@
       </view>
     </block>
     <view class="weui-cells__title">
-      如发现结果存在错误，可长按错误的条目提交上报。
+      如发现结果存在错误，可长按错误的条目上报。
     </view>
   </view>
 

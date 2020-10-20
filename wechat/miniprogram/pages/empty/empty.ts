@@ -147,7 +147,7 @@ Page({
    * 选择教学楼
    */
   bindJxlChange(e: AnyObject): void {
-    this.setData({ jxl_selected: e.detail.value })
+    this.setData({ jxl_selected: +e.detail.value })
     this.submit()
   },
 
@@ -155,7 +155,7 @@ Page({
    * 选择日期
    */
   bindRqChange(e: AnyObject): void {
-    this.setData({ rq_selected: e.detail.value })
+    this.setData({ rq_selected: +e.detail.value })
     this.submit()
   },
 
@@ -163,7 +163,7 @@ Page({
    * 选择节次
    */
   bindJcChange(e: AnyObject): void {
-    this.setData({ jc_selected: e.detail.value })
+    this.setData({ jc_selected: +e.detail.value })
     this.submit()
   },
 
@@ -209,7 +209,7 @@ Page({
     })
   },
 
-  hideLayer():void {
+  hideLayer(): void {
     this.setData({ layer_display: false })
   },
 
