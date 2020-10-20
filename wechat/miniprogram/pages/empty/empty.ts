@@ -81,9 +81,7 @@ Page({
         },
         {
           text: '取消',
-          tap: () => this.setData({
-            confirm_display: false,
-          })
+          tap: () => this.setData({ confirm_display: false })
         }
       ]
     })
@@ -105,7 +103,7 @@ Page({
    */
   onShow(): void {
     this.hideLayer()
-    
+
     this.dangqianriqi()
     this.dangqianjieci()
     this.dingwei()
