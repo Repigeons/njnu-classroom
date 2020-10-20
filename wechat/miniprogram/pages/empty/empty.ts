@@ -22,7 +22,9 @@ Page({
 
     notice: { id: '', title: '', text: '' },
 
-    layer_buttons: Array(),
+    confirm_buttons: Array<ILayerButton>(),
+    confirm_display: false,
+    layer_buttons: Array<ILayerButton>(),
     layer_display: false,
     layer_index: 0,
   },
@@ -53,8 +55,16 @@ Page({
     this.setData({
       layer_buttons: [{
         text: '上报错误',
-        tap: () => {
-          wx.request({
+        tap: () => this.setData({
+          layer_display: false,
+          confirm_display: true,
+        })
+      }],
+
+      confirm_buttons: [
+        {
+          text: '提交',
+          tap: () => wx.request({
             url: `${app.globalData.server}/api/feedback`,
             method: 'POST',
             header: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -65,12 +75,18 @@ Page({
                 resultList: JSON.stringify(this.data.classroomList),
                 index: this.data.layer_index,
             },
-            success: () => {
-              this.setData({ layer_display: false })
-            }
+            success: () => this.setData({ confirm_display: false }),
+            fail: err => console.error(err)
+          })
+        },
+        {
+          text: '取消',
+          tap: () => this.setData({
+            layer_display: true,
+            confirm_display: false,
           })
         }
-      }]
+      ]
     })
 
     // 加载
@@ -89,6 +105,8 @@ Page({
    * 每次显示时重置状态
    */
   onShow(): void {
+    this.hideLayer()
+    
     this.dangqianriqi()
     this.dangqianjieci()
     this.dingwei()
@@ -180,7 +198,6 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        // console.log(resData)
         this.setData({
           service: resData.service,
           classroomList: resData.data
@@ -210,7 +227,10 @@ Page({
   },
 
   hideLayer(): void {
-    this.setData({ layer_display: false })
+    this.setData({
+      layer_display: false,
+      confirm_display: false,
+    })
   },
 
   closeDialog(): void {

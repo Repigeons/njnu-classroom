@@ -150,7 +150,8 @@ Page({
           bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
         }
         this.setData({ bar_list })
-      }
+      },
+      fail: err => console.error(err)
     })
   },
 
@@ -176,7 +177,7 @@ Page({
   },
 
   closeDialog(): void {
-    this.setData({notice: {}})
+    this.setData({dialog: {}})
   },
 
   onShareAppMessage() {

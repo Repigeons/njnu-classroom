@@ -8,7 +8,15 @@ Component({
     buttons: {
       type: Array,
       value: []
-    }
+    },
+    BackColor: {
+      type: String,
+      value: '#000'
+    },
+    ForeColor: {
+      type: String,
+      value: '#fff'
+    },
   },
 
   /**
@@ -24,11 +32,13 @@ Component({
   methods: {
     tap(e): void {
       const index = e.target.dataset.button_index
-      this.properties.buttons[index].tap(e)
+      if (this.properties.buttons[index].tap)
+        this.properties.buttons[index].tap(e)
     },
     longpress(e): void {
       const index = e.target.dataset.button_index
-      this.properties.buttons[index].longpress(e)
+      if (this.properties.buttons[index].longpress)
+        this.properties.buttons[index].longpress(e)
     },
   }
 })

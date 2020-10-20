@@ -1,8 +1,9 @@
 <!--components/layer.wxml-->
-<view class="layer_container">
+<view class="layer_container" style="background-color:{{BackColor}}">
   <block wx:for="{{buttons}}" wx:key="key">
     <text class="layer_button" data-button_index="{{index}}"
     bindtap="tap" bindlongpress="longpress"
+    style="background-color:{{BackColor}}; color: {{ForeColor}}"
     >{{item.text}}</text>
   </block>
 </view>
