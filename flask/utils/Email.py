@@ -9,12 +9,12 @@ import json
 
 from ._smtp import SMTP
 
-mail_config = json.load(open('conf/mail.json'))
+__mail_config = json.load(open('conf/mail.json'))
 
-__mail_server = SMTP(**mail_config)
+__mail_server = SMTP(**__mail_config)
 
 
-def __send_email(subject: str, message: str):
+def _send_email(subject: str, message: str):
     __mail_server.send(
         subject, message, 'plain',
         'Repigeons<zz.daniel@foxmail.com>',

@@ -7,7 +7,7 @@
 """"""
 import datetime
 
-import config
+import app
 import utils
 from handler.Classroom import Classroom
 
@@ -46,7 +46,7 @@ def reset(name: str = None, day: int = None) -> None:
 
 def handler(args: dict) -> dict:
     global update_time
-    if config.config['service'] == 'off':
+    if app.config['service'] == 'off':
         return {
             'status': 1,
             'message': "service off",

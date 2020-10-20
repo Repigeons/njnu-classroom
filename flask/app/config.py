@@ -10,4 +10,4 @@ import os
 
 env = 'pro' if os.getenv('FLASK_ENV') == 'production' else 'dev'
 
-config = json.load(open('conf/config.json'))
+__config = json.load(open('../conf/config.json'))

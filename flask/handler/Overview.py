@@ -5,10 +5,9 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Overview.py
 """"""
-import datetime
 from typing import Dict, List
 
-import config
+import app
 import utils
 from handler.Classroom import Classroom
 
@@ -28,7 +27,7 @@ def reset():
 
 
 def handler(args: dict) -> dict:
-    if config.config['service'] == 'off':
+    if app.config['service'] == 'off':
         return {
             'status': 1,
             'message': "service off",

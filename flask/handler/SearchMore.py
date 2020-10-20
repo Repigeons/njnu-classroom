@@ -5,13 +5,13 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  SearchMore.py
 """"""
-import config
+import app
 import utils
 from handler.Classroom import Classroom
 
 
 def handler(args: dict) -> dict:
-    if config.config['service'] == 'off':
+    if app.config['service'] == 'off':
         return {
             'status': 1,
             'message': "service off",

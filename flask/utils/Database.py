@@ -7,12 +7,12 @@
 """"""
 import json
 
-import config
+import app
 from ._mysql import MySQL
 
-__database_config = json.load(open('conf/database.json'))[config.env]
+__database_config = json.load(open('conf/database.json'))[app.config.env]
 
-__database = MySQL(
+_database = MySQL(
     host=__database_config['host'],
     port=__database_config['port'],
     user=__database_config['user'],
