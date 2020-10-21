@@ -36,7 +36,7 @@ Page({
   onLoad(options: Record<string, string>): void {
     // 公告系统
     wx.request({
-      url: `${app.globalData.server}/notice.json?${Math.random()}`,
+      url: `${app.globalData.server}/notice.json`,
       success: res => {
         const data = res.data as Record<string, any>
         const date = data.date as string
