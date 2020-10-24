@@ -27,20 +27,6 @@ def reset():
         return jsonify(None), 500
 
 
-@app.route('/index.json', methods=['GET'])
-def index():
-    try:
-        request_args = request.args.to_dict()
-        response_body = request_handler.index_handler(request_args)
-        return jsonify(response_body), 200
-    except KeyError as e:
-        return jsonify(None), 400
-    except Exception as e:
-        print(type(e), e)
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
-        return jsonify(None), 500
-
-
 @app.route('/empty.json', methods=['GET'])
 def empty():
     try:

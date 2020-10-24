@@ -3,7 +3,7 @@
 # @Time     :  2020/10/19 0019
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  Email.py
+# @FileName :  mail_manager.py
 """"""
 import json
 
