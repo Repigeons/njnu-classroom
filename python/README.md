@@ -73,8 +73,8 @@ python Main.py
 ├── utils                   # Python代码，工具函数
 │   ├── __init__.py
 │   ├── _mysql.py           # 数据库操作类
-│   ├── _db_manager.py      # 应用数据库管理
-│   └── _get_cookie.py      # cookie获取函数
+│   ├── db_manager.py      # 应用数据库管理
+│   └── get_cookie.py      # cookie获取函数
 ├── Main.py                 # 应用主入口
 └── requirements.txt        # 项目所需的包和库
 ```
