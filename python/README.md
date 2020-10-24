@@ -62,21 +62,21 @@ python Main.py
 
 ### 6、项目结构
 ```
-├── requirements.txt        # 项目所需的包和库
-├── Main.py                 # 项目唯一启动文件
 ├── conf                    # 项目配置文件
 │   ├── account.json        # 可用的一站式账户
 │   ├── database.json       # 项目使用的数据库配置
 │   └── template.*.json     # 配置文件对应的模板
+├── get_data                # Python代码，核心过程
+│   ├── __init__.py
+│   ├── _base_info.py       # 获取基础信息
+│   └── _core_data.py       # 获取核心数据
 ├── utils                   # Python代码，工具函数
 │   ├── __init__.py
-│   ├── _mysql.py           # 对PyMySQL封装的简易数据库操作类
-│   ├── _db_manager.py      # 数据库操作函数
-│   └── _get_cookie.py      # 获取后续所需的cookies
-└── get_data                # Python代码，核心过程
-    ├── __init__.py
-    ├── _base_info.py       # 获取基础信息
-    └── _core_data.py       # 获取核心数据
+│   ├── _mysql.py           # 数据库操作类
+│   ├── _db_manager.py      # 应用数据库管理
+│   └── _get_cookie.py      # cookie获取函数
+├── Main.py                 # 应用主入口
+└── requirements.txt        # 项目所需的包和库
 ```
 
 
