@@ -28,6 +28,7 @@ def main():
         app.logger.addHandler(default_handler)
         if args.logger is not None:
             logger_handler = logging.FileHandler(args.logger)
+            logger_handler.setLevel(logging.INFO)
             app.logger.addHandler(logger_handler)
 
         make_server(host=args.host, port=args.port, app=app).serve_forever()
