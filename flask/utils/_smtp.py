@@ -43,7 +43,6 @@ class SMTP:
         smtp = SMTP_SSL(host=self.__host)
         smtp.connect(host=self.__host, port=self.__port)
         smtp.login(user=self.__user, password=self.__password)
-        # print(';'.join(['%(name)s<%(addr)s>' % to for to in header_to]))
         message = MIMEText(message, message_type, 'utf-8')
         message['Subject'] = Header(subject)
         message['From'] = Header(header_from)

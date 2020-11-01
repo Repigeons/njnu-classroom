@@ -22,7 +22,7 @@ def reset():
         request_handler.reset_overview()
         return jsonify(None), 202
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
         return jsonify(None), 500
 
@@ -36,7 +36,7 @@ def empty():
     except KeyError as e:
         return jsonify(None), 400
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
         return jsonify(None), 500
 
@@ -50,7 +50,7 @@ def search_more():
     except KeyError as e:
         return jsonify(None), 400
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
         return jsonify(None), 500
 
@@ -64,7 +64,7 @@ def overview():
     except KeyError as e:
         return jsonify(None), 400
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
         return jsonify(None), 500
 
@@ -83,6 +83,6 @@ def feedback():
         )
         return jsonify(None), 202
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
         return jsonify(None), 500

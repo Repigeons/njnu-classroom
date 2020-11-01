@@ -58,7 +58,7 @@ def main():
             'detail': e.args[0]
         }), 403
     except Exception as e:
-        print(type(e), e)
+        app.logger.warning(f"{type(e), e}")
         return jsonify({
             'status': 1,
             'message': type(e),
