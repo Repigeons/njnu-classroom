@@ -74,6 +74,9 @@ def feedback():
     try:
         request_args = request.form.to_dict()
         request_args['resultList'] = json.loads(request_args['resultList'])
+        request_args['index'] = int(request_args['index'])
+        request_args['id'] = request_args['index'] + 1
+        request_args['item'] = request_args['resultList'][request_args['index']]
         send_email(
             subject='南师教室：用户反馈',
             message=json.dumps(request_args, ensure_ascii=False, indent=2)
