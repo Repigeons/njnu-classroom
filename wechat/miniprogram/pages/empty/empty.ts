@@ -51,7 +51,6 @@ Page({
             text: text
           }
         })
-        console.log(this.data.notice)
       }
     })
 
@@ -68,20 +67,29 @@ Page({
       confirm_buttons: [
         {
           text: '提交',
-          tap: () => wx.request({
-            url: `${app.globalData.server}/api/feedback`,
-            method: 'POST',
-            header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            data: {
-                day: this.data.rq_selected,
-                jxl: jxl[this.data.jxl_selected].name,
-                dqjc: this.data.jc_selected + 1,
-                resultList: JSON.stringify(this.data.classroomList),
-                index: this.data.layer_index,
-            },
-            success: () => this.setData({ confirm_display: false }),
-            fail: err => console.error(err)
-          })
+          tap: () => {
+            wx.showToast({
+              title: '发送中',
+              icon: 'loading'
+            })
+            this.setData({ confirm_display: false })
+            wx.request({
+              url: `${app.globalData.server}/api/feedback`,
+              method: 'POST',
+              header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              data: {
+                  day: this.data.rq_selected,
+                  jxl: jxl[this.data.jxl_selected].name,
+                  dqjc: this.data.jc_selected + 1,
+                  resultList: JSON.stringify(this.data.classroomList),
+                  index: this.data.layer_index,
+              },
+              success: () => wx.hideToast({
+                complete: () => wx.showToast({ title: '发送成功' })
+              }),
+              fail: err => console.error(err)
+            })
+          }
         },
         {
           text: '取消',

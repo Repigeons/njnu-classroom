@@ -22,3 +22,7 @@
   right:8px;
   opacity: 0.8;
 }
+
+.rp-cell {
+  height: 24px;
+}

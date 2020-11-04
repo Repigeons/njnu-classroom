@@ -49,7 +49,7 @@
     <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
       <view class="weui-cells weui-cells_after-title" bindlongpress="showLayer" data-index="{{index}}">
-        <view class="weui-cell weui-cell_example">
+        <view class="weui-cell weui-cell_example rp-cell">
           <view class="weui-cell__hd">
             <view wx:if="{{item.zylxdm=='00'}}">
               <image src="../../images/kong.png" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;"></image>
@@ -99,4 +99,3 @@ style="top:{{258 + layer_index * 56}}px"></rp-layer>
 <rp-layer class="rp-layer" wx:if="{{confirm_display}}"
 buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
 style="top:{{258 + layer_index * 56}}px"></rp-layer>
-
