@@ -18,28 +18,17 @@
 ### 4、部署方法
 Python语言具备良好的跨平台特性，可通过`virtualenv`模块快速建立项目虚拟环境。
 具体命令如下：
+```powershell
+# Windows PowerShell
+virtualenv env
+./env/Script/activate
+pip install -r requirements.txt
+python Main.py
 ```
-# Windows cmd
-python -m venv ENV
-ENV\Script\activate.bat
-pip install -r requirements.txt
-python Main.py
-
-# Windows powershell
-python -m venv ENV
-./ENV/Script/Activate.ps1
-pip install -r requirements.txt
-python Main.py
-
-# Linux bash
-python3 -m venv ENV
-source ./ENV/bin/activate
-pip install -r requirements.txt
-python Main.py
-
-# MacOS Terminal
-python3 -m venv ENV
-source ./ENV/bin/activate
+```bash
+# Linux Bash / MacOS Terminal
+virtualenv env
+source ./env/bin/activate
 pip install -r requirements.txt
 python Main.py
 ```
@@ -49,14 +38,29 @@ python Main.py
 除了利用Python解释性运行的方法，也可以先对项目进行编译，编译方法如下：
 
 (1)安装PyInstaller，命令为
-> pip3 install pyinstaller
+```powershell
+pip install pyinstaller
+```
 
-(2)激活虚拟环境（参考[#4](#4部署方法)）
-> (略)
+(2)激活虚拟环境
+```powershell
+# Windows PowerShell
+./env/Script/activate
+```
+```bash
+# Linux Bash / MacOS Terminal
+source ./env/bin/activate
+```
 
 (3)编译项目，命令为
-> pyinstaller -F Main.py -p ENV/Lib/site-packages
-
+```powershell
+# Windows PowerShell
+pyinstaller -F Main.py -p env/Lib/site-packages
+```
+```bash
+# Linux Bash / MacOS Terminal
+pyinstaller -F Main.py -p env/lib64/python3.8/site-packages
+```
 （其中site-packages为虚拟环境目录下的该项目所引用的包，需根据具体情况填写该参数）
 
 
@@ -73,8 +77,8 @@ python Main.py
 ├── utils                   # Python代码，工具函数
 │   ├── __init__.py
 │   ├── _mysql.py           # 数据库操作类
-│   ├── db_manager.py      # 应用数据库管理
-│   └── get_cookie.py      # cookie获取函数
+│   ├── db_manager.py       # 应用数据库管理
+│   └── get_cookie.py       # cookie获取函数
 ├── Main.py                 # 应用主入口
 └── requirements.txt        # 项目所需的包和库
 ```
