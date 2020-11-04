@@ -100,7 +100,7 @@ Page({
    * 选择教室
    */
   bindJsChange(e: AnyObject): void {
-    const js_selected = e.detail.value
+    const js_selected = +e.detail.value
     this.setData({ js_selected })
     wx.setStorage({
       key: 'last_overview',
