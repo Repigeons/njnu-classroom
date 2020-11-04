@@ -42,7 +42,7 @@ TypeScript是由微软开发的开源跨平台编程语言，作为JavaScript的
     │   ├── weui.wxss       # 样式表
     │   └── ...
     ├── images              # 资源文件（图片）
-    ├── utils               # weui
+    ├── utils               # 
     │   ├── util.ts         # 工具模块，计算距离、节次等
     │   └── parser.ts       # 工具模块，解析数据等
     └── pages               # 小程序页面
