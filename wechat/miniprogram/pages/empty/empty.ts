@@ -105,7 +105,7 @@ Page({
     }
     this.setData({jxl_name_array})
 
-    if (options.page == 'index') {
+    if (options.page == 'empty') {
     }
   },
 
@@ -249,8 +249,8 @@ Page({
   onShareAppMessage() {
     return {
       title: '空教室查询',
-      path: 'pages/index/index'
-      + `?page=index`,
+      path: 'pages/empty/empty'
+      + `?page=empty`,
       image: 'images/logo.png'
     }
   }

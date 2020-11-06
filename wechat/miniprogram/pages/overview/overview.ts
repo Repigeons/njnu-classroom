@@ -41,6 +41,23 @@ Page({
     this.setData({ cellHeight, cellWidth })
 
     if (options.page == 'overview') {
+      const {jxl, js} = options
+      let jxl_selected = 0, js_selected
+        for (let i=0; i<this.data.jxl_array.length; i++) {
+          if (this.data.jxl_array[i] == jxl) {
+            jxl_selected = i
+            break
+          }
+        }
+        let list = app.globalData.classrooms[this.data.jxl_array[jxl_selected]]
+        let js_array = []
+        for (let i=0; i< list.length; i++) {
+          js_array.push(list[i]['JSMPH'])
+          if (list[i]['JSMPH'] == js)
+            js_selected = i
+        }
+        this.setData({ jxl_selected, js_array })
+        this.bindJsChange({detail:{value:js_selected}})
     }
   },
 
@@ -71,14 +88,14 @@ Page({
         this.setData({ jxl_selected, js_array })
         this.bindJsChange({detail:{value:js_selected}})
       },
-      fail: () => this.bindJxlChange({detail:{value:2}})
+      fail: () => this.bindJxlChange({detail:{value:0}})
     })
   },
 
   /**
    * 选择教学楼
    */
-  bindJxlChange(e: any): void {
+  bindJxlChange(e: AnyObject): void {
     const jxl_selected = e.detail.value
     let list = app.globalData.classrooms[this.data.jxl_array[jxl_selected]]
     let js_array = []
@@ -185,8 +202,8 @@ Page({
       title: '教室概览',
       path: 'pages/overview/overview'
       + `?page=overview`
-      + `&jxl_selected=${this.data.jxl_selected}`
-      + `&js_selected=${this.data.js_selected}`,
+      + `&jxl=${this.data.jxl_array[this.data.jxl_selected]}`
+      + `&js=${this.data.js_array[this.data.js_selected]}`,
       image: 'images/logo.png'
     }
   }
