@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="c4062a1e-1b3f-4c3d-b34e-1d6b49fe2fa8" name="Notice_deployment">
+        <fileTransfer accessType="SFTP" host="classroom.njnu.xyz" port="22" sshConfigId="e79f5846-3b95-4da6-a0b1-d92eff6d9e53" sshConfig="root@classroom.njnu.xyz:22 agent" authAgent="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
