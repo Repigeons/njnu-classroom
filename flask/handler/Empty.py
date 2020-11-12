@@ -6,6 +6,7 @@
 # @FileName :  Empty.py
 """"""
 import datetime
+import json
 
 import app
 import utils
@@ -39,8 +40,10 @@ def reset(name: str = None, day: int = None) -> None:
         args={'jxl': name}
     )
     for item in result:
-        buildings[name][day].append(Classroom.load(item))
-        buildings[name][day][-1].day = day
+        classroom = Classroom.load(item)
+        classroom.day = day
+        if classroom.jasdm not in app.config['exclude_classroom']:
+            buildings[name][day].append(classroom)
     buildings[name][day].sort()
 
 
