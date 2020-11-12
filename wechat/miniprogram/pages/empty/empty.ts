@@ -27,6 +27,8 @@ Page({
     layer_buttons: Array<ILayerButton>(),
     layer_display: false,
     layer_index: 0,
+
+    feedbackTime: 0
   },
 
   /**
@@ -64,38 +66,50 @@ Page({
         })
       }],
 
-      confirm_buttons: [
-        {
-          text: '提交',
-          tap: () => {
+      confirm_buttons: [{
+        text: '提交',
+        tap: () => {
+          this.setData({ confirm_display: false })
+          const interval: number = 60000 // 间隔时间（毫秒）
+          let now: number = new Date().getTime()
+          if (now < this.data.feedbackTime + interval) {
             wx.showToast({
-              title: '发送中',
-              icon: 'loading'
+              title: '操作过于频繁',
+              icon: 'loading',
+              duration: 500
             })
-            this.setData({ confirm_display: false })
-            wx.request({
-              url: `${app.globalData.server}/api/feedback`,
-              method: 'POST',
-              header: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              data: {
-                  day: this.data.rq_selected,
-                  jxl: jxl[this.data.jxl_selected].name,
-                  dqjc: this.data.jc_selected + 1,
-                  resultList: JSON.stringify(this.data.classroomList),
-                  index: this.data.layer_index,
-              },
-              success: () => wx.hideToast({
-                complete: () => wx.showToast({ title: '发送成功' })
-              }),
-              fail: err => console.error(err)
-            })
+            return
           }
-        },
-        {
-          text: '取消',
-          tap: () => this.setData({ confirm_display: false })
+          wx.showToast({
+            title: '发送中',
+            icon: 'loading'
+          })
+          wx.request({
+            url: `${app.globalData.server}/api/feedback`,
+            method: 'POST',
+            header: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            data: {
+                day: this.data.rq_selected,
+                jxl: jxl[this.data.jxl_selected].name,
+                dqjc: this.data.jc_selected + 1,
+                resultList: JSON.stringify(this.data.classroomList),
+                index: this.data.layer_index,
+            },
+            success: () => {
+              wx.hideToast({
+                complete: () => wx.showToast({ title: '发送成功' })
+              })
+              this.setData({
+                feedbackTime: new Date().getTime()
+              })
+            },
+            fail: err => console.error(err)
+          })
         }
-      ]
+      }, {
+        text: '取消',
+        tap: () => this.setData({ confirm_display: false })
+      }]
     })
 
     // 加载数据

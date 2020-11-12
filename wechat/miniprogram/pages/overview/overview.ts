@@ -42,51 +42,17 @@ Page({
 
     if (options.page == 'overview') {
       const {jxl, js} = options
-      let jxl_selected = 0, js_selected
-        for (let i=0; i<this.data.jxl_array.length; i++) {
-          if (this.data.jxl_array[i] == jxl) {
-            jxl_selected = i
-            break
-          }
-        }
-        let list = app.globalData.classrooms[this.data.jxl_array[jxl_selected]]
-        let js_array = []
-        for (let i=0; i< list.length; i++) {
-          js_array.push(list[i]['JSMPH'])
-          if (list[i]['JSMPH'] == js)
-            js_selected = i
-        }
-        this.setData({ jxl_selected, js_array })
-        this.bindJsChange({detail:{value:js_selected}})
+      this.switchClassroom(jxl, js)
     }
   },
 
   onShow(): void {
-    let jxl_array = [], dqjc = getJc(new Date())
-    for (let key in app.globalData.classrooms) {
-      jxl_array.push(key)
-    }
-    this.setData({ jxl_array, dqjc })
+    this.setData({ dqjc: getJc(new Date()) })
     wx.getStorage({
       key: 'last_overview',
       success: res => {
         let {jxl, js} = res.data
-        let jxl_selected = 0, js_selected
-        for (let i=0; i<this.data.jxl_array.length; i++) {
-          if (this.data.jxl_array[i] == jxl) {
-            jxl_selected = i
-            break
-          }
-        }
-        let list = app.globalData.classrooms[this.data.jxl_array[jxl_selected]]
-        let js_array = []
-        for (let i=0; i< list.length; i++) {
-          js_array.push(list[i]['JSMPH'])
-          if (list[i]['JSMPH'] == js)
-            js_selected = i
-        }
-        this.setData({ jxl_selected, js_array })
-        this.bindJsChange({detail:{value:js_selected}})
+        this.switchClassroom(jxl, js)
       },
       fail: () => this.bindJxlChange({detail:{value:0}})
     })
@@ -195,6 +161,27 @@ Page({
 
   closeDialog(): void {
     this.setData({dialog: {}})
+  },
+
+  switchClassroom(jxl: string, js: string): void {
+    let jxl_array = [], js_array = [], jxl_selected = 0, js_selected = 0
+    for (let key in app.globalData.classrooms) {
+      jxl_array.push(key)
+    }
+    for (let i=0; i<jxl_array.length; i++) {
+      if (jxl_array[i] == jxl) {
+        jxl_selected = i
+        break
+      }
+    }
+    let list = app.globalData.classrooms[jxl_array[jxl_selected]]
+    for (let i=0; i< list.length; i++) {
+      js_array.push(list[i]['JSMPH'])
+      if (list[i]['JSMPH'] == js)
+        js_selected = i
+    }
+    this.setData({ jxl_array, jxl_selected, js_array })
+    this.bindJsChange({detail:{value:js_selected}})
   },
 
   onShareAppMessage() {
