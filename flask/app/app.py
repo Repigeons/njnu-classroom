@@ -18,7 +18,7 @@ app = Flask(__name__)
 @app.route('/reset', methods=['POST'])
 def reset():
     try:
-        request_handler.reset_index()
+        request_handler.reset_empty()
         request_handler.reset_overview()
         return jsonify(None), 202
     except Exception as e:
