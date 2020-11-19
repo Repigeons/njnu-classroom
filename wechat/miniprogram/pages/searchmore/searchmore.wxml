@@ -1,8 +1,7 @@
 <!--pages/searchmore/searchmore.wxml-->
 <view class="page">
   <view class="page__bd">
-    <view style="height:8px"></view>
-    <view class="weui-search-bar" style="padding-bottom:0px">
+    <view class="weui-search-bar rp-bar">
       <view class="weui-search-bar__form">
         <view class="weui-search-bar__box">
           <icon class="weui-icon-search_in-box" type="search" size="14"></icon>
@@ -21,10 +20,10 @@
 
     <!-- 筛选 -->
     <view wx:if="{{showButton}}">
-      <view class="weui-search-bar" style="padding-top:16px">
+      <view class="weui-search-bar rp-bar">
         <view class="weui-search-bar__form">
-          <view class="weui-cell  weui-cell_vcode" style="height:48px"> <!-- 官方高度是56像素 -->
-            <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-cell  weui-cell_vcode rp-cell">
+            <view class="weui-cell__hd rp-cell__hd">
               <view class="weui-label">日期</view>
             </view>
             <view class="weui-cell__bd" >
@@ -33,29 +32,29 @@
               </picker>
             </view>
           </view>
-          <view class="weui-cell  weui-cell_vcode" style="height:48px">
-            <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-cell  weui-cell_vcode rp-cell">
+            <view class="weui-cell__hd rp-cell__hd">
               <view class="weui-label">节次</view>
             </view>
             <view class="weui-cell__bd">
               <picker value="{{jc_ks_selected}}" bindchange="bindJcKsChange" range="{{jc_ks_array}}">
                 <view class="weui-select weui-select_in-select-after">
-                  <text decode="true" style="font-weight:700">从&ensp;</text>
+                  <text decode="true" class="rp-cell__hd">从&ensp;</text>
                   <text>{{jc_array[jc_ks_selected]}}</text>
                 </view>
               </picker>
             </view>
-            <view class="weui-cell__bd" style="margin-left:1px;padding-left:1px;left:1px">
+            <view class="weui-cell__bd rp-cell__bd">
               <picker value="{{jc_js_selected+jc_js_array.length-12}}" bindchange="bindJcJsChange" range="{{jc_js_array}}">
                 <view class="weui-select weui-select_in-select-after">
-                  <text decode="true" style="font-weight:700">到&ensp;</text>
+                  <text decode="true" class="rp-cell__hd">到&ensp;</text>
                   <text>{{jc_array[jc_js_selected]}}</text>
                 </view>
               </picker>
             </view>
           </view>
-          <view class="weui-cell  weui-cell_vcode" style="height:48px">
-            <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-cell  weui-cell_vcode rp-cell">
+            <view class="weui-cell__hd rp-cell__hd">
               <view class="weui-label">教学楼</view>
             </view>
             <view class="weui-cell__bd">
@@ -64,8 +63,8 @@
               </picker>
             </view>
           </view>
-          <view class="weui-cell  weui-cell_vcode" style="height:48px">
-            <view class="weui-cell__hd"  style="font-weight:700">
+          <view class="weui-cell  weui-cell_vcode rp-cell">
+            <view class="weui-cell__hd rp-cell__hd">
               <view class="weui-label">类型</view>
             </view>
             <view class="weui-cell__bd">
@@ -105,9 +104,8 @@
     <!-- Result -->
     <!-- Tips -->
     <view  wx:if="{{!showResult}}">
-      <view style="height:16px"></view>
-      <view class="weui-cells__tips">
-        <text style="font-weight:700">Tips：</text>
+      <view class="weui-cells__tips rp-bar">
+        <text class="rp-cell__hd">Tips：</text>
         <text decode="true">使用更多搜索，可以方便地根据课程或活动名称查到其所在的教室以及时间，支持通过筛选缩小搜索范围。点击上方搜索栏开始搜索。\n\n例1：基础英语\n例2：团日活动</text>
       </view>
     </view>

@@ -4,7 +4,7 @@
     <view class="weui-cells__title">请选择想要查询的教学楼和时间：</view>
     <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell  weui-cell_vcode">
-        <view class="weui-cell__hd" style="font-weight:700">
+        <view class="weui-cell__hd rp-title">
           <view class="weui-label">教学楼</view>
         </view>
         <view class="weui-cell__bd">
@@ -17,7 +17,7 @@
         </view>
         </view>
         <view class="weui-cell  weui-cell_vcode">
-          <view class="weui-cell__hd" style="font-weight:700">
+          <view class="weui-cell__hd rp-title">
             <view class="weui-label">日期</view>
           </view>
           <view class="weui-cell__bd">
@@ -30,7 +30,7 @@
         </view>
       </view>
       <view class="weui-cell  weui-cell_vcode">
-        <view class="weui-cell__hd" style="font-weight:700">
+        <view class="weui-cell__hd rp-title">
           <view class="weui-label">节次</view>
         </view>
         <view class="weui-cell__bd">
@@ -49,21 +49,19 @@
     <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
       <view class="rp-cells" bindlongpress="showLayer" data-index="{{index}}">
-        <!-- <view class="weui-cells weui-cells_after-title rp-cells" bindlongpress="showLayer" data-index="{{index}}"> -->
         <view class="weui-cell rp-cell" hover-class="rp-cell_active">
           <view class="weui-cell__hd">
-            <view wx:if="{{item.zylxdm=='00'}}">
-              <image src="../../images/kong.png" style="margin-right: 16px;vertical-align: middle;width:24px; height: 24px;"></image>
-            </view>
-            <view wx:else>
-              <image src="../../images/yan.png" style="margin-right: 16px;vertical-align: middle;width:24px; height: 24px;"></image>
-            </view>
+            <image src="../../images/{{item.logo}}" class="rp-item-logo"></image>
           </view>
           <view class="weui-cell__bd">
-            <text style="font-size:17px; font-weight:700">{{item.classroom}}教室</text>
-            <text style="font-size:14px; color:#e58600; font-weight:700" decode="true">&ensp;『{{item.jc_ks}}-{{item.jc_js}}节』</text>
-            <text style="font-size:14px" decode="true">&ensp;容量：{{item.capacity}}</text>
-            <text style="font-size:14px; color:#535353" wx:if="{{item.zylxdm=='10'}}">\n研究生课程，可能为空教室</text>
+            <view>
+              <text class="rp-item-title rp-title">{{item.classroom}}教室</text>
+              <text class="rp-item-text  rp-title  rp-item-text-jc"decode="true">&ensp;『{{item.jc_ks}}-{{item.jc_js}}节』</text>
+              <text class="rp-item-text" decode="true">&ensp;容量：{{item.capacity}}</text>
+            </view>
+            <view wx:if="{{item.zylxdm=='10'}}">
+              <text class="rp-item-text rp-item-text-yan">研究生课程，可能为空教室</text>
+            </view>
           </view>
         </view>
       </view>

@@ -1,5 +1,9 @@
 /* pages/empty/empty.wxss */
 
+.rp-title {
+  font-weight: 700;
+}
+
 .rp-dialog {
   visibility: hidden;
   opacity: 0;
@@ -38,4 +42,27 @@
 
 .rp-cell_active {
   background-color: #b8ced9;
+}
+
+.rp-item-logo {
+  vertical-align: middle;
+  height: 24px;
+  width: 24px;
+  margin-right: 16px;
+}
+
+.rp-item-title {
+  font-size: 17px;
+}
+
+.rp-item-text {
+  font-size: 14px;
+}
+
+.rp-item-text-jc {
+  color: #e58600;
+}
+
+.rp-item-text-yan {
+  color: #535353;
 }
