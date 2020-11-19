@@ -7,6 +7,7 @@
 """"""
 import json
 import os
+import shutil
 from datetime import datetime
 from wsgiref.simple_server import make_server
 
@@ -29,9 +30,19 @@ def main():
         if token != request_args['token']:
             raise ValueError("incorrect token")
 
-        text: str = request_args['text']
-        text = text.replace('\\n', '\n')
+        # Save to notice history
+        history_dir = os.path.join(os.path.dirname(file), 'notice-history')
+        None if os.path.exists(history_dir) else os.mkdir(history_dir)
+        with open(file, 'r', encoding='utf8') as f:
+            data = json.load(f)
+            f.close()
+        history_file = os.path.join(history_dir, datetime.fromtimestamp(data['timestamp']).strftime("%Y-%m-%d %X"))
+        shutil.copyfile(file, history_file)
 
+        # Save to notice.json
+        text: str = request_args['text']
+        for ch in [('\\n', '\n')]:
+            text = text.replace(*ch)
         now = datetime.now()
         data = {
             'timestamp': int(now.timestamp()),
