@@ -19,10 +19,23 @@
 
 .rp-layer {
   position:absolute;
-  right:8px;
+  right:16px;
   opacity: 0.8;
 }
 
 .rp-cell {
-  height: 24px;
+  height: 16px;
+  line-height: 20px;
+  border-radius: 16px;
+}
+
+.rp-cells {
+  position: relative;
+  background-color: #fff;
+  margin: 8px 8px 8px 8px;
+  border-radius: 16px;
+}
+
+.rp-cell_active {
+  background-color: #b8ced9;
 }

@@ -48,21 +48,22 @@
     </view>
     <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
     <block wx:for="{{classroomList}}" wx:key="key">
-      <view class="weui-cells weui-cells_after-title" bindlongpress="showLayer" data-index="{{index}}">
-        <view class="weui-cell weui-cell_example rp-cell">
+      <view class="rp-cells" bindlongpress="showLayer" data-index="{{index}}">
+        <!-- <view class="weui-cells weui-cells_after-title rp-cells" bindlongpress="showLayer" data-index="{{index}}"> -->
+        <view class="weui-cell rp-cell" hover-class="rp-cell_active">
           <view class="weui-cell__hd">
             <view wx:if="{{item.zylxdm=='00'}}">
-              <image src="../../images/kong.png" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;"></image>
+              <image src="../../images/kong.png" style="margin-right: 16px;vertical-align: middle;width:24px; height: 24px;"></image>
             </view>
             <view wx:else>
-              <image src="../../images/yan.png" style="margin-right: 16px;vertical-align: middle;width:20px; height: 20px;"></image>
+              <image src="../../images/yan.png" style="margin-right: 16px;vertical-align: middle;width:24px; height: 24px;"></image>
             </view>
           </view>
           <view class="weui-cell__bd">
-            <text style="font-weight:700">{{item.classroom}}教室</text>
-            <text style="font-size:14px" decode="true">&ensp;【{{item.jc_ks}}-{{item.jc_js}}节】</text>
+            <text style="font-size:17px; font-weight:700">{{item.classroom}}教室</text>
+            <text style="font-size:14px; color:#e58600; font-weight:700" decode="true">&ensp;『{{item.jc_ks}}-{{item.jc_js}}节』</text>
             <text style="font-size:14px" decode="true">&ensp;容量：{{item.capacity}}</text>
-            <text style="font-size:14px" wx:if="{{item.zylxdm=='10'}}">（研究生课）</text>
+            <text style="font-size:14px; color:#535353" wx:if="{{item.zylxdm=='10'}}">\n研究生课程，可能为空教室</text>
           </view>
         </view>
       </view>
@@ -94,8 +95,8 @@
 
 <rp-layer class="rp-layer" wx:if="{{layer_display}}"
 buttons="{{layer_buttons}}" BackColor="#434343" ForeColor="#fff"
-style="top:{{258 + layer_index * 56}}px"></rp-layer>
+style="top:{{261 + layer_index * 56}}px"></rp-layer>
 
 <rp-layer class="rp-layer" wx:if="{{confirm_display}}"
 buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
-style="top:{{258 + layer_index * 56}}px"></rp-layer>
+style="top:{{261 + layer_index * 56}}px"></rp-layer>
