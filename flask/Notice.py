@@ -18,7 +18,7 @@ token = os.getenv('NOTICE_TOKEN')
 file = os.getenv('NOTICE_FILE')
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['PUT'])
 def main():
     try:
         request_args: dict = request.form.to_dict()
