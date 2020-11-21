@@ -49,8 +49,9 @@
   color:#000
 }
 
-.rp-title_cell_empty{
-  font-weight:600;
+.rp-title_cell-text{
+  text-align: center;
+  font-weight: 600;
 }
 
 .rp-title_cell_highlight {
