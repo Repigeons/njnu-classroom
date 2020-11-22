@@ -23,12 +23,13 @@ file = os.getenv('NOTICE_FILE')
 def main():
     try:
         request_args: dict = request.form.to_dict()
-        if 'token' not in request_args.keys():
-            raise KeyError("Expected field `token`")
+        request_headers: dict = request.headers.environ
         if 'text' not in request_args.keys():
             raise KeyError("Expected field `text`")
-        if token != request_args['token']:
-            raise ValueError("incorrect token")
+        if 'HTTP_TOKEN' not in request_headers.keys():
+            raise KeyError("Expected field `token`")
+        if token != request_headers['HTTP_TOKEN']:
+            raise ValueError("Invalid token")
 
         # Save to notice history
         history_dir = os.path.join(os.path.dirname(file), 'notice-history')
