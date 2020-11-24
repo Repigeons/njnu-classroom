@@ -22,16 +22,19 @@ def get_class_info(cookies: dict, xn_xq_dm: str, jas_dm: str, zc: int) -> list:
     :param zc:周次
     :return:list[dict{}]
     """
-    res = requests.post(
-        url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do',
-        cookies=cookies,
-        data={
-            'XNXQDM': xn_xq_dm,
-            'ZC': zc,
-            'JASDM': jas_dm
-        }
-    ).json()
-    res = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
+    try:
+        res = requests.post(
+            url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do',
+            cookies=cookies,
+            data={
+                'XNXQDM': xn_xq_dm,
+                'ZC': zc,
+                'JASDM': jas_dm
+            }
+        ).json()
+        res = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
+    except KeyError:
+        return [[] for _ in range(7)]
     for i in range(7):
         for item in res[i]:
             _analyse_jc(item)
