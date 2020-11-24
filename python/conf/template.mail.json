@@ -1,0 +1,14 @@
+{
+  "sender": {
+    "host": "smtp.njnu.edu.cn",
+    "port": 994,
+    "user": "*@njnu.edu.cn",
+    "password": ""
+  },
+  "receivers": [
+    {
+      "name": "Repigeons",
+      "addr": "info@njnu.xyz"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
 # local config files
-account.json
-database.json
+/account.json
+/database.json
+/mail.json

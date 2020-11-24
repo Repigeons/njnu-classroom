@@ -15,6 +15,7 @@ from sys import exit
 
 import get_data
 import utils
+from utils import send_email
 
 # 预处理：初始化临时文件夹
 temp_dir = '~tmp/'
@@ -36,18 +37,22 @@ def preparing() -> None:
             open(temp_dir + 'cookies.json', 'w')
         )
     except FileNotFoundError:
+        send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 39")
         print('配置文件缺失')
         print('Exit with code', 1)
         exit(1)
     except JSONDecodeError:
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 44")
         print('配置文件解析失败')
         print('Exit with code', 1)
         exit(1)
     except KeyError:
+        send_email(subject="南师教室：错误报告", message=f"KeyError\n登录失败\nat line 49")
         print('登录失败')
         print('Exit with code', 1)
         exit(1)
     except Exception as e:
+        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nat line 54")
         print(type(e), e)
         print('Exit with code', -1)
         exit(-1)
@@ -61,10 +66,12 @@ def preparing() -> None:
             open(temp_dir + 'time_info.json', 'w')
         )
     except JSONDecodeError:
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 68")
         print('cookies无效')
         print('Exit with code', 2)
         exit(2)
     except KeyError:
+        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取时间信息失败\nat line 73")
         print('获取时间信息失败')
         print('Exit with code', 3)
         exit(3)
@@ -82,10 +89,12 @@ def preparing() -> None:
             ensure_ascii=False
         )
     except JSONDecodeError:
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 91")
         print('cookies无效')
         print('Exit with code', 2)
         exit(2)
     except KeyError:
+        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取教学楼信息失败\nat line 96")
         print('获取教学楼信息失败')
         print('Exit with code', 3)
         exit(3)
@@ -119,18 +128,22 @@ def preparing() -> None:
                 filename=f"{config['staticPath']}/classrooms.json"
             )
         except FileNotFoundError:
+            send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 130")
             print('配置文件缺失')
             print('Exit with code', 1)
             exit(1)
         except JSONDecodeError:
+            send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 135")
             print('配置文件解析失败')
             print('Exit with code', 1)
             exit(1)
     except JSONDecodeError:
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 140")
         print('cookies无效')
         print('Exit with code', 2)
         exit(2)
     except KeyError:
+        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取教室信息失败\nat line 145")
         print('获取教室信息失败')
         print('Exit with code', 3)
         exit(3)
@@ -191,10 +204,12 @@ def core() -> None:
                         })
                     utils.insert(weekday, args_list)
     except JSONDecodeError:
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 206")
         print('cookies无效')
         print('Exit with code', 2)
         exit(2)
     except Exception as e:
+        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nat line 211")
         print(type(e), e)
         print('Exit with code', -1)
         exit(-1)
