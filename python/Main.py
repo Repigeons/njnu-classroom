@@ -116,27 +116,27 @@ def preparing() -> None:
                 ensure_ascii=False
             )
 
-        # save classrooms info to static directory
-        try:
-            config = json.load(open('conf/config.json'))
-            if not os.path.exists(config['staticPath']):
-                print('static目录不存在')
-                print('Exit with code', 1)
-                exit(1)
-            utils.dump_static_json(
-                classrooms=classrooms,
-                filename=f"{config['staticPath']}/classrooms.json"
-            )
-        except FileNotFoundError:
-            send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 130")
-            print('配置文件缺失')
-            print('Exit with code', 1)
-            exit(1)
-        except JSONDecodeError:
-            send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 135")
-            print('配置文件解析失败')
-            print('Exit with code', 1)
-            exit(1)
+        # # save classrooms info to static directory
+        # try:
+        #     config = json.load(open('conf/config.json'))
+        #     if not os.path.exists(config['staticPath']):
+        #         print('static目录不存在')
+        #         print('Exit with code', 1)
+        #         exit(1)
+        #     utils.dump_static_json(
+        #         classrooms=classrooms,
+        #         filename=f"{config['staticPath']}/classrooms.json"
+        #     )
+        # except FileNotFoundError:
+        #     send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 130")
+        #     print('配置文件缺失')
+        #     print('Exit with code', 1)
+        #     exit(1)
+        # except JSONDecodeError:
+        #     send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 135")
+        #     print('配置文件解析失败')
+        #     print('Exit with code', 1)
+        #     exit(1)
     except JSONDecodeError:
         send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 140")
         print('cookies无效')
