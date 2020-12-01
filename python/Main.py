@@ -52,6 +52,8 @@ if __name__ == '__main__':
         if not os.path.exists(temp_dir):
             os.mkdir(temp_dir)
 
+        print(datetime.datetime.now().strftime('[%Y-%m-%d %X]'), '开始课程信息收集工作。')
+
         prepare()
         print('基础信息采集完成...')
 
