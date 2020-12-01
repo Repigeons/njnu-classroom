@@ -35,7 +35,7 @@ def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
             cookies=cookies,
             data={
                 'XNXQDM': term_code,
-                'ZC': this_week,
+                'ZC': next_week,
                 'JASDM': classroom['JASDM']
             }
         ).json()
@@ -53,7 +53,7 @@ def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
                 'day': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][day],
                 'zylxdm': '00' if row['ZYLXDM'] == '' else row['ZYLXDM'],
                 'jc_ks': int(jc[0]),
-                'jc_js': int(jc[0]),
+                'jc_js': int(jc[-1]),
                 'jyytms': row['JYYTMS'] if 'JYYTMS' in row else '',
                 'kcm': row['KCM'],
             }

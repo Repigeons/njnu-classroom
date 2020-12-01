@@ -93,7 +93,7 @@ def merge(temp_dir: str):
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     # 全部保存到文件
     for jxl in jxl_list:
-        print("开始下载教学楼：", jxl)
+        print("开始下载：", jxl, "...")
         jxl_classrooms = []
         for day in days:
             classrooms = __database.fetchall(
@@ -113,7 +113,7 @@ def merge(temp_dir: str):
                     classrooms2.append(classroom)
             jxl_classrooms.extend(classrooms2)
         json.dump(jxl_classrooms, open(f"{temp_dir}/jxl_classrooms_{jxl}.json", 'w', encoding='utf8'))
-        print(jxl, "下载完成...")
+        print("下载完成：", jxl)
     # 清空数据库
     __database.update("TRUNCATE TABLE `dev`")
     # 重新插入数据库
