@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2019/9/19
+# @Time     :  2020/11/30
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm Professional x64
 # @FileName :  _mysql
 """"""
+from typing import List
+
 from pymysql import connect, DatabaseError
 
 
@@ -57,25 +59,31 @@ class MySQL:
         except DatabaseError:
             return False
 
-    def fetchone(self, sql: str, args=None) -> tuple or None:
+    def fetchone(self, sql: str, args=None) -> dict:
         """
         Fetch the first record matches the sql sentence
         :param sql:a querying sql sentence
         :param args:a object, a tuple or a dict with the committing arguments or None
-        :return:a tuple of a record
+        :return:a dict of a record
         """
         db = self.__connect()
         cursor = db.cursor()
         try:
             cursor.execute(sql, args)
-            return cursor.fetchone()
+            column = [col[0] for col in cursor.description]
+            result = cursor.fetchone()
+            result_dict = {}
+            for i in range(len(column)):
+                result_dict[i] = result[i]
+                result_dict[column[i]] = result[i]
+            return result_dict
         except DatabaseError as e:
             db.rollback()
             raise e
         finally:
             db.close()
 
-    def fetchall(self, sql: str, args=None) -> tuple or None:
+    def fetchall(self, sql: str, args=None) -> List[dict]:
         """
         Fetch all the records match the sql sentence
         :param sql:a querying sql sentence
@@ -86,7 +94,16 @@ class MySQL:
         cursor = db.cursor()
         try:
             cursor.execute(sql, args)
-            return cursor.fetchall()
+            column = [col[0] for col in cursor.description]
+            result = cursor.fetchall()
+            result_list = []
+            for row in result:
+                result_dict = {}
+                for i in range(len(column)):
+                    result_dict[i] = row[i]
+                    result_dict[column[i]] = row[i]
+                result_list.append(result_dict)
+            return result_list
         except DatabaseError as e:
             db.rollback()
             raise e

@@ -1,256 +1,90 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2020/05/30
+# @Time     :  2020/11/30 0030
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  Main
+# @FileName :  Main.py
 """"""
 import datetime
 import json
 import os
 import shutil
 import time
-from json.decoder import JSONDecodeError
-from sys import exit
 
-import get_data
 import utils
-from utils import send_email
+import app
 
-# 预处理：初始化临时文件夹
-temp_dir = '~tmp/'
-None if os.path.exists(temp_dir) else os.mkdir(temp_dir)
+temp_dir = '~tmp'
 
 
-def preparing() -> None:
-    """
-    准备工作
-    收集cookie信息、时间信息和教学楼信息
-    :return:None
-    """
-
-    # get cookies
-    try:
-        print('开始尝试获取cookies...')
-        json.dump(
-            utils.get_cookie_dict(account=json.load(open('conf/account.json'))),
-            open(temp_dir + 'cookies.json', 'w')
-        )
-    except FileNotFoundError:
-        send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 39")
-        print('配置文件缺失')
-        print('Exit with code', 1)
-        exit(1)
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 44")
-        print('配置文件解析失败')
-        print('Exit with code', 1)
-        exit(1)
-    except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n登录失败\nat line 49")
-        print('登录失败')
-        print('Exit with code', 1)
-        exit(1)
-    except Exception as e:
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nat line 54")
-        print(type(e), e)
-        print('Exit with code', -1)
-        exit(-1)
-    cookies = json.load(open(temp_dir + 'cookies.json'))
-
-    # get time related info  # （当前学年学期、周次、总周次、总教学周次）
-    try:
-        print('开始尝试查询时间信息...')
-        json.dump(
-            get_data.get_time_info(cookies=cookies),
-            open(temp_dir + 'time_info.json', 'w')
-        )
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 68")
-        print('cookies无效')
-        print('Exit with code', 2)
-        exit(2)
-    except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取时间信息失败\nat line 73")
-        print('获取时间信息失败')
-        print('Exit with code', 3)
-        exit(3)
-    time_info = json.load(open(temp_dir + 'time_info.json'))
-
-    # get jxl info
-    try:
-        print('开始尝试查询教学楼信息...')
-        json.dump(
-            get_data.get_jxl_info(
-                cookies=cookies,
-                xn_xq_dm=time_info['XNXQDM']
-            ),
-            open(temp_dir + 'jxl_info.json', 'w', encoding='utf8'),
-            ensure_ascii=False
-        )
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 91")
-        print('cookies无效')
-        print('Exit with code', 2)
-        exit(2)
-    except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取教学楼信息失败\nat line 96")
-        print('获取教学楼信息失败')
-        print('Exit with code', 3)
-        exit(3)
-    jxl_info = json.load(open(temp_dir + 'jxl_info.json', encoding='utf8'))
-
-    # get classroom info
-    try:
-        classrooms = []
-        for jxl in jxl_info:
-            classroom_info = get_data.get_classroom_info(
-                cookies=cookies,
-                xn_xq_dm=time_info['XNXQDM'],
-                jxl_dm=jxl['JXLDM']
-            )
-            classrooms.extend(classroom_info)
-            json.dump(
-                classroom_info,
-                open(temp_dir + f"classroom_info_{jxl['JXLMC']}.json", 'w', encoding='utf8'),
-                ensure_ascii=False
-            )
-
-        # # save classrooms info to static directory
-        # try:
-        #     config = json.load(open('conf/config.json'))
-        #     if not os.path.exists(config['staticPath']):
-        #         print('static目录不存在')
-        #         print('Exit with code', 1)
-        #         exit(1)
-        #     utils.dump_static_json(
-        #         classrooms=classrooms,
-        #         filename=f"{config['staticPath']}/classrooms.json"
-        #     )
-        # except FileNotFoundError:
-        #     send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nat line 130")
-        #     print('配置文件缺失')
-        #     print('Exit with code', 1)
-        #     exit(1)
-        # except JSONDecodeError:
-        #     send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nat line 135")
-        #     print('配置文件解析失败')
-        #     print('Exit with code', 1)
-        #     exit(1)
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 140")
-        print('cookies无效')
-        print('Exit with code', 2)
-        exit(2)
-    except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取教室信息失败\nat line 145")
-        print('获取教室信息失败')
-        print('Exit with code', 3)
-        exit(3)
+def prepare():
+    app.save_cookies(file=f"{temp_dir}/cookies.json")
+    cookies = json.load(open(f"{temp_dir}/cookies.json"))
+    app.save_time(cookies=cookies, file=f"{temp_dir}/time_info.json")
+    app.save_classrooms(f"{temp_dir}/classrooms.json")
 
 
-def core() -> None:
-    """
-    核心任务
-    收集各教室在各时间段的数据，并存入数据库
-    :return:None
-    """
+def main():
+    cookies = json.load(open(f"{temp_dir}/cookies.json"))
+    time_info = json.load(open(f"{temp_dir}/time_info.json"))
+    classrooms = json.load(open(f"{temp_dir}/classrooms.json"))
 
-    utils.truncate()
-    # load stored info
-    cookies = json.load(open(temp_dir + 'cookies.json'))
-    time_info = json.load(open(temp_dir + 'time_info.json'))
-    jxl_info = json.load(open(temp_dir + 'jxl_info.json', encoding='utf8'))
-
-    # get class info
-    try:
-        for jxl in jxl_info:
-            classroom_info = json.load(open(temp_dir + 'classroom_info_%s.json' % jxl['JXLMC'], encoding='utf8'))
-            print('开始查询教学楼:', jxl['JXLMC'])
-            for classroom in classroom_info:
-                classroom['jsmph'] = classroom['JASMC'].replace(classroom['JXLMC'], '')
-                print('正在查询教室:', classroom['JASMC'])
-                class_info = get_data.get_class_weekly(
-                    cookies=cookies,
-                    xn_xq_dm=time_info['XNXQDM'],
-                    jas_dm=classroom['JASDM'],
-                    zc=time_info['ZC'],
-                    zzc=time_info['ZZC']
-                )
-                for weekday in range(7):
-                    args_list = []
-                    for data in class_info[weekday]:
-                        print([
-                            classroom['jsmph'],
-                            classroom['JXLMC'],
-                            classroom['JASDM'],
-                            classroom['SKZWS'],
-                            data['ZYLXDM'],
-                            data['JC'][0],
-                            data['JC'][1],
-                            data['JYYTMS'],
-                            data['KCM']
-                        ])
-                        args_list.append({
-                            'jsmph': classroom['jsmph'],
-                            'jxl': classroom['JXLMC'],
-                            'jasdm': classroom['JASDM'],
-                            'capacity': classroom['SKZWS'],
-                            'zylxdm': data['ZYLXDM'],
-                            'jc_ks': data['JC'][0],
-                            'jc_js': data['JC'][1],
-                            'jyytms': data['JYYTMS'],
-                            'kcm': data['KCM']
-                        })
-                    utils.insert(weekday, args_list)
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 206")
-        print('cookies无效')
-        print('Exit with code', 2)
-        exit(2)
-    except Exception as e:
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nat line 211")
-        print(type(e), e)
-        print('Exit with code', -1)
-        exit(-1)
+    utils.truncate_kcb()
+    for jxl in classrooms:
+        print('开始查询教学楼：', jxl)
+        for classroom in classrooms[jxl]:
+            print('正在查询教室:', classroom['JXLMC'], classroom['jsmph'])
+            result = app.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
+            utils.insert_into_kcb(class_list=result)
 
 
-# 主函数
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
-    parser.add_argument('-env', default='dev', type=str, help='developing environment or production environment')
-    parser.add_argument('-phantomjs', default='phantomjs', type=str, help='phantomjs path')
+    parser.add_argument('-env', default='dev', type=str, help="developing environment or production environment")
+    parser.add_argument('-phantomjs', default='phantomjs', type=str, help="phantomjs path")
     args = parser.parse_args()
 
-    utils.set_phantomjs(args.phantomjs)
+    app.set_phantomjs(args.phantomjs)
 
-    # Runnable main
     try:
-        preparing()
+        if not os.path.exists(temp_dir):
+            os.mkdir(temp_dir)
 
-        print('基础信息采集完成')
-        print('即将开始采集详细信息')
-        time.sleep(10)
+        prepare()
+        print('基础信息采集完成...')
 
-        core()
+        print('即将开始采集详细信息...')
+        time.sleep(5)
+        main()
+        print('详细信息采集完成...')
+
+        print('即将开始校正数据...')
+        time.sleep(5)
+        utils.copy_to_dev()
+        utils.correct()
+        print('校正数据完成...')
+
+        print('即将开始归并数据...')
+        time.sleep(5)
+        utils.merge(temp_dir=temp_dir)
+        print('数据归并完成...')
 
         if args.env == 'pro':
-            utils.save_to_pro()
+            utils.copy_to_pro()
 
         print()
         print('--------------------------------------------------')
         print(datetime.datetime.now().strftime('[%Y-%m-%d %X]'), '本轮具体课程信息收集工作成功完成。')
         print()
 
-    except SystemExit as systemExit:
+    except SystemExit or KeyboardInterrupt as exception:
+        raise exception
+    except Exception as e:
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nin app._get_cookie at line 75")
+        print(type(e), e)
+        print('Exit with code', -1)
+        exit(-1)
+    finally:
         shutil.rmtree(temp_dir)
-        raise systemExit
-    except KeyboardInterrupt as keyboardInterrupt:
-        shutil.rmtree(temp_dir)
-        raise keyboardInterrupt
-
-# 收尾：清理临时文件夹
-shutil.rmtree(temp_dir)
-exit(0)

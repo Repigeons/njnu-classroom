@@ -13,7 +13,7 @@
 
 ### 3、配置文件
 
-在`conf`配置文件夹下，应包含`account.json`与`database.json`两个配置文件，分别为爬取数据时使用的一站式账户和项目使用的数据库配置，文件格式参考`template.*.json`模板文件
+在`conf`配置文件夹下，应包含`account.json`、`database.json`和`mail.json`三个配置文件，分别为爬取数据时使用的一站式账户、项目使用的数据库配置和运行时错误的邮件反馈，文件格式参考`template.*.json`模板文件
 
 ### 4、部署方法
 
@@ -36,65 +36,45 @@ pip install -r requirements.txt
 python Main.py
 ```
 
-### 5、编译方法
-
-除了利用Python解释性运行的方法，也可以先对项目进行编译，编译方法如下：
-
-(1)安装PyInstaller，命令为
-
-```powershell
-pip install pyinstaller
-```
-
-(2)激活虚拟环境
-
-```powershell
-# Windows PowerShell
-./env/Script/activate
-```
-
-```bash
-# Linux Bash / MacOS Terminal
-source ./env/bin/activate
-```
-
-(3)编译项目，命令为
-
-```powershell
-# Windows PowerShell
-pyinstaller -F Main.py -p env/Lib/site-packages
-```
-
-```bash
-# Linux Bash / MacOS Terminal
-pyinstaller -F Main.py -p env/lib64/python3.8/site-packages
-```
-
-（其中site-packages为虚拟环境目录下的该项目所引用的包，需根据具体情况填写该参数）
-
-### 6、项目结构
+### 5、项目结构
 
 ```Markdown
 ├── conf                    # 项目配置文件
 │   ├── account.json        # 可用的一站式账户
 │   ├── database.json       # 项目使用的数据库配置
+│   ├── mail.json           # 项目使用的邮件配置
 │   └── template.*.json     # 配置文件对应的模板
-├── get_data                # Python代码，核心过程
+├── app                     # Python代码，核心过程
 │   ├── __init__.py
-│   ├── _base_info.py       # 获取基础信息
-│   └── _core_data.py       # 获取核心数据
+│   ├── _core_data.py       # 获取详细课程数据
+│   ├── _get_classrooms.py  # 获取教学楼及教室信息
+│   ├── _get_cookies.py     # 获取cookies
+│   └── _get_time.py        # 时间相关信息
 ├── utils                   # Python代码，工具函数
 │   ├── __init__.py
 │   ├── _mysql.py           # 数据库操作类
-│   ├── db_manager.py       # 应用数据库管理
-│   └── get_cookie.py       # cookie获取函数
+│   ├── _smtp.py            # 发件服务器操作类
+│   ├── database_manager.py # 数据库业务模块
+│   └── mail_manager.py     # 邮件业务模块
 ├── Main.py                 # 应用主入口
 └── requirements.txt        # 项目所需的包和库
 ```
 
-### 7、附录
+### 6、附录
 
-#### 7.1 项目中使用到的api地址
+#### 6.1 数据库
+
+数据库中共包含5张数据表，分别为：
+
+- 教室列表 `JAS`
+- 原始课程表 `KCB`
+- 校正表 `correction`
+- 开发环境数据表 `dev`
+- 生产环境数据表 `pro`
+
+** 数据库创建语句可在 [`create.sql`](../create.sql) 文件中查询。
+
+#### 6.2 项目中使用到的api地址
 
 - 查询当前学年学期
 
@@ -108,16 +88,12 @@ pyinstaller -F Main.py -p env/lib64/python3.8/site-packages
 
 > <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do>
 
-- 获取教学楼信息
+- 获取全部教学楼教室信息
 
-> <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxkxjs1.do>
+> <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxjsxx.do>
 
-- <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxkxjs1.do>
-
-> <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxkxjs1.do>
-
-- 获取指定周次的数据
+- 获取指定教室指定周次的数据
 
 > <http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do>
 
-- 以上仅为简单枚举，具体用法(请求头及请求参数请参考源码及注释)
+** 以上仅为简单枚举，具体用法(请求头及请求参数请参考源码及注释)
