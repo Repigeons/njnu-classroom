@@ -9,21 +9,29 @@ from typing import Dict, List
 
 import app
 import utils
-from handler.Classroom import Classroom
 
-buildings: Dict[str, List[Classroom]] = {}
+buildings: Dict[str, List[dict]] = {}
 
 
 def reset():
     buildings.clear()
-    for d, day in enumerate(["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]):
-        result = utils.database.fetchall(f"SELECT * FROM `{day}`")
-        for item in result:
-            classroom = Classroom.load(item)
-            classroom.day = d
-            if classroom.jasdm not in buildings.keys():
-                buildings[classroom.jasdm] = []
-            buildings[classroom.jasdm].append(classroom)
+    day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
+    for jasdm in utils.database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
+        buildings[jasdm[0]] = [
+            {
+                'day': day_mapper[item['day']],
+                'jasdm': item['JASDM'],
+                'jxl': item['JXLMC'],
+                'jsmph': item['jsmph'],
+                'capacity': item['SKZWS'],
+                'zylxdm': item['zylxdm'],
+                'jc_ks': item['jc_ks'],
+                'jc_js': item['jc_js'],
+                'jyytms': item['jyytms'],
+                'kcm': item['kcm'],
+            } for item in
+            utils.database.fetchall("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jasdm[0]})
+        ]
 
 
 def handler(args: dict) -> dict:
@@ -37,14 +45,12 @@ def handler(args: dict) -> dict:
 
     if 'jasdm' not in args.keys():
         raise KeyError
-    classrooms = [classroom.dict for classroom in buildings[args['jasdm']]]
-    for i in range(len(classrooms)):
-        classrooms[i]['id'] = classrooms[i]['rank'] = i + 1
+
     return {
         'status': 0,
         'message': "ok",
         'service': "on",
-        'data': classrooms
+        'data': buildings[args['jasdm']]
     }
 
 
