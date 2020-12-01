@@ -29,16 +29,16 @@ class Classroom:
     @classmethod
     def load(cls, item):
         classroom = cls()
-        if type(item) == tuple and len(item) == 10:
-            classroom.jsmph = item[1]
-            classroom.jxl = item[2]
-            classroom.jasdm = item[3]
-            classroom.capacity = item[4]
-            classroom.zylxdm = item[5]
-            classroom.jc_ks = item[6]
-            classroom.jc_js = item[7]
-            classroom.jyytms = item[8]
-            classroom.kcm = item[9]
+        if type(item) == dict:
+            classroom.jsmph = item['jsmph']
+            classroom.jxl = item['jxl']
+            classroom.jasdm = item['jasdm']
+            classroom.capacity = item['capacity']
+            classroom.zylxdm = item['zylxdm']
+            classroom.jc_ks = item['jc_ks']
+            classroom.jc_js = item['jc_js']
+            classroom.jyytms = item['jyytms']
+            classroom.kcm = item['kcm']
         else:
             raise ValueError
         return classroom

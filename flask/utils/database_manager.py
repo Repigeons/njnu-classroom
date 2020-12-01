@@ -3,7 +3,7 @@
 # @Time     :  2020/10/18 0018
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  db_manager.py
+# @FileName :  database_manager.py
 """"""
 import json
 

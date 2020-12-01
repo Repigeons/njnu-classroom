@@ -1,6 +1,3 @@
 {
-  "service": "on",
-  "exclude_classroom": [
-    "3102051013"
-  ]
+  "service": "on"
 }

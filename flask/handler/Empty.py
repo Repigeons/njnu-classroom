@@ -15,15 +15,13 @@ from handler.Classroom import Classroom
 update_time: str
 days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 buildings = {
-    "信息楼": [[], [], [], [], [], [], []],
-    "电教楼": [[], [], [], [], [], [], []],
-    "学明楼": [[], [], [], [], [], [], []],
-    "学正楼": [[], [], [], [], [], [], []],
-    "学海楼": [[], [], [], [], [], [], []],
-    "广乐楼": [[], [], [], [], [], [], []],
-    "学行楼": [[], [], [], [], [], [], []],
-    "学思楼": [[], [], [], [], [], [], []],
 }
+
+
+def reset_buildings():
+    jxl_list = utils.database.fetchall("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `_SFYXZX`")
+    for jxl in jxl_list:
+        buildings[jxl['JXLDM_DISPLAY']] = [[] for _ in range(7)]
 
 
 def reset(name: str = None, day: int = None) -> None:
@@ -42,8 +40,7 @@ def reset(name: str = None, day: int = None) -> None:
     for item in result:
         classroom = Classroom.load(item)
         classroom.day = day
-        if classroom.jasdm not in app.config['exclude_classroom']:
-            buildings[name][day].append(classroom)
+        buildings[name][day].append(classroom)
     buildings[name][day].sort()
 
 
@@ -83,4 +80,5 @@ def now() -> str:
     return datetime.datetime.now().strftime('%x')
 
 
+reset_buildings()
 reset()

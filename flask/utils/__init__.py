@@ -5,5 +5,5 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py
 """"""
-from .db_manager import _database as database
+from .database_manager import _database as database
 from .mail_manager import _send_email as send_email
