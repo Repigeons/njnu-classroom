@@ -49,6 +49,7 @@ def handler(args: dict) -> dict:
             'jxl': item['JXLMC'],
             'JXLMC': item['JXLMC'],
 
+            'classroom': item['jsmph'],
             'jsmph': item['jsmph'],
 
             'capacity': item['SKZWS'],

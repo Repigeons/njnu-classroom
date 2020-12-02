@@ -43,6 +43,7 @@ def reset(jxl: str, day: int) -> None:
             'jxl': item['JXLMC'],
             'JXLMC': item['JXLMC'],
 
+            'classroom': item['jsmph'],
             'jsmph': item['jsmph'],
 
             'capacity': item['SKZWS'],

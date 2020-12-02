@@ -25,6 +25,7 @@ def reset():
                 'jxl': item['JXLMC'],
                 'JXLMC': item['JXLMC'],
 
+                'classroom': item['jsmph'],
                 'jsmph': item['jsmph'],
 
                 'capacity': item['SKZWS'],
