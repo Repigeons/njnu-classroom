@@ -141,4 +141,4 @@ def copy_to_pro():
     __database.update("INSERT INTO `pro` SELECT null, "
                       "`JXLMC`, `jsmph`, `JASDM`, `SKZWS`, "
                       "`zylxdm`, `jc_ks`, `jc_js`, `jyytms`, `kcm`, `day`, `_SFYXZX` "
-                      "FROM `KCB`")
+                      "FROM `dev`")
