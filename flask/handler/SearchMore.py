@@ -8,6 +8,7 @@
 import app
 import utils
 
+days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
 day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
 
 
@@ -34,12 +35,11 @@ def handler(args: dict) -> dict:
         raise KeyError('kcm')
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`=%(day)s"
+    day = True if args['day'] == "#" else f"`day`={days[int(args['day'])]}"
     jxl = True if args['jxl'] == "#" else "`jxl`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
-    keyword = f"`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
+    keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
-    args['day'] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][int(args['day'])]
 
     result = [
         {

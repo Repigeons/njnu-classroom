@@ -43,7 +43,7 @@ def empty():
         return jsonify(response_body), 200
     except KeyError as e:
         return jsonify({
-            'status': -1,
+            'status': 2,
             'message': f"Expected or unresolved key `{e}`",
             'data': []
         }), 400
@@ -51,7 +51,7 @@ def empty():
         app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nwhen handle request /empty.json")
         return jsonify({
-            'status': 1,
+            'status': -1,
             'message': f"{type(e), e}",
             'data': None
         }), 500
@@ -65,7 +65,7 @@ def search_more():
         return jsonify(response_body), 200
     except KeyError as e:
         return jsonify({
-            'status': -1,
+            'status': 2,
             'message': f"Expected or unresolved key `{e}`",
             'data': []
         }), 400
@@ -73,7 +73,7 @@ def search_more():
         app.logger.warning(f"{type(e), e}")
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}when handle request /searchmore.json")
         return jsonify({
-            'status': 1,
+            'status': -1,
             'message': f"{type(e), e}",
             'data': None
         }), 500
@@ -87,7 +87,7 @@ def overview():
         return jsonify(response_body), 200
     except KeyError as e:
         return jsonify({
-            'status': 1,
+            'status': 2,
             'message': f"Expected or unresolved key `{e}`",
             'data': []
         }), 400
