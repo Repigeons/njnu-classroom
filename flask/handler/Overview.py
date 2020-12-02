@@ -5,28 +5,36 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Overview.py
 """"""
-from typing import Dict, List
 
 import app
 import utils
 
-buildings: Dict[str, List[dict]] = {}
+day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
+
+classrooms = {}
 
 
 def reset():
-    buildings.clear()
-    day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
+    classrooms.clear()
     for jasdm in utils.database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
-        buildings[jasdm[0]] = [
+        classrooms[jasdm[0]] = [
             {
-                'day': day_mapper[item['day']],
                 'jasdm': item['JASDM'],
+                'JASDM': item['JASDM'],
+
                 'jxl': item['JXLMC'],
+                'JXLMC': item['JXLMC'],
+
                 'jsmph': item['jsmph'],
+
                 'capacity': item['SKZWS'],
-                'zylxdm': item['zylxdm'],
+                'SKZWS': item['SKZWS'],
+
+                'day': day_mapper[item['day']],
                 'jc_ks': item['jc_ks'],
                 'jc_js': item['jc_js'],
+
+                'zylxdm': item['zylxdm'],
                 'jyytms': item['jyytms'],
                 'kcm': item['kcm'],
             } for item in
@@ -43,14 +51,14 @@ def handler(args: dict) -> dict:
             'data': []
         }
 
-    if 'jasdm' not in args.keys():
-        raise KeyError
+    if 'jasdm' not in args.keys() or args['jasdm'] not in classrooms.keys():
+        raise KeyError('jasdm')
 
     return {
         'status': 0,
         'message': "ok",
         'service': "on",
-        'data': buildings[args['jasdm']]
+        'data': classrooms[args['jasdm']]
     }
 
 

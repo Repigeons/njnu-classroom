@@ -7,7 +7,8 @@
 """"""
 import app
 import utils
-from handler.Classroom import Classroom
+
+day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
 
 
 def handler(args: dict) -> dict:
@@ -19,39 +20,57 @@ def handler(args: dict) -> dict:
             'data': []
         }
 
-    for key in ["day", "jc_ks", "jc_js", "jxl", "zylxdm", "kcm"]:
-        if key not in args.keys():
-            raise KeyError
-    if args['day'] != "#":
-        try:
-            int(args['day'])
-        except ValueError:
-            raise KeyError
-    if not args['jc_ks'].isdigit() or not args['jc_js'].isdigit():
-        raise KeyError
+    if 'day' not in args.keys() or args['day'] != "#" and not args['day'].isdigit():
+        raise KeyError('day')
+    elif 'jc_ks' not in args.keys() or not args['jc_ks'].isdigit():
+        raise KeyError('jc_ks')
+    elif 'jc_js' not in args.keys() or not args['jc_js'].isdigit():
+        raise KeyError('jc_js')
+    elif 'jxl' not in args.keys():
+        raise KeyError('jxl')
+    elif 'zylxdm' not in args.keys():
+        raise KeyError('zylxdm')
+    elif 'kcm' not in args.keys():
+        raise KeyError('kcm')
 
-    kcm = "_" if args['kcm'] == "#" else args['kcm']
-    days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
-    days = days if args['day'] == "#" else [days[int(args['day'])]]
-    jc = f"(`jc_ks`>={args['jc_ks']} AND `jc_js`<={args['jc_js']})"
-    jxl = "(`jxl` IS NOT NULL)" if args['jxl'] == "#" else f"(`jxl`='{args['jxl']}')"
-    zylxdm = "(`zylxdm` IS NOT NULL)" if args['zylxdm'] == "#" else f"(`zylxdm`='{args['zylxdm']}')"
+    jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
+    day = True if args['day'] == "#" else f"`day`=%(day)s"
+    jxl = True if args['jxl'] == "#" else "`jxl`=%(jxl)s"
+    zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
+    keyword = f"`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
+    args['keyword'] = f"%{args['kcm']}%"
+    args['day'] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][int(args['day'])]
 
-    classrooms = []
-    for d, day in enumerate(days):
-        result = utils.database.fetchall(
-            sql=f"SELECT * FROM `{day}` WHERE {jc} AND {jxl} AND {zylxdm} AND (`jyytms` LIKE %(kcm)s OR `kcm` LIKE %(kcm)s)",
-            args={'kcm': f"%{kcm}%"}
+    result = [
+        {
+            'jasdm': item['JASDM'],
+            'JASDM': item['JASDM'],
+
+            'jxl': item['JXLMC'],
+            'JXLMC': item['JXLMC'],
+
+            'jsmph': item['jsmph'],
+
+            'capacity': item['SKZWS'],
+            'SKZWS': item['SKZWS'],
+
+            'day': day_mapper[item['day']],
+            'jc_ks': item['jc_ks'],
+            'jc_js': item['jc_js'],
+
+            'zylxdm': item['zylxdm'],
+            'jyytms': item['jyytms'],
+            'kcm': item['kcm'],
+        } for item in
+        utils.database.fetchall(
+            sql=f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})",
+            args=args
         )
-        for item in result:
-            classroom = Classroom.load(item)
-            classroom.day = d if args['day'] == "#" else int(args['day'])
-            classrooms.append(classroom.dict)
-    for i in range(len(classrooms)):
-        classrooms[i]['id'] = classrooms[i]['rank'] = i + 1
+    ]
+
     return {
         'status': 0,
         'message': "ok",
         'service': "on",
-        'data': classrooms
+        'data': result
     }
