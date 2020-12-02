@@ -6,17 +6,11 @@
 # @FileName :  _get_cookies.py
 """"""
 import json
+import os
 from json.decoder import JSONDecodeError
 
 from selenium import webdriver
 from utils import send_email
-
-__env = 'phantomjs'
-
-
-def set_phantomjs(phantomjs: str):
-    global __env
-    __phantomjs = phantomjs
 
 
 def save_cookies(file: str) -> None:
@@ -62,7 +56,8 @@ def get_cookie_dict(account: dict) -> dict:
     """
     username, password, gid = account.values()
 
-    browser = webdriver.PhantomJS(__env)
+    phantomjs = os.getenv("phantomjs")
+    browser = webdriver.PhantomJS(phantomjs)
     browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
 
     browser.switch_to.default_content()
