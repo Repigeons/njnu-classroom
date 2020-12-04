@@ -10,7 +10,7 @@ from wsgiref.simple_server import make_server
 
 from flask.logging import default_handler
 
-from app import app, env
+from app import app
 
 
 def main():
@@ -22,9 +22,7 @@ def main():
     parser.add_argument('-logger', default=None, type=str, help='outputting log file')
     args = parser.parse_args()
 
-    if env == 'dev':
-        app.run(host=args.host, port=args.port, debug=True)
-    else:
+    if app.config['ENV'] == "production":
         app.logger.addHandler(default_handler)
         if args.logger is not None:
             logger_handler = logging.FileHandler(args.logger)
@@ -33,6 +31,8 @@ def main():
 
         make_server(host=args.host, port=args.port, app=app).serve_forever()
         app.run()
+    else:
+        app.run(host=args.host, port=args.port, debug=True)
 
 
 if __name__ == '__main__':

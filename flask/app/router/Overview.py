@@ -5,9 +5,32 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Overview.py
 """"""
+from flask import current_app as app, request, jsonify
 
-import app
 import utils
+
+
+@app.route('/overview.json', methods=['GET'])
+def overview():
+    try:
+        request_args = request.args.to_dict()
+        response_body = handler(request_args)
+        return jsonify(response_body), 200
+    except KeyError as e:
+        return jsonify({
+            'status': 2,
+            'message': f"Expected or unresolved key `{e}`",
+            'data': []
+        }), 400
+    except Exception as e:
+        app.logger.warning(f"{type(e), e}")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}when handle request /overview.json")
+        return jsonify({
+            'status': -1,
+            'message': f"{type(e), e}",
+            'data': None
+        }), 500
+
 
 day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
 

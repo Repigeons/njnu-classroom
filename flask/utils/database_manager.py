@@ -6,16 +6,11 @@
 # @FileName :  database_manager.py
 """"""
 import json
+import os
 
-import app
 from ._mysql import MySQL
 
-__database_config = json.load(open('conf/database.json'))[app.env]
+__env = 'pro' if os.getenv('FLASK_ENV') == 'production' else 'dev'
+__database_config = json.load(open('conf/database.json'))
 
-_database = MySQL(
-    host=__database_config['host'],
-    port=__database_config['port'],
-    user=__database_config['user'],
-    passwd=__database_config['password'],
-    database=__database_config['database'],
-)
+_database = MySQL(**__database_config[__env])
