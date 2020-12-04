@@ -26,7 +26,7 @@ def empty():
         }), 400
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nwhen handle request /empty.json")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nin app.router.Empty: line 27")
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -34,8 +34,10 @@ def empty():
         }), 500
 
 
-days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
-day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
+day_mapper = {
+    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+}
 
 update_time: str
 buildings = {}
@@ -84,7 +86,7 @@ def reset(jxl: str, day: int) -> None:
             sql=f"SELECT * FROM `pro` "
                 f"WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `_SFYXZX`"
                 f"ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
-            args={'JXLMC': jxl, 'day': days[day]}
+            args={'JXLMC': jxl, 'day': day_mapper[day]}
         )
     ]
 

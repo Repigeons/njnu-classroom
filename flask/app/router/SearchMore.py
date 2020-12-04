@@ -24,7 +24,7 @@ def search_more():
         }), 400
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}when handle request /searchmore.json")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.router.SearchMore: line 25")
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -32,8 +32,10 @@ def search_more():
         }), 500
 
 
-days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]
-day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
+day_mapper = {
+    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+}
 
 
 def handler(args: dict) -> dict:
@@ -59,7 +61,7 @@ def handler(args: dict) -> dict:
         raise KeyError('kcm')
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`={days[int(args['day'])]}"
+    day = True if args['day'] == "#" else f"`day`={day_mapper[int(args['day'])]}"
     jxl = True if args['jxl'] == "#" else "`jxl`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"

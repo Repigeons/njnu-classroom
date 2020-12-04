@@ -33,7 +33,7 @@ def reset():
         }), 202
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}when handle request /reset")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.app: line 34")
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -49,9 +49,11 @@ def feedback():
         request_args['index'] = int(request_args['index'])
         request_args['id'] = request_args['index'] + 1
         request_args['item'] = request_args['resultList'][request_args['index']]
+
+        message = f""
         utils.send_email(
             subject='南师教室：用户反馈',
-            message=json.dumps(request_args, ensure_ascii=False, indent=2)
+            message=message + json.dumps(request_args, ensure_ascii=False, indent=2)
         )
         return jsonify({
             'status': 0,
@@ -60,7 +62,7 @@ def feedback():
         }), 202
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.app: line 63")
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",

@@ -24,7 +24,7 @@ def overview():
         }), 400
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}when handle request /overview.json")
+        utils.send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.router.Overview: line 25")
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -32,8 +32,10 @@ def overview():
         }), 500
 
 
-day_mapper = {"sunday": 0, "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6}
-
+day_mapper = {
+    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+}
 classrooms = {}
 
 
