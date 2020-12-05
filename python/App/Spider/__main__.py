@@ -51,8 +51,8 @@ def main():
         print(datetime.datetime.now().strftime('[%Y-%m-%d %X]'), '本轮具体课程信息收集工作成功完成。')
         print()
 
-    except SystemExit or KeyboardInterrupt as exception:
-        raise exception
+    except SystemExit or KeyboardInterrupt as e:
+        raise e
 
     except Exception as e:
         send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nin app._get_cookie at line 75")

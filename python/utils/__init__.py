@@ -7,3 +7,4 @@
 """"""
 from ._mysql import MySQL
 from ._smtp import SMTP
+from ._threading import Threading

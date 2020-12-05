@@ -6,44 +6,142 @@
 # @FileName :  Feedback.py
 """"""
 import json
+import os
 
+import requests
 from flask import current_app as app, request, jsonify
 
-from App.public import send_email
+from App.Spider.app import save_cookies, save_time
+from App.public import database, send_email
+from utils import Threading
 
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
+    Threading(backend_process).start(proxy_app=app, request_args=request.form.to_dict())
+    return jsonify({
+        'status': 0,
+        'message': "ok",
+        'data': "feedback"
+    }), 202
+
+
+def backend_process(proxy_app, request_args: dict):
+    request_args['resultList'] = json.loads(request_args['resultList'])
+    request_args['index'] = int(request_args['index'])
+    request_args['item'] = request_args['resultList'][request_args['index']]
+    request_args['id'] = request_args['item']['id']
     try:
-        request_args = request.form.to_dict()
-        request_args['resultList'] = json.loads(request_args['resultList'])
-        request_args['index'] = int(request_args['index'])
-        request_args['id'] = request_args['index'] + 1
-        request_args['item'] = request_args['resultList'][request_args['index']]
+        jc, day = request_args['dqjc'], int(request_args['day'])
+        jxl, jsmph, jasdm = request_args['item']['JXLMC'], request_args['item']['jsmph'], request_args['item']['JASDM']
 
-        message = f""
-        send_email(
-            subject='南师教室：用户反馈',
-            message=message + json.dumps(request_args, ensure_ascii=False, indent=2)
-        )
-        return jsonify({
-            'status': 0,
-            'message': "ok",
-            'data': "feedback"
-        }), 202
+        if check_with_ehall(jasdm=jasdm, day=day, jc=jc):
+
+            week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=jc)
+
+            send_email(
+                subject=f"南师教室：用户反馈 "
+                        f"{jxl} "
+                        f"{jsmph}教室 "
+                        f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                        f"（当前为第{jc}节）",
+                message=f"验证一站式平台：数据一致\n"
+                        f"上报计数：{total_count}\n"
+                        f"本周计数：{week_count}\n"
+                        f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
+                        f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+            )
+
+        else:
+            from App.Spider.__main__ import main
+            main()
+
+            send_email(
+                subject=f"南师教室：用户反馈 "
+                        f"{jxl} "
+                        f"{jsmph}教室 "
+                        f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                        f"（当前为第{jc}节）",
+                message=f"验证一站式平台：数据不一致\n"
+                        f"操作方案：更新数据库\n"
+                        f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+            )
+
     except Exception as e:
-        app.logger.warning(f"{type(e), e}")
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.app: line 63")
-        return jsonify({
-            'status': -1,
-            'message': f"{type(e), e}",
-            'data': None
-        }), 500
+        proxy_app.logger.warning(f"{type(e), e}")
+        send_email(
+            subject='南师教室：错误报告',
+            message=f"{type(e)}\n{e}\nin App.Server.router.Feedback: line 69"
+        )
 
 
-def backend():
-    pass
+def check_with_ehall(jasdm: str, day: int, jc: str):
+    cookies_file, time_file = "cookies.json", "time.json"
+    try:
+        save_cookies(file=cookies_file)
+        cookies = json.load(open(cookies_file))
+    finally:
+        os.remove(cookies_file)
+    try:
+        save_time(cookies=cookies, file=time_file)
+        time_info = json.load(open(time_file))
+    finally:
+        os.remove(time_file)
+
+    res = requests.post(
+        url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+        cookies=cookies,
+        data={
+            'XNXQDM': time_info['XNXQDM'][0],
+            'ZC': time_info['ZC'],
+            'JASDM': jasdm
+        }
+    ).json()
+    kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
+    for row in kcb:
+        if row['JC'] == jc and row['ZYLXDM'] == '':
+            return True  # 数据为空，待纠错
+    return False  # 数据未更新
 
 
-def check_with_ehall():
-    pass
+def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
+    database.update(
+        sql="INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
+        args={
+            'jasdm': jasdm,
+            'jc': jc,
+            'day': day
+        }
+    )
+    statistic = database.fetchall(
+        sql="SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
+            "FROM `feedback_metadata` "
+            "WHERE `JASDM`=%(jasdm)s "
+            "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
+            "AND `jc`=%(jc)s "
+            "GROUP BY `date` "
+            "ORDER BY `date`",
+        args={
+            'jasdm': jasdm,
+            'jc': jc,
+            'day': day
+        }
+    )
+    week_count = statistic[-1]['count']
+    total_count = sum([row['count'] for row in statistic])
+    if week_count != total_count:
+        database.update(
+            sql="INSERT INTO `correction` ("
+                "day, JXLMC, jsmph, JASDM, SKZWS, zylxdm, jc_ks, jc_js, jyytms, kcm"
+                ") VALUES ("
+                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s, '-1', '04', %(jc)s, %(jc)s, '占用','####占用'"
+                ")",
+            args={
+                'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
+                'JXLMC': jxl,
+                'jsmph': jsmph,
+                'JASDM': jasdm,
+                'jc': jc
+            }
+        )
+    return week_count, total_count

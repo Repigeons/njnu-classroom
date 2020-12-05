@@ -7,16 +7,19 @@
 """"""
 import json
 
-from utils import SMTP
+from utils import SMTP, Threading
 
 __mail_config = json.load(open('conf/mail.json'))
 
 __mail_server = SMTP(**__mail_config['sender'])
 
 
-async def send_email(subject: str, message: str):
-    __mail_server.send(
-        subject, message, 'plain',
-        'Repigeons<info@njnu.xyz>',
-        *__mail_config['receivers']
-    )
+def send_email(subject: str, message: str):
+    def _send(_subject: str, _message: str):
+        __mail_server.send(
+            subject, message, 'plain',
+            'Repigeons<info@njnu.xyz>',
+            *__mail_config['receivers']
+        )
+
+    Threading(_send).start(_subject=subject, _message=message)

@@ -6,10 +6,10 @@
 # @FileName :  _get_cookies.py
 """"""
 import json
-import os
 from json.decoder import JSONDecodeError
 
 from selenium import webdriver
+
 from App.public import send_email
 
 
@@ -27,22 +27,22 @@ def save_cookies(file: str) -> None:
         )
         print('cookies获取完成...')
     except FileNotFoundError:
-        send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nin app._get_cookie at line 60")
+        send_email(subject="南师教室：错误报告", message=f"FileNotFoundError\n配置文件缺失\nin App.Spider.app._get_cookie at line 29")
         print('配置文件缺失')
         print('Exit with code', 1)
         exit(1)
     except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nin app._get_cookie at line 65")
+        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\n配置文件解析失败\nin App.Spider.app._get_cookie at line 34")
         print('配置文件解析失败')
         print('Exit with code', 1)
         exit(1)
     except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n登录失败\nin app._get_cookie at line 70")
+        send_email(subject="南师教室：错误报告", message=f"KeyError\n登录失败\nin App.Spider.app._get_cookie at line 39")
         print('登录失败')
         print('Exit with code', 1)
         exit(1)
     except Exception as e:
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nin app._get_cookie at line 75")
+        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}\nin App.Spider.app._get_cookie at line 44")
         print(type(e), e)
         print('Exit with code', -1)
         exit(-1)
@@ -55,9 +55,9 @@ def get_cookie_dict(account: dict) -> dict:
     :return:dict{_WEU, MOD_AUTH_CAS}
     """
     username, password, gid = account.values()
+    config = json.load(open('conf/spider.json'))
 
-    phantomjs = os.getenv("phantomjs")
-    browser = webdriver.PhantomJS() if phantomjs is None else webdriver.PhantomJS(phantomjs)
+    browser = webdriver.PhantomJS(config['phantomjs']) if ('phantomjs' in config) else webdriver.PhantomJS()
     browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
 
     browser.switch_to.default_content()
