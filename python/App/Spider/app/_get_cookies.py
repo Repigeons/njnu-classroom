@@ -55,9 +55,26 @@ def get_cookie_dict(account: dict) -> dict:
     :return:dict{_WEU, MOD_AUTH_CAS}
     """
     username, password, gid = account.values()
-    config = json.load(open('conf/spider.json'))
+    selenium = json.load(open('conf/selenium.json'))
+    driver = selenium['driver']
+    args = selenium[driver]
 
-    browser = webdriver.PhantomJS(config['phantomjs']) if ('phantomjs' in config) else webdriver.PhantomJS()
+    if driver.lower() == "phantomjs":
+        browser = webdriver.PhantomJS(**args)
+
+    elif driver.lower() == "chrome":
+        option = webdriver.ChromeOptions()
+        option.add_argument("--headless")
+        browser = webdriver.Chrome(options=option, **args)
+
+    elif driver.lower() == "firefox":
+        option = webdriver.FirefoxOptions()
+        option.add_argument("-headless")
+        browser = webdriver.Firefox(options=option, **args)
+
+    else:
+        raise Exception(f"Unresolved selenium driver `{driver}`")
+
     browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
 
     browser.switch_to.default_content()

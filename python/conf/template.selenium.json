@@ -1,0 +1,13 @@
+{
+  "driver": "phantomjs",
+  "phantomjs": {
+    "executable_path": "phantomjs"
+  },
+  "chrome": {
+    "executable_path": "chromedriver"
+  },
+  "firefox": {
+    "firefox_binary": "firefox/firefox",
+    "executable_path": "geckodriver"
+  }
+}
