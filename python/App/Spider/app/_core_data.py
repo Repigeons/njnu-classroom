@@ -55,7 +55,7 @@ def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
                 'jc_ks': int(jc[0]),
                 'jc_js': int(jc[-1]),
                 'jyytms': row['JYYTMS'] if 'JYYTMS' in row else '',
-                'kcm': row['KCM'],
+                'kcm': row['KCM'] if 'KCM' in row else '',
             }
             for key in classroom:
                 item[key] = classroom[key]
