@@ -66,7 +66,7 @@ def handler(args: dict) -> dict:
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
     day = True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'"
-    jxl = True if args['jxl'] == "#" else "`jxl`=%(jxl)s"
+    jxl = True if args['jxl'] == "#" else "`JXLMC`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
