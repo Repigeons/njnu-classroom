@@ -104,8 +104,7 @@ create index dev_jxl_index on dev (JXLMC);
 
 create table pro
 (
-    id      int auto_increment
-        primary key,
+    id      int auto_increment primary key,
     JXLMC   varchar(32)                                                                         not null comment '教学楼名称',
     jsmph   varchar(32)                                                                         not null comment '教室门牌号',
     JASDM   char(10)                                                                            not null comment '教室代码',
@@ -123,3 +122,22 @@ create table pro
 create index pro_day_index on pro (day);
 create index pro_jasdm_index on pro (JASDM);
 create index pro_jxl_index on pro (JXLMC);
+
+create table feedback_metadata
+(
+    id    int auto_increment primary key,
+    time  timestamp default CURRENT_TIMESTAMP not null comment '日期',
+    jc    int                                 not null comment '节次',
+    JASDM char(10)                            not null comment '教室代码'
+)   ENGINE = InnoDB
+    DEFAULT CHARSET = utf8mb4
+    comment '用户反馈';
+
+create view `feedback` as
+    select `feedback_metadata`.`id`                            `id`,
+           `JAS`.`JASMC`                                       `JASMC`,
+           date_format(`feedback_metadata`.`time`, '%Y-%m-%d') `date`,
+           date_format(`feedback_metadata`.`time`, '%W')       `day`,
+           `feedback_metadata`.`jc`                            `jc`
+    from `JAS`, `feedback_metadata`
+    where `JAS`.`JASDM` = `feedback_metadata`.`JASDM`;
