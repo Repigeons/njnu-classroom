@@ -2,12 +2,10 @@
 App<IAppOption>({
   globalData: {
     server: 'https://classroom.njnu.xyz',
-    zylxdm: Object(),
     classrooms: Object(),
   },
   onLaunch() {
     this.getClassrooms().then(data => this.globalData.classrooms = data)
-    this.getZylxdm().then(data => this.globalData.zylxdm = data)
   },
   getNotice() {
     return new Promise((resolve) => {

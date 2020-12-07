@@ -3,7 +3,6 @@
 interface IAppOption {
   globalData: {
     readonly server: string
-    zylxdm: Record<string, string>
     classrooms: Record<string, Array<IJasInfo>>
   }
   getNotice: () => Promise<INotice>

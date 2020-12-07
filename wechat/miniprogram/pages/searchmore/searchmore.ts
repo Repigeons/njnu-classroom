@@ -42,8 +42,9 @@ Page({
       '11': '/images/yanjiusheng.png',
     },
     dialog: {},
-    list: Array<IClassroomRow>(),
-    result_size: 0
+    search_result: Array<IClassroomRow>(),
+    result_size: 0,
+    display_list: Array<IClassroomRow>(),
   },
 
   /**
@@ -142,18 +143,15 @@ Page({
           }
           this.setData({
             service: resData.service,
-            list: data.slice(0, perPage),
+            search_result: data,
             result_size: data.length,
-            showResult: true
-          })
-          wx.setStorage({
-            key: 'list',
-            data: data
+            display_list: data.slice(0, perPage),
+            showResult: true,
           })
         },
         fail: res => {
           console.error(res)
-          this.setData({ list: [] })
+          this.setData({ display_list: [] })
         }
       })
     }
@@ -211,12 +209,9 @@ Page({
   },
 
   onReachBottom(): void {
-    wx.getStorage({
-      key: 'list',
-      success: res => {
-        const list = this.data.list as Array<IClassroomRow>
-        this.setData({list: list.concat(res.data.slice(list.length, list.length + perPage))})
-      }
+    const list = this.data.display_list as Array<IClassroomRow>, search_result = this.data.search_result
+    this.setData({
+      display_list: list.concat(search_result.slice(list.length, list.length + perPage))
     })
   },
 
@@ -225,7 +220,7 @@ Page({
    */
   showDialog(e: AnyObject): void {
     const index: number = e.currentTarget.dataset.index
-    const item: IClassroomRow = this.data.list[index]
+    const item: IClassroomRow = this.data.display_list[index]
     const rq: string = this.data.rq_array[item.dayIndex]
     this.setData({dialog: item2dialog(item, rq)})
   },

@@ -83,7 +83,7 @@
       <view wx:else class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
       <view class="weui-panel weui-panel_access">
         <view class="weui-panel__bd">
-          <view wx:for="{{list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+          <view wx:for="{{display_list}}" wx:for-index="index" wx:for-item="item" wx:key="key">
             <view class="weui-media-box weui-media-box_appmsg" hover-class="weui-cell_active" bindtap="showDialog" data-index="{{index}}">
               <view class="weui-media-box__hd weui-media-box__hd_in-appmsg">
                 <image class="weui-media-box__thumb" src="{{iconPath[item.zylxdm]}}"/>
