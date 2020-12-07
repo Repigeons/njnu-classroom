@@ -24,7 +24,11 @@ def overview():
         }), 400
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.router.Overview: line 25")
+        send_email(
+            subject="南师教室：错误报告 in app.router.Overview",
+            message=f"{type(e), e}\n"
+                    f"{request.url}\n"
+        )
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",

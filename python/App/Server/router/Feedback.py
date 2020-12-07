@@ -70,8 +70,10 @@ def backend_process(proxy_app, request_args: dict):
     except Exception as e:
         proxy_app.logger.warning(f"{type(e), e}")
         send_email(
-            subject='南师教室：错误报告',
-            message=f"{type(e)}\n{e}\nin App.Server.router.Feedback: line 69"
+            subject="南师教室：错误报告 in app.router.Feedback",
+            message=f"{type(e), e}\n"
+                    f"{request.url}\n"
+                    f"{request_args}"
         )
 
 

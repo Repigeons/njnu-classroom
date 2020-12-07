@@ -24,7 +24,11 @@ def search_more():
         }), 400
     except Exception as e:
         app.logger.warning(f"{type(e), e}")
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.router.SearchMore: line 25")
+        send_email(
+            subject="南师教室：错误报告 in app.router.SearchMore",
+            message=f"{type(e), e}\n"
+                    f"{request.url}\n"
+        )
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -61,7 +65,7 @@ def handler(args: dict) -> dict:
         raise KeyError('kcm')
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`={day_mapper[int(args['day'])]}"
+    day = True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'"
     jxl = True if args['jxl'] == "#" else "`jxl`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
