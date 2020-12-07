@@ -67,13 +67,13 @@ create table correction
     JXLMC   varchar(32)                                                                         not null comment '教学楼名称',
     jsmph   varchar(32)                                                                         not null comment '教室门牌号',
     JASDM   char(10)                                                                            not null comment '教室代码',
-    SKZWS   int                                                                                 not null comment '座位数',
-    zylxdm  char(2) default '00'                                                                not null comment '类型代码',
+    SKZWS   int     default -1                                                                  not null comment '座位数',
+    zylxdm  char(2) default '04'                                                                not null comment '类型代码',
     jc_ks   tinyint                                                                             not null comment '节次_开始',
     jc_js   tinyint                                                                             not null comment '节次_结束',
     jyytms  text                                                                                not null comment '借用用途说明',
     kcm     text                                                                                not null comment '课程名',
-    _SFYXZX bit     default b'0'                                                                not null comment '是否允许自习'
+    _SFYXZX bit     default b'1'                                                                not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '校正表';

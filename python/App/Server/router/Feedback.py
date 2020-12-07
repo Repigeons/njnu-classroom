@@ -134,9 +134,9 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
     if week_count != total_count:
         database.update(
             sql="INSERT INTO `correction` ("
-                "day, JXLMC, jsmph, JASDM, SKZWS, zylxdm, jc_ks, jc_js, jyytms, kcm"
+                "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
                 ") VALUES ("
-                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s, '-1', '04', %(jc)s, %(jc)s, '占用','####占用'"
+                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
                 ")",
             args={
                 'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],

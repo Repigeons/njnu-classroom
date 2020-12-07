@@ -46,6 +46,7 @@ def insert_into_kcb(class_list: list) -> None:
 
 
 def correct():
+    print("待校正数据：")
     for correction in database.fetchall("SELECT * FROM `correction`"):
         print([
             correction['day'], correction['jc_ks'], correction['jc_js'],
@@ -59,8 +60,15 @@ def correct():
         ]
         sql.append((
             "UPDATE `dev` SET "
-            "`SKZWS`=%(SKZWS)s, `jyytms`=%(jyytms)s, `kcm`=%(kcm)s WHERE "
-            "`day`=%(day)s AND `JASDM`=%(JASDM)s AND `jc_ks`=%(jc_js)s AND `jc_js`=%(jc_js)s",
+            "`SKZWS`=%(SKZWS)s, "
+            "`zylxdm`=%(zylxdm)s, "
+            "`jc_ks`=%(jc_ks)s, "
+            "`jyytms`=%(jyytms)s, "
+            "`kcm`=%(kcm)s WHERE "
+            "`day`=%(day)s AND "
+            "`JASDM`=%(JASDM)s AND "
+            "`jc_ks`=%(jc_js)s AND "
+            "`jc_js`=%(jc_js)s",
             correction))
         database.update_batch(*sql)
 
@@ -91,7 +99,6 @@ def merge(temp_dir: str):
                     classrooms2.append(classroom)
             jxl_classrooms.extend(classrooms2)
         json.dump(jxl_classrooms, open(f"{temp_dir}/jxl_classrooms_{jxl}.json", 'w', encoding='utf8'))
-        print("下载完成：", jxl)
     # 清空数据库
     database.update("TRUNCATE TABLE `dev`")
     # 重新插入数据库
@@ -107,6 +114,7 @@ def merge(temp_dir: str):
             ");", row
         ) for row in jxl_classrooms
         ])
+        print("归并完成：", jxl)
 
 
 def copy_to_dev():
