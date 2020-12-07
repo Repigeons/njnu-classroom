@@ -41,6 +41,7 @@ Page({
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
     this.setData({
       cellHeight, cellWidth,
+      classrooms: app.globalData.classrooms,
       jxl_name_array: Object.keys(app.globalData.classrooms)
     })
 
@@ -66,28 +67,22 @@ Page({
    * 选择教学楼
    */
   bindJxlChange(e: AnyObject): void {
-    const jxl_selected = e.detail.value
-    let list = app.globalData.classrooms[this.data.jxl_name_array[this.data.jxl_selected]]
+    const jxl_selected = +e.detail.value
+    const jxl = this.data.jxl_name_array[jxl_selected]
+    const list = this.data.classrooms[jxl]
     let jsmph_array = []
     for (let i=0; i< list.length; i++) {
       jsmph_array.push(list[i]['JSMPH'])
     }
     this.setData({ jxl_selected, jsmph_array })
-    this.bindJsChange({detail:{value:0}})
-    wx.setStorage({
-      key: 'last_overview',
-      data: {
-        jxl: this.data.jxl_name_array[this.data.jxl_selected],
-        js: this.data.jsmph_array[this.data.jsmph_selected],
-      }
-    })
+    this.bindJsChange(0)
   },
 
   /**
    * 选择教室
    */
   bindJsChange(e: AnyObject): void {
-    const jsmph_selected = +e.detail.value
+    const jsmph_selected = (typeof e == 'number') ? e : +e.detail.value
     this.setData({ jsmph_selected })
     wx.setStorage({
       key: 'last_overview',
@@ -144,12 +139,12 @@ Page({
 
   bindFormer(): void {
     let value = (this.data.jsmph_selected - 1 + this.data.jsmph_array.length) % this.data.jsmph_array.length
-    this.bindJsChange({detail:{value}})
+    this.bindJsChange(value)
   },
 
   bindLatter(): void {
     let value = (this.data.jsmph_selected + 1) % this.data.jsmph_array.length
-    this.bindJsChange({detail:{value}})
+    this.bindJsChange(value)
   },
 
   /**
@@ -183,7 +178,7 @@ Page({
         jsmph_selected = i
     }
     this.setData({ jxl_name_array, jxl_selected, jsmph_array })
-    this.bindJsChange({detail:{value:jsmph_selected}})
+    this.bindJsChange(jsmph_selected)
   },
 
   onShareAppMessage() {
