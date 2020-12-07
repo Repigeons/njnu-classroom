@@ -28,7 +28,7 @@ Werkzeug==1.0.1
 
 ### 3、配置文件
 
-在 `conf` 配置文件夹下，包含 `account.json` `database.json` `mail.json` 和 `spider.json` `server.json` `notice.json`，其中前三个为工具配置文件，后三个为服务模块配置文件，配置文件模版均在 `template.*.json`。
+在 `conf` 配置文件夹下，包含 `account.json` `database.json` `mail.json` `selenium.json` 和 `spider.json` `server.json` `notice.json`，其中前四个为工具配置文件，后三个为服务模块配置文件，配置文件模版均在 `template.*.json`。
 
 ### 4、部署方法
 
@@ -81,6 +81,7 @@ python -m manage --run Notice
 │   ├── account.json        # 可用的一站式账户
 │   ├── database.json       # 项目使用的数据库配置
 │   ├── mail.json           # 项目使用的邮件服务器配置
+│   ├── selenium.json       # selenium模拟浏览器配置
 │   ├── spider.json         # 爬虫服务模块配置
 │   ├── server.json         # 数据服务模块配置
 │   ├── notice.json         # 公告服务模块配置
@@ -103,7 +104,7 @@ python -m manage --run Notice
 
 #### 6.1 数据库
 
-数据库中共包含 5 张数据表：
+数据库中共包含 6 张数据表：
 
 - 教室列表 `JAS`
 - 原始课程表 `KCB`
