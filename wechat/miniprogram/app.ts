@@ -5,6 +5,26 @@ App<IAppOption>({
     classrooms: Object(),
   },
   onLaunch() {
+    const keys = [
+      'notice',
+      'position.json',
+      'classroom.json',
+      'zylxdm.json',
+      'last_overview',
+    ]
+    const storageInfo = wx.getStorageInfoSync().keys
+    const storage: Record<string, any> = {}
+    for (let key_index in keys) {
+      const key = keys[key_index]
+      if (storageInfo.indexOf(key) != -1) {
+        storage[key] = wx.getStorageSync(key)
+      }
+    }
+    wx.clearStorageSync()
+    for (let key in storage) {
+      wx.setStorage({ key, data: storage[key] })
+    }
+
     this.getClassrooms().then(data => this.globalData.classrooms = data)
   },
   getNotice() {
