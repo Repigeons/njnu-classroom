@@ -13,17 +13,19 @@ Page({
     topBorder: 56,
     barRatio: 0.8,
     dqjc: 1,
-    // 周日~0
+    // 周日->0
     day: new Date().getDay(),
     time_array: [
       ['08:00', '08:40'], ['08:45', '09:25'], ['09:40', '10:20'], ['10:35', '11:15'], ['11:20', '12:00'],
       ['13:30', '14:10'], ['14:15', '14:55'], ['15:10', '15:50'], ['15:55', '16:35'],
       ['18:30', '19:10'], ['19:20', '20:00'], ['20:10', '20:50'],
     ],
-    jxl_array: Array<string>(),
+
+    classrooms: Object() as Record<string, Array<IJasInfo>>,
+    jxl_name_array: Array<string>(),
     jxl_selected: 0,
-    js_array: Array<string>(),
-    js_selected: 0,
+    jsmph_array: Array<string>(),
+    jsmph_selected: 0,
     dialog: {},
     bar_list: Array<IClassroomRow>(),
     empty: true,
@@ -37,12 +39,14 @@ Page({
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
-
-    this.setData({ cellHeight, cellWidth })
+    this.setData({
+      cellHeight, cellWidth,
+      jxl_name_array: Object.keys(app.globalData.classrooms)
+    })
 
     if (options.page == 'overview') {
-      const {jxl, js} = options
-      this.switchClassroom(jxl, js)
+      const {JXLMC, JSMPH} = options
+      this.switchClassroom(JXLMC, JSMPH)
     }
   },
 
@@ -63,18 +67,18 @@ Page({
    */
   bindJxlChange(e: AnyObject): void {
     const jxl_selected = e.detail.value
-    let list = app.globalData.classrooms[this.data.jxl_array[jxl_selected]]
-    let js_array = []
+    let list = app.globalData.classrooms[this.data.jxl_name_array[this.data.jxl_selected]]
+    let jsmph_array = []
     for (let i=0; i< list.length; i++) {
-      js_array.push(list[i]['JSMPH'])
+      jsmph_array.push(list[i]['JSMPH'])
     }
-    this.setData({ jxl_selected, js_array })
+    this.setData({ jxl_selected, jsmph_array })
     this.bindJsChange({detail:{value:0}})
     wx.setStorage({
       key: 'last_overview',
       data: {
-        jxl: this.data.jxl_array[this.data.jxl_selected],
-        js: this.data.js_array[this.data.js_selected],
+        jxl: this.data.jxl_name_array[this.data.jxl_selected],
+        js: this.data.jsmph_array[this.data.jsmph_selected],
       }
     })
   },
@@ -83,20 +87,20 @@ Page({
    * 选择教室
    */
   bindJsChange(e: AnyObject): void {
-    const js_selected = +e.detail.value
-    this.setData({ js_selected })
+    const jsmph_selected = +e.detail.value
+    this.setData({ jsmph_selected })
     wx.setStorage({
       key: 'last_overview',
       data: {
-        jxl: this.data.jxl_array[this.data.jxl_selected],
-        js: this.data.js_array[this.data.js_selected],
+        jxl: this.data.jxl_name_array[this.data.jxl_selected],
+        js: this.data.jsmph_array[this.data.jsmph_selected],
       }
     })
     
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
       data: {
-        jasdm: app.globalData.classrooms[this.data.jxl_array[this.data.jxl_selected]][js_selected]['JASDM']
+        jasdm: app.globalData.classrooms[this.data.jxl_name_array[this.data.jxl_selected]][jsmph_selected]['JASDM']
       },
       success: res => {
         let resData = res.data as Record<string, AnyObject>
@@ -139,12 +143,12 @@ Page({
   },
 
   bindFormer(): void {
-    let value = (this.data.js_selected - 1 + this.data.js_array.length) % this.data.js_array.length
+    let value = (this.data.jsmph_selected - 1 + this.data.jsmph_array.length) % this.data.jsmph_array.length
     this.bindJsChange({detail:{value}})
   },
 
   bindLatter(): void {
-    let value = (this.data.js_selected + 1) % this.data.js_array.length
+    let value = (this.data.jsmph_selected + 1) % this.data.jsmph_array.length
     this.bindJsChange({detail:{value}})
   },
 
@@ -164,24 +168,22 @@ Page({
   },
 
   switchClassroom(jxl: string, js: string): void {
-    let jxl_array = [], js_array = [], jxl_selected = 0, js_selected = 0
-    for (let key in app.globalData.classrooms) {
-      jxl_array.push(key)
-    }
-    for (let i=0; i<jxl_array.length; i++) {
-      if (jxl_array[i] == jxl) {
+    let jxl_name_array = Object.keys(app.globalData.classrooms), jsmph_array = [], jxl_selected = 0, jsmph_selected = 0
+    
+    for (let i=0; i<jxl_name_array.length; i++) {
+      if (jxl_name_array[i] == jxl) {
         jxl_selected = i
         break
       }
     }
-    let list = app.globalData.classrooms[jxl_array[jxl_selected]]
+    let list = app.globalData.classrooms[jxl_name_array[jxl_selected]]
     for (let i=0; i< list.length; i++) {
-      js_array.push(list[i]['JSMPH'])
+      jsmph_array.push(list[i]['JSMPH'])
       if (list[i]['JSMPH'] == js)
-        js_selected = i
+        jsmph_selected = i
     }
-    this.setData({ jxl_array, jxl_selected, js_array })
-    this.bindJsChange({detail:{value:js_selected}})
+    this.setData({ jxl_name_array, jxl_selected, jsmph_array })
+    this.bindJsChange({detail:{value:jsmph_selected}})
   },
 
   onShareAppMessage() {
@@ -189,8 +191,8 @@ Page({
       title: '教室概览',
       path: 'pages/overview/overview'
       + `?page=overview`
-      + `&jxl=${this.data.jxl_array[this.data.jxl_selected]}`
-      + `&js=${this.data.js_array[this.data.js_selected]}`,
+      + `&JXLMC=${this.data.jxl_name_array[this.data.jxl_selected]}`
+      + `&JSMPH=${this.data.jsmph_array[this.data.jsmph_selected]}`,
       image: 'images/logo.png'
     }
   }

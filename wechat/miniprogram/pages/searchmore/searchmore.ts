@@ -5,8 +5,6 @@ import { parseKcm, item2dialog } from '../../utils/parser'
 import { IClassroomRow } from '../../../typings/IClassroomInfo'
 
 // constant
-const jxl: Array<IJxl> = app.globalData.jxl
-const lx: Array<ILx> = app.globalData.lx
 const perPage: number = 50
 
 Page({
@@ -24,6 +22,7 @@ Page({
     jxl_name_array: Array<string>(),
     jxl_selected: 0,
     
+    lx_mapper: Object(),
     lx_name_array: Array<string>(),
     lx_selected: 0,
 
@@ -53,13 +52,17 @@ Page({
    * 初始化可选节次数组
    */
   onLoad(options: Record<string, string>): void {
-    const jxl_name_array: Array<string> = ['所有']
-    const lx_name_array: Array<string> = []
-    for (let i = 0; i < jxl.length; i++)
-      jxl_name_array.push(jxl[i].name)
-    for (let i = 0; i < lx.length; i++)
-      lx_name_array.push(lx[i].name)
-    this.setData({jxl_name_array, lx_name_array})
+    app.getClassrooms().then(data => {
+      const jxl_name_array = Object.keys(data)
+      jxl_name_array.unshift('所有')
+      this.setData({ jxl_name_array })
+    })
+    app.getZylxdm().then(data => {
+      this.setData({
+        lx_mapper: data,
+        lx_name_array: Object.keys(data)
+      })
+    })
 
     this.updateJcArray()
     
@@ -123,8 +126,8 @@ Page({
           day: (this.data.rq_selected == 0) ? '#' : this.data.rq_selected - 1,
           jc_ks: this.data.jc_ks_selected + 1,
           jc_js: this.data.jc_js_selected + 1,
-          jxl: (this.data.jxl_selected == 0) ? '#' : jxl[this.data.jxl_selected - 1].name,
-          zylxdm: lx[this.data.lx_selected].dm,
+          jxl: (this.data.jxl_selected == 0) ? '#' : this.data.jxl_name_array[this.data.jxl_selected],
+          zylxdm: this.data.lx_mapper[this.data.lx_name_array[this.data.lx_selected]],
           kcm: this.data.keyword
         },
         success: res => {

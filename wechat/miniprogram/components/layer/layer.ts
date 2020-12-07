@@ -1,5 +1,11 @@
 // components/layer.ts
 
+interface ILayerButton {
+  text: string,
+  tap?: (e:any) => any,
+  longpress?: (e:any) => any,
+}
+
 Component({
   /**
    * 组件的属性列表

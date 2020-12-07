@@ -2,19 +2,26 @@
 
 interface IAppOption {
   globalData: {
-    readonly server: string,
-    readonly jxl: Array<IJxl>,
-    readonly lx: Array<ILx>,
-    classrooms: Record<string, Array<AnyObject>>
+    readonly server: string
+    zylxdm: Record<string, string>
+    classrooms: Record<string, Array<IJasInfo>>
   }
+  getNotice: () => Promise<INotice>
+  getPositionJson: () => Promise<IJxlPosition>
+  getClassrooms: () => Promise<Record<string, Array<IJasInfo>>>
+  getZylxdm: () => Promise<Record<string, string>>
 }
 
-interface IJxl {
-  readonly name: string,
-  readonly pos: [number, number]
+interface INotice {
+  readonly date: string
+  readonly timestamp: number
+  readonly text: string
 }
 
-interface ILx {
-  readonly dm: string,
-  readonly name: string
+interface IJxlPosition extends Record<string, Array<number>> {}
+
+interface IJasInfo {
+  readonly JXLMC: string
+  readonly JSMPH: string
+  readonly JASDM: string
 }

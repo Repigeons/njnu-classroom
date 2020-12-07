@@ -3,12 +3,11 @@
 const app = getApp<IAppOption>()
 import { getDistance, getJc } from '../../utils/util.js'
 
-// constant
-const jxl: Array<IJxl> = app.globalData.jxl
-
 Page({
   data: {
     service: 'on',
+    notice: Object() as INotice,
+    jxl_position: Object() as IJxlPosition,
     jxl_name_array: Array<string>(),
     jxl_selected: 0,
 
@@ -19,8 +18,6 @@ Page({
     jc_selected: 0,
 
     classroomList: Array(),
-
-    notice: { timestamp: 0, date: '', title: '', text: '' },
 
     confirm_buttons: Array<ILayerButton>(),
     confirm_display: false,
@@ -37,23 +34,28 @@ Page({
    */
   onLoad(options: Record<string, string>): void {
     // 公告系统
-    wx.request({
-      url: `${app.globalData.server}/notice.json`,
-      success: res => {
-        const data = res.data as Record<string, any>
-        const date = data.date as string
-        const timestamp = data.timestamp as number
-        const text = data.text as string
-        let notice = wx.getStorageSync('notice') as number
-        this.setData({
-          notice: {
-            timestamp: (timestamp==notice) ? 0 : timestamp,
-            date: date,
-            title: '公告',
-            text: text
-          }
-        })
-      }
+    app.getNotice().then(data => {
+      let notice = wx.getStorageSync('notice') as number
+      this.setData({
+        notice: {
+          timestamp: (data.timestamp==notice) ? 0 : data.timestamp,
+          date: data.date,
+          text: data.text
+        }
+      })
+    })
+
+    // 加载教学楼位置
+    app.getPositionJson().then(data => {
+      this.setData({
+        jxl_position: data,
+        jxl_name_array: Object.keys(data)
+      })
+
+      // 初始化至当前状态
+      this.dangqianriqi()
+      this.dangqianjieci()
+      this.dingwei()
     })
 
     // 上报错误
@@ -90,7 +92,7 @@ Page({
             header: { 'Content-Type': 'application/x-www-form-urlencoded' },
             data: {
                 day: this.data.rq_selected,
-                jxl: jxl[this.data.jxl_selected].name,
+                jxl: this.data.jxl_name_array[this.data.jxl_selected],
                 dqjc: this.data.jc_selected + 1,
                 resultList: JSON.stringify(this.data.classroomList),
                 index: this.data.layer_index,
@@ -103,7 +105,7 @@ Page({
                 feedbackTime: new Date().getTime()
               })
             },
-            fail: err => console.error(err)
+            fail: console.error
           })
         }
       }, {
@@ -111,13 +113,6 @@ Page({
         tap: () => this.setData({ confirm_display: false })
       }]
     })
-
-    // 加载数据
-    let jxl_name_array: Array<string> = []
-    for (let i = 0; i < jxl.length; i++) {
-      jxl_name_array.push(jxl[i].name)
-    }
-    this.setData({jxl_name_array})
 
     if (options.page == 'empty') {
     }
@@ -129,10 +124,6 @@ Page({
    */
   onShow(): void {
     this.hideLayer()
-
-    this.dangqianriqi()
-    this.dangqianjieci()
-    this.dingwei()
   },
 
   /**
@@ -143,16 +134,12 @@ Page({
       type: 'gcj02',
       success: res => {
         let minId: number = 0
-        let minDis: number = getDistance({
-          longitude1: jxl[0].pos[1],
-          latitude1: jxl[0].pos[0],
-          longitude2: res.longitude,
-          latitude2: res.latitude,
-        })
-        for (let i = 1; i < jxl.length; i++) {
+        let minDis: number = 0xffffffff
+        let length = Object.keys(this.data.jxl_position).length
+        for (let i = 1; i < length; i++) {
           let dis: number = getDistance({
-            longitude1: jxl[i].pos[1],
-            latitude1: jxl[i].pos[0],
+            latitude1: this.data.jxl_position[this.data.jxl_name_array[i]][0],
+            longitude1: this.data.jxl_position[this.data.jxl_name_array[i]][1],
             longitude2: res.longitude,
             latitude2: res.latitude,
           })
@@ -164,7 +151,7 @@ Page({
         this.setData({jxl_selected: minId})
         this.submit()
       },
-      fail: err => console.error(err)
+      fail: console.error
     })
   },
 
@@ -216,7 +203,7 @@ Page({
       url: `${app.globalData.server}/api/empty.json`,
       data: {
         day: this.data.rq_selected,
-        jxl: jxl[this.data.jxl_selected].name,
+        jxl: this.data.jxl_name_array[this.data.jxl_selected],
         dqjc: this.data.jc_selected + 1
       },
       success: res => {
@@ -238,7 +225,7 @@ Page({
     wx.setStorage({
       key: 'notice',
       data: this.data.notice.timestamp,
-      success: () => this.setData({notice: {timestamp: 0, date: '', title: '', text: ''}})
+      success: () => this.setData({notice: {timestamp: 0, date: '', text: ''}})
     })
   },
 
@@ -258,7 +245,7 @@ Page({
   },
 
   closeDialog(): void {
-    this.setData({notice: {timestamp: 0, date: '', title: '', text: ''}})
+    this.setData({notice: {timestamp: 0, date: '', text: ''}})
   },
 
   onShareAppMessage() {

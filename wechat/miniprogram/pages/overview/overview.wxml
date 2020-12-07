@@ -11,14 +11,14 @@
             <view class="weui-label rp-label" bindtap="bindFormer">◀</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
-            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
-              <view class="weui-select weui-select_in-select-after rp-no_padding" style="font-weight:700">{{jxl_array[jxl_selected]}}</view>
+            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
+              <view class="weui-select weui-select_in-select-after rp-no_padding" style="font-weight:700">{{jxl_name_array[jxl_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__bd rp-bd_right">
-            <picker value="{{js_selected}}" bindchange="bindJsChange" range="{{js_array}}">
+            <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{jsmph_array}}">
               <view decode="true" class="weui-select weui-select_in-select-after rp-no_padding" style="font-weight:700">
-                <text decode="true">&emsp;{{js_array[js_selected]}}</text>
+                <text decode="true">&emsp;{{jsmph_array[jsmph_selected]}}</text>
               </view>
             </picker>
           </view>

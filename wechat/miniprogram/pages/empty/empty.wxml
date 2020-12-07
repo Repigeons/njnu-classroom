@@ -77,7 +77,7 @@
     <view class="weui-dialog__wrp" bindtap="closeDialog">
       <view class="weui-dialog">
         <view class="weui-dialog__hd">
-          <view class="weui-dialog__title">{{notice.date}} {{notice.title}}</view>
+          <view class="weui-dialog__title">{{notice.date}} 公告</view>
         </view>
         <view class="weui-dialog__bd rp-dialog__bd">
           <text decode="true">{{notice.text}}</text>
