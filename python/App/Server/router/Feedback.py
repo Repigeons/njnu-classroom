@@ -11,6 +11,7 @@ import os
 import requests
 from flask import current_app as app, request, jsonify
 
+from App.Server import router
 from App.Spider.app import save_cookies, save_time
 from App.public import database, send_email
 from utils import Threading
@@ -55,6 +56,8 @@ def backend_process(proxy_app, request_args: dict):
         else:
             from App.Spider.__main__ import main
             main()
+            router.reset_empty()
+            router.reset_overview()
 
             send_email(
                 subject=f"南师教室：用户反馈 "
