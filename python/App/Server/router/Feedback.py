@@ -39,24 +39,39 @@ def backend_process(proxy_app, request_args: dict):
     request_args['id'] = request_args['item']['id']
     try:
         jc, day = request_args['dqjc'], int(request_args['day'])
-        jxl, jsmph, jasdm = request_args['item']['JXLMC'], request_args['item']['jsmph'], request_args['item']['JASDM']
+        jxl = request_args['item']['JXLMC']
+        jsmph = request_args['item']['jsmph']
+        jasdm = request_args['item']['JASDM']
+        zylxdm = request_args['item']['zylxdm']
 
-        if check_with_ehall(jasdm=jasdm, day=day, jc=jc):
+        if check_with_ehall(jasdm=jasdm, day=day, jc=jc, zylxdm=zylxdm):
 
-            week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=jc)
+            if zylxdm == '00':
+                week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=jc)
+                send_email(
+                    subject=f"南师教室：用户反馈 "
+                            f"{jxl} "
+                            f"{jsmph}教室 "
+                            f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                            f"（当前为第{jc}节）",
+                    message=f"验证一站式平台：数据一致\n"
+                            f"上报计数：{total_count}\n"
+                            f"本周计数：{week_count}\n"
+                            f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
+                            f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+                )
 
-            send_email(
-                subject=f"南师教室：用户反馈 "
-                        f"{jxl} "
-                        f"{jsmph}教室 "
-                        f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
-                        f"（当前为第{jc}节）",
-                message=f"验证一站式平台：数据一致\n"
-                        f"上报计数：{total_count}\n"
-                        f"本周计数：{week_count}\n"
-                        f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
-                        f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
-            )
+            else:
+                send_email(
+                    subject=f"南师教室：用户反馈 "
+                            f"{jxl} "
+                            f"{jsmph}教室 "
+                            f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                            f"（当前为第{jc}节）",
+                    message=f"验证一站式平台：数据一致（非空教室）\n"
+                            f"操作方案：None"
+                            f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+                )
 
         else:
             from App.Spider.__main__ import main
@@ -88,7 +103,7 @@ def backend_process(proxy_app, request_args: dict):
     lock.release()
 
 
-def check_with_ehall(jasdm: str, day: int, jc: str):
+def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
     cookies_file, time_file = "cookies.json", "time.json"
     try:
         save_cookies(file=cookies_file)
@@ -112,9 +127,9 @@ def check_with_ehall(jasdm: str, day: int, jc: str):
     ).json()
     kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
     for row in kcb:
-        if row['JC'] == jc and row['ZYLXDM'] == '':
-            return True  # 数据为空，待纠错
-    return False  # 数据未更新
+        if row['JC'] == jc and row['ZYLXDM'] in (zylxdm, ''):
+            return True  # 数据一致，待纠错
+    return False  # 数据不一致，待更新
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
