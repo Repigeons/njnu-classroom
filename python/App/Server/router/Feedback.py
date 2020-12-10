@@ -7,6 +7,7 @@
 """"""
 import json
 import os
+from threading import Lock
 
 import requests
 from flask import current_app as app, request, jsonify
@@ -15,6 +16,8 @@ from App.Server import router
 from App.Spider.app import save_cookies, save_time
 from App.public import database, send_email
 from utils import Threading
+
+lock = Lock()
 
 
 @app.route('/feedback', methods=['POST'])
@@ -28,6 +31,8 @@ def feedback():
 
 
 def backend_process(proxy_app, request_args: dict):
+    lock.acquire()
+
     request_args['resultList'] = json.loads(request_args['resultList'])
     request_args['index'] = int(request_args['index'])
     request_args['item'] = request_args['resultList'][request_args['index']]
@@ -72,12 +77,15 @@ def backend_process(proxy_app, request_args: dict):
 
     except Exception as e:
         proxy_app.logger.warning(f"{type(e), e}")
+
         send_email(
             subject="南师教室：错误报告 in app.router.Feedback",
             message=f"{type(e), e}\n"
                     f"{request.url}\n"
                     f"{request_args}"
         )
+
+    lock.release()
 
 
 def check_with_ehall(jasdm: str, day: int, jc: str):
