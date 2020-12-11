@@ -31,13 +31,12 @@ def feedback():
 
 
 def backend_process(proxy_app, request_args: dict):
-    lock.acquire()
-
     request_args['resultList'] = json.loads(request_args['resultList'])
     request_args['index'] = int(request_args['index'])
     request_args['item'] = request_args['resultList'][request_args['index']]
     request_args['id'] = request_args['item']['id']
     try:
+        lock.acquire()
         jc, day = request_args['dqjc'], int(request_args['day'])
         jxl = request_args['item']['JXLMC']
         jsmph = request_args['item']['jsmph']
@@ -99,8 +98,8 @@ def backend_process(proxy_app, request_args: dict):
                     f"{request.url}\n"
                     f"{request_args}"
         )
-
-    lock.release()
+    finally:
+        lock.release()
 
 
 def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
@@ -127,7 +126,7 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
     ).json()
     kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
     for row in kcb:
-        if row['JC'] == jc and row['ZYLXDM'] in (zylxdm, ''):
+        if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
             return True  # 数据一致，待纠错
     return False  # 数据不一致，待更新
 
