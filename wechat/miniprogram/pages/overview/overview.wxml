@@ -76,7 +76,7 @@
 
     <!-- 数据内容 -->
     <view style="position:absolute; top: {{topBorder+cellHeight+1}}px; left: {{leftBorder+cellWidth+1}}px; z-index: 2">
-      <block wx:for="{{bar_list}}" wx:for-index="index" wx:key="key">
+      <block wx:for="{{bar_list}}" wx:key="key">
         <view class="rp-bar rp-bar_{{item.usage}}"
           style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.day1}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px"
           bindtap="showDialog" data-index="{{index}}"
@@ -111,7 +111,7 @@
           <view class="weui-dialog__title">{{dialog.title}}</view>
         </view>
         <view class="weui-dialog__bd rp-dialog__bd">
-          <block wx:for="{{dialog.detail}}" wx:for-item="item" wx:key="key">
+          <block wx:for="{{dialog.detail}}" wx:key="key">
             <view>{{item.field}}：{{item.value}}</view>
           </block>
         </view>

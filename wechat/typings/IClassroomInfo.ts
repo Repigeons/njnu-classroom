@@ -1,7 +1,7 @@
 export interface IClassroomRow extends Record<string, any> {
   id: number,
-  jxl: string,
-  classroom: string,
+  JXLMC: string,
+  jsmph: string,
   day: number,
   jc_ks: number,
   jc_js: number,

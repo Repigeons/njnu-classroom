@@ -39,11 +39,11 @@ Page({
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
-    this.setData({
-      cellHeight, cellWidth,
-      classrooms: app.globalData.classrooms,
-      jxl_name_array: Object.keys(app.globalData.classrooms)
-    })
+    this.setData({ cellHeight, cellWidth })
+    app.getClassrooms().then(data => this.setData({
+      classrooms: data,
+      jxl_name_array: Object.keys(data)
+    }))
 
     if (options.page == 'overview') {
       const {JXLMC, JSMPH} = options
@@ -95,7 +95,7 @@ Page({
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
       data: {
-        jasdm: app.globalData.classrooms[this.data.jxl_name_array[this.data.jxl_selected]][jsmph_selected]['JASDM']
+        jasdm: this.data.classrooms[this.data.jxl_name_array[this.data.jxl_selected]][jsmph_selected]['JASDM']
       },
       success: res => {
         let resData = res.data as Record<string, AnyObject>
@@ -163,21 +163,21 @@ Page({
   },
 
   switchClassroom(jxl: string, js: string): void {
-    let jxl_name_array = Object.keys(app.globalData.classrooms), jsmph_array = [], jxl_selected = 0, jsmph_selected = 0
+    let jsmph_array = [], jxl_selected = 0, jsmph_selected = 0
     
-    for (let i=0; i<jxl_name_array.length; i++) {
-      if (jxl_name_array[i] == jxl) {
+    for (let i=0; i<this.data.jxl_name_array.length; i++) {
+      if (this.data.jxl_name_array[i] == jxl) {
         jxl_selected = i
         break
       }
     }
-    let list = app.globalData.classrooms[jxl_name_array[jxl_selected]]
+    let list = this.data.classrooms[this.data.jxl_name_array[jxl_selected]]
     for (let i=0; i< list.length; i++) {
       jsmph_array.push(list[i]['JSMPH'])
       if (list[i]['JSMPH'] == js)
         jsmph_selected = i
     }
-    this.setData({ jxl_name_array, jxl_selected, jsmph_array })
+    this.setData({ jxl_selected, jsmph_array })
     this.bindJsChange(jsmph_selected)
   },
 

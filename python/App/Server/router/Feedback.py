@@ -73,10 +73,8 @@ def backend_process(proxy_app, request_args: dict):
                 )
 
         else:
-            from App.Spider.__main__ import main
-            main()
-            router.reset_empty()
-            router.reset_overview()
+            os.system(os.getenv("SPIDER_SHELL"))
+            os.system(os.getenv("RESET_CMD"))
 
             send_email(
                 subject=f"南师教室：用户反馈 "

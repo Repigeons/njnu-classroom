@@ -1,8 +1,19 @@
 {
+  "entryPagePath": "pages/empty/empty",
   "pages": [
     "pages/empty/empty",
     "pages/overview/overview",
-    "pages/searchmore/searchmore"
+    "pages/explore/explore"
+  ],
+  "subpackages":[
+    {
+      "root": "pages/explore/pages",
+      "pages": [
+        "searchmore/searchmore",
+        "shuttle/shuttle",
+        "calendar/calendar"
+      ]
+    }
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -28,10 +39,10 @@
         "text": "教室概览"
       },
       {
-        "pagePath": "pages/searchmore/searchmore",
+        "pagePath": "pages/explore/explore",
         "iconPath": "images/gdss.png",
         "selectedIconPath": "images/gdss_1.png",
-        "text": "更多搜索"
+        "text": "发现"
       }
     ]
   },

@@ -61,7 +61,20 @@
       "list": []
     },
     "miniprogram": {
-      "list": []
+      "list": [
+        {
+          "name": "pages/explore/explore",
+          "pathName": "pages/explore/explore",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/explore/pages/shuttle/shuttle",
+          "pathName": "pages/explore/pages/shuttle/shuttle",
+          "query": "",
+          "scene": null
+        }
+      ]
     }
   }
 }

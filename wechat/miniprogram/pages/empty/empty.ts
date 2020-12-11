@@ -1,7 +1,7 @@
 // empty.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
-import { getDistance, getJc } from '../../utils/util.js'
+import { getDistance, getJc } from '../../utils/util'
 
 Page({
   data: {
@@ -46,7 +46,7 @@ Page({
     })
 
     // 加载教学楼位置
-    app.getPositionJson().then(data => {
+    app.getPosition().then(data => {
       this.setData({
         jxl_position: data,
         jxl_name_array: Object.keys(data)

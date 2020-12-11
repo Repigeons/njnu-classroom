@@ -1,23 +1,29 @@
-const getSpan = (hour: number, minute: number): number => {
+export const formatTime = (datetime: Date): string => {
+  const hours = datetime.getHours()
+  const minutes = datetime.getMinutes()
+  return `${hours>9?'':'0'}${hours}:${minutes>9?'':'0'}${minutes}`
+}
+
+export const getTimeSpan = (hour: number, minute: number): number => {
   return hour * 60 + minute
 }
 
 export const getJc = (datetime: Date): number => {
   // 当前时间
-  const span: number = getSpan(datetime.getHours(), datetime.getMinutes())
+  const span: number = getTimeSpan(datetime.getHours(), datetime.getMinutes())
   const jc_list: Array<number> = [
-    getSpan(8, 40),
-    getSpan(9, 25),
-    getSpan(10, 20),
-    getSpan(11, 15),
-    getSpan(12, 0),
-    getSpan(14, 10),
-    getSpan(14, 55),
-    getSpan(15, 50),
-    getSpan(16, 35),
-    getSpan(19, 10),
-    getSpan(20, 0),
-    getSpan(20, 50)
+    getTimeSpan(8, 40),
+    getTimeSpan(9, 25),
+    getTimeSpan(10, 20),
+    getTimeSpan(11, 15),
+    getTimeSpan(12, 0),
+    getTimeSpan(14, 10),
+    getTimeSpan(14, 55),
+    getTimeSpan(15, 50),
+    getTimeSpan(16, 35),
+    getTimeSpan(19, 10),
+    getTimeSpan(20, 0),
+    getTimeSpan(20, 50)
   ]
   for (let i = 0; i < 12; i++)
     if (span < jc_list[i])

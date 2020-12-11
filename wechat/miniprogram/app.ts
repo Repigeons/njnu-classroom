@@ -1,8 +1,7 @@
 // app.ts
 App<IAppOption>({
   globalData: {
-    server: 'https://classroom.njnu.xyz',
-    classrooms: Object(),
+    server: 'https://classroom.njnu.xyz'
   },
   onLaunch() {
     const keys = [
@@ -11,6 +10,7 @@ App<IAppOption>({
       'classroom.json',
       'zylxdm.json',
       'last_overview',
+      'explore/shuttle.json',
     ]
     const storageInfo = wx.getStorageInfoSync().keys
     const storage: Record<string, any> = {}
@@ -24,75 +24,112 @@ App<IAppOption>({
     for (let key in storage) {
       wx.setStorage({ key, data: storage[key] })
     }
-
-    this.getClassrooms().then(data => this.globalData.classrooms = data)
+  
+    this.getPosition(true)
+    this.getClassrooms(true)
+    this.getZylxdm(true)
+    this.getShuttle(true)
   },
-  getNotice() {
-    return new Promise((resolve) => {
+
+  getNotice(): Promise<INotice> {
+    return new Promise((resolve, reject) => {
       wx.request({
         url: `${this.globalData.server}/notice.json`,
-        success: res => resolve(res.data as INotice)
+        success: res => resolve(res.data as INotice),
+        fail: reject
       })
     })
   },
-  getPositionJson() {
-    wx.request({
-      url: `${this.globalData.server}/position.json`,
-      success: res => wx.setStorage({
-        key: 'position.json',
-        data: res.data
-      }),
-      fail: console.error
-    })
-    return new Promise((resolve) => {
+  getPosition(request: boolean): Promise<IJxlPosition> {
+    if (request) {
+      wx.request({
+        url: `${this.globalData.server}/position.json`,
+        success: res => wx.setStorage({
+          key: 'position.json',
+          data: res.data
+        }),
+        fail: console.error
+      })
+    }
+    return new Promise((resolve, reject) => {
       wx.getStorage({
         key: 'position.json',
         success: res => resolve(res.data),
         fail: () => wx.request({
           url: `${this.globalData.server}/position.json`,
-          success: res => resolve(res.data as IJxlPosition)
+          success: res => resolve(res.data as IJxlPosition),
+          fail: reject
         })
       })
     })
   },
-  getClassrooms() {
-    wx.request({
-      url: `${this.globalData.server}/classrooms.json`,
-      success: res => wx.setStorage({
-        key: 'classrooms.json',
-        data: res.data
-      }),
-      fail: console.error
-    })
-    return new Promise((resolve) => {
+  getClassrooms(request: boolean): Promise<Record<string, Array<IJasInfo>>> {
+    if (request) {
+      wx.request({
+        url: `${this.globalData.server}/classrooms.json`,
+        success: res => wx.setStorage({
+          key: 'classrooms.json',
+          data: res.data
+        }),
+        fail: console.error
+      })
+    }
+    return new Promise((resolve, reject) => {
       wx.getStorage({
         key: 'classrooms.json',
         success: res => resolve(res.data),
         fail: () => wx.request({
           url: `${this.globalData.server}/classrooms.json`,
-          success: res => resolve(res.data as Record<string, Array<IJasInfo>>)
+          success: res => resolve(res.data as Record<string, Array<IJasInfo>>),
+          fail: reject
         })
       })
     })
   },
-  getZylxdm() {
-    wx.request({
-      url: `${this.globalData.server}/zylxdm.json`,
-      success: res => wx.setStorage({
-        key: 'zylxdm.json',
-        data: res.data
-      }),
-      fail: console.error
-    })
-    return new Promise((resolve) => {
+  getZylxdm(request: boolean): Promise<Record<string, string>> {
+    if (request) {
+      wx.request({
+        url: `${this.globalData.server}/zylxdm.json`,
+        success: res => wx.setStorage({
+          key: 'zylxdm.json',
+          data: res.data
+        }),
+        fail: console.error
+      })
+    }
+    return new Promise((resolve, reject) => {
       wx.getStorage({
         key: 'zylxdm.json',
         success: res => resolve(res.data),
         fail: () => wx.request({
           url: `${this.globalData.server}/zylxdm.json`,
-          success: res => resolve(res.data as Record<string, string>)
+          success: res => resolve(res.data as Record<string, string>),
+          fail: reject
         })
       })
     })
-  } 
+  },
+  getShuttle(request: boolean): Promise<IShuttle> {
+    if (request) {
+      wx.request({
+        url: `${this.globalData.server}/explore/shuttle.json`,
+        success: res => wx.setStorage({
+          key: 'explore/shuttle.json',
+          data: res.data
+        }),
+        fail: console.error
+      })
+    }
+    return new Promise((resolve, reject) => {
+      wx.getStorage({
+        key: 'explore/shuttle.json',
+        success: res => resolve(res.data),
+        fail: () => wx.request({
+          url: `${this.globalData.server}/explore/shuttle.json`,
+          success: res => resolve(res.data as IShuttle),
+          fail: reject
+        })
+      })
+    })
+  },
 })

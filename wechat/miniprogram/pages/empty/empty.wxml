@@ -56,8 +56,8 @@
           <view class="weui-cell__bd">
             <view>
               <text class="rp-item-title rp-title">{{item.jsmph}}教室</text>
-              <text class="rp-item-text  rp-title  rp-item-text-jc"decode="true">&ensp;『{{item.jc_ks}}-{{item.jc_js}}节』</text>
-              <text class="rp-item-text" decode="true">&ensp;容量：{{item.capacity}}</text>
+              <text class="rp-item-text  rp-title  rp-item-text-jc" decode="true">&ensp;『{{item.jc_ks}}-{{item.jc_js}}节』</text>
+              <text class="rp-item-text" decode="true">&ensp;容量：{{item.SKZWS}}</text>
             </view>
             <view wx:if="{{item.zylxdm=='10'}}">
               <text class="rp-item-text rp-item-text-yan">研究生课程，可能为空教室</text>

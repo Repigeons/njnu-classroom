@@ -3,12 +3,12 @@
 interface IAppOption {
   globalData: {
     readonly server: string
-    classrooms: Record<string, Array<IJasInfo>>
   }
-  getNotice: () => Promise<INotice>
-  getPositionJson: () => Promise<IJxlPosition>
-  getClassrooms: () => Promise<Record<string, Array<IJasInfo>>>
-  getZylxdm: () => Promise<Record<string, string>>
+  getNotice(): Promise<INotice>
+  getPosition(request?: boolean): Promise<IJxlPosition>
+  getClassrooms(request?: boolean): Promise<Record<string, Array<IJasInfo>>>
+  getZylxdm(request?: boolean): Promise<Record<string, string>>
+  getShuttle(request?: boolean): Promise<IShuttle>
 }
 
 interface INotice {
@@ -23,4 +23,10 @@ interface IJasInfo {
   readonly JXLMC: string
   readonly JSMPH: string
   readonly JASDM: string
+}
+
+interface IShuttle {
+  readonly stations: Array<string>
+  readonly routes1: Array<Array<string>>
+  readonly routes2: Array<Array<string>>
 }
