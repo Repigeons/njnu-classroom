@@ -1,0 +1,28 @@
+/* pages/explore/explore.wxss */
+
+.rp-userInfo {
+  position: relative;
+  margin: 15px 30rpx 80px;
+  padding: 15px 30rpx;
+}
+
+.rp-avatar {
+  position: absolute;
+  display: inline-block;
+  height: 80px;
+  width: 80px;
+}
+
+.rp-nickname {
+  position: absolute;
+  margin-left: 100px;
+  height: 80px;
+  line-height: 80px;
+  font-size: 40px;
+}
+
+.rp-grids {
+  position: relative;
+  margin: 20px;
+  padding: 0;
+}

@@ -1,0 +1,64 @@
+<!--explore/pages/shuttlebus/shuttlebus.wxml-->
+<view>
+  校车站: 
+  <view wx:if="{{showMoreStation}}">
+    <view wx:for="{{stations_display}}" wx:key="key">
+      {{item}}
+      <text wx:if="{{index==0}}" bindtap="showMoreStation">隐藏其它</text>
+    </view>
+  </view>
+  <view wx:else>
+    {{stations_display[0]}}
+    <text bindtap="showMoreStation">显示更多</text>
+  </view>
+</view>
+
+<view wx:if="{{hasBus}}">
+  <view wx:if="{{nextShuttle!=-1 && nextShuttle>0}}">
+    <view>
+      上一辆车：
+      自 {{routes[nextShuttle-1][1]}}
+      至 {{routes[nextShuttle-1][2]}}
+    </view>
+    <view>
+      {{routes[nextShuttle-1][0]}} 发车（已发车 {{intervalUpdate[0]}} 分钟）
+    </view>
+  </view>
+  <view wx:else>
+    今天还没有发车呢~
+  </view>
+
+  <view wx:if="{{nextShuttle!=-1 && nextShuttle<routes.length}}">
+    <view>
+      下一辆车：
+      自 {{routes[nextShuttle][1]}}
+      至 {{routes[nextShuttle][2]}}
+    </view>
+    <view>
+      {{routes[nextShuttle][0]}} 发车（距发车 {{intervalUpdate[1]}} 分钟）
+    </view>
+  </view>
+  <view wx:else>
+    今天已经没有车了哟~
+  </view>
+</view>
+<view wx:else>
+  今天没有车哟~
+</view>
+
+<view>
+  <button bindtap="direct">换向</button>
+  方向：
+  {{start}} ——> {{end}}
+</view>
+
+<view>
+  时刻表：
+  <view wx:for="{{ !direction ? routes1 : routes2}}" wx:key="key">
+    {{item[0]}}
+    自
+    {{item[1]}}
+    发往
+    {{item[2]}}
+  </view>
+</view>
