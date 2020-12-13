@@ -30,5 +30,10 @@ if __name__ == '__main__':
 
         main()
 
+    elif args.run == "Explore":
+        from App.Explore.__main__ import main
+
+        main()
+
     else:
         print(f"Unresolved module `{args.run}`")
