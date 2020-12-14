@@ -18,16 +18,14 @@ app.config.update(
     **json.load(open('conf/server.json'))
 )
 with app.app_context():
-    from . import router
-    from .router import Empty, Overview, SearchMore, Feedback
+    from App.Server import router
 
 
 @app.route('/reset', methods=['POST'])
 def reset():
     try:
         app.logger.info("request to reset'")
-        router.reset_empty()
-        router.reset_overview()
+        router.reset()
         return jsonify({
             'status': 0,
             'message': "ok",
@@ -41,3 +39,6 @@ def reset():
             'message': f"{type(e), e}",
             'data': None
         }), 500
+
+
+router.reset()

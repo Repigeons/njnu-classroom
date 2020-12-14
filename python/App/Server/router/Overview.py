@@ -5,9 +5,11 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Overview.py
 """"""
+import json
+
 from flask import current_app as app, request, jsonify
 
-from App.public import database, send_email
+from App.public import day_mapper, database, get_redis, send_email
 
 
 @app.route('/overview.json', methods=['GET'])
@@ -36,42 +38,6 @@ def overview():
         }), 500
 
 
-day_mapper = {
-    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
-    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
-}
-classrooms = {}
-
-
-def reset():
-    classrooms.clear()
-    for jasdm in database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
-        classrooms[jasdm[0]] = [
-            {
-                'jasdm': item['JASDM'],
-                'JASDM': item['JASDM'],
-
-                'jxl': item['JXLMC'],
-                'JXLMC': item['JXLMC'],
-
-                'classroom': item['jsmph'],
-                'jsmph': item['jsmph'],
-
-                'capacity': item['SKZWS'],
-                'SKZWS': item['SKZWS'],
-
-                'day': day_mapper[item['day']],
-                'jc_ks': item['jc_ks'],
-                'jc_js': item['jc_js'],
-
-                'zylxdm': item['zylxdm'],
-                'jyytms': item['jyytms'],
-                'kcm': item['kcm'],
-            } for item in
-            database.fetchall("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jasdm[0]})
-        ]
-
-
 def handler(args: dict) -> dict:
     if app.config['service'] == 'off':
         return {
@@ -81,15 +47,52 @@ def handler(args: dict) -> dict:
             'data': []
         }
 
-    if 'jasdm' not in args.keys() or args['jasdm'] not in classrooms.keys():
+    redis = get_redis()
+
+    if 'jasdm' not in args.keys() or not redis.hexists("Overview", args['jasdm']):
         raise KeyError('jasdm')
+
+    value = json.loads(redis.hget(
+        name="Overview",
+        key=args['jasdm']
+    ))
 
     return {
         'status': 0,
         'message': "ok",
         'service': "on",
-        'data': classrooms[args['jasdm']]
+        'data': value
     }
 
 
-reset()
+def reset():
+    redis = get_redis()
+    for jasdm in database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
+        redis.hset(
+            name="Overview",
+            key=jasdm[0],
+            value=json.dumps([
+                {
+                    'jasdm': item['JASDM'],
+                    'JASDM': item['JASDM'],
+
+                    'jxl': item['JXLMC'],
+                    'JXLMC': item['JXLMC'],
+
+                    'classroom': item['jsmph'],
+                    'jsmph': item['jsmph'],
+
+                    'capacity': item['SKZWS'],
+                    'SKZWS': item['SKZWS'],
+
+                    'day': day_mapper[item['day']],
+                    'jc_ks': item['jc_ks'],
+                    'jc_js': item['jc_js'],
+
+                    'zylxdm': item['zylxdm'],
+                    'jyytms': item['jyytms'],
+                    'kcm': item['kcm'],
+                } for item in
+                database.fetchall("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jasdm[0]})
+            ])
+        )

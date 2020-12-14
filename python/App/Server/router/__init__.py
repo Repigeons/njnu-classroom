@@ -5,5 +5,16 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py
 """"""
-from .Empty import reset_all as reset_empty
-from .Overview import reset as reset_overview
+from .Empty import reset as __reset_empty
+from .Overview import reset as __reset_overview
+
+from . import Empty, Overview, SearchMore, Feedback
+
+
+def reset():
+    from App.public import get_redis
+    redis = get_redis()
+    redis.delete("Empty")
+    redis.delete("Overview")
+    __reset_empty()
+    __reset_overview()

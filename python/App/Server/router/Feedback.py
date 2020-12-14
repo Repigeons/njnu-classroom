@@ -12,7 +12,6 @@ from threading import Lock
 import requests
 from flask import current_app as app, request, jsonify
 
-from App.Server import router
 from App.Spider.app import save_cookies, save_time
 from App.public import database, send_email
 from utils import Threading

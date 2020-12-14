@@ -7,7 +7,7 @@
 """"""
 from flask import current_app as app, request, jsonify
 
-from App.public import database, send_email
+from App.public import day_mapper, database, send_email
 
 
 @app.route('/searchmore.json', methods=['GET'])
@@ -34,12 +34,6 @@ def search_more():
             'message': f"{type(e), e}",
             'data': None
         }), 500
-
-
-day_mapper = {
-    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
-    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
-}
 
 
 def handler(args: dict) -> dict:
