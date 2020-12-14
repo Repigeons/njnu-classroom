@@ -81,10 +81,11 @@ def handler(args: dict) -> dict:
 def reset():
     redis = get_redis()
     for jxl in database.fetchall("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `_SFYXZX`"):
+        jxlmc = jxl[0]
         for day in range(7):
             redis.hset(
                 name="Empty",
-                key=f"{jxl[0]}_{day}",
+                key=f"{jxlmc}_{day}",
                 value=json.dumps([
                     {
                         'jasdm': item['JASDM'],
@@ -110,7 +111,7 @@ def reset():
                         sql=f"SELECT * FROM `pro` "
                             f"WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `_SFYXZX`"
                             f"ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
-                        args={'JXLMC': jxl[0], 'day': day_mapper[day]}
+                        args={'JXLMC': jxlmc, 'day': day_mapper[day]}
                     )
                 ])
             )
