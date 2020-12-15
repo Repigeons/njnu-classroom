@@ -10,8 +10,7 @@ from threading import Lock
 
 from flask import current_app as app, jsonify
 
-from App.Server.router import day_mapper
-from App.public import database, get_redis, send_email
+from App.public import day_mapper, database, get_redis, send_email
 from utils import Threading
 
 lock = Lock()

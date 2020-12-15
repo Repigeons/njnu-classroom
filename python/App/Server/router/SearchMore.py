@@ -7,8 +7,7 @@
 """"""
 from flask import current_app as app, request, jsonify
 
-from App.Server.router import day_mapper
-from App.public import database, send_email
+from App.public import day_mapper, database, send_email
 
 
 @app.route('/searchmore.json', methods=['GET'])
