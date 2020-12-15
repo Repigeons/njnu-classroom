@@ -5,16 +5,11 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py
 """"""
-from .Empty import reset as __reset_empty
-from .Overview import reset as __reset_overview
+from . import Empty, Overview, SearchMore, Feedback, Reset
 
-from . import Empty, Overview, SearchMore, Feedback
+from .Reset import reset
 
-
-def reset():
-    from App.public import get_redis
-    redis = get_redis()
-    redis.delete("Empty")
-    redis.delete("Overview")
-    __reset_empty()
-    __reset_overview()
+day_mapper = {
+    0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
+    'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+}

@@ -9,11 +9,11 @@ import json
 
 from flask import current_app as app, request, jsonify
 
-from App.public import day_mapper, database, get_redis, send_email
+from App.public import get_redis, send_email
 
 
 @app.route('/overview.json', methods=['GET'])
-def overview():
+def route():
     try:
         request_args = request.args.to_dict()
         response_body = handler(request_args)
@@ -63,36 +63,3 @@ def handler(args: dict) -> dict:
         'service': "on",
         'data': value
     }
-
-
-def reset():
-    redis = get_redis()
-    for jasdm in database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
-        redis.hset(
-            name="Overview",
-            key=jasdm[0],
-            value=json.dumps([
-                {
-                    'jasdm': item['JASDM'],
-                    'JASDM': item['JASDM'],
-
-                    'jxl': item['JXLMC'],
-                    'JXLMC': item['JXLMC'],
-
-                    'classroom': item['jsmph'],
-                    'jsmph': item['jsmph'],
-
-                    'capacity': item['SKZWS'],
-                    'SKZWS': item['SKZWS'],
-
-                    'day': day_mapper[item['day']],
-                    'jc_ks': item['jc_ks'],
-                    'jc_js': item['jc_js'],
-
-                    'zylxdm': item['zylxdm'],
-                    'jyytms': item['jyytms'],
-                    'kcm': item['kcm'],
-                } for item in
-                database.fetchall("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jasdm[0]})
-            ])
-        )

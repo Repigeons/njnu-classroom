@@ -5,7 +5,7 @@
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mariadb://classroom.njnu.xyz:3306/NjnuClassroom</jdbc-url>
+      <jdbc-url>jdbc:mariadb://localhost:3306/NjnuClassroom</jdbc-url>
     </data-source>
   </component>
 </project>

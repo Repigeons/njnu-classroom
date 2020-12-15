@@ -20,7 +20,7 @@ lock = Lock()
 
 
 @app.route('/feedback', methods=['POST'])
-def feedback():
+def route():
     Threading(backend_process).start(proxy_app=app, request_args=request.form.to_dict())
     return jsonify({
         'status': 0,
@@ -34,13 +34,13 @@ def backend_process(proxy_app, request_args: dict):
     request_args['index'] = int(request_args['index'])
     request_args['item'] = request_args['resultList'][request_args['index']]
     request_args['id'] = request_args['item']['id']
+    jc, day = request_args['dqjc'], int(request_args['day'])
+    jxl = request_args['item']['JXLMC']
+    jsmph = request_args['item']['jsmph']
+    jasdm = request_args['item']['JASDM']
+    zylxdm = request_args['item']['zylxdm']
     try:
         lock.acquire()
-        jc, day = request_args['dqjc'], int(request_args['day'])
-        jxl = request_args['item']['JXLMC']
-        jsmph = request_args['item']['jsmph']
-        jasdm = request_args['item']['JASDM']
-        zylxdm = request_args['item']['zylxdm']
 
         if check_with_ehall(jasdm=jasdm, day=day, jc=jc, zylxdm=zylxdm):
 

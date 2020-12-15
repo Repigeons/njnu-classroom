@@ -7,11 +7,12 @@
 """"""
 from flask import current_app as app, request, jsonify
 
-from App.public import day_mapper, database, send_email
+from App.Server.router import day_mapper
+from App.public import database, send_email
 
 
 @app.route('/searchmore.json', methods=['GET'])
-def search_more():
+def route():
     try:
         request_args = request.args.to_dict()
         response_body = handler(request_args)
