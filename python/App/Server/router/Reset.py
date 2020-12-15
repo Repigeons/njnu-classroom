@@ -18,7 +18,7 @@ lock = Lock()
 
 
 @app.route('/reset', methods=['POST'])
-def route():
+def route_reset():
     try:
         Threading(reset).start()
         return jsonify({

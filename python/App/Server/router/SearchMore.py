@@ -12,7 +12,7 @@ from App.public import database, send_email
 
 
 @app.route('/searchmore.json', methods=['GET'])
-def route():
+def route_search_more():
     try:
         request_args = request.args.to_dict()
         response_body = handler(request_args)

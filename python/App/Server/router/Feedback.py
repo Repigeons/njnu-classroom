@@ -20,7 +20,7 @@ lock = Lock()
 
 
 @app.route('/feedback', methods=['POST'])
-def route():
+def route_feedback():
     Threading(backend_process).start(proxy_app=app, request_args=request.form.to_dict())
     return jsonify({
         'status': 0,

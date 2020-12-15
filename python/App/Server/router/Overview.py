@@ -13,7 +13,7 @@ from App.public import get_redis, send_email
 
 
 @app.route('/overview.json', methods=['GET'])
-def route():
+def route_overview():
     try:
         request_args = request.args.to_dict()
         response_body = handler(request_args)
