@@ -12,23 +12,13 @@ if __name__ == '__main__':
     parser.add_argument('-run', '--run', default=None, type=str)
     args = parser.parse_args()
 
-    if args.run is None:
-        pass
+    if args.run is not None:
+        from importlib import import_module
 
-    elif args.run == "Spider":
-        from App.Spider.__main__ import main
-
-        main()
-
-    elif args.run == "Server":
-        from App.Server.__main__ import main
-
-        main()
-
-    elif args.run == "Notice":
-        from App.Notice.__main__ import main
-
-        main()
-
-    else:
-        print(f"Unresolved module `{args.run}`")
+        try:
+            import_module(f"App.{args.run}.__main__").main()
+        except ModuleNotFoundError as e:
+            if e.name == f"App.{args.run}":
+                print(f"No module named '{args.run}'")
+            else:
+                raise e
