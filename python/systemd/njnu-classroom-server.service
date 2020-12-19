@@ -1,0 +1,13 @@
+[Unit]
+Description=NjnuClassroom Data Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Restart=on-failure
+RestartSec=5s
+ExecStart=/opt/NjnuClassroom/server.sh
+
+[Install]
+WantedBy=multi-user.target

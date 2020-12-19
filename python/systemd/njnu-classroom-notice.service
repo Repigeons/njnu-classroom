@@ -1,0 +1,13 @@
+[Unit]
+Description=NjnuClassroom Notice Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Restart=on-failure
+RestartSec=5s
+ExecStart=/opt/NjnuClassroom/notice.sh
+
+[Install]
+WantedBy=multi-user.target
