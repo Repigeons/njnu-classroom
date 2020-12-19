@@ -16,9 +16,14 @@ if __name__ == '__main__':
         from importlib import import_module
 
         try:
-            import_module(f"App.{args.run}.__main__").main()
+            getattr(import_module(f"App.{args.run}.__main__"), 'main')()
         except ModuleNotFoundError as e:
             if e.name == f"App.{args.run}":
                 print(f"No module named '{args.run}'")
+            else:
+                raise e
+        except AttributeError as e:
+            if str(e) == f"module 'App.{args.run}.__main__' has no attribute 'main'":
+                print(e)
             else:
                 raise e

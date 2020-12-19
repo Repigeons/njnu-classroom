@@ -5,6 +5,9 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py
 """"""
+if __name__ == "App.public":
+    raise ModuleNotFoundError(name=__name__)
+
 # public Object
 from .database_manager import _database as database
 
