@@ -6,11 +6,12 @@
 # @FileName :  mail_manager.py
 """"""
 import json
+import os
 from threading import Lock
 
 from utils import SMTP, Threading
 
-__mail_config = json.load(open('conf/mail.json'))
+__mail_config = json.load(open(f"{os.getenv('conf', 'conf')}/mail.json"))
 
 __mail_server = SMTP(**__mail_config['sender'])
 lock = Lock()

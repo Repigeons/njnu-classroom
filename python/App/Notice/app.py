@@ -15,7 +15,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 app.config.update(
     env=os.getenv("env"),
-    **json.load(open('conf/notice.json'))
+    **json.load(open(f"{os.getenv('conf', 'conf')}/notice.json"))
 )
 
 

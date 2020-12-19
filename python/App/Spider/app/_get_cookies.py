@@ -6,6 +6,7 @@
 # @FileName :  _get_cookies.py
 """"""
 import json
+import os
 from json.decoder import JSONDecodeError
 
 from selenium import webdriver
@@ -22,7 +23,7 @@ def save_cookies(file: str) -> None:
     try:
         print('开始尝试获取cookies...')
         json.dump(
-            get_cookie_dict(account=json.load(open('conf/account.json'))),
+            get_cookie_dict(account=json.load(open(f"{os.getenv('conf', 'conf')}/account.json"))),
             open(file, 'w')
         )
         print('cookies获取完成...')
@@ -55,7 +56,7 @@ def get_cookie_dict(account: dict) -> dict:
     :return:dict{_WEU, MOD_AUTH_CAS}
     """
     username, password, gid = account.values()
-    selenium = json.load(open('conf/selenium.json'))
+    selenium = json.load(open(f"{os.getenv('conf', 'conf')}/selenium.json"))
     driver = selenium['driver']
     args = selenium[driver]
 

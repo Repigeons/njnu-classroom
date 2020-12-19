@@ -13,7 +13,7 @@ from flask import Flask
 app = Flask(__name__)
 app.config.update(
     env=os.getenv("env"),
-    **json.load(open('conf/server.json'))
+    **json.load(open(f"{os.getenv('conf', 'conf')}/server.json"))
 )
 with app.app_context():
     from App.Server import router

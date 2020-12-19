@@ -7,9 +7,10 @@
 """"""
 import logging
 from wsgiref.simple_server import make_server
+
 from flask.logging import default_handler
 
-from .app import app
+from App.Server.app import app
 
 
 def main():

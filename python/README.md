@@ -53,25 +53,27 @@ pip install -r requirements.txt
 
 该部分同时具备 `Script 启动` 和 `Module 启动` 两种方式，在激活虚拟环境后，可使用以下任意一种方式启动：
 
-```sh
-# 方式一：直接启动服务模块
+** 使用方式一或方式二可使用--conf参数设置配置文件目录，方式三许需要预设置`conf`环境变量
+
+```shell
+# 方式一：通过 manage 脚本启动服务模块
+python manage.py --run Spider [--conf <config-directory:conf/>]
+python manage.py --run Server [--conf <config-directory:conf/>]
+python manage.py --run Notice [--conf <config-directory:conf/>]
+```
+
+```shell
+# 方式二：通过 manage 模块启动服务模块
+python -m manage --run Spider [--conf <config-directory:conf/>]
+python -m manage --run Server [--conf <config-directory:conf/>]
+python -m manage --run Notice [--conf <config-directory:conf/>]
+```
+
+```shell
+# 方式三：直接启动服务模块
 python -m App.Spider
 python -m App.Server
 python -m App.Notice
-```
-
-```sh
-# 方式二：通过 manage 脚本启动服务模块
-python manage.py -run Spider
-python manage.py -run Server
-python manage.py -run Notice
-```
-
-```sh
-# 方式三：通过 manage 模块启动服务模块
-python -m manage --run Spider
-python -m manage --run Server
-python -m manage --run Notice
 ```
 
 ### 6、项目结构

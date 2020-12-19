@@ -6,7 +6,8 @@
 # @FileName :  __main__.py
 """"""
 from wsgiref.simple_server import make_server
-from .app import app
+
+from App.Notice.app import app
 
 
 def main():

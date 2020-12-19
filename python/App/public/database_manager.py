@@ -10,6 +10,6 @@ import os
 
 from utils import MySQL
 
-__database_config = json.load(open('conf/database.json'))
+__database_config = json.load(open(f"{os.getenv('conf', 'conf')}/database.json"))
 __env = os.getenv("env")
 _database = MySQL(**__database_config[__env])
