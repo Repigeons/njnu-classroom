@@ -1,5 +1,8 @@
 SET NAMES utf8mb4;
 
+create schema NjnuClassroom collate utf8mb4_general_ci;
+use NjnuClassroom;
+
 create table JAS
 (
     JASDM           char(10)         not null comment '教室代码' primary key,
