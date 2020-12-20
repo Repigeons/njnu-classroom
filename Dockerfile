@@ -12,6 +12,7 @@ RUN pip3 install virtualenv
 # Initialize the project directory
 RUN mkdir /usr/local/src/NjnuClassroom
 RUN mkdir /opt/NjnuClassroom
+RUN mkdir /etc/NjnuClassroom
 
 # Copy project files and deployment
 ADD python/App /usr/local/src/NjnuClassroom/App
@@ -40,4 +41,4 @@ EXPOSE 80
 # startup
 WORKDIR /root
 RUN chmod 111 boot
-ENTRYPOINT /root/boot
+ENTRYPOINT ["/root/boot"]
