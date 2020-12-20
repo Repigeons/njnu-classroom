@@ -12,11 +12,11 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     parser.add_argument('-r', '--run', default=None, type=str, help="run the service module")
-    parser.add_argument('-c', '--conf', default=None, type=str, help="set the config directory, default 'conf/'")
+    parser.add_argument('-c', '--config', default="conf", type=str, help="set the config directory, default './conf/'")
     args = parser.parse_args()
 
     if args.run is not None:
-        os.environ['conf'] = 'conf' if args.conf is None else args.conf
+        os.environ['conf'] = args.config
 
         try:
             __import__(f"App.{args.run}.__main__", fromlist=('App', args.run, '__main__')).main()
