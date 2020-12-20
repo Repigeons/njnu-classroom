@@ -13,6 +13,7 @@ RUN pip3 install virtualenv
 RUN mkdir /usr/local/src/NjnuClassroom
 RUN mkdir /opt/NjnuClassroom
 RUN mkdir /etc/NjnuClassroom
+RUN mkdir /var/log/NjnuClassroom
 
 # Copy project files and deployment
 ADD python/App /usr/local/src/NjnuClassroom/App
