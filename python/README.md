@@ -6,7 +6,14 @@
 
 该部分为项目的后端数据服务，分为三个模块，分别用于从一站式事务中心获取数据并整理、提供详细数据服务以及发布公告信息。
 
-### 2、开发语言及环境
+### 2、环境依赖
+
+- python3
+- redis
+- nginx
+- mariadb-server
+
+### 3、开发语言及环境
 
 该部分全部使用 Python 编程语言，采用 JetBrains PyCharm 集成开发环境进行开发，使用到的模块包括：
 
@@ -26,11 +33,31 @@ urllib3==1.26.2
 Werkzeug==1.0.1
 ```
 
-### 3、配置文件
+### 4、配置文件
 
 在 `conf` 配置文件夹下，包含 `account.json` `database.json` `mail.json` `selenium.json` 和 `spider.json` `server.json` `notice.json`，其中前四个为工具配置文件，后三个为服务模块配置文件，配置文件模版均在 `template.*.json`。
 
-### 4、部署方法
+### 7、Docker部署（推荐）
+
+该部分已被制作为 docker 镜像，位于 DockerHub 中。
+
+镜像地址：docker.io/repigeons/njnu-classroom
+
+运行所依赖的 python3, redis, nginx 和 firefox 已被添加至镜像中，宿主机中仅需安装 mariadb-server 并设置相应权限即可。
+
+docker容器 使用方式：
+
+```shell
+# 拉取镜像
+docker pull repigeons/njnu-classroom
+
+# 使用该镜像创建容器
+docker run -it -v <宿主机中配置文件目录>:<容器中配置文件目录> -v <宿主机中日志文件目录>:<容器中日志文件目录> -p <宿主机项目端口>:<容器开放端口> --name <容器名称> repigeons/njnu-classroom
+# 示例：
+docker run -it -v ~/github/NjnuClassroom/python/conf:/etc/NjnuClassroom -v /var/log/NjnuClassroom:/var/log/NjnuClassroom -p 8008:80 --name njnu-classroom repigeons/njnu-classroom
+```
+
+### 6、其他部署方法
 
 Python语言具备良好的跨平台特性，可通过`virtualenv`模块快速建立项目虚拟环境。
 具体命令如下：
@@ -49,24 +76,24 @@ source ./env/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5、运行方法
+### 7、运行方法
 
 该部分同时具备 `Script 启动` 和 `Module 启动` 两种方式，在激活虚拟环境后，可使用以下任意一种方式启动：
 
-** 使用方式一或方式二可使用--conf参数设置配置文件目录，方式三许需要预设置`conf`环境变量
+** 使用方式一或方式二可使用--conf参数设置配置文件目录，方式三需要预设置`conf`环境变量
 
 ```shell
 # 方式一：通过 manage 脚本启动服务模块
-python manage.py --run Spider [--conf <config-directory:conf/>]
-python manage.py --run Server [--conf <config-directory:conf/>]
-python manage.py --run Notice [--conf <config-directory:conf/>]
+python manage.py --run Spider [--config <config-directory:conf/>]
+python manage.py --run Server [--config <config-directory:conf/>]
+python manage.py --run Notice [--config <config-directory:conf/>]
 ```
 
 ```shell
 # 方式二：通过 manage 模块启动服务模块
-python -m manage --run Spider [--conf <config-directory:conf/>]
-python -m manage --run Server [--conf <config-directory:conf/>]
-python -m manage --run Notice [--conf <config-directory:conf/>]
+python -m manage --run Spider [--config <config-directory:conf/>]
+python -m manage --run Server [--config <config-directory:conf/>]
+python -m manage --run Notice [--config <config-directory:conf/>]
 ```
 
 ```shell
@@ -76,7 +103,12 @@ python -m App.Server
 python -m App.Notice
 ```
 
-### 6、项目结构
+### 8、systemd 守护进程
+
+若直接运行项目，可使用 systemd 守护进程，
+service 文件示例位于 systemd 文件夹中。
+
+### 9、项目结构
 
 ```text
 ├── conf                    # 项目配置文件
@@ -102,9 +134,9 @@ python -m App.Notice
 └── requirements.txt        # 项目所需的包和库
 ```
 
-### 6、附录
+### 10、附录
 
-#### 6.1 数据库
+#### 10.1 数据库
 
 数据库中共包含 6 张数据表：
 
@@ -121,7 +153,7 @@ python -m App.Notice
 
 ** 数据库创建语句可在 [`create.sql`](../create.sql) 文件中查询。
 
-#### 6.2 项目中使用到的api地址
+#### 10.2 项目中使用到的api地址
 
 - 查询当前学年学期
 
