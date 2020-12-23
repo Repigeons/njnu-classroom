@@ -41,5 +41,5 @@ EXPOSE 80
 
 # startup
 WORKDIR /root
-RUN chmod 111 boot
+RUN chmod 111 init
 ENTRYPOINT ["/root/init"]
