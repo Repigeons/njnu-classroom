@@ -18,9 +18,9 @@ def __init__logging(filename: str) -> None:
     # 基础配置
     logging.basicConfig(
         level=logging.INFO,
-        format="[%(asctime)s]\t"
-               "[ %(levelname)s ]\t\t"
-               "[\t%(module)20s\t]\t\t"
+        format="[%(asctime)s] "
+               "[ %(levelname)s ]  "
+               "[ %(module)20s  ]    "
                ": %(message)s"
     )
     # 日志文件
