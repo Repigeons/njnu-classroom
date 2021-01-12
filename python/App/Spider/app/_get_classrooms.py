@@ -47,7 +47,7 @@ def get_classrooms() -> Dict[str, List[dict]]:
     cursor.execute("SELECT DISTINCT `JXLDM`,`JXLDM_DISPLAY` FROM `JAS`")
     for jxl in cursor.fetchall():
         result[jxl.JXLDM_DISPLAY] = []
-        cursor.execute("SELECT * FROM `JAS` WHERE JXLDM=%s", (jxl.JXLDM,))
+        cursor.execute("SELECT * FROM `JAS` WHERE JXLDM=%(JSLDM)s", {'JSLDM': jxl.JXLDM})
         for jas in cursor.fetchall():
             result[jxl.JXLDM_DISPLAY].append({
                 'JXLMC': jas.JXLDM_DISPLAY,
