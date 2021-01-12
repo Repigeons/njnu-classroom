@@ -24,7 +24,7 @@ def __init__logging(filename: str) -> None:
                ": %(message)s"
     )
     # 日志文件
-    if filename is not None:
+    if filename:
         # get logging file
         filename = os.path.abspath(os.path.join("/var/log/NjnuClassroom", filename))
         os.makedirs(os.path.dirname(filename), exist_ok=True)
@@ -41,7 +41,7 @@ def main(args: Namespace):
 
     logging.info("Starting Application with PID [%d]", os.getpid())
 
-    if args.run is not None:
+    if args.run:
         os.environ['application.yml'] = os.getenv("application.yml", "resources/application.yml")
         if not os.path.exists(os.getenv("application.yml")):
             logging.error("FileNotFoundError: No such file [%s]", os.getenv("application.yml"))

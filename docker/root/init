@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/usr/bin/sh
 
+# 启动 redis 服务器
 /usr/bin/redis-server /etc/redis.conf &
+# 启动 nginx 服务器
 /usr/sbin/nginx &
-/bin/sh
-
+# 创建 bash 子进程
+/usr/bin/bash

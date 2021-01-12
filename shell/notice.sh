@@ -4,6 +4,5 @@
 export env=pro
 export FLASK_ENV=production
 
-# shellcheck disable=SC2039
 source env/bin/activate
-python /usr/local/src/NjnuClassroom/manage.py --run Notice --config /etc/NjnuClassroom
+python /usr/local/src/NjnuClassroom/manage.py --run Notice --log /var/log/NjnuClassroom/notice.log
