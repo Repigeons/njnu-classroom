@@ -37,18 +37,13 @@ def index():
 
         # Save to notice history
         if os.path.exists(Context.file):
-            history_dir = os.path.join(os.path.dirname(Context.file), 'notice-history')
-            None if os.path.exists(history_dir) else os.mkdir(history_dir)
-            with open(Context.file, 'r', encoding='utf8') as f:
-                data = json.load(f)
-                f.close()
-            history_file = os.path.join(
-                history_dir,
-                datetime.datetime.fromtimestamp(data['timestamp']).strftime("%Y-%m-%d %X")
-            )
-            shutil.copyfile(Context.file, history_file)
+            file = os.path.abspath(Context.file)
+            history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
+            history_list = json.load(open(history, encoding='utf8')) if os.path.exists(history) else []
+            history_list.append(json.load(open(Context.file, encoding='utf8')))
+            json.dump(history_list, open(history, 'w', encoding='utf8'))
 
-        # Save to notice.json
+        # Save to [notice.json]
         text: str = request_args['text']
         for ch in [('\\n', '\n')]:
             text = text.replace(*ch)
@@ -58,8 +53,12 @@ def index():
             'date': now.strftime("%Y-%m-%d"),
             'text': text,
         }
-        with open(Context.file, 'w', encoding='utf8') as f:
-            json.dump(data, f, ensure_ascii=False)
+        json.dump(
+            obj=data,
+            fp=open(Context.file, 'w', encoding='utf8'),
+            ensure_ascii=False,
+            indent=2
+        )
         return jsonify({
             'status': 0,
             'message': "ok",
