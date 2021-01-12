@@ -4,7 +4,11 @@
 
 ### 1、简介
 
-该部分为项目的后端数据服务，分为三个模块，分别用于从一站式事务中心获取数据并整理、提供详细数据服务以及发布公告信息。
+该部分为项目的后端数据服务，分为三个模块，分别为：
+
+- Spider：从一站式事务中心获取数据并整理
+- Server：向小程序提供数据服务
+- Notice：发布公告信息
 
 ### 2、环境依赖
 
@@ -15,29 +19,33 @@
 
 ### 3、开发语言及环境
 
-该部分全部使用 Python 编程语言，采用 JetBrains PyCharm 集成开发环境进行开发，使用到的模块包括：
+该部分全部使用Python编程语言，采用 JetBrains PyCharm 集成开发环境进行开发，使用到的模块包括：
 
 ```text
-certifi==2020.11.8
-chardet==3.0.4
+certifi==2020.12.5
+chardet==4.0.0
 click==7.1.2
 Flask==1.1.2
 idna==2.10
 itsdangerous==1.1.0
 Jinja2==2.11.2
+mariadb==1.0.5
 MarkupSafe==1.1.1
-PyMySQL==0.10.1
-requests==2.25.0
+python-redis-lock==3.7.0
+PyYAML==5.3.1
+redis==3.5.3
+requests==2.25.1
 selenium==3.141.0
 urllib3==1.26.2
 Werkzeug==1.0.1
 ```
 
-### 4、配置文件
+### 4、资源文件
 
-在 `conf` 配置文件夹下，包含 `account.json` `database.json` `mail.json` `selenium.json` 和 `spider.json` `server.json` `notice.json`，其中前四个为工具配置文件，后三个为服务模块配置文件，配置文件模版均在 `template.*.json`。
+所有资源文件均放置在 `resources` 文件夹下，
+其中 `application.yml` 为应用配置文件，包含数据库、邮件服务器在内的各项配置信息。
 
-### 7、Docker部署（推荐）
+### 5、Docker部署（推荐）
 
 该部分已被制作为 docker 镜像，位于 DockerHub 中。
 
@@ -52,9 +60,9 @@ docker容器 使用方式：
 docker pull repigeons/njnu-classroom
 
 # 使用该镜像创建容器
-docker run -it -v <宿主机中配置文件目录>:<容器中配置文件目录> -v <宿主机中日志文件目录>:<容器中日志文件目录> -p <宿主机项目端口>:<容器开放端口> --name <容器名称> repigeons/njnu-classroom
+docker run --name <容器名称> -p <宿主机项目端口>:<容器开放端口> -v <宿主机中日志文件目录>:<容器中日志文件目录> -it repigeons/njnu-classroom
 # 示例：
-docker run -it -v ~/github/NjnuClassroom/python/conf:/etc/NjnuClassroom -v /var/log/NjnuClassroom:/var/log/NjnuClassroom -p 8008:80 --name njnu-classroom repigeons/njnu-classroom
+docker run --name njnu-classroom -p 8000:80 -v /var/log/NjnuClassroom:/var/log/NjnuClassroom -it repigeons/njnu-classroom
 ```
 
 ### 6、其他部署方法
@@ -72,35 +80,26 @@ pip install -r requirements.txt
 ```bash
 # Linux Bash
 virtualenv env
-source ./env/bin/activate
+source env/bin/activate
 pip install -r requirements.txt
 ```
 
 ### 7、运行方法
 
-该部分同时具备 `Script 启动` 和 `Module 启动` 两种方式，在激活虚拟环境后，可使用以下任意一种方式启动：
-
-** 使用方式一或方式二可使用--conf参数设置配置文件目录，方式三需要预设置`conf`环境变量
+该部分同时具备 `Script启动` 和 `Module启动` 两种方式，在激活虚拟环境后，可使用以下任意一种方式启动：
 
 ```shell
 # 方式一：通过 manage 脚本启动服务模块
-python manage.py --run Spider [--config <config-directory:conf/>]
-python manage.py --run Server [--config <config-directory:conf/>]
-python manage.py --run Notice [--config <config-directory:conf/>]
+python manage.py -r Spider [-l <logging file>]
+python manage.py -r Server [-l <logging file>]
+python manage.py -r Notice [-l <logging file>]
 ```
 
 ```shell
 # 方式二：通过 manage 模块启动服务模块
-python -m manage --run Spider [--config <config-directory:conf/>]
-python -m manage --run Server [--config <config-directory:conf/>]
-python -m manage --run Notice [--config <config-directory:conf/>]
-```
-
-```shell
-# 方式三：直接启动服务模块
-python -m App.Spider
-python -m App.Server
-python -m App.Notice
+python -m manage --run Spider [--log <logging file>]
+python -m manage --run Server [--log <logging file>]
+python -m manage --run Notice [--log <logging file>]
 ```
 
 ### 8、systemd 守护进程
@@ -111,27 +110,19 @@ service 文件示例位于 systemd 文件夹中。
 ### 9、项目结构
 
 ```text
-├── conf                    # 项目配置文件
-│   ├── account.json        # 可用的一站式账户
-│   ├── database.json       # 项目使用的数据库配置
-│   ├── mail.json           # 项目使用的邮件服务器配置
-│   ├── selenium.json       # selenium模拟浏览器配置
-│   ├── spider.json         # 爬虫服务模块配置
-│   ├── server.json         # 数据服务模块配置
-│   ├── notice.json         # 公告服务模块配置
-│   └── template.*.json     # 配置文件对应的模板
+python(NjnuClassroom)
+├── manage.py               # 模块主入口
 ├── App                     # 应用模块
-│   ├── public              # 公用工具模块
 │   ├── Spider              # 爬虫服务模块
 │   ├── Server              # 数据服务模块
 │   └── Notice              # 公告服务模块
 ├── utils                   # 工具类
 │   ├── __init__.py
-│   ├── _mysql.py           # 数据库操作类
-│   ├── _smtp.py            # 发件服务器操作类
-│   └── _threading.py       # 多线程操作类
-├── manage.py               # 模块主入口
-└── requirements.txt        # 项目所需的包和库
+│   ├── _mariadb.py         # 数据库操作类
+│   └── _smtp.py            # 发件服务器操作类
+├── requirements.txt        # pip依赖包列表
+└── resources               # 资源文件
+    └── application.yml     # 应用配置文件
 ```
 
 ### 10、附录
