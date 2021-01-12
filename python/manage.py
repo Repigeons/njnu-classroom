@@ -5,36 +5,37 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  manage.py
 """"""
+from logging.handlers import TimedRotatingFileHandler
 import logging
 import os
 import time
 from argparse import ArgumentParser, Namespace
 
-os.environ['start_time'] = str(int(time.time() * 1000))
+os.environ["startup_time"] = str(int(time.time() * 1000))
 
 logging.basicConfig(
-    level=logging.DEBUG if os.getenv("env") == "dev" else logging.INFO,
-    # datefmt="%x %X",
+    level=logging.INFO,
     format="[%(asctime)s]\t"
            "[ %(levelname)s ]\t\t"
-           "[ %(module)24s\t]\t\t"
-           ": %(message)s",
+           "[\t%(module)20s\t]\t\t"
+           ": %(message)s"
 )
 
 
 def main(args: Namespace):
     if args.log is not None:
-        logging.basicConfig(
-            filemode='a',
-            filename=args.log,
-        )
+        logger = logging.getLogger()
+        formatter = logger.handlers[0].formatter
+        handler = TimedRotatingFileHandler(filename=args.log, encoding="utf8", when='D', backupCount=10)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
-    logging.info("Starting Application with PID %d", os.getpid())
+    logging.info("Starting Application with PID [%d]", os.getpid())
 
     if args.run is not None:
         os.environ['application.yml'] = os.getenv("application.yml", "resources/application.yml")
-        if not os.path.exists(os.getenv('application.yml')):
-            logging.error("FileNotFoundError: No such file [%s]", os.getenv('application.yml'))
+        if not os.path.exists(os.getenv("application.yml")):
+            logging.error("FileNotFoundError: No such file [%s]", os.getenv("application.yml"))
             exit(-1)
 
         try:

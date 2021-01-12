@@ -35,7 +35,7 @@ def __init__():
     start_time = time.time() * 1000
     logging.info("Initializing ApplicationContext...")
 
-    yml = yaml.safe_load(open(os.getenv('application.yml')))
+    yml = yaml.safe_load(open(os.getenv("application.yml")))
     __init__base_field(config=yml['application']['server'])
     __init__mysql(config=yml['database']['mysql'])
     __init__redis(config=yml['database']['redis'])

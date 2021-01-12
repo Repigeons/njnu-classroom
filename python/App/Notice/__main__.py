@@ -22,7 +22,7 @@ def main():
         now = time.time() * 1000
         logging.info(
             "Started Application in %f seconds",
-            (int(now) - int(os.getenv("start_time"))) / 1000
+            (int(now) - int(os.getenv("startup_time"))) / 1000
         )
         if app.config['ENV'] == "production":
             make_server(

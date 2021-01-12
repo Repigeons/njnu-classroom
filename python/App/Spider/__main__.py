@@ -39,7 +39,7 @@ def main():
                 now = time.time() * 1000
                 logging.info(
                     "本轮课程信息收集工作成功完成. 共计耗时 %f seconds",
-                    (int(now) - int(os.getenv("start_time"))) / 1000
+                    (int(now) - int(os.getenv("startup_time"))) / 1000
                 )
             finally:
                 lock.release()
