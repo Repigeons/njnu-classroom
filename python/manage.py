@@ -13,22 +13,31 @@ from argparse import ArgumentParser, Namespace
 
 os.environ["startup_time"] = str(int(time.time() * 1000))
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="[%(asctime)s]\t"
-           "[ %(levelname)s ]\t\t"
-           "[\t%(module)20s\t]\t\t"
-           ": %(message)s"
-)
+
+def __init__logging(filename: str) -> None:
+    # 基础配置
+    logging.basicConfig(
+        level=logging.INFO,
+        format="[%(asctime)s]\t"
+               "[ %(levelname)s ]\t\t"
+               "[\t%(module)20s\t]\t\t"
+               ": %(message)s"
+    )
+    # 日志文件
+    if filename is not None:
+        # get logging file
+        filename = os.path.abspath(os.path.join("/var/log/NjnuClassroom", filename))
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        # set logger configuration
+        logger = logging.getLogger()
+        formatter = logger.handlers[0].formatter
+        handler = TimedRotatingFileHandler(filename=filename, encoding="utf8", when='D', backupCount=10)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
 
 def main(args: Namespace):
-    if args.log is not None:
-        logger = logging.getLogger()
-        formatter = logger.handlers[0].formatter
-        handler = TimedRotatingFileHandler(filename=args.log, encoding="utf8", when='D', backupCount=10)
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
+    __init__logging(args.log)
 
     logging.info("Starting Application with PID [%d]", os.getpid())
 
