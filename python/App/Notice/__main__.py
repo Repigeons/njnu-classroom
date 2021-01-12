@@ -5,21 +5,53 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __main__.py
 """"""
+import logging
+import os
+import time
 from wsgiref.simple_server import make_server
 
+import App.Notice._ApplicationContext as Context
+from App.Notice._ApplicationContext import send_email
 from App.Notice.app import app
 
 
 def main():
-    host = app.config['host'] if 'host' in app.config else "localhost"
-    port = app.config['port'] if 'port' in app.config else 8000
+    try:
+        logging.info("Using environment [%s]", app.config['ENV'])
+        logging.info("Flask started with port [%d] (http) on [%s]", Context.port, Context.host)
+        now = time.time() * 1000
+        logging.info(
+            "Started Application in %f seconds",
+            (int(now) - int(os.getenv("start_time"))) / 1000
+        )
+        if app.config['ENV'] == "production":
+            make_server(
+                host=Context.host,
+                port=Context.port,
+                app=app
+            ).serve_forever()
+            app.run()
 
-    if app.config['ENV'] == "production":
-        make_server(host=host, port=port, app=app).serve_forever()
-        app.run()
+        else:
+            app.run(
+                host=Context.host,
+                port=Context.port,
+                app=app,
+                debug=True
+            )
 
-    else:
-        app.run(host=host, port=port, debug=True)
+    except KeyboardInterrupt as e:
+        raise e
+
+    except Exception as e:
+        logging.error(f"{type(e), e}")
+        send_email(
+            subject="南师教室：错误报告",
+            message=f"{type(e), e}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+        )
+        logging.info("Exit with code %d", -1)
+        exit(-1)
 
 
 if __name__ == '__main__':

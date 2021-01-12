@@ -6,28 +6,34 @@
 # @FileName :  Reset.py
 """"""
 import json
-from threading import Lock
+import logging
+from threading import Thread
 
-from flask import current_app as app, jsonify
+from flask import current_app as app, request, jsonify
+from redis import StrictRedis
+from redis_lock import Lock
 
-from App.public import day_mapper, database, get_redis, send_email
-from utils import Threading
-
-lock = Lock()
+import App.Server._ApplicationContext as Context
+from App.Server._ApplicationContext import send_email
 
 
 @app.route('/reset', methods=['POST'])
 def route_reset():
     try:
-        Threading(reset).start()
+        Thread(target=reset).start()
         return jsonify({
             'status': 0,
             'message': "ok",
             'data': "reset"
         }), 202
     except Exception as e:
-        app.logger.warning(f"{type(e), e}")
-        send_email(subject='南师教室：错误报告', message=f"{type(e)}\n{e}in app.app: line 35")
+        logging.warning(f"{type(e), e}")
+        send_email(
+            subject="南师教室：错误报告",
+            message=f"{type(e), e}\n"
+                    f"{request.url}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+        )
         return jsonify({
             'status': -1,
             'message': f"{type(e), e}",
@@ -36,84 +42,97 @@ def route_reset():
 
 
 def reset():
-    try:
-        lock.acquire()
-        redis = get_redis()
-        redis.delete("Empty")
-        redis.delete("Overview")
-        reset_empty()
-        reset_overview()
-    finally:
-        lock.release()
+    redis = StrictRedis(connection_pool=Context.redis_pool)
+    lock1 = Lock(redis, "Server-Empty")
+    lock2 = Lock(redis, "Server-Overview")
+    if lock1.acquire(blocking=False):
+        try:
+            redis.delete("Empty")
+            reset_empty()
+        finally:
+            lock1.release()
+    if lock2.acquire(blocking=False):
+        try:
+            redis.delete("Overview")
+            reset_overview()
+        finally:
+            lock2.release()
 
 
 def reset_empty():
-    redis = get_redis()
-    for jxl in database.fetchall("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `_SFYXZX`"):
-        jxlmc = jxl[0]
+    redis = StrictRedis(connection_pool=Context.redis_pool)
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
+    for jxl in cursor.fetchall():
+        jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
+            cursor.execute(
+                "SELECT * FROM `pro` "
+                "WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `SFYXZX` "
+                "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
+                {'JXLMC': jxlmc, 'day': Context.day_mapper[day]}
+            )
             redis.hset(
                 name="Empty",
                 key=f"{jxlmc}_{day}",
                 value=json.dumps([
                     {
-                        'jasdm': item['JASDM'],
-                        'JASDM': item['JASDM'],
+                        'jasdm': row.JASDM,
+                        'JASDM': row.JASDM,
 
-                        'jxl': item['JXLMC'],
-                        'JXLMC': item['JXLMC'],
+                        'jxl': row.JXLMC,
+                        'JXLMC': row.JXLMC,
 
-                        'classroom': item['jsmph'],
-                        'jsmph': item['jsmph'],
+                        'classroom': row.jsmph,
+                        'jsmph': row.jsmph,
 
-                        'capacity': item['SKZWS'],
-                        'SKZWS': item['SKZWS'],
+                        'capacity': row.SKZWS,
+                        'SKZWS': row.SKZWS,
 
-                        'day': day_mapper[item['day']],
-                        'jc_ks': item['jc_ks'],
-                        'jc_js': item['jc_js'],
+                        'day': Context.day_mapper[row.day],
+                        'jc_ks': row.jc_ks,
+                        'jc_js': row.jc_js,
 
-                        'zylxdm': item['zylxdm'],
-                        'jyytms': item['jyytms'],
-                        'kcm': item['kcm'],
-                    } for item in database.fetchall(
-                        sql=f"SELECT * FROM `pro` "
-                            f"WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `_SFYXZX`"
-                            f"ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
-                        args={'JXLMC': jxlmc, 'day': day_mapper[day]}
-                    )
+                        'zylxdm': row.zylxdm,
+                        'jyytms': row.jyytms,
+                        'kcm': row.kcm,
+                    } for row in cursor.fetchall()
                 ])
             )
+    cursor.close(), connection.close()
 
 
 def reset_overview():
-    redis = get_redis()
-    for jasdm in database.fetchall("SELECT DISTINCT `JASDM` FROM `JAS`"):
+    redis = StrictRedis(connection_pool=Context.redis_pool)
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
+    for jas in cursor.fetchall():
+        cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
         redis.hset(
             name="Overview",
-            key=jasdm[0],
+            key=jas.JASDM,
             value=json.dumps([
                 {
-                    'jasdm': item['JASDM'],
-                    'JASDM': item['JASDM'],
+                    'jasdm': row.JASDM,
+                    'JASDM': row.JASDM,
 
-                    'jxl': item['JXLMC'],
-                    'JXLMC': item['JXLMC'],
+                    'jxl': row.JXLMC,
+                    'JXLMC': row.JXLMC,
 
-                    'classroom': item['jsmph'],
-                    'jsmph': item['jsmph'],
+                    'classroom': row.jsmph,
+                    'jsmph': row.jsmph,
 
-                    'capacity': item['SKZWS'],
-                    'SKZWS': item['SKZWS'],
+                    'capacity': row.SKZWS,
+                    'SKZWS': row.SKZWS,
 
-                    'day': day_mapper[item['day']],
-                    'jc_ks': item['jc_ks'],
-                    'jc_js': item['jc_js'],
+                    'day': Context.day_mapper[row.day],
+                    'jc_ks': row.jc_ks,
+                    'jc_js': row.jc_js,
 
-                    'zylxdm': item['zylxdm'],
-                    'jyytms': item['jyytms'],
-                    'kcm': item['kcm'],
-                } for item in
-                database.fetchall("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jasdm[0]})
+                    'zylxdm': row.zylxdm,
+                    'jyytms': row.jyytms,
+                    'kcm': row.kcm,
+                } for row in cursor.fetchall()
             ])
         )
+    cursor.close(), connection.close()

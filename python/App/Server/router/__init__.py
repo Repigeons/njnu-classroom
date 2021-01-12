@@ -8,4 +8,3 @@
 from . import Empty, Overview, SearchMore, Feedback, Reset
 
 from .Reset import reset
-

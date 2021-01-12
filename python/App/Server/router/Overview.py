@@ -6,10 +6,14 @@
 # @FileName :  Overview.py
 """"""
 import json
+import logging
 
 from flask import current_app as app, request, jsonify
+from redis import StrictRedis
 
-from App.public import get_redis, send_email
+import App.Server._ApplicationContext as Context
+
+from App.Server._ApplicationContext import send_email
 
 
 @app.route('/overview.json', methods=['GET'])
@@ -25,11 +29,12 @@ def route_overview():
             'data': []
         }), 400
     except Exception as e:
-        app.logger.warning(f"{type(e), e}")
+        logging.warning(f"{type(e), e}")
         send_email(
-            subject="南师教室：错误报告 in app.router.Overview",
+            subject="南师教室：错误报告",
             message=f"{type(e), e}\n"
                     f"{request.url}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
         return jsonify({
             'status': -1,
@@ -39,7 +44,7 @@ def route_overview():
 
 
 def handler(args: dict) -> dict:
-    if app.config['service'] == 'off':
+    if Context.service == 'off':
         return {
             'status': 1,
             'message': "service off",
@@ -47,7 +52,7 @@ def handler(args: dict) -> dict:
             'data': []
         }
 
-    redis = get_redis()
+    redis = StrictRedis(connection_pool=Context.redis_pool)
 
     if 'jasdm' not in args.keys() or not redis.hexists("Overview", args['jasdm']):
         raise KeyError('jasdm')

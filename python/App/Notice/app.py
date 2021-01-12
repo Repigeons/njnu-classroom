@@ -7,23 +7,24 @@
 """"""
 import datetime
 import json
+import logging
 import os
 import shutil
+import time
 
 from flask import Flask, request, jsonify
 
+import App.Notice._ApplicationContext as Context
+
+start_time = time.time() * 1000
+logging.info("Initializing FlaskApplication...")
 app = Flask(__name__)
-app.config.update(
-    env=os.getenv("env"),
-    **json.load(open(f"{os.getenv('conf', 'conf')}/notice.json"))
-)
+complete_time = time.time() * 1000
+logging.info("FlaskApplication: initialization completed in %d ms", complete_time - start_time)
 
 
 @app.route('/', methods=['PUT'])
 def index():
-    token = app.config['token']
-    file = app.config['file']
-
     try:
         request_args: dict = request.form.to_dict()
         request_headers: dict = request.headers.environ
@@ -31,21 +32,21 @@ def index():
             raise KeyError("Expected field `text`")
         if 'HTTP_TOKEN' not in request_headers.keys():
             raise KeyError("Expected field `token`")
-        if token != request_headers['HTTP_TOKEN']:
+        if Context.token != request_headers['HTTP_TOKEN']:
             raise ValueError("Invalid token")
 
         # Save to notice history
-        if os.path.exists(file):
-            history_dir = os.path.join(os.path.dirname(file), 'notice-history')
+        if os.path.exists(Context.file):
+            history_dir = os.path.join(os.path.dirname(Context.file), 'notice-history')
             None if os.path.exists(history_dir) else os.mkdir(history_dir)
-            with open(file, 'r', encoding='utf8') as f:
+            with open(Context.file, 'r', encoding='utf8') as f:
                 data = json.load(f)
                 f.close()
             history_file = os.path.join(
                 history_dir,
                 datetime.datetime.fromtimestamp(data['timestamp']).strftime("%Y-%m-%d %X")
             )
-            shutil.copyfile(file, history_file)
+            shutil.copyfile(Context.file, history_file)
 
         # Save to notice.json
         text: str = request_args['text']
@@ -57,7 +58,7 @@ def index():
             'date': now.strftime("%Y-%m-%d"),
             'text': text,
         }
-        with open(file, 'w', encoding='utf8') as f:
+        with open(Context.file, 'w', encoding='utf8') as f:
             json.dump(data, f, ensure_ascii=False)
         return jsonify({
             'status': 0,
@@ -77,7 +78,10 @@ def index():
             'detail': e.args[0]
         }), 403
     except Exception as e:
-        app.logger.warning(f"{type(e), e}")
+        logging.warning(
+            f"{type(e), e}"
+            f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+        )
         return jsonify({
             'status': 1,
             'message': type(e),

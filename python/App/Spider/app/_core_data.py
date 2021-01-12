@@ -10,8 +10,22 @@ import json
 
 import requests
 
+import App.Spider._ApplicationContext as Context
+
+
+def truncate_kcb() -> None:
+    """
+    清空`kcb`表
+    """
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.execute("TRUNCATE TABLE `KCB`")
+    cursor.close(), connection.close()
+
 
 def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
+    """
+    获取具体课程信息
+    """
     today = datetime.datetime.now().weekday()
     this_week = time_info['ZC']
     next_week = time_info['ZC'] + 1 if time_info['ZC'] < time_info['ZJXZC'] else time_info['ZJXZC']
@@ -66,3 +80,19 @@ def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
                 item['zylxdm'], item['jyytms'], item['kcm']
             ])
     return result
+
+
+def insert_into_kcb(class_list: list) -> None:
+    """
+    将课程信息插入`kcb`表
+    """
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.executemany(
+        "INSERT INTO `KCB`("
+        "`JXLMC`,`jsmph`,`JASDM`,`SKZWS`,`zylxdm`,`jc_ks`,`jc_js`,`jyytms`,`kcm`,`day`,`SFYXZX`"
+        ") VALUES ("
+        "%(JXLMC)s,%(jsmph)s,%(JASDM)s,%(SKZWS)s,%(zylxdm)s,%(jc_ks)s,%(jc_js)s,%(jyytms)s,%(kcm)s,%(day)s,%(SFYXZX)s"
+        ")",
+        class_list
+    )
+    cursor.close(), connection.close()

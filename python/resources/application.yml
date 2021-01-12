@@ -1,0 +1,49 @@
+database:
+  mysql:
+    host: "localhost"
+    port: 3306
+    user: "root"
+    password: ""
+    database: ""
+  redis:
+    host: "localhost"
+    port: 6379
+    db: 0
+
+application:
+  server:
+    host: "localhost"
+    port: 8001
+    service: on
+
+  notice:
+    host: "localhost"
+    port: 8000
+    token: ""
+    file: "notice.json"
+
+  spider:
+    account:
+      username: ""
+      password: ""
+      gid: ""
+    selenium:
+      driver: "firefox"
+      list:
+        phantomjs:
+          executable_path: "phantomjs"
+        chrome:
+          executable_path: "chromedriver"
+        firefox:
+          executable_path: "geckodriver"
+          firefox_binary: "firefox"
+
+mail:
+  sender:
+    host: "smtp.njnu.edu.cn"
+    port: 994
+    user: "*@njnu.edu.cn"
+    password:
+  receivers:
+    - name: "Repigeons"
+      addr: "info@njnu.xyz"

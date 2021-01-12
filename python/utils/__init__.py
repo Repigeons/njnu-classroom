@@ -5,6 +5,5 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __init__.py
 """"""
-from ._mysql import MySQL
+from ._mariadb import MariaDB
 from ._smtp import SMTP
-from ._threading import Threading

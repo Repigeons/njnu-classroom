@@ -5,17 +5,22 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  app.py
 """"""
-import json
-import os
+import logging
+import time
 
 from flask import Flask
 
+start_time = time.time() * 1000
+logging.info("Initializing FlaskApplication...")
 app = Flask(__name__)
-app.config.update(
-    env=os.getenv("env"),
-    **json.load(open(f"{os.getenv('conf', 'conf')}/server.json"))
-)
+complete_time = time.time() * 1000
+logging.info("FlaskApplication: initialization completed in %d ms", complete_time - start_time)
+
 with app.app_context():
     from App.Server import router
 
+start_time = time.time() * 1000
+logging.info("Initializing Cache...")
 router.reset()
+complete_time = time.time() * 1000
+logging.info("Cache: initialization completed in %d ms", complete_time - start_time)

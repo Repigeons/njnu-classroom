@@ -5,9 +5,13 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  SearchMore.py
 """"""
+import logging
+
 from flask import current_app as app, request, jsonify
 
-from App.public import day_mapper, database, send_email
+import App.Server._ApplicationContext as Context
+
+from App.Server._ApplicationContext import send_email
 
 
 @app.route('/searchmore.json', methods=['GET'])
@@ -23,11 +27,12 @@ def route_search_more():
             'data': []
         }), 400
     except Exception as e:
-        app.logger.warning(f"{type(e), e}")
+        logging.warning(f"{type(e), e}")
         send_email(
-            subject="南师教室：错误报告 in app.router.SearchMore",
+            subject="南师教室：错误报告",
             message=f"{type(e), e}\n"
                     f"{request.url}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
         return jsonify({
             'status': -1,
@@ -37,7 +42,7 @@ def route_search_more():
 
 
 def handler(args: dict) -> dict:
-    if app.config['service'] == 'off':
+    if Context.service == 'off':
         return {
             'status': 1,
             'message': "service off",
@@ -59,39 +64,38 @@ def handler(args: dict) -> dict:
         raise KeyError('kcm')
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'"
+    day = True if args['day'] == "#" else f"`day`='{Context.day_mapper[int(args['day'])]}'"
     jxl = True if args['jxl'] == "#" else "`JXLMC`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
 
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
     result = [
         {
-            'jasdm': item['JASDM'],
-            'JASDM': item['JASDM'],
+            'jasdm': row.JASDM,
+            'JASDM': row.JASDM,
 
-            'jxl': item['JXLMC'],
-            'JXLMC': item['JXLMC'],
+            'jxl': row.JXLMC,
+            'JXLMC': row.JXLMC,
 
-            'classroom': item['jsmph'],
-            'jsmph': item['jsmph'],
+            'classroom': row.jsmph,
+            'jsmph': row.jsmph,
 
-            'capacity': item['SKZWS'],
-            'SKZWS': item['SKZWS'],
+            'capacity': row.SKZWS,
+            'SKZWS': row.SKZWS,
 
-            'day': day_mapper[item['day']],
-            'jc_ks': item['jc_ks'],
-            'jc_js': item['jc_js'],
+            'day': Context.day_mapper[row.day],
+            'jc_ks': row.jc_ks,
+            'jc_js': row.jc_js,
 
-            'zylxdm': item['zylxdm'],
-            'jyytms': item['jyytms'],
-            'kcm': item['kcm'],
-        } for item in
-        database.fetchall(
-            sql=f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})",
-            args=args
-        )
+            'zylxdm': row.zylxdm,
+            'jyytms': row.jyytms,
+            'kcm': row.kcm,
+        } for row in cursor.fetchall()
     ]
+    cursor.close(), connection.close()
 
     return {
         'status': 0,

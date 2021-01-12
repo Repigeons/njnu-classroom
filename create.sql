@@ -36,7 +36,7 @@ create table JAS
     KSYXJ           varchar(32)      null comment '考试优先级',
     SFYXCX          bit              null comment '是否允许查询',
     SFYXJY          bit              null comment '是否允许借用',
-    _SFYXZX         bit default b'0' not null comment '是否允许自习'
+    SFYXZX          bit default b'0' not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '教室列表';
@@ -55,7 +55,7 @@ create table KCB
     jyytms  text                                                                                not null comment '借用用途说明',
     kcm     text                                                                                not null comment '课程名',
     day     enum ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') not null comment '星期',
-    _SFYXZX bit     default b'0'                                                                not null comment '是否允许自习'
+    SFYXZX  bit     default b'0'                                                                not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '原始课程表';
@@ -76,7 +76,7 @@ create table correction
     jc_js   tinyint                                                                             not null comment '节次_结束',
     jyytms  text                                                                                not null comment '借用用途说明',
     kcm     text                                                                                not null comment '课程名',
-    _SFYXZX bit     default b'1'                                                                not null comment '是否允许自习'
+    SFYXZX  bit     default b'1'                                                                not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '校正表';
@@ -97,7 +97,7 @@ create table dev
     jyytms  text                                                                                not null comment '借用用途说明',
     kcm     text                                                                                not null comment '课程名',
     day     enum ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') not null comment '星期',
-    _SFYXZX bit     default b'0'                                                                not null comment '是否允许自习'
+    SFYXZX  bit     default b'0'                                                                not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '开发环境';
@@ -118,7 +118,7 @@ create table pro
     jyytms  text                                                                                not null comment '借用用途说明',
     kcm     text                                                                                not null comment '课程名',
     day     enum ('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday') not null comment '星期',
-    _SFYXZX bit     default b'0'                                                                not null comment '是否允许自习'
+    SFYXZX  bit     default b'0'                                                                not null comment '是否允许自习'
 )   ENGINE = InnoDB
     DEFAULT CHARSET = utf8mb4
     comment '生产环境';

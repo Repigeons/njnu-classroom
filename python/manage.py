@@ -5,23 +5,53 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  manage.py
 """"""
+import logging
 import os
+import time
+from argparse import ArgumentParser, Namespace
 
-if __name__ == '__main__':
-    from argparse import ArgumentParser
+os.environ['start_time'] = str(int(time.time() * 1000))
 
-    parser = ArgumentParser()
-    parser.add_argument('-r', '--run', default=None, type=str, help="run the service module")
-    parser.add_argument('-c', '--config', default="conf", type=str, help="set the config directory, default './conf/'")
-    args = parser.parse_args()
+logging.basicConfig(
+    level=logging.DEBUG if os.getenv("env") == "dev" else logging.INFO,
+    # datefmt="%x %X",
+    format="[%(asctime)s]\t"
+           "[ %(levelname)s ]\t\t"
+           "[ %(module)24s\t]\t\t"
+           ": %(message)s",
+)
+
+
+def main(args: Namespace):
+    if args.log is not None:
+        logging.basicConfig(
+            filemode='a',
+            filename=args.log,
+        )
+
+    logging.info("Starting Application with PID %d", os.getpid())
 
     if args.run is not None:
-        os.environ['conf'] = args.config
+        os.environ['application.yml'] = os.getenv("application.yml", "resources/application.yml")
+        if not os.path.exists(os.getenv('application.yml')):
+            logging.error("FileNotFoundError: No such file [%s]", os.getenv('application.yml'))
+            exit(-1)
 
         try:
-            __import__(f"App.{args.run}.__main__", fromlist=('App', args.run, '__main__')).main()
+            logging.info("Initializing module [%s]", args.run)
+            module = __import__(f"App.{args.run}.__main__", fromlist=("App", args.run, "__main__"))
         except ModuleNotFoundError as e:
             if e.name == f"App.{args.run}":
-                print(f"No module named '{args.run}'")
-            else:
-                raise e
+                logging.error("ModuleNotFoundError: No such module [%s]", args.run)
+                exit(-1)
+            raise e
+
+        logging.info("Starting Service [%s]", args.run)
+        module.main()
+
+
+if __name__ == '__main__':
+    parser = ArgumentParser()
+    parser.add_argument('-r', '--run', type=str, help="Service module")
+    parser.add_argument('-l', '--log', type=str, help="Logging file")
+    main(args=parser.parse_args())

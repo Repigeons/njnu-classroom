@@ -6,22 +6,25 @@
 # @FileName :  Feedback.py
 """"""
 import json
-import os
-from threading import Lock
+import logging
+from multiprocessing import Process
 
 import requests
 from flask import current_app as app, request, jsonify
+from redis import StrictRedis
+from redis_lock import Lock
 
+import App.Server._ApplicationContext as Context
+from App.Server._ApplicationContext import send_email
 from App.Spider.app import save_cookies, save_time
-from App.public import database, send_email
-from utils import Threading
-
-lock = Lock()
 
 
 @app.route('/feedback', methods=['POST'])
 def route_feedback():
-    Threading(backend_process).start(proxy_app=app, request_args=request.form.to_dict())
+    Process(
+        target=backend_process,
+        args=(request.form.to_dict())
+    ).start()
     return jsonify({
         'status': 0,
         'message': "ok",
@@ -29,7 +32,7 @@ def route_feedback():
     }), 202
 
 
-def backend_process(proxy_app, request_args: dict):
+def backend_process(request_args: dict):
     request_args['resultList'] = json.loads(request_args['resultList'])
     request_args['index'] = int(request_args['index'])
     request_args['item'] = request_args['resultList'][request_args['index']]
@@ -40,8 +43,6 @@ def backend_process(proxy_app, request_args: dict):
     jasdm = request_args['item']['JASDM']
     zylxdm = request_args['item']['zylxdm']
     try:
-        lock.acquire()
-
         if check_with_ehall(jasdm=jasdm, day=day, jc=jc, zylxdm=zylxdm):
 
             if zylxdm == '00':
@@ -72,8 +73,10 @@ def backend_process(proxy_app, request_args: dict):
                 )
 
         else:
-            os.system(os.getenv("SPIDER_SHELL"))
-            os.system(os.getenv("RESET_CMD"))
+            import manage
+            from .Reset import reset
+            manage.main(manage.Namespace(run="Spider"))
+            reset()
 
             send_email(
                 subject=f"南师教室：用户反馈 "
@@ -87,30 +90,25 @@ def backend_process(proxy_app, request_args: dict):
             )
 
     except Exception as e:
-        proxy_app.logger.warning(f"{type(e), e}")
-
+        logging.warning(f"{type(e), e}")
         send_email(
-            subject="南师教室：错误报告 in app.router.Feedback",
+            subject="南师教室：错误报告",
             message=f"{type(e), e}\n"
                     f"{request.url}\n"
-                    f"{request_args}"
+                    f"{request_args}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
-    finally:
-        lock.release()
 
 
 def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
-    cookies_file, time_file = "cookies.json", "time.json"
-    try:
-        save_cookies(file=cookies_file)
-        cookies = json.load(open(cookies_file))
-    finally:
-        os.remove(cookies_file)
-    try:
-        save_time(cookies=cookies, file=time_file)
-        time_info = json.load(open(time_file))
-    finally:
-        os.remove(time_file)
+    redis = StrictRedis(connection_pool=Context.redis_pool)
+    lock = Lock(redis, "Spider")
+    lock.acquire()
+    save_cookies(), save_time()
+    cookies = json.loads(redis.hget("Spider", "cookies"))
+    time_info = json.loads(redis.hget("Spider", "time_info"))
+    redis.delete("Spider")
+    lock.release()
 
     res = requests.post(
         url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
@@ -129,38 +127,40 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
-    database.update(
-        sql="INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
-        args={
+    connection, cursor = Context.mysql.get_connection_cursor()
+    cursor.execute(
+        "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
+        {
             'jasdm': jasdm,
             'jc': jc,
             'day': day
         }
     )
-    statistic = database.fetchall(
-        sql="SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
-            "FROM `feedback_metadata` "
-            "WHERE `JASDM`=%(jasdm)s "
-            "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
-            "AND `jc`=%(jc)s "
-            "GROUP BY `date` "
-            "ORDER BY `date`",
-        args={
+    cursor.execute(
+        "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
+        "FROM `feedback_metadata` "
+        "WHERE `JASDM`=%(jasdm)s "
+        "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
+        "AND `jc`=%(jc)s "
+        "GROUP BY `date` "
+        "ORDER BY `date`",
+        {
             'jasdm': jasdm,
             'jc': jc,
             'day': day
         }
     )
-    week_count = statistic[-1]['count']
-    total_count = sum([row['count'] for row in statistic])
+    statistic = cursor.fetchall()
+    week_count = statistic[-1].count
+    total_count = sum([row.count for row in statistic])
     if week_count != total_count:
-        database.update(
-            sql="INSERT INTO `correction` ("
-                "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
-                ") VALUES ("
-                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
-                ")",
-            args={
+        cursor.execute(
+            "INSERT INTO `correction` ("
+            "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
+            ") VALUES ("
+            "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
+            ")",
+            {
                 'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
                 'JXLMC': jxl,
                 'jsmph': jsmph,
@@ -168,4 +168,5 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
                 'jc': jc
             }
         )
+    cursor.close(), connection.close()
     return week_count, total_count

@@ -6,38 +6,58 @@
 # @FileName :  _get_time.py
 """"""
 import json
+import logging
 import time
 from json.decoder import JSONDecodeError
 
 import requests
+from redis import StrictRedis
 
-from App.public import send_email
+import App.Spider._ApplicationContext as Context
+from App.Spider._ApplicationContext import send_email
 
 
-def save_time(cookies: dict, file: str) -> None:
+def save_time() -> None:
     """
-    将时间信息保存至文件
-    :param cookies: cookies
-    :param file: 时间信息文件
-    :return: None
+    将时间信息保存至Redis
     """
     try:
-        print('开始尝试查询时间信息...')
-        json.dump(
-            get_time_info(cookies=cookies),
-            open(file, 'w')
+        redis = StrictRedis(connection_pool=Context.redis_pool)
+        cookies = json.loads(redis.hget("Spider", "cookies"))
+        logging.info("开始查询时间信息...")
+        time_info = get_time_info(cookies=cookies)
+        logging.info("时间信息查询成功")
+        redis.hset("Spider", "time_info", json.dumps(time_info))
+        logging.info("时间信息存储完成")
+    except JSONDecodeError as e:
+        logging.error("cookies无效")
+        send_email(
+            subject="南师教室：错误报告",
+            message=f"cookies无效\n"
+                    f"JSONDecodeError\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
-        print('时间信息查询完成...')
-    except JSONDecodeError:
-        send_email(subject="南师教室：错误报告", message=f"JSONDecodeError\ncookies无效\nat line 68")
-        print('cookies无效')
-        print('Exit with code', 2)
+        logging.info("Exit with code %d", 2)
         exit(2)
-    except KeyError:
-        send_email(subject="南师教室：错误报告", message=f"KeyError\n获取时间信息失败\nat line 73")
-        print('获取时间信息失败')
-        print('Exit with code', 3)
+    except KeyError as e:
+        logging.error("获取时间信息失败")
+        send_email(
+            subject="南师教室：错误报告",
+            message=f"获取时间信息失败\n"
+                    f"KeyError\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+        )
+        logging.info("Exit with code %d", 3)
         exit(3)
+    except Exception as e:
+        logging.error(f"{type(e), e}")
+        send_email(
+            subject="南师教室：错误报告",
+            message=f"{type(e), e}\n"
+                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+        )
+        logging.info("Exit with code %d", -1)
+        exit(-1)
 
 
 def get_time_info(cookies: dict) -> dict:
@@ -64,7 +84,7 @@ def get_time_info(cookies: dict) -> dict:
         data={
             'XN': result['XNDM'],
             'XQ': result['XQDM'],
-            'RQ': time.strftime('%Y-%m-%d', time.localtime())
+            'RQ': time.strftime("%Y-%m-%d", time.localtime())
         }
     ).json()
     result['ZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZC']
