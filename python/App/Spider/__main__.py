@@ -25,6 +25,8 @@ def main():
         if lock.acquire(blocking=False):
             try:
                 logging.info("开始课程信息收集工作...")
+                logging.info("初始化工作环境...")
+                redis.delete("Spider")
                 # 采集基础信息
                 prepare()
                 # 采集详细信息
