@@ -12,7 +12,6 @@ from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 
 import App.Server._ApplicationContext as Context
-
 from App.Server._ApplicationContext import send_email
 
 
@@ -44,7 +43,7 @@ def route_overview():
 
 
 def handler(args: dict) -> dict:
-    if Context.service == 'off':
+    if not Context.serve:
         return {
             'status': 1,
             'message': "service off",

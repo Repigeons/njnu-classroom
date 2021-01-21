@@ -10,7 +10,6 @@ import logging
 from flask import current_app as app, request, jsonify
 
 import App.Server._ApplicationContext as Context
-
 from App.Server._ApplicationContext import send_email
 
 
@@ -42,7 +41,7 @@ def route_search_more():
 
 
 def handler(args: dict) -> dict:
-    if Context.service == 'off':
+    if not Context.serve:
         return {
             'status': 1,
             'message': "service off",

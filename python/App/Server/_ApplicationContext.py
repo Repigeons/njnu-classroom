@@ -18,7 +18,7 @@ from utils import MariaDB, SMTP
 
 host: str
 port: int
-service: str
+serve: bool
 day_mapper: dict
 
 mysql: MariaDB
@@ -46,11 +46,11 @@ def __init__():
 
 
 def __init__base_field(config: dict) -> None:
-    global host, port, service
+    global host, port, serve
     global day_mapper
     host = config['host']
     port = config['port']
-    service = config['service']
+    serve = config['service']
     day_mapper = {
         0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
         'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
