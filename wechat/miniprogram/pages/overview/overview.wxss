@@ -1,5 +1,4 @@
 /* pages/overview/overview.wxss */
-
 .rp-label {
   text-align: center;
   width: 15%;
@@ -104,24 +103,4 @@
 
 .rp-bar_others {
   background-color:#d6844e;
-}
-
-.rp-dialog {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.rp-dialog_show {
-  visibility: visible;
-  opacity:1;
-}
-
-.rp-dialog__bd {
-  text-align: left;
-  margin: 5px 0 15px 0;
-  padding: 0 20px 0 24px;
-}
-
-.rp-dialog_text {
-  text-align: left;
 }

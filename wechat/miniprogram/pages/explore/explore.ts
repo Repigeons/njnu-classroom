@@ -10,25 +10,25 @@ Page({
   data: {
     grids: [
       {
-        "pagePath": "pages/searchmore/searchmore",
-        "iconPath": "/images/gdss.png",
+        "url": "pages/searchmore/searchmore",
         "text": "更多搜索"
       },
       {
-        "pagePath": "pages/shuttle/shuttle",
-        "iconPath": "/images/gdss.png",
+        "url": "pages/shuttle/shuttle",
         "text": "校内班车时刻表"
       },
       {
-        "pagePath": "pages/calendar/calendar",
-        "iconPath": "/images/gdss.png",
+        "url": "pages/calendar/calendar",
         "text": "校历"
       },
       {
-        "pagePath": ".",
-        "iconPath": "/images/gdss.png",
+        "url": ".",
         "text": "定制时间表"
       },
+      {
+        "url": "",
+        "text": "一键支持"
+      }
     ]
   },
 
