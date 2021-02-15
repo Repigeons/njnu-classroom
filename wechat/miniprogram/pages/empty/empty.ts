@@ -7,6 +7,7 @@ Page({
   data: {
     service: 'on',
     notice: Object() as INotice,
+    DoNotShowButton: [{text: "不再显示"}],
     jxl_position: Object() as IJxlPosition,
     jxl_name_array: Array<string>(),
     jxl_selected: 0,
@@ -242,10 +243,6 @@ Page({
       layer_display: false,
       confirm_display: false,
     })
-  },
-
-  closeDialog(): void {
-    this.setData({notice: {timestamp: 0, date: '', text: ''}})
   },
 
   onShareAppMessage() {

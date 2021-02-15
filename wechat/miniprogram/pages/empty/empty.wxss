@@ -27,42 +27,9 @@
   opacity: 0.8;
 }
 
-.rp-cell {
-  height: 16px;
-  line-height: 20px;
-  border-radius: 16px;
-}
-
 .rp-cells {
   position: relative;
   background-color: #fff;
   margin: 8px 8px 8px 8px;
   border-radius: 16px;
-}
-
-.rp-cell_active {
-  background-color: #b8ced9;
-}
-
-.rp-item-logo {
-  vertical-align: middle;
-  height: 24px;
-  width: 24px;
-  margin-right: 16px;
-}
-
-.rp-item-title {
-  font-size: 17px;
-}
-
-.rp-item-text {
-  font-size: 14px;
-}
-
-.rp-item-text-jc {
-  color: #e58600;
-}
-
-.rp-item-text-yan {
-  color: #535353;
 }

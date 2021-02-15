@@ -27,6 +27,7 @@ Page({
     jsmph_array: Array<string>(),
     jsmph_selected: 0,
     dialog: {},
+    closeDialog: [{text:"关闭"}],
     bar_list: Array<IClassroomRow>(),
     empty: true,
   },

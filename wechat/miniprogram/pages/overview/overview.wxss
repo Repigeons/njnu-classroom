@@ -121,3 +121,7 @@
   margin: 5px 0 15px 0;
   padding: 0 20px 0 24px;
 }
+
+.rp-dialog_text {
+  text-align: left;
+}

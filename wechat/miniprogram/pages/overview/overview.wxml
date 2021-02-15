@@ -82,44 +82,18 @@
           bindtap="showDialog" data-index="{{index}}"
         ><block wx:if="{{item.usage!='empty'}}"><text>{{bar_list[index]['shortkcmc']}}</text></block></view>
       </block>
-      <!--
-        以下为示例内容
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*(jc_js-jc_ks+1)-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*(day-1)}}px; top: {{(cellHeight+1)*(jc_ks-1)}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*0}}px; top: {{(cellHeight+1)*9}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*3}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*2-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*7}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*1-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*1}}px; top: {{(cellHeight+1)*11}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*7-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*2}}px; top: {{(cellHeight+1)*5}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*1-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*3}}px; top: {{(cellHeight+1)*2}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*7-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*3}}px; top: {{(cellHeight+1)*5}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*5-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*4}}px; top: {{(cellHeight+1)*0}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*3-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*4}}px; top: {{(cellHeight+1)*9}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*5}}px; top: {{(cellHeight+1)*0}}px"></view>
-      <view class="rp-bar" style="width:{{cellWidth*0.6}}px; height:{{(cellHeight+1)*12-1}}px; left: {{cellWidth*0.2+(cellWidth+1)*6}}px; top: {{(cellHeight+1)*0}}px"></view>
-      -->
     </view>
     <!--~ 数据内容 -->
   </view>
   <!--~ body -->
 
   <!-- Dialog -->
-  <view class="rp-dialog {{dialog.title ? 'rp-dialog_show' : ''}}">
-    <view class="weui-mask" bindtap="closeDialog"></view>
-    <view class="weui-dialog__wrp" bindtap="closeDialog">
-      <view class="weui-dialog" style="z-index: 9">
-        <view class="weui-dialog__hd">
-          <view class="weui-dialog__title">{{dialog.title}}</view>
-        </view>
-        <view class="weui-dialog__bd rp-dialog__bd">
-          <block wx:for="{{dialog.detail}}" wx:key="key">
-            <view>{{item.field}}：{{item.value}}</view>
-          </block>
-        </view>
-        <view class="weui-dialog__ft">
-          <view class="weui-dialog__btn" bindtap="closeDialog"> 关 闭 </view>
-        </view>
-      </view>
+  <mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
+    <view class="rp-dialog_text">
+      <block wx:for="{{dialog.detail}}" wx:key="key">
+        <view>{{item.field}}：{{item.value}}</view>
+      </block>
     </view>
-  </view>
+  </mp-dialog>
   <!--~ Dialog -->
 </view>

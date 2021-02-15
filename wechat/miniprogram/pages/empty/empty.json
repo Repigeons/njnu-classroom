@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "rp-layer": "../../components/layer/layer"
+    "mp-dialog": "../../miniprogram_npm/weui-miniprogram/dialog/dialog",
+    "rp-layer": "../../components/layer/layer",
+    "rp-classroom": "../../components/empty-classroom/empty-classroom"
   }
 }

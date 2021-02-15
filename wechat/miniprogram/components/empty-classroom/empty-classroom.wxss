@@ -1,0 +1,46 @@
+/* components/empty-classroom/empty-classroom.wxss */
+.rp-cell {
+  height: 16px;
+  line-height: 20px;
+  border-radius: 16px;
+  padding: 16px;
+
+  position: relative;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.rp-cell_active {
+  background-color: #b8ced9;
+}
+
+.rp-cell__bd {
+  -webkit-box-flex: 1;
+  flex: 1;
+}
+
+.rp-item-logo {
+  vertical-align: middle;
+  height: 24px;
+  width: 24px;
+  margin-right: 16px;
+}
+
+.rp-item-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.rp-item-text {
+  font-size: 14px;
+}
+
+.rp-item-text-jc {
+  color: #e58600;
+  font-weight: 700;
+}
+
+.rp-item-text-yan {
+  color: #535353;
+}
