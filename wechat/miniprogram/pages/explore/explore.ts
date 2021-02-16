@@ -8,6 +8,7 @@ Page({
    * 页面的初始数据
    */
   data: {
+    fullYear: new Date().getFullYear(),
     grids: [
       {
         "url": "pages/searchmore/searchmore",
@@ -26,8 +27,14 @@ Page({
         "text": "定制时间表"
       },
       {
-        "url": "",
+        "url": ".",
         "text": "一键支持"
+      },
+      {
+        "target": "miniProgram",
+        "text": "反馈",
+        "appId": "*",
+        "bindfail": () => {console.log("feedback")}
       }
     ]
   },
@@ -46,6 +53,13 @@ Page({
 
   },
 
+  copyQQGroupId(): void {
+    wx.setClipboardData({
+      data: '1150057272',
+      success: () => wx.showToast({ title: "已复制到剪贴板" })
+    })
+  },
+
   /**
    * 用户点击右上角分享
    */
@@ -54,7 +68,7 @@ Page({
       title: '发现',
       path: 'pages/explore/explore'
       + `?page=explore`,
-      image: 'images/logo.png'
+      image: "images/logo.png"
     }
   }
 })

@@ -4,5 +4,18 @@
     <open-data type="userAvatarUrl" class="rp-avatar"></open-data>
     <open-data type="userNickName" class="rp-nickname"></open-data>
   </view>
+
   <mp-grids grids="{{grids}}"></mp-grids>
+
+  <view class="page__bd">
+    <view class="weui-footer weui-footer_fixed-bottom">
+			<view class="weui-footer__links">
+				<a href="javascript:void();" class="weui-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</a>
+			</view>
+      <view class="weui-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
+		</view>
+  </view>
 </view>
+
+<!-- 反馈按钮：鸽子转起来了！ -->
+<button open-type="feedback"style="position:fixed; width: 33.33333333%; height:93px; top: 218px; right: 0; opacity: 0"></button>
