@@ -89,7 +89,7 @@
 
   <!-- Dialog -->
   <mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
-    <view class="rp-dialog_text">
+    <view style="text-align:left">
       <block wx:for="{{dialog.detail}}" wx:key="key">
         <view>{{item.field}}：{{item.value}}</view>
       </block>

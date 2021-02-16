@@ -65,7 +65,7 @@
 
   <!-- Notice -->
   <mp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{DoNotShowButton}}" bindbuttontap="DoNotShow">
-    <view class="rp-dialog_text">
+    <view style="text-align:left">
       <text decode="true">{{notice.text}}</text>
     </view>
   </mp-dialog>
