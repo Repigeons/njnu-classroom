@@ -7,6 +7,7 @@ Page({
   data: {
     showMoreStation: false,
     stations_display: Array<string>(),
+    nearestStation: [{}],
     routes: Object(),
     stations: Object(),
     routes1: Object(),
@@ -17,6 +18,8 @@ Page({
     end: String(),
     nextShuttle: Number(),
     intervalUpdate: Array<number>(),
+    color1_array: ['#808080', '#0090F2', '#00F324', '#F28A00'],
+    color2_array: ['#808080', '#005A8C', '#006000', '#BF6D00'],
   },
   
   onLoad(/*options*/) {
@@ -26,6 +29,7 @@ Page({
     app.getShuttle().then(data => {
       this.setData(data)
       let stations_display: Array<string> = []
+      let nearestStation = [{station:"", distance:0}]
       wx.getLocation({
         type: 'gcj02',
         success: res => {
@@ -43,8 +47,10 @@ Page({
           list.forEach(item => {
             stations_display.push(`${item.station}\t距离约${Math.floor(item.distance)}米`)
           })
+          nearestStation[0] = list[0]
+          nearestStation[0]["distance"]=Math.floor(nearestStation[0]["distance"])
           stations_display[0] += "（距离最近）"
-          this.setData({ stations_display })
+          this.setData({ stations_display,nearestStation })
         },
         fail: console.error
       })
@@ -103,9 +109,21 @@ Page({
     }
   },
 
+  scroll(e?: any) {
+    console.log(e)
+  },
+
+  upper(e?: any) {
+    console.log(e)
+  },
+
+  lower(e?: any) {
+    console.log(e)
+  },
+
   onShareAppMessage() {
     return {
-      title: '校内班车',
+      title: '校内班车时刻表',
       path: 'pages/explore/pages/shuttle/shuttle'
       + `?page=shuttle`,
       image: 'images/logo.png'

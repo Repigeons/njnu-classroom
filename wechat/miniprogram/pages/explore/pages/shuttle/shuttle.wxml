@@ -1,4 +1,79 @@
 <!--explore/pages/shuttlebus/shuttlebus.wxml-->
+
+<view class="page">
+
+  <!-- 站点信息（固定） -->
+  <view class="rp-topbox">
+    <view class="rp-topbox-button__left" bindtap="showMoreStation">
+      <view class="rp-topbox-title">{{nearestStation[0]["station"]}}</view>
+      <view class="rp-topbox-distance">距我{{nearestStation[0]["distance"]}}米（最近）</view>
+    </view>
+    <view class="rp-topbox-arrow">
+      <image src="../../../../images/arrow.png" class="rp-topbox-arrow__image"></image>
+    </view>
+    <view class="rp-topbox-button__right" bindtap="direct">
+      <view class="rp-topbox-title">{{end}}方向</view>
+      <view class="rp-topbox-exchange">
+        <view style="display: flex; align-items: center; justify-content: center; padding-right:2px">
+          <image src="../../../../images/exchange.png" class="rp-topbox-exchange__image"></image>
+        </view>
+        <view>换向</view>
+      </view>
+    </view>
+  </view>
+  <!--~ 站点信息（固定） -->
+
+  <!-- 校车信息（滑动区域） -->
+  <view class="rp-scrollzone">
+    <scroll-view scroll-y="true" style="height:100%">
+      <view wx:for="{{routes}}" wx:key="key">
+        <view class="rp-cell">
+          <view wx:if="{{1==0}}" class="rp-cell__hd">
+            <view class="rp-mark" style="background-color: {{color1_array[0]}}"></view>
+            <view class="rp-time">{{item[0]}}</view>
+            <view class="rp-vline" style="background-color: {{color2_array[0]}}"></view>
+            <view class="rp-interval" style="color: {{color2_array[0]}}">发车{{'xx'}}分钟</view>
+          </view>
+          <view wx:if="{{1==1}}" class="rp-cell__hd">
+            <view class="rp-mark" style="background-color: {{color1_array[1]}}"></view>
+            <view class="rp-time">{{item[0]}}</view>
+            <view class="rp-vline" style="background-color: {{color2_array[1]}}"></view>
+            <view class="rp-interval" style="color: {{color2_array[1]}}">发车{{'xx'}}分钟</view>
+          </view>
+          <view wx:if="{{1==2}}" class="rp-cell__hd">
+            <view class="rp-mark" style="background-color: {{color1_array[2]}}"></view>
+            <view class="rp-time">{{item[0]}}</view>
+            <view class="rp-vline" style="background-color: {{color2_array[2]}}"></view>
+            <view class="rp-interval" style="color: {{color2_array[2]}}">还有{{'xx'}}分钟发车</view>
+          </view>
+          <view wx:if="{{1==3}}" class="rp-cell__hd">
+            <view class="rp-mark" style="background-color: {{color1_array[3]}}"></view>
+            <view class="rp-time">{{item[0]}}</view>
+            <view class="rp-vline" style="background-color: {{color2_array[3]}}"></view>
+            <view class="rp-interval" style="color: {{color2_array[3]}}">{{'xx'}}分钟后发车</view>
+          </view>
+          <view wx:if="{{1==-1}}" class="rp-cell__hd">
+            <view class="rp-mark" style="background-color: {{color1_array[0]}}"></view>
+            <view class="rp-time">{{item[0]}}</view>
+            <view class="rp-vline" style="background-color: {{color2_array[0]}}"></view>
+            <view class="rp-interval" style="color: {{color2_array[0]}}">不经过最近站点</view>
+          </view>
+          <view class="rp-cell__ft">
+            <view class="rp-station">{{item[1]}}</view>
+            <view class="rp-cellarrow">
+              <image src="../../../../images/arrow.png" class="rp-cellarrow__image"></image>
+            </view>
+            <view class="rp-station">{{item[2]}}</view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+  <!--~ 校车信息（滑动区域） -->
+
+</view>
+
+<!-- 
 <view>
   校车站: 
   <view wx:if="{{showMoreStation}}">
@@ -54,7 +129,7 @@
 
 <view>
   时刻表：
-  <view wx:for="{{ !direction ? routes1 : routes2}}" wx:key="key">
+  <view wx:for="{{routes}}" wx:key="key">
     {{item[0]}}
     自
     {{item[1]}}
@@ -62,3 +137,4 @@
     {{item[2]}}
   </view>
 </view>
+ -->
