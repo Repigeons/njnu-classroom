@@ -1,0 +1,15 @@
+<view class="cell" hover-class="cell_active">
+  <view class="cell__hd">
+    <image class="item-logo" src="/images/{{icon[zylxdm]}}"/>
+  </view>
+  <view class="cell__bd">
+    <view>
+      <text class="item-title">{{jsmph}}教室</text>
+      <text class="item-text item-text_jc" decode="true">&ensp;『{{jc_ks}}-{{jc_js}}节』</text>
+      <text class="item-text" decode="true">&ensp;容量：{{skzws}}</text>
+    </view>
+    <view wx:if="{{zylxdm=='10'}}">
+      <text class="item-text item-text_yan">研究生课程，可能为空教室</text>
+    </view>
+  </view>
+</view>

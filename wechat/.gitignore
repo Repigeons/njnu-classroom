@@ -17,3 +17,6 @@ miniprogram_npm/
 
 # TypeScript
 *.js
+
+# Private.config
+project.private.config.json

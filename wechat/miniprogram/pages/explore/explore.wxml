@@ -7,13 +7,11 @@
 
   <mp-grids grids="{{grids}}"></mp-grids>
 
-  <view class="page__bd">
-    <view class="weui-footer weui-footer_fixed-bottom">
-			<view class="weui-footer__links">
-				<a href="javascript:void();" class="weui-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</a>
-			</view>
-      <view class="weui-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
-		</view>
+  <view class="weui-footer weui-footer_fixed-bottom">
+    <view class="weui-footer__links">
+      <a class="weui-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</a>
+    </view>
+    <view class="weui-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
   </view>
 </view>
 

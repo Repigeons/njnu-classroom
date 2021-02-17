@@ -4,19 +4,27 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    logo: { type: String },
+    zylxdm: { type: String },
     jsmph: { type: String },
     jc_ks: { type: Number },
     jc_js: { type: Number },
     skzws: { type: Number },
-    yan: { type: Boolean },
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-
+    icon: {
+      '00': "kong.png",
+      '01': "benke.png",
+      '03': "benke.png",
+      '02': "jieyong.png",
+      '04': "jieyong.png",
+      '05': "qita.png",
+      '10': "yanjiusheng.png",
+      '11': "yanjiusheng.png",
+    }
   },
 
   /**

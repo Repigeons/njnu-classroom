@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "mp-grids": "../../miniprogram_npm/weui-miniprogram/grids/grids"
+    "mp-grids": "weui-miniprogram/grids/grids"
   }
 }

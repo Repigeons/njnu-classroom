@@ -26,25 +26,16 @@ Page({
     lx_name_array: Array<string>(),
     lx_selected: 0,
 
-    keyword: '',
-    showInput: false,
-    showButton: false,
+    keyword: String(),
+    showSearch: false,
     showResult: false,
 
-    // 结果集
-    iconPath: {
-      '01': '/images/benke.png',
-      '03': '/images/benke.png',
-      '02': '/images/jieyong.png',
-      '04': '/images/jieyong.png',
-      '05': '/images/qita.png',
-      '10': '/images/yanjiusheng.png',
-      '11': '/images/yanjiusheng.png',
-    },
     dialog: {},
     search_result: Array<IClassroomRow>(),
     result_size: 0,
     display_list: Array<IClassroomRow>(),
+    
+    closeDialog: [{text:"关闭"}],
   },
 
   /**
@@ -75,7 +66,7 @@ Page({
         jc_js_selected: +options.jc_js_selected,
         jxl_selected: +options.jxl_selected,
         lx_selected: +options.lx_selected,
-        showInput: options.showInput=='true',
+        showSearch: options.showSearch=='true',
       })
       this.onSearch()
     }
@@ -94,32 +85,29 @@ Page({
     this.setData({jc_ks_array, jc_js_array})
   },
 
-  /**
-   * 显示输入框
-   */
-  showInput(): void {
+  onFocus(): void {
     this.setData({
-      showInput: true,
-      showButton: true,
+      showSearch: true,
       showResult: false
     })
   },
 
   /**
-   * 显示按钮
+   * 输入搜索关键词
    */
-  showButton(): void {
-    this.setData({
-      showButton: true,
-      showResult: false
-    })
+  onInput(e: AnyObject): void {
+    this.setData({ keyword: e.detail.value.trim() })
   },
 
+  onClear(): void {
+    this.setData({ keyword: "" })
+  },
+  
   /**
    * 搜索
    */
   onSearch(): void {
-    this.setData({ showButton: false })
+    this.setData({ showSearch: false })
     if (this.data.keyword) {
       wx.request({
         url: `${app.globalData.server}/api/searchmore.json`,
@@ -155,20 +143,6 @@ Page({
         }
       })
     }
-  },
-
-  /**
-   * 清空输入框
-   */
-  clearInput(): void {
-    this.setData({keyword: ''})
-  },
-
-  /**
-   * 输入搜索关键词
-   */
-  onInput(e: AnyObject): void {
-    this.setData({keyword: e.detail.value.trim()})
   },
 
   /**
@@ -223,6 +197,7 @@ Page({
     const item: IClassroomRow = this.data.display_list[index]
     const rq: string = this.data.rq_array[item.dayIndex]
     this.setData({dialog: item2dialog(item, rq)})
+    console.log(this.data.dialog)
   },
 
   closeDialog(): void {
@@ -240,7 +215,7 @@ Page({
       + `&jc_js_selected=${this.data.jc_js_selected}`
       + `&jxl_selected=${this.data.jxl_selected}`
       + `&lx_selected=${this.data.lx_selected}`
-      + `&showInput=${this.data.showInput}`,
+      + `&showSearch=${this.data.showSearch}`,
       image: 'images/logo.png'
     }
   }

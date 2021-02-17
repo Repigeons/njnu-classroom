@@ -209,11 +209,7 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        let classroomList = resData.data
-        for (let i=0; i<classroomList.length; i++) {
-          classroomList[i].logo = classroomList[i].zylxdm=='00' ? "kong.png" : "yan.png"
-        }
-        this.setData({ service: resData.service, classroomList })
+        this.setData({ service: resData.service, classroomList: resData.data })
       },
       fail: err => {
         console.error(err)

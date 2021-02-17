@@ -1,0 +1,58 @@
+/* pages/explore/pages/searchmore/components/classRow/classRow.wxss */
+.cell {
+  padding: 16px;
+  position: relative;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+}
+
+.cell_active {
+  background-color: #b8ced9;
+}
+
+.cell__hd {
+  margin-right: 16px;
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+}
+
+.cell__bd {
+  -webkit-box-flex: 1;
+  flex: 1;
+  min-width: 0;
+}
+
+.item-logo {
+  width: 100%;
+  max-height: 100%;
+  vertical-align: top;
+}
+
+.item-title {
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--weui-FG-0);
+  width: auto;
+  white-space: nowrap;
+  word-wrap: normal;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.item-desc {
+  color: var(--weui-FG-2);
+  font-size: 14px;
+  padding-top: 4px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.item-title, .item-desc {
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -11,30 +11,34 @@ Page({
     fullYear: new Date().getFullYear(),
     grids: [
       {
-        "url": "pages/searchmore/searchmore",
-        "text": "更多搜索"
+        url: "pages/searchmore/searchmore",
+        text: "更多搜索",
+        imgUrl: "/images/gdss.png",
       },
       {
-        "url": "pages/shuttle/shuttle",
-        "text": "校内班车时刻表"
+        url: "pages/shuttle/shuttle",
+        text: "校内班车时刻表",
+        imgUrl: "/images/gdss.png",
       },
       {
-        "url": "pages/calendar/calendar",
-        "text": "校历"
+        url: "pages/calendar/calendar",
+        text: "校历",
+        imgUrl: "/images/gdss.png",
       },
       {
-        "url": ".",
-        "text": "定制时间表"
+        url: ".",
+        text: "定制时间表",
+        imgUrl: "/images/gdss.png",
       },
       {
-        "url": ".",
-        "text": "一键支持"
+        url: ".",
+        text: "一键支持",
+        imgUrl: "/images/gdss.png",
       },
       {
-        "target": "miniProgram",
-        "text": "反馈",
-        "appId": "*",
-        "bindfail": () => {console.log("feedback")}
+        url: ".",
+        text: "反馈",
+        imgUrl: "/images/gdss.png",
       }
     ]
   },
