@@ -1,5 +1,3 @@
-import {IClassroomInfo} from '../../typings/IClassroomInfo'
-
 export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
   let kcxx: Array<string>
   let pklysz: Record<string, string> = {'01':'研', '02':'成', '03':'本', '04':'借', '05':'本考', '11':'研考', '12':'成教'}

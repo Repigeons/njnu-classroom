@@ -1,16 +1,12 @@
-export interface IClassroomRow extends Record<string, any> {
-  id: number,
-  JXLMC: string,
-  jsmph: string,
-  day: number,
-  jc_ks: number,
-  jc_js: number,
-  zylxdm: string,
-  jyytms: string,
-  kcm: string,
+interface IJxlPosition extends Record<string, Array<number>> {}
+
+interface IJasInfo {
+  readonly JXLMC: string
+  readonly JSMPH: string
+  readonly JASDM: string
 }
 
-export interface IClassroomInfo extends Record<string, any> {
+interface IClassroomInfo extends Record<string, any> {
   /**
    * 标题
    */
@@ -83,4 +79,16 @@ export interface IClassroomInfo extends Record<string, any> {
    * 
    */
   PKLY?: string,
+}
+
+interface IClassroomRow extends Record<string, any> {
+  id: number,
+  JXLMC: string,
+  jsmph: string,
+  day: number,
+  jc_ks: number,
+  jc_js: number,
+  zylxdm: string,
+  jyytms: string,
+  kcm: string,
 }
