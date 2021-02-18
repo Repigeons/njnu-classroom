@@ -1,0 +1,21 @@
+<view class="cell">
+  <view class="cell__hd">
+    <view class="mark mark_color{{state}}"></view>
+    <view class="time">{{time}}</view>
+    <view class="vline vline_color{{state}}"></view>
+    <view class="interval interval_color{{state}}">
+      <block wx:if="{{state==0}}">不经过该站点</block>
+      <block wx:if="{{state==1}}">已于{{deltaTime}}分钟前发车</block>
+      <block wx:if="{{state==2}}">已发车{{deltaTime}}分钟</block>
+      <block wx:if="{{state==3}}">还有{{deltaTime}}分钟发车</block>
+      <block wx:if="{{state==4}}">将于{{deltaTime}}分钟后发车</block>
+    </view>
+  </view>
+  <view class="cell__ft">
+    <view class="station">{{from}}</view>
+    <view class="cellarrow">
+      <image src="/images/arrow.png" class="cellarrow__image"></image>
+    </view>
+    <view class="station">{{to}}</view>
+  </view>
+</view>

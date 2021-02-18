@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "navigationBarTitleText": "校内班车时刻表",
+  "usingComponents": {
+    "rp-row": "/components/shuttle/shuttle-row/shuttle-row"
+  }
 }

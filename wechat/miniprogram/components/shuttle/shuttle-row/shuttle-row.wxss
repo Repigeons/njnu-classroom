@@ -1,0 +1,86 @@
+/* components/shuttle/shuttle-row/shuttle-row.wxss */
+.cell {
+  border-radius: 16px;
+  background-color: #FFFFFF;
+  width:calc(100% - 40px);
+  height:24px; 
+  margin:0px 8px 8px 8px;
+  padding:12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.cell__hd {
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.cell__ft{
+  width: 30%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.mark{
+  width:12px;
+  height:12px;
+}
+
+.time{
+  font-size:22px;
+  line-height:22px;
+  text-align: center;
+  width:72px;
+}
+
+.vline{
+  width:2px;
+  height:16px;
+}
+
+.interval{
+  padding-left: 4px;
+  font-size:12px;
+  line-height:12px;
+  white-space:nowrap;
+}
+
+.station{
+  font-size:12px;
+  line-height:12px;
+  white-space:nowrap;
+}
+
+.cellarrow{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 4px 0px 4px;
+}
+
+.cellarrow__image {
+  height: 4px;
+  width: 16px;
+}
+
+.mark_color0        { background-color: #808080; }
+.mark_color1        { background-color: #808080; }
+.mark_color2        { background-color: #0090F2; }
+.mark_color3        { background-color: #00F324; }
+.mark_color4        { background-color: #F28A00; }
+.vline_color0       { background-color: #808080; }
+.vline_color1       { background-color: #808080; }
+.vline_color2       { background-color: #005A8C; }
+.vline_color3       { background-color: #006000; }
+.vline_color4       { background-color: #BF6D00; }
+.interval_color0    { color: #808080; }
+.interval_color1    { color: #808080; }
+.interval_color2    { color: #005A8C; }
+.interval_color3    { color: #006000; }
+.interval_color4    { color: #BF6D00; }
