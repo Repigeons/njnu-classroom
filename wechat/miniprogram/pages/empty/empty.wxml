@@ -8,7 +8,7 @@
           <view class="weui-label">教学楼</view>
         </view>
         <view class="weui-cell__bd">
-          <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
+          <picker range="{{jxl_name_array}}" bindchange="bindJxlChange">
             <view class="weui-select weui-select_in-select-after">{{jxl_name_array[jxl_selected]}}</view>
           </picker>
         </view>

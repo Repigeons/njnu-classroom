@@ -1,28 +1,26 @@
 <!--pages/overview/overview.wxml-->
 <view class="page">
-  <!-- body -->
   <view class="page__bd">
-
     <!-- 选择教室 -->
-    <view class="weui-search-bar" style="padding-top:8px">
+    <view class="weui-search-bar rp-search-bar">
       <view class="weui-search-bar__form">
-        <view class="rp-cell" style="height:40px"> <!-- 官方高度是56像素 -->
-          <view class="weui-cell__hd rp-label" style="font-weight:700; color:unset;">
+        <view class="rp-cell">
+          <view class="weui-cell__hd rp-label">
             <view bindtap="bindFormer">◀</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
             <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
-              <view class="rp-bd_text" style="font-weight:700">{{jxl_name_array[jxl_selected]}}</view>
+              <view class="rp-bd_text">{{jxl_name_array[jxl_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__bd rp-bd_right">
             <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{jsmph_array}}">
-              <view class="rp-bd_text" style="font-weight:700">
+              <view class="rp-bd_text">
                 <text decode="true">{{jsmph_array[jsmph_selected]}}</text>
               </view>
             </picker>
           </view>
-          <view class="weui-cell__ft rp-label" style="font-weight:700; color:unset;">
+          <view class="weui-cell__ft rp-label">
             <view bindtap="bindLatter">▶</view>
           </view>
         </view>

@@ -2,7 +2,6 @@
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../../../utils/parser'
-import { IClassroomRow } from '../../../../../typings/IClassroomInfo'
 
 // constant
 const perPage: number = 50
@@ -197,7 +196,6 @@ Page({
     const item: IClassroomRow = this.data.display_list[index]
     const rq: string = this.data.rq_array[item.dayIndex]
     this.setData({dialog: item2dialog(item, rq)})
-    console.log(this.data.dialog)
   },
 
   closeDialog(): void {

@@ -2,6 +2,6 @@
   "usingComponents": {
     "mp-dialog": "weui-miniprogram/dialog/dialog",
     "mp-searchbar": "weui-miniprogram/searchbar/searchbar",
-    "rp-row": "../../../../components/searchmore/searchmore-row/searchmore-row"
+    "rp-row": "/components/searchmore/searchmore-row/searchmore-row"
   }
 }
