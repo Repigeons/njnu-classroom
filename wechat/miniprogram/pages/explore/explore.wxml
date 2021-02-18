@@ -4,6 +4,10 @@
     <open-data type="userAvatarUrl" class="rp-avatar"></open-data>
     <open-data type="userNickName" class="rp-nickname"></open-data>
   </view>
+  
+  <view class="ad">
+    <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
+  </view>
 
   <mp-grids grids="{{grids}}"></mp-grids>
 
@@ -16,4 +20,5 @@
 </view>
 
 <!-- 反馈按钮：鸽子转起来了！ -->
-<button open-type="feedback"style="position:fixed; width: 33.33333333%; height:93px; top: 218px; right: 0; opacity: 0"></button>
+<button open-type="feedback" class="rp-feedback"></button>
+
