@@ -1,0 +1,41 @@
+<!--explore/pages/shuttlebus/shuttlebus.wxml-->
+<view class="page">
+  <!-- 站点信息（固定） -->
+  <view class="rp-topbox">
+    <view class="rp-topbox-button__left">
+      <picker range="{{stations_display}}" value="{{selectedStation}}" bindchange="bindStationChange">
+        <view class="rp-topbox-title">
+          {{stations[selectedStation][0]}}
+        </view>
+        <view class="rp-topbox-distance">
+          距我{{stationDistance[selectedStation]}}米
+          <block wx:if="{{stations_display[selectedStation]==stations[selectedStation][0]+nearestHint}}">（最近）</block>
+        </view>
+      </picker>
+    </view>
+    <view class="rp-topbox-arrow">
+      <image src="/images/arrow.png" class="rp-topbox-arrow__image"></image>
+    </view>
+    <view class="rp-topbox-button__right" bindtap="redirect">
+      <view class="rp-topbox-title">{{terminus}}方向</view>
+      <view class="rp-topbox-exchange">
+        <view style="display: flex; align-items: center; justify-content: center; padding-right:2px">
+          <image src="/images/exchange.png" class="rp-topbox-exchange__image"></image>
+        </view>
+        <view>换向</view>
+      </view>
+    </view>
+  </view>
+  <!--~ 站点信息（固定） -->
+
+  <!-- 校车信息（滑动区域） -->
+  <view class="rp-scrollzone">
+    <scroll-view style="height:100%" scroll-y="true" scroll-into-view="{{scrollId}}" scroll-with-animation>
+      <block wx:for="{{routes}}" wx:key="key">
+        <rp-row id="row{{index}}" time="{{item[0]}}" from="{{item[1]}}" to="{{item[2]}}"
+        via="{{(selectedStation >= name2index[item[1]] && selectedStation <= name2index[item[2]]) || (selectedStation >= name2index[item[2]] && selectedStation <= name2index[item[1]])}}"/>
+      </block>
+    </scroll-view>
+  </view>
+  <!--~ 校车信息（滑动区域） -->
+</view>

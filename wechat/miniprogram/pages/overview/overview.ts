@@ -2,7 +2,6 @@
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../utils/parser'
-import { IClassroomRow } from '../../../typings/IClassroomInfo'
 import { getJc } from '../../utils/util'
 
 Page({
@@ -27,6 +26,7 @@ Page({
     jsmph_array: Array<string>(),
     jsmph_selected: 0,
     dialog: {},
+    closeDialog: [{text:"关闭"}],
     bar_list: Array<IClassroomRow>(),
     empty: true,
   },

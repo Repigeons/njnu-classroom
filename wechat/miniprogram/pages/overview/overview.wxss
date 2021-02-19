@@ -1,14 +1,20 @@
 /* pages/overview/overview.wxss */
-
-.rp-label {
-  text-align: center;
-  width: 15%;
+.rp-search-bar {
+  padding-top: 8px;
 }
 
 .rp-cell {
   position: relative;
   display: -webkit-box;
   -webkit-box-align: center;
+  height: 40px;
+}
+
+.rp-label {
+  text-align: center;
+  width: 15%;
+  font-weight: 700;
+  color: unset;
 }
 
 .rp-bd_left {
@@ -21,6 +27,7 @@
   line-height: 16px;
   position: relative;
   z-index: 1;
+  font-weight: 700;
 }
 
 .rp-bd_right {
@@ -81,8 +88,7 @@
 
 .rp-bar {
   position: absolute;
-  transition: height .6s;
-  transition: top .6s;
+  transition: height .6s, top .6s, background-color .6s;
   opacity: 0.75;
   border-radius: 8px;
   display: flex;
@@ -104,20 +110,4 @@
 
 .rp-bar_others {
   background-color:#d6844e;
-}
-
-.rp-dialog {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.rp-dialog_show {
-  visibility: visible;
-  opacity:1;
-}
-
-.rp-dialog__bd {
-  text-align: left;
-  margin: 5px 0 15px 0;
-  padding: 0 20px 0 24px;
 }

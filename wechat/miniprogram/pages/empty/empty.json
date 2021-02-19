@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "rp-layer": "../../components/layer/layer"
+    "mp-dialog": "weui-miniprogram/dialog/dialog",
+    "rp-layer": "/components/global/layer/layer",
+    "rp-row": "/components/empty/empty-row/empty-row"
   }
 }

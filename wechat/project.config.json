@@ -30,51 +30,31 @@
     "checkSiteMap": true,
     "uploadWithSourceMap": true,
     "compileHotReLoad": false,
-    "useMultiFrameRuntime": false,
+    "useMultiFrameRuntime": true,
     "useApiHook": true,
+    "useApiHostProcess": false,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
     },
+    "enableEngineNative": false,
     "bundle": false,
     "useIsolateContext": true,
     "useCompilerModule": true,
     "userConfirmedUseCompilerModuleSwitch": false,
     "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
+    "packNpmManually": true,
+    "packNpmRelationList": [
+      {
+        "packageJsonPath": "./package.json",
+        "miniprogramNpmDistDir": "./miniprogram/"
+      }
+    ],
     "minifyWXSS": true
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "appid": "wx42f3e578c5411a23",
-  "qqappid": "1110565565",
-  "condition": {
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "gamePlugin": {
-      "list": []
-    },
-    "miniprogram": {
-      "list": [
-        {
-          "name": "pages/explore/explore",
-          "pathName": "pages/explore/explore",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "pages/explore/pages/shuttle/shuttle",
-          "pathName": "pages/explore/pages/shuttle/shuttle",
-          "query": "",
-          "scene": null
-        }
-      ]
-    }
-  }
+  "qqappid": "1110565565"
 }

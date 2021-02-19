@@ -1,0 +1,79 @@
+/* explore/pages/shuttlebus/shuttlebus.wxss */
+.rp-topbox {
+  position: absolute;
+  width: calc(100% - 40px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 56px; 
+  margin: 16px 8px;
+  background-color: #DDDDDD;
+  border-radius: 16px;
+  padding: 12px;
+}
+
+.rp-topbox-button__left {
+  text-align: left;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-topbox-arrow{
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-topbox-button__right {
+  text-align: right;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rp-topbox-exchange{
+  font-size: 12px; 
+  color: #4D4D4D; 
+  height: 18px;
+  line-height: 18px;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-right: 1px;
+}
+
+.rp-topbox-distance{
+  font-size: 12px; 
+  color: #4D4D4D; 
+  height: 18px; 
+  line-height: 18px;
+  white-space: nowrap;
+  margin-left: 1px;
+}
+
+.rp-topbox-title{
+  font-size: 21px; 
+  font-weight: 500; 
+  height: 28px; 
+  white-space: nowrap;
+}
+
+.rp-topbox-arrow__image {
+  height: 10px;
+  width: 40px;
+}
+
+.rp-topbox-exchange__image {
+  height: 8px;
+  width: 12px;
+}
+
+.rp-scrollzone{
+  position: absolute;
+  top: 112px;
+  height: calc(100% - 112px);
+  width: 100%;
+}

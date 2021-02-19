@@ -5,7 +5,7 @@
     "pages/overview/overview",
     "pages/explore/explore"
   ],
-  "subpackages":[
+  "subpackages": [
     {
       "root": "pages/explore/pages",
       "pages": [

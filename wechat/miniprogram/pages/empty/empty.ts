@@ -7,6 +7,7 @@ Page({
   data: {
     service: 'on',
     notice: Object() as INotice,
+    DoNotShowButton: [{text: "不再显示"}],
     jxl_position: Object() as IJxlPosition,
     jxl_name_array: Array<string>(),
     jxl_selected: 0,
@@ -208,11 +209,7 @@ Page({
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        let classroomList = resData.data
-        for (let i=0; i<classroomList.length; i++) {
-          classroomList[i].logo = classroomList[i].zylxdm=='00' ? "kong.png" : "yan.png"
-        }
-        this.setData({ service: resData.service, classroomList })
+        this.setData({ service: resData.service, classroomList: resData.data })
       },
       fail: err => {
         console.error(err)
@@ -242,10 +239,6 @@ Page({
       layer_display: false,
       confirm_display: false,
     })
-  },
-
-  closeDialog(): void {
-    this.setData({notice: {timestamp: 0, date: '', text: ''}})
   },
 
   onShareAppMessage() {

@@ -12,7 +12,11 @@ $RECYCLE.BIN/
 
 # Node.js
 node_modules/
+package-lock.json
+miniprogram_npm/
 
 # TypeScript
 *.js
-package-lock.json
+
+# Private.config
+project.private.config.json
