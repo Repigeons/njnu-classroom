@@ -79,13 +79,16 @@ Page({
       })
     }
     // 滚动到最近位置
-    let now = new Date()
-    for (let scrollIndex = 0; scrollIndex < this.data.routes.length; scrollIndex++) {
-      if (Date.parse(`0 ${this.data.routes[scrollIndex][0]}`) - Date.parse(`0 ${now.getHours()}:${now.getMinutes()}`) >= -15) {
-        this.setData({ scrollId: `row${scrollIndex ? scrollIndex-1 : scrollIndex}` })
+    let now = new Date(),scrollIndex = this.data.routes.length - 1
+    while (scrollIndex > 0) {
+      let deltaTime = Date.parse(`0 ${this.data.routes[scrollIndex][0]}`) - Date.parse(`0 ${now.getHours()}:${now.getMinutes()}`)
+      deltaTime = deltaTime / 1000 / 60
+      if (deltaTime < -15) {
         break
       }
+      scrollIndex--
     }
+    this.setData({ scrollId: `row${scrollIndex}` })
   },
 
   bindStationChange(e: AnyObject): void {
