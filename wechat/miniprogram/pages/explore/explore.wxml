@@ -4,11 +4,11 @@
     <open-data type="userAvatarUrl" class="rp-avatar"></open-data>
     <open-data type="userNickName" class="rp-nickname"></open-data>
   </view>
-  
+  <!--
   <view class="ad">
     <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
   </view>
-
+  -->
   <mp-grids grids="{{grids}}"></mp-grids>
 
   <view class="weui-footer weui-footer_fixed-bottom">
@@ -20,5 +20,6 @@
 </view>
 
 <!-- 反馈按钮：鸽子转起来了！ -->
-<button open-type="feedback" class="rp-feedback"></button>
-
+<view class="rp-feedback">
+  <button open-type="feedback"></button>
+</view>
