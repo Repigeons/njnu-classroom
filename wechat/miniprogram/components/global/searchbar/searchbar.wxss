@@ -77,9 +77,6 @@
   left: 8px;
   margin-top: -8px;
 }
-.search-bar_focusing .icon-search {
-  margin-right: 4px;
-}
 
 .icon-clear {
   -webkit-mask-position: 50% 50%;
