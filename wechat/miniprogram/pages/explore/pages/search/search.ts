@@ -2,10 +2,10 @@
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../../../utils/parser'
-
 // constant
 const perPage: number = 50
 
+export default
 Page({
   /**
    * 页面的初始数据

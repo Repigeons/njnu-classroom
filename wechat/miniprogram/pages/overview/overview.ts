@@ -4,6 +4,7 @@ const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../utils/parser'
 import { getJc } from '../../utils/util'
 
+export default
 Page({
   data: {
     cellHeight: 0,

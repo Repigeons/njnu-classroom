@@ -3,6 +3,7 @@
 const app = getApp<IAppOption>()
 import {getDistance} from '../../../../utils/util'
 
+export default
 Page({
   data: {
     selectedStation: 0,
