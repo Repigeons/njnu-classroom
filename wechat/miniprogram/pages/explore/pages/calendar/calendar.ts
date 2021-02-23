@@ -2,7 +2,6 @@
 // 获取应用实例
 const app = getApp<IAppOption>()
 
-export default
 Page({
   /**
    * 页面的初始数据
@@ -37,3 +36,4 @@ Page({
     }
   }
 })
+export {}

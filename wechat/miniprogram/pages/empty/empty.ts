@@ -3,7 +3,6 @@
 const app = getApp<IAppOption>()
 import { getDistance, getJc } from '../../utils/util'
 
-export default
 Page({
   data: {
     service: 'on',
@@ -251,3 +250,4 @@ Page({
     }
   }
 })
+export {}
