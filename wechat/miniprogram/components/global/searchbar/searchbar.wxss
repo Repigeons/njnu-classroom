@@ -28,43 +28,22 @@
 }
 
 .search-bar__input {
-padding: 8px 0;
-width: 100%;
-border: 0;
-font-size: 14px;
-box-sizing: content-box;
-background: transparent;
-caret-color: var(--weui-BRAND);
-color: var(--weui-FG-0);
-height: inherit;
-line-height: inherit;
-}
-
-.search-bar__label {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  font-size: 0;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  color: var(--weui-FG-1);
-  background: var(--weui-BG-2);
-  border-radius: 16px;
-}
-.search-bar_focusing .search-bar__label {
-  display: none;
+  padding: 8px 0;
+  width: 100%;
+  border: 0;
+  font-size: 14px;
+  box-sizing: content-box;
+  background: transparent;
+  caret-color: var(--weui-BRAND);
+  color: var(--weui-FG-0);
+  height: inherit;
+  line-height: inherit;
 }
 
 .search-bar__text {
-    display: inline-block;
-    font-size: 14px;
-    vertical-align: middle;
+  display: inline-block;
+  font-size: 14px;
+  vertical-align: middle;
 }
 
 .search-bar__search {
