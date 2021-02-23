@@ -1,2 +1,3 @@
-<!--explore/pages/calendar/calendar.wxml-->
-<text>explore/pages/calendar/calendar.wxml</text>
+<scroll-view scroll-x style="height: 100vh">
+  <image src="{{calendar}}" mode="aspectFit" style="height: 100vh; width: 136vh"/>
+</scroll-view>

@@ -1,11 +1,13 @@
 // calendar.ts
-Page({
+// 获取应用实例
+const app = getApp<IAppOption>()
 
+Page({
   /**
    * 页面的初始数据
    */
   data: {
-
+    calendar: `${app.globalData.server}/calendar.jpg`
   },
 
   /**
