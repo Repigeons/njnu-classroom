@@ -1,53 +1,27 @@
 // explore.ts
 // 获取应用实例
-// const app = getApp<IAppOption>()
+const app = getApp<IAppOption>()
 
+export default
 Page({
-
   /**
    * 页面的初始数据
    */
   data: {
     fullYear: new Date().getFullYear(),
-    grids: [
-      {
-        url: "pages/search/search",
-        text: "更多搜索",
-        imgUrl: "/images/gdss.png",
-      },
-      {
-        url: "pages/shuttle/shuttle",
-        text: "校内班车时刻表",
-        imgUrl: "/images/gdss.png",
-      },
-      {
-        url: "pages/calendar/calendar",
-        text: "校历",
-        imgUrl: "/images/gdss.png",
-      },
-      {
-        url: ".",
-        text: "定制时间表",
-        imgUrl: "/images/gdss.png",
-      },
-      {
-        url: ".",
-        text: "一键支持",
-        imgUrl: "/images/gdss.png",
-      },
-      {
-        url: ".",
-        text: "反馈",
-        imgUrl: "/images/gdss.png",
-      }
-    ]
+    grids: Array<Record<string,string>>()
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(/*options*/): void {
-
+    wx.request({
+      url: `${app.globalData.server}/explore-grids.json`,
+      success: res => {
+        this.setData({ grids: res.data as Array<Record<string,string>>})
+      }
+    })
   },
 
   /**
