@@ -1,4 +1,4 @@
-// searchmore.ts
+// miniprogram/pages/explore/pages/search/search.js
 // 获取应用实例
 const app = getApp<IAppOption>()
 import { parseKcm, item2dialog } from '../../../../utils/parser'
@@ -7,7 +7,14 @@ import { parseKcm, item2dialog } from '../../../../utils/parser'
 const perPage: number = 50
 
 Page({
+  /**
+   * 页面的初始数据
+   */
   data: {
+    keyword: String(),
+    showSearch: Boolean(),
+    showResult: Boolean(),
+
     service: 'on',
     // 筛选
     rq_array: ['所有', '周日', '周一', '周二', '周三', '周四', '周五', '周六'],
@@ -25,15 +32,10 @@ Page({
     lx_name_array: Array<string>(),
     lx_selected: 0,
 
-    keyword: String(),
-    showSearch: false,
-    showResult: false,
-
     dialog: {},
     search_result: Array<IClassroomRow>(),
     result_size: 0,
     display_list: Array<IClassroomRow>(),
-    
     closeDialog: [{text:"关闭"}],
   },
 
@@ -91,92 +93,86 @@ Page({
     })
   },
 
-  /**
-   * 输入搜索关键词
-   */
-  onInput(e: AnyObject): void {
-    this.setData({ keyword: e.detail.value.trim() })
+  onInput(e: any) {
+    this.setData({ keyword: e.detail.value })
   },
 
-  onClear(): void {
-    this.setData({ keyword: "" })
-  },
-  
   /**
-   * 搜索
-   */
+  * 搜索
+  */
   onSearch(): void {
-    this.setData({ showSearch: false })
-    if (this.data.keyword) {
-      wx.request({
-        url: `${app.globalData.server}/api/searchmore.json`,
-        data:{
-          day: (this.data.rq_selected == 0) ? '#' : this.data.rq_selected - 1,
-          jc_ks: this.data.jc_ks_selected + 1,
-          jc_js: this.data.jc_js_selected + 1,
-          jxl: (this.data.jxl_selected == 0) ? '#' : this.data.jxl_name_array[this.data.jxl_selected],
-          zylxdm: this.data.lx_mapper[this.data.lx_name_array[this.data.lx_selected]],
-          kcm: this.data.keyword
-        },
-        success: res => {
-          let resData = res.data as Record<string,any>
-          let data = resData.data as Array<IClassroomRow>
-          for (let i = 0; i < data.length; i++) {
-            let info = parseKcm(data[i].zylxdm, data[i].kcm)
-            if (info == null) continue
-            for (let k in info)
-              data[i][k] = info[k]
-            data[i].dayIndex = data[i].day + 1
-          }
-          this.setData({
-            service: resData.service,
-            search_result: data,
-            result_size: data.length,
-            display_list: data.slice(0, perPage),
-            showResult: true,
-          })
-        },
-        fail: res => {
-          console.error(res)
-          this.setData({ display_list: [] })
-        }
-      })
-    }
+   this.setData({ showSearch: false })
+   if (this.data.keyword) {
+     wx.request({
+       url: `${app.globalData.server}/api/searchmore.json`,
+       data:{
+         day: (this.data.rq_selected == 0) ? '#' : this.data.rq_selected - 1,
+         jc_ks: this.data.jc_ks_selected + 1,
+         jc_js: this.data.jc_js_selected + 1,
+         jxl: (this.data.jxl_selected == 0) ? '#' : this.data.jxl_name_array[this.data.jxl_selected],
+         zylxdm: this.data.lx_mapper[this.data.lx_name_array[this.data.lx_selected]],
+         kcm: this.data.keyword
+       },
+       success: res => {
+         let resData = res.data as Record<string,any>
+         let data = resData.data as Array<IClassroomRow>
+         console.log(resData)
+         for (let i = 0; i < data.length; i++) {
+           let info = parseKcm(data[i].zylxdm, data[i].kcm)
+           if (info == null) continue
+           for (let k in info)
+             data[i][k] = info[k]
+           data[i].dayIndex = data[i].day + 1
+         }
+         this.setData({
+           service: resData.service,
+           search_result: data,
+           result_size: data.length,
+           display_list: data.slice(0, perPage),
+           showResult: true,
+         })
+       },
+       fail: res => {
+         console.error(res)
+         this.setData({ display_list: [] })
+       }
+     })
+   }
   },
 
   /**
-   * 选择日期
-   */
+    * 选择日期
+    */
   bindRqChange(e: AnyObject): void {
     this.setData({rq_selected: e.detail.value})
   },
 
   /**
-   * 选择开始节次
-   */
+    * 选择开始节次
+    */
   bindJcKsChange(e: AnyObject): void {
     this.setData({jc_ks_selected: +e.detail.value})
     this.updateJcArray()
   },
 
   /**
-   * 选择结束节次
-   */
+    * 选择结束节次
+    */
   bindJcJsChange(e: AnyObject): void {
     this.setData({jc_js_selected: +e.detail.value + 12 - this.data.jc_js_array.length})
     this.updateJcArray()
   },
 
   /**
-   * 选择教学楼
-   */
+    * 选择教学楼
+    */
   bindJxlChange(e: AnyObject): void {
     this.setData({ jxl_selected: +e.detail.value })
   },
 
   /**
-   * 选择类型
-   */
+    * 选择类型
+    */
   bindLxChange(e: AnyObject): void {
     this.setData({ lx_selected: +e.detail.value })
   },
@@ -189,8 +185,8 @@ Page({
   },
 
   /**
-   * 显示详细信息
-   */
+    * 显示详细信息
+    */
   showDialog(e: AnyObject): void {
     const index: number = e.currentTarget.dataset.index
     const item: IClassroomRow = this.data.display_list[index]
@@ -202,18 +198,21 @@ Page({
     this.setData({dialog: {}})
   },
 
+  /**
+   * 用户点击右上角分享
+   */
   onShareAppMessage() {
     return {
       title: '更多搜索',
-      path: 'pages/explore/pages/searchmore/searchmore'
-      + `?page=searchmore`
-      + `&keyword=${this.data.keyword}`
-      + `&rq_selected=${this.data.rq_selected}`
-      + `&jc_ks_selected=${this.data.jc_ks_selected}`
-      + `&jc_js_selected=${this.data.jc_js_selected}`
-      + `&jxl_selected=${this.data.jxl_selected}`
-      + `&lx_selected=${this.data.lx_selected}`
-      + `&showSearch=${this.data.showSearch}`,
+      path: 'pages/explore/pages/search/search'
+      + `?page=searchmore`,
+      // + `&keyword=${this.data.keyword}`
+      // + `&rq_selected=${this.data.rq_selected}`
+      // + `&jc_ks_selected=${this.data.jc_ks_selected}`
+      // + `&jc_js_selected=${this.data.jc_js_selected}`
+      // + `&jxl_selected=${this.data.jxl_selected}`
+      // + `&lx_selected=${this.data.lx_selected}`
+      // + `&showSearch=${this.data.showSearch}`,
       image: 'images/logo.png'
     }
   }

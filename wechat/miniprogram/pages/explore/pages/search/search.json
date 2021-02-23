@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "mp-dialog": "weui-miniprogram/dialog/dialog",
+    "rp-searchbar": "/components/global/searchbar/searchbar",
+    "rp-row": "/components/search/search-row/search-row"
+  }
+}

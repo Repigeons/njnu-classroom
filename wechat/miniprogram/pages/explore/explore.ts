@@ -11,7 +11,7 @@ Page({
     fullYear: new Date().getFullYear(),
     grids: [
       {
-        url: "pages/searchmore/searchmore",
+        url: "pages/search/search",
         text: "更多搜索",
         imgUrl: "/images/gdss.png",
       },

@@ -9,7 +9,7 @@
     {
       "root": "pages/explore/pages",
       "pages": [
-        "searchmore/searchmore",
+        "search/search",
         "shuttle/shuttle",
         "calendar/calendar"
       ]
