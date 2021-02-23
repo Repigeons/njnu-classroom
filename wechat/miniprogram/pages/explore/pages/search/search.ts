@@ -59,7 +59,7 @@ Page({
 
     this.updateJcArray()
     
-    if (options.page == 'searchmore') {
+    if (options.page == 'search') {
       this.setData({
         keyword: options.keyword,
         rq_selected: +options.rq_selected,
@@ -205,14 +205,14 @@ Page({
     return {
       title: '更多搜索',
       path: 'pages/explore/pages/search/search'
-      + `?page=searchmore`,
-      // + `&keyword=${this.data.keyword}`
-      // + `&rq_selected=${this.data.rq_selected}`
-      // + `&jc_ks_selected=${this.data.jc_ks_selected}`
-      // + `&jc_js_selected=${this.data.jc_js_selected}`
-      // + `&jxl_selected=${this.data.jxl_selected}`
-      // + `&lx_selected=${this.data.lx_selected}`
-      // + `&showSearch=${this.data.showSearch}`,
+      + `?page=search`
+      + `&keyword=${this.data.keyword}`
+      + `&rq_selected=${this.data.rq_selected}`
+      + `&jc_ks_selected=${this.data.jc_ks_selected}`
+      + `&jc_js_selected=${this.data.jc_js_selected}`
+      + `&jxl_selected=${this.data.jxl_selected}`
+      + `&lx_selected=${this.data.lx_selected}`
+      + `&showSearch=${this.data.showSearch}`,
       image: 'images/logo.png'
     }
   }
