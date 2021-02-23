@@ -29,6 +29,10 @@
   right: 0;
   opacity: 0;
 }
+.rp-feedback button {
+  height: 100%;
+  padding: 0;
+}
 
 .ad {
   padding: 5px;
