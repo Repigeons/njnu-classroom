@@ -19,7 +19,7 @@
   flex-direction: column;
 }
 
-.rp-topbox-arrow{
+.rp-topbox-arrow {
   width: 20%;
   display: flex;
   align-items: center;
@@ -33,7 +33,7 @@
   flex-direction: column;
 }
 
-.rp-topbox-exchange{
+.rp-topbox-exchange {
   font-size: 12px; 
   color: #4D4D4D; 
   height: 18px;
@@ -45,7 +45,7 @@
   margin-right: 1px;
 }
 
-.rp-topbox-distance{
+.rp-topbox-distance {
   font-size: 12px; 
   color: #4D4D4D; 
   height: 18px; 
@@ -54,7 +54,7 @@
   margin-left: 1px;
 }
 
-.rp-topbox-title{
+.rp-topbox-title {
   font-size: 21px; 
   font-weight: 500; 
   height: 28px; 
@@ -66,14 +66,25 @@
   width: 40px;
 }
 
+.rp-topbox-exchange__bd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-right: 2px;
+}
+
 .rp-topbox-exchange__image {
   height: 8px;
   width: 12px;
 }
 
-.rp-scrollzone{
+.rp-scrollzone {
   position: absolute;
   top: 112px;
   height: calc(100% - 112px);
   width: 100%;
+}
+
+.rp-scrollzone__scrollview {
+  height: 100%;
 }

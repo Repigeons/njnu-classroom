@@ -34,7 +34,7 @@
 .item-title {
   font-weight: 400;
   font-size: 17px;
-  color: var(--weui-FG-0);
+  color: rgba(0,0,0,.9);
   width: auto;
   white-space: nowrap;
   word-wrap: normal;
@@ -43,7 +43,7 @@
 }
 
 .item-desc {
-  color: var(--weui-FG-2);
+  color: rgba(0,0,0,.3);
   font-size: 14px;
   padding-top: 4px;
   display: -webkit-box;

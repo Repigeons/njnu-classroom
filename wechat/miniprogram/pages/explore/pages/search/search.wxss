@@ -10,7 +10,7 @@
   display: -webkit-flex;
   display: flex;
   box-sizing: border-box;
-  background-color: var(--weui-BG-0);
+  background-color: #ededed;
   -webkit-text-size-adjust: 100%;
   -webkit-box-align: center;
   -webkit-align-items: center;
@@ -18,7 +18,7 @@
 }
 
 .rp-bar {
-  color: var(--weui-FG-1);
+  color: rgba(0,0,0,.5);
   padding: 0 16px;
   font-size: 14px;
   line-height: 1.4;
@@ -42,7 +42,7 @@
   margin-bottom: 3px;
   padding-left: 16px;
   padding-right: 16px;
-  color: var(--weui-FG-1);
+  color: rgba(0,0,0,.5);
   font-size: 14px;
   line-height: 1.4;
 }
