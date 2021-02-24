@@ -28,8 +28,9 @@ Page({
   onTapGrids(e: any): void {
     const methods: Record<string, Function> = {
       support: () => wx.showToast({ title: "感谢支持" }),
-    }
-    methods[e.detail.method]()
+    },
+    method = methods[e.detail.method]
+    if (typeof method == "function") method()
   },
 
   copyQQGroupId(): void {
