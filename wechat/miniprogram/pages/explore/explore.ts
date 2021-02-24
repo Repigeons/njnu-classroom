@@ -28,6 +28,7 @@ Page({
   onTapGrids(e: any): void {
     const methods: Record<string, Function> = {
       support: () => wx.showToast({ title: "感谢支持" }),
+      calendar: () =>  wx.previewImage({urls: [`${app.globalData.server}/calendar.jpg`]}),
     },
     method = methods[e.detail.method]
     if (typeof method == "function") method()
