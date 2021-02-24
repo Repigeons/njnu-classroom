@@ -5,7 +5,7 @@
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "libVersion": "2.14.1",
+  "libVersion": "2.15.0",
   "projectname": "NjnuClassroom",
   "scripts": {
     "beforeCompile": "npm run tsc",
@@ -56,5 +56,6 @@
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "appid": "wx42f3e578c5411a23",
-  "qqappid": "1110565565"
+  "qqappid": "1110565565",
+  "condition": {}
 }
