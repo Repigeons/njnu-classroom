@@ -8,19 +8,14 @@ Page({
    */
   data: {
     fullYear: new Date().getFullYear(),
-    grids: Array<Record<string,string>>()
+    grids: Array<IGrid>()
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(/*options*/): void {
-    wx.request({
-      url: `${app.globalData.server}/explore-grids.json`,
-      success: res => {
-        this.setData({ grids: res.data as Array<Record<string,string>>})
-      }
-    })
+    app.getExploreGrids().then((data: Array<IGrid>) => this.setData({ grids: data}))
   },
 
   /**

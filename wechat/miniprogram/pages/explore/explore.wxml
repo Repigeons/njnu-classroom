@@ -9,7 +9,7 @@
     <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
   </view>
   -->
-  <mp-grids grids="{{grids}}"></mp-grids>
+  <rp-grids grids="{{grids}}" />
 
   <view class="weui-footer weui-footer_fixed-bottom">
     <view class="weui-footer__links">
@@ -17,9 +17,4 @@
     </view>
     <view class="weui-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
   </view>
-</view>
-
-<!-- 反馈按钮：鸽子转起来了！ -->
-<view class="rp-feedback">
-  <button open-type="feedback"></button>
 </view>

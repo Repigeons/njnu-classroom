@@ -21,19 +21,6 @@
   overflow: hidden;
 }
 
-.rp-feedback {
-  position:fixed;
-  width: 33.33333333%;
-  height:93px;
-  top: 218px;
-  right: 0;
-  opacity: 0;
-}
-.rp-feedback button {
-  height: 100%;
-  padding: 0;
-}
-
 .ad {
   padding: 5px;
   margin-top: -10px;

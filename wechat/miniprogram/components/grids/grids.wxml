@@ -1,0 +1,39 @@
+<!--components/grids/grids.wxml-->
+<view class="grids">
+  <block wx:for="{{innerGrids}}" wx:key="index">
+    <navigator
+      class="grid"
+      hover-class="grid-hover"
+      target="{{item.target}}"
+      url="{{item.url}}"
+      open-type="{{item.openType}}"
+      app-id="{{item.appId}}"
+      path="{{item.path}}"
+      extra-data="{{item.extraData}}"
+      version="{{item.version}}"
+      hover-stop-propagation="{{item.hoverStopPropagation}}"
+      hover-start-time="{{item.hoverStartTime}}"
+      hover-stay-time="{{item.hoverStayTime}}"
+      bindsuccess="{{item.bindsuccess}}"
+      bindfail="{{item.bindfail}}"
+      bindcomplete="{{item.bindcomplete}}"
+      bindtap="{{item.bindtap}}"
+    >
+      <view class="grid__icon">
+        <image class="grid__icon_img" src="{{item.imgUrl}}" alt></image>
+      </view>
+      <view class="grid__label">{{item.text}}</view>
+      <view class="grid__cover">
+        <button class="grid__button" wx:if="{{item.button}}"
+          open-type="{{item.button.openType}}"
+          session-from="{{item.button.sessionFrom}}"
+          send-message-title="{{item.button.sendMessageTitle}}"
+          send-message-path="{{item.button.sendMessagePath}}"
+          send-message-img="{{item.button.sendMessageImg}}"
+          app-parameter="{{item.button.appParameter}}"
+          show-message-card="{{item.button.showMessageCard}}"
+        />
+      </view>
+    </navigator>
+  </block>
+</view>

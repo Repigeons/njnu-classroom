@@ -4,6 +4,11 @@ App<IAppOption>({
     server: 'https://classroom.njnu.xyz'
   },
   onLaunch() {
+    this.clearStorage()
+    this.preload()
+  },
+
+  clearStorage(): void {
     const keys = [
       'notice',
       'position.json',
@@ -11,6 +16,7 @@ App<IAppOption>({
       'zylxdm.json',
       'last_overview',
       'explore/shuttle.json',
+      'explore/grids.json',
     ]
     const storageInfo = wx.getStorageInfoSync().keys
     const storage: Record<string, any> = {}
@@ -24,11 +30,14 @@ App<IAppOption>({
     for (let key in storage) {
       wx.setStorage({ key, data: storage[key] })
     }
-  
+  },
+
+  preload(): void {
     this.getPosition(true)
     this.getClassrooms(true)
     this.getZylxdm(true)
     this.getShuttle(true)
+    this.getExploreGrids(true)
   },
 
   getNotice(): Promise<INotice> {
@@ -132,4 +141,27 @@ App<IAppOption>({
       })
     })
   },
+  getExploreGrids(request?: boolean): Promise<Array<IGrid>> {
+    if (request) {
+      wx.request({
+        url: `${this.globalData.server}/explore-grids.json`,
+        success: res => wx.setStorage({
+          key: 'explore/grids.json',
+          data: res.data
+        }),
+        fail: console.error
+      })
+    }
+    return new Promise((resolve, reject) => {
+      wx.getStorage({
+        key: 'explore/grids.json',
+        success: res => resolve(res.data),
+        fail: () => wx.request({
+          url: `${this.globalData.server}/explore-grids.json`,
+          success: res => resolve(res.data as Array<IGrid>),
+          fail: reject
+        })
+      })
+    })
+  }
 })
