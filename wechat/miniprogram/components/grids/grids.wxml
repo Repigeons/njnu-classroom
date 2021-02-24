@@ -17,7 +17,8 @@
       bindsuccess="{{item.bindsuccess}}"
       bindfail="{{item.bindfail}}"
       bindcomplete="{{item.bindcomplete}}"
-      bindtap="{{item.bindtap}}"
+      bindtap="onGridTap"
+      data-method="{{item.method}}"
     >
       <view class="grid__icon">
         <image class="grid__icon_img" src="{{item.imgUrl}}" alt></image>

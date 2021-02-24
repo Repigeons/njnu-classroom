@@ -9,7 +9,7 @@
     <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
   </view>
   -->
-  <rp-grids grids="{{grids}}" />
+  <rp-grids grids="{{grids}}" bindtapgrids="onTapGrids"/>
 
   <view class="weui-footer weui-footer_fixed-bottom">
     <view class="weui-footer__links">

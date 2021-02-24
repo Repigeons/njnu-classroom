@@ -11,10 +11,7 @@ const navigatorDefault: IGridNavigator = {
   hoverStopPropagation: false,
   hoverStartTime: 50,
   hoverStayTime: 600,
-  bindsuccess: () => {},
-  bindfail: () => {},
-  bindcomplete: () => {},
-  bindtap: () => {},
+  tap: ''
 },
 buttonDefault: IGridButton = {
   openType: '',
@@ -45,7 +42,9 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    
+    onGridTap(e) {
+      this.triggerEvent('tapgrids', {'method': e.currentTarget.dataset.method})
+    }
   },
   observers: {
     grids(grids: Array<IGrid>) {

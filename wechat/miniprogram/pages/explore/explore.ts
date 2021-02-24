@@ -15,7 +15,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(/*options*/): void {
-    app.getExploreGrids().then((data: Array<IGrid>) => this.setData({ grids: data}))
+    app.getExploreGrids().then(data => this.setData({ grids: data}))
   },
 
   /**
@@ -23,6 +23,13 @@ Page({
    */
   onShow(): void {
 
+  },
+
+  onTapGrids(e: any): void {
+    const methods: Record<string, Function> = {
+      support: () => wx.showToast({ title: "感谢支持" }),
+    }
+    methods[e.detail.method]()
   },
 
   copyQQGroupId(): void {
