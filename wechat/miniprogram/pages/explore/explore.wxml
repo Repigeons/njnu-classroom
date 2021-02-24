@@ -1,10 +1,11 @@
 <!--pages/explore/explore.wxml-->
 <view class="page">
   <view class="rp-userInfo">
-    <open-data type="userAvatarUrl" class="rp-avatar"/>
-    <open-data type="userNickName" class="rp-nickname"/>
-    <view style="position:absolute;margin:60px 10px;right:0">
-      【状态：未登录】
+    <view class="rp-avatar">
+      <open-data type="userAvatarUrl"/>
+    </view>
+    <view class="rp-nickname">
+      <open-data type="userNickName"/>
     </view>
   </view>
   <!--

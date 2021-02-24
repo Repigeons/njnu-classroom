@@ -1,24 +1,30 @@
 /* pages/explore/explore.wxss */
 .rp-userInfo {
   position: relative;
-  margin: 15px 30rpx 80px;
-  padding: 15px 30rpx;
+  width: 100%;
+  margin: 16px auto 12px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
-.rp-avatar {
-  position: absolute;
-  display: inline-block;
-  height: 80px;
-  width: 80px;
-}
-
-.rp-nickname {
-  position: absolute;
-  margin-left: 100px;
-  height: 80px;
-  line-height: 80px;
-  font-size: 40px;
+.rp-userInfo .rp-avatar {
+  display: block;
+  height: 64px;
+  width: 64px;
+  margin: 12px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+}
+.rp-userInfo .rp-nickname {
+  text-align: center;
+  font-size: 28px;
+  color: #000;
+  width: 90%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .rp-grids {
