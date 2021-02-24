@@ -21,6 +21,10 @@
   overflow: hidden;
 }
 
+.rp-grids {
+  margin: 8px
+}
+
 .ad {
   padding: 5px;
   margin-top: -10px;

@@ -28,7 +28,8 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    grids: { type: Array }
+    grids: { type: Array },
+    column: { type: Number },
   },
 
   /**

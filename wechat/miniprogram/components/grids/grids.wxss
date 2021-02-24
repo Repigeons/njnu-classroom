@@ -1,52 +1,48 @@
 /* components/grids/grids.wxss */
 .grids {
   position: relative;
-  overflow: hidden;
-}
-
-.grid-hover {
-  background-color: rgba(0, 0, 0, .1);
-  opacity: .7;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .grid {
   position: relative;
-  float: left;
-  padding: 20px 10px;
-  width: 33.33333333%;
-  box-sizing: border-box;
-  border: 1px solid var(--weui-FG-3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 10px;
+  height: 96px;
+  margin: 4px;
+}
+.grid-hover {
+  background-color: #b8ced9;
 }
 
 .grid__icon {
   width: 28px;
   height: 28px;
-  margin: 0 auto;
-}
-
-.grid__icon .grid__icon_img {
-  width: 100%;
-  height: 100%;
+  margin: 8px;
 }
 
 .grid__label {
-  margin-top: 4px;
-  display: block;
-  color: var(--weui-FG-0);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   font-size: 14px;
+  height: 20px;
+  line-height: 20px;
 }
 
 .grid__cover {
   position: absolute;
   top: 0;
+  left: 0;
   opacity: 0;
   height: 100%;
   width: 100%;
-  left: 0;
   padding: 0;
 }
 

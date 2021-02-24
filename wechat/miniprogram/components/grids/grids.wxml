@@ -1,9 +1,8 @@
 <!--components/grids/grids.wxml-->
 <view class="grids">
   <block wx:for="{{innerGrids}}" wx:key="index">
-    <navigator
-      class="grid"
-      hover-class="grid-hover"
+    <navigator class="grid" hover-class="grid-hover"
+      style="width: calc({{100 / column}}% - 8px);"
       target="{{item.target}}"
       url="{{item.url}}"
       open-type="{{item.openType}}"
@@ -20,12 +19,10 @@
       bindtap="onGridTap"
       data-method="{{item.method}}"
     >
-      <view class="grid__icon">
-        <image class="grid__icon_img" src="{{item.imgUrl}}" alt></image>
-      </view>
+      <image class="grid__icon" src="{{item.imgUrl}}" alt/>
       <view class="grid__label">{{item.text}}</view>
-      <view class="grid__cover">
-        <button class="grid__button" wx:if="{{item.button}}"
+      <view class="grid__cover" wx:if="{{item.button}}">
+        <button class="grid__button"
           open-type="{{item.button.openType}}"
           session-from="{{item.button.sessionFrom}}"
           send-message-title="{{item.button.sendMessageTitle}}"

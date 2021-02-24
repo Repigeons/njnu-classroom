@@ -1,15 +1,20 @@
 <!--pages/explore/explore.wxml-->
 <view class="page">
   <view class="rp-userInfo">
-    <open-data type="userAvatarUrl" class="rp-avatar"></open-data>
-    <open-data type="userNickName" class="rp-nickname"></open-data>
+    <open-data type="userAvatarUrl" class="rp-avatar"/>
+    <open-data type="userNickName" class="rp-nickname"/>
+    <view style="position:absolute;margin:60px 10px;right:0">
+      【状态：未登录】
+    </view>
   </view>
   <!--
   <view class="ad">
     <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
   </view>
   -->
-  <rp-grids grids="{{grids}}" bindtapgrids="onTapGrids"/>
+  <view class="rp-grids">
+    <rp-grids grids="{{grids}}" column="3" bindtapgrids="onTapGrids"/>
+  </view>
 
   <view class="weui-footer weui-footer_fixed-bottom">
     <view class="weui-footer__links">
