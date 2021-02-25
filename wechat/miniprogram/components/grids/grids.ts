@@ -1,8 +1,8 @@
 // components/grids/grids.js
 const navigatorDefault: IGridNavigator = {
   target: 'self',
-  url: '',
   openType: 'navigate',
+  url: '.',
   delta: 1,
   appId: '',
   path: '',
@@ -11,7 +11,7 @@ const navigatorDefault: IGridNavigator = {
   hoverStopPropagation: false,
   hoverStartTime: 50,
   hoverStayTime: 600,
-  tap: ''
+  method: ''
 },
 buttonDefault: IGridButton = {
   openType: '',

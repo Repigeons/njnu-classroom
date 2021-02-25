@@ -10,11 +10,7 @@ interface IGridNavigator {
   hoverStopPropagation?: boolean
   hoverStartTime?: number
   hoverStayTime?: number
-  bindsuccess?: () => any,
-  bindfail?: () => any,
-  bindcomplete?: () => any
-  tap?: string
-  bindtap?: () => any
+  method?: string
 }
 
 interface IGridButton {
