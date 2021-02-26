@@ -1,0 +1,19 @@
+<!--components/scroll-picker/scroll-picker.wxml-->
+<view class="picker {{button ? 'pickerWithButton' : ''}}">
+  <scroll-view class="scroll" scroll-into-view="tab{{scroll-1}}" scroll-with-animation scroll-x enhanced show-scrollbar="{{false}}">
+    <text class="tab tab-occupied" id="tab{{-1}}" decode>&ensp;</text>
+    <block wx:for="{{list}}" wx:key="key">
+      <view class="tab {{selected==index ? 'tab-selected' : ''}}"
+        id="tab{{index}}" bindtap="onChange" data-index="{{index}}">
+        <block wx:if="{{key}}">{{item[key]}}</block>
+        <block wx:else>{{item}}</block>
+      </view>
+    </block>
+    <text class="tab tab-occupied" decode>&ensp;</text>
+  </scroll-view>
+  <view class="button" wx:if="{{button}}">
+    <text class="button__text" bindtap="onButton">{{button}}</text>
+  </view>
+  <view class="cover cover__left"></view>
+  <view class="cover cover__right"></view>
+</view>

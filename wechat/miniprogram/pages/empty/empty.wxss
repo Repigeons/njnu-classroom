@@ -1,35 +1,28 @@
 /* pages/empty/empty.wxss */
-
-.rp-title {
-  font-weight: 700;
+.rp-picker {
+  margin-bottom: 1px;
 }
 
-.rp-dialog {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .3s;
-}
-
-.rp-dialog_show {
-  visibility: visible;
-  opacity:1;
-}
-
-.rp-dialog__bd {
+.rp-result {
+  position: absolute;
   text-align: left;
-  margin: 5px 0 15px 0;
-  padding: 0 20px 0 24px;
+  top: 136px;
+  height: calc(100% - 136px);
+  width: 100%;
+}
+
+.rp-result__scrollview {
+  height: 100%;
+}
+
+.rp-result__desc {
+  padding: 0 16px 4px;
+  font-size: 14px;
+  color: rgba(0,0,0,.5);
 }
 
 .rp-layer {
   position:absolute;
   right:16px;
   opacity: 0.8;
-}
-
-.rp-cells {
-  position: relative;
-  background-color: #fff;
-  margin: 8px 8px 8px 8px;
-  border-radius: 16px;
 }

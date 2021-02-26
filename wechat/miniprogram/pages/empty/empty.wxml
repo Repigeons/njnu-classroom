@@ -1,81 +1,46 @@
 <!--pages/empty/empty.wxml-->
-<view class="page" bindtouchstart="hideLayer">
-  <view class="page__bd">
-    <view class="weui-cells__title">请选择想要查询的教学楼和时间：</view>
-    <view class="weui-cells weui-cells_after-title">
-      <view class="weui-cell  weui-cell_vcode">
-        <view class="weui-cell__hd rp-title">
-          <view class="weui-label">教学楼</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker range="{{jxl_name_array}}" bindchange="bindJxlChange">
-            <view class="weui-select weui-select_in-select-after">{{jxl_name_array[jxl_selected]}}</view>
-          </picker>
-        </view>
-        <view class="weui-cell__ft">
-          <view class="weui-vcode-btn" bindtap="dingwei">重新定位</view>
-        </view>
-        </view>
-        <view class="weui-cell  weui-cell_vcode">
-          <view class="weui-cell__hd rp-title">
-            <view class="weui-label">日期</view>
-          </view>
-          <view class="weui-cell__bd">
-          <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
-            <view class="weui-select weui-select_in-select-after">{{rq_array[rq_selected]}}</view>
-          </picker>
-        </view>
-        <view class="weui-cell__ft">
-          <view class="weui-vcode-btn" bindtap="dangqianriqi">当前日期</view>
-        </view>
-      </view>
-      <view class="weui-cell  weui-cell_vcode">
-        <view class="weui-cell__hd rp-title">
-          <view class="weui-label">节次</view>
-        </view>
-        <view class="weui-cell__bd">
-          <picker value="{{jc_selected}}" bindchange="bindJcChange" range="{{jc_array}}">
-            <view class="weui-select weui-select_in-select-after">{{jc_array[jc_selected]}}</view>
-          </picker>
-        </view>
-        <view class="weui-cell__ft">
-          <view class="weui-vcode-btn" bindtap="dangqianjieci">当前节次</view>
-        </view>
-      </view>
+<view class="page">
+  <view class="rp-pickers" bindtouchstart="hideLayer">
+    <view class="rp-picker">
+      <rp-picker list="{{jxl_array}}" key="name" selected="{{jxl_selected}}" scroll="{{jxl_scroll}}" bindchange="bindJxlChange" button="重新定位" bindbutton="dingwei" />
     </view>
-
-    <!-- Result -->
-    <block wx:if="{{service=='on'}}">
-      <view class="weui-cells__title">
-        共找到 {{classroomList.length}} 条结果{{classroomList.length ? "，已按照推荐程度排列" : ""}}。
-      </view>
-      <block wx:for="{{classroomList}}" wx:key="key">
-        <view class="rp-cells" bindlongpress="showLayer" data-index="{{index}}">
-          <rp-row zylxdm="{{item.zylxdm}}" jsmph="{{item.jsmph}}" skzws="{{item.SKZWS}}"
-            jc_ks="{{item.jc_ks}}" jc_js="{{item.jc_js}}"/>
-        </view>
-      </block>
-      <view class="weui-cells__title">※ 如果发现某一条目与事实情况不符，可长按相应条目提交错误。</view>
-    </block>
-    <block wx:else>
-      <view class="weui-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
-    </block>
-    <!-- Result -->
+    <view class="rp-picker">
+      <rp-picker list="{{rq_array}}" selected="{{rq_selected}}" scroll="{{rq_scroll}}" bindchange="bindRqChange" button="当前日期" bindbutton="dangqianriqi" />
+    </view>
+    <view class="rp-picker">
+      <rp-picker list="{{jc_array}}" selected="{{jc_selected}}" scroll="{{jc_scroll}}" bindchange="bindJcChange" button="当前节次" bindbutton="dangqianjieci" />
+    </view>
   </view>
 
-  <!-- Notice -->
-  <mp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{DoNotShowButton}}" bindbuttontap="DoNotShow">
-    <view style="text-align:left">
-      <text decode="true">{{notice.text}}</text>
+  <view class="rp-result" wx:if="{{serve}}">
+    <scroll-view class="rp-result__scrollview" scroll-y scroll-with-animation>
+      <block wx:for="{{result}}" wx:key="key">
+        <rp-row zylxdm="{{item.zylxdm}}" jsmph="{{item.jsmph}}" skzws="{{item.SKZWS}}" jc_ks="{{item.jc_ks}}" jc_js="{{item.jc_js}}" bindlongpress="showLayer" data-index="{{index}}" bindtouchstart="hideLayer" />
+      </block>
+      <view class="rp-result__desc">
+        共发现 {{result.length}} 条结果，如果发现某一条目与事实情况不符，可长按相应条目提交错误。
+      </view>
+      <!-- feedback -->
+      <rp-layer class="rp-layer" wx:if="{{layer_display}}"
+      buttons="{{layer_buttons}}" BackColor="#434343" ForeColor="#fff"
+      style="top:{{11 + layer_index * 50}}px" />
+      <rp-layer class="rp-layer" wx:if="{{confirm_display}}"
+      buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
+      style="top:{{11 + layer_index * 50}}px" />
+      <!-- feedback -->
+    </scroll-view>
+  </view>
+  <view class="rp-result" wx:else>
+    <view class="rp-result__title">
+      本学期已经结束，南师教室也放假啦~~~
     </view>
-  </mp-dialog>
-  <!-- Notice -->
+  </view>
 </view>
 
-<rp-layer class="rp-layer" wx:if="{{layer_display}}"
-buttons="{{layer_buttons}}" BackColor="#434343" ForeColor="#fff"
-style="top:{{256 + layer_index * 56}}px"/>
-
-<rp-layer class="rp-layer" wx:if="{{confirm_display}}"
-buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
-style="top:{{256 + layer_index * 56}}px"/>
+<!-- Notice -->
+<mp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{DoNotShowButton}}" bindbuttontap="DoNotShow">
+  <view style="text-align:left">
+    <text decode="true">{{notice.text}}</text>
+  </view>
+</mp-dialog>
+<!-- Notice -->

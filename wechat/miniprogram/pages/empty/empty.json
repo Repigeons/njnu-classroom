@@ -2,6 +2,7 @@
   "usingComponents": {
     "mp-dialog": "weui-miniprogram/dialog/dialog",
     "rp-layer": "/components/layer/layer",
-    "rp-row": "/components/empty-row/empty-row"
+    "rp-row": "/components/empty-row/empty-row",
+    "rp-picker": "/components/scroll-picker/scroll-picker"
   }
 }

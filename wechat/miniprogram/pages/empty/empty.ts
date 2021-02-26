@@ -5,28 +5,29 @@ import { getDistance, getJc } from '../../utils/util'
 
 Page({
   data: {
-    service: 'on',
-    notice: Object() as INotice,
+    // 公告
+    notice: {} as INotice,
     DoNotShowButton: [{text: "不再显示"}],
-    jxl_position: Object() as IJxlPosition,
-    jxl_name_array: Array<string>(),
+    // 筛选
+    jxl_array: {} as Array<IPosition>,
     jxl_selected: 0,
-
-    rq_array: ['周日', '周一', '周二', '周三', '周四', '周五', '周六'],
+    jxl_scroll: 0,
+    rq_array: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     rq_selected: 0,
-
+    rq_scroll: 0,
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
     jc_selected: 0,
-
-    classroomList: Array(),
-
-    confirm_buttons: Array<ILayerButton>(),
+    jc_scroll: 0,
+    // 结果
+    serve: true,
+    result: Array(),
+    // 反馈
+    layer_index: 0,
+    layer_display: false,
     confirm_display: false,
     layer_buttons: Array<ILayerButton>(),
-    layer_display: false,
-    layer_index: 0,
-
-    feedbackTime: 0
+    confirm_buttons: Array<ILayerButton>(),
+    feedbackTime: 0,
   },
 
   /**
@@ -34,7 +35,7 @@ Page({
    * 生成教学楼名（仅用于列表显示）
    */
   onLoad(options: Record<string, string>): void {
-    // 公告系统
+    // 公告
     app.getNotice().then(data => {
       let notice = wx.getStorageSync('notice') as number
       this.setData({
@@ -47,12 +48,8 @@ Page({
     })
 
     // 加载教学楼位置
-    app.getPosition().then(data => {
-      this.setData({
-        jxl_position: data,
-        jxl_name_array: Object.keys(data)
-      })
-
+    app.getJxlPosition().then(data => {
+      this.setData({ jxl_array: data })
       // 初始化至当前状态
       this.dangqianriqi()
       this.dangqianjieci()
@@ -68,7 +65,6 @@ Page({
           confirm_display: true,
         })
       }],
-
       confirm_buttons: [{
         text: '提交',
         tap: () => {
@@ -92,10 +88,10 @@ Page({
             method: 'POST',
             header: { 'Content-Type': 'application/x-www-form-urlencoded' },
             data: {
-                day: this.data.rq_selected,
-                jxl: this.data.jxl_name_array[this.data.jxl_selected],
+                day: (this.data.rq_selected + 1) % 7,
+                jxl: this.data.jxl_array[this.data.jxl_selected].name,
                 dqjc: this.data.jc_selected + 1,
-                resultList: JSON.stringify(this.data.classroomList),
+                resultList: JSON.stringify(this.data.result),
                 index: this.data.layer_index,
             },
             success: () => {
@@ -135,63 +131,69 @@ Page({
       type: 'gcj02',
       success: res => {
         let minId: number = 0
-        let minDis: number = 0xffffffff
-        let length = Object.keys(this.data.jxl_position).length
-        for (let i = 1; i < length; i++) {
-          let dis: number = getDistance({
-            latitude1: this.data.jxl_position[this.data.jxl_name_array[i]][0],
-            longitude1: this.data.jxl_position[this.data.jxl_name_array[i]][1],
+        let minDistance: number = 0xffffffff
+        for (let jxlIndex = 0; jxlIndex < this.data.jxl_array.length; jxlIndex++) {
+          let distance: number = getDistance({
+            latitude1: this.data.jxl_array[jxlIndex].positon[0],
+            longitude1: this.data.jxl_array[jxlIndex].positon[1],
             longitude2: res.longitude,
             latitude2: res.latitude,
           })
-          if (minDis > dis) {
-            minDis = dis
-            minId = i
+          if (minDistance > distance) {
+            minDistance = distance
+            minId = jxlIndex
           }
         }
-        this.setData({jxl_selected: minId})
+        this.setData({
+          jxl_selected: minId,
+          jxl_scroll: minId,
+        })
         this.submit()
       },
       fail: console.error
     })
   },
-
   /**
    * 将选择的日期设为当天
    */
   dangqianriqi(): void {
-    this.setData({ rq_selected: new Date().getDay() })
+    let rq = new Date().getDay()
+    this.setData({
+      rq_selected: rq,
+      rq_scroll: rq,
+    })
     this.submit()
   },
-
   /**
    * 将选择的课程节次设为当前节次
    */
   dangqianjieci(): void {
-    this.setData({ jc_selected: getJc(new Date()) })
+    let jc = getJc(new Date())
+    this.setData({
+      jc_selected: jc,
+      jc_scroll: jc,
+    })
     this.submit()
   },
 
   /**
    * 选择教学楼
    */
-  bindJxlChange(e: AnyObject): void {
+  bindJxlChange(e: any): void {
     this.setData({ jxl_selected: +e.detail.value })
     this.submit()
   },
-
   /**
    * 选择日期
    */
-  bindRqChange(e: AnyObject): void {
+  bindRqChange(e: any): void {
     this.setData({ rq_selected: +e.detail.value })
     this.submit()
   },
-
   /**
    * 选择节次
    */
-  bindJcChange(e: AnyObject): void {
+  bindJcChange(e: any): void {
     this.setData({ jc_selected: +e.detail.value })
     this.submit()
   },
@@ -203,21 +205,27 @@ Page({
     wx.request({
       url: `${app.globalData.server}/api/empty.json`,
       data: {
-        day: this.data.rq_selected,
-        jxl: this.data.jxl_name_array[this.data.jxl_selected],
+        day: (this.data.rq_selected + 1) % 7,
+        jxl: this.data.jxl_array[this.data.jxl_selected].name,
         dqjc: this.data.jc_selected + 1
       },
       success: res => {
         let resData = res.data as Record<string,any>
-        this.setData({ service: resData.service, classroomList: resData.data })
+        this.setData({
+          serve: resData.service == 'on',
+          result: resData.data
+        })
       },
       fail: err => {
         console.error(err)
-        this.setData({ classroomList: [] })
+        this.setData({ result: [] })
       }
     })
   },
 
+  /**
+   * 关闭公告栏
+   */
   DoNotShow(): void {
     wx.setStorage({
       key: 'notice',
@@ -226,14 +234,19 @@ Page({
     })
   },
 
-  showLayer(e: AnyObject): void {
+  /**
+   * 显示用户反馈弹出层
+   */
+  showLayer(e: any): void {
     let index: number = e.currentTarget.dataset.index
     this.setData({
         layer_index: index,
         layer_display: true
     })
   },
-
+  /**
+   * 隐藏用户反馈弹出层
+   */
   hideLayer(): void {
     this.setData({
       layer_display: false,
