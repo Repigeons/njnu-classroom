@@ -1,6 +1,6 @@
 <!--components/grids/grids.wxml-->
 <view class="grids">
-  <block wx:for="{{innerGrids}}" wx:key="index">
+  <block wx:for="{{innerGrids}}" wx:key="key">
     <navigator class="grid" hover-class="grid-hover"
       style="width: calc({{100 / column}}% - 8px);"
       target="{{item.target}}"

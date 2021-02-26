@@ -1,6 +1,7 @@
 // explore.ts
 // 获取应用实例
 const app = getApp<IAppOption>()
+let interstitialAd: WechatMiniprogram.InterstitialAd
 
 Page({
   /**
@@ -16,6 +17,12 @@ Page({
    */
   onLoad(/*options*/): void {
     app.getExploreGrids().then(data => this.setData({ grids: data}))
+    if (wx.createInterstitialAd) {
+      interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-cbb4c40d86d77b8b' })
+      interstitialAd.onLoad(() => {})
+      interstitialAd.onError(console.error)
+      interstitialAd.onClose(() => {})
+    }
   },
 
   /**
@@ -26,9 +33,10 @@ Page({
   },
 
   onTapGrids(e: any): void {
-    const methods: Record<string, Function> = {
-      support: () => wx.showToast({ title: "感谢支持" }),
-      calendar: () =>  wx.previewImage({urls: [`${app.globalData.server}/calendar.jpg`]}),
+    const methods: Record<string, () => void> = {
+      developing: () => wx.showToast({ title: "敬请期待", icon: 'none' }),
+      calendar: () =>  wx.previewImage({urls: [`${app.globalData.server}/images/calendar.jpg`]}),
+      support: () =>  interstitialAd?.show().catch(console.error),
     },
     method = methods[e.detail.method]
     if (typeof method == "function") method()

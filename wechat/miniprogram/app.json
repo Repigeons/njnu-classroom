@@ -3,13 +3,14 @@
   "pages": [
     "pages/empty/empty",
     "pages/overview/overview",
-    "pages/explore/explore"
+    "pages/explore/index/index"
   ],
   "subpackages": [
     {
       "root": "pages/explore/pages",
       "pages": [
         "search/search",
+        "search_/search",
         "shuttle/shuttle"
       ]
     }
@@ -38,7 +39,7 @@
         "text": "教室概览"
       },
       {
-        "pagePath": "pages/explore/explore",
+        "pagePath": "pages/explore/index/index",
         "iconPath": "images/gdss.png",
         "selectedIconPath": "images/gdss_1.png",
         "text": "发现"

@@ -2,10 +2,10 @@
 <view class="page">
   <view class="rp-userInfo">
     <view class="rp-avatar">
-      <open-data type="userAvatarUrl"/>
+      <open-data type="userAvatarUrl" />
     </view>
     <view class="rp-nickname">
-      <open-data type="userNickName"/>
+      <open-data type="userNickName" />
     </view>
   </view>
   <!--
@@ -14,7 +14,7 @@
   </view>
   -->
   <view class="rp-grids">
-    <rp-grids grids="{{grids}}" column="3" bindtapgrids="onTapGrids"/>
+    <rp-grids grids="{{grids}}" column="3" bindtapgrids="onTapGrids" />
   </view>
 
   <view class="weui-footer weui-footer_fixed-bottom">
