@@ -6,10 +6,11 @@ interface IAppOption {
   }
   clearStorage(): void
   preload(): void
+  _getCache(args: {url: string, request: boolean}): Promise<string|Record<string,any>|ArrayBuffer>
   getNotice(): Promise<INotice>
-  getPosition(request?: boolean): Promise<IJxlPosition>
+  getJxlPosition(request?: boolean): Promise<Array<IPosition>>
   getClassrooms(request?: boolean): Promise<Record<string, Array<IJasInfo>>>
   getZylxdm(request?: boolean): Promise<Record<string, string>>
-  getShuttle(request?: boolean): Promise<IShuttle>
   getExploreGrids(request?: boolean): Promise<Array<IGrid>>
+  getShuttle(request?: boolean): Promise<IShuttle>
 }

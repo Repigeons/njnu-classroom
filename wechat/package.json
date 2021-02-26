@@ -20,9 +20,11 @@
     "tsc": "node ./node_modules/typescript/lib/tsc.js"
   },
   "dependencies": {
+    "md5": "^2.3.0",
     "weui-miniprogram": "^1.0.3"
   },
   "devDependencies": {
+    "@types/md5": "^2.3.0",
     "miniprogram-api-typings": "^2.8.3-1",
     "typescript": "^3.3.3333"
   }
