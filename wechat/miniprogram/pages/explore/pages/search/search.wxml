@@ -1,94 +1,18 @@
 <!--miniprogram/pages/explore/pages/search/search.wxml-->
 <view class="page">
   <view class="rp-search">
-    <rp-searchbar inputVal="{{keyword}}" focus="{{showSearch}}" placeholder="搜索课程/活动" bindfocus="onFocus" bindinput="onInput" bindsearch="onSearch"/>
-    <view wx:if="{{showSearch}}" class="rp-search__filter">
-      <view class="weui-search-bar__form">
-        <view class="weui-cell  weui-cell_vcode rp-cell">
-          <view class="weui-cell__hd rp-cell__hd">
-            <view class="weui-label">日期</view>
-          </view>
-          <view class="weui-cell__bd" >
-            <picker value="{{rq_selected}}" bindchange="bindRqChange" range="{{rq_array}}">
-              <view class="weui-select weui-select_in-select-after">{{rq_array[rq_selected]}}</view>
-            </picker>
-          </view>
-        </view>
-        <view class="weui-cell  weui-cell_vcode rp-cell">
-          <view class="weui-cell__hd rp-cell__hd">
-            <view class="weui-label">节次</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker value="{{jc_ks_selected}}" bindchange="bindJcKsChange" range="{{jc_ks_array}}">
-              <view class="weui-select weui-select_in-select-after">
-                <text decode="true" class="rp-cell__hd">从&ensp;</text>
-                <text>{{jc_array[jc_ks_selected]}}</text>
-              </view>
-            </picker>
-          </view>
-          <view class="weui-cell__bd rp-cell__bd">
-            <picker value="{{jc_js_selected+jc_js_array.length-12}}" bindchange="bindJcJsChange" range="{{jc_js_array}}">
-              <view class="weui-select weui-select_in-select-after">
-                <text decode="true" class="rp-cell__hd">到&ensp;</text>
-                <text>{{jc_array[jc_js_selected]}}</text>
-              </view>
-            </picker>
-          </view>
-        </view>
-        <view class="weui-cell  weui-cell_vcode rp-cell">
-          <view class="weui-cell__hd rp-cell__hd">
-            <view class="weui-label">教学楼</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
-              <view class="weui-select weui-select_in-select-after">{{jxl_name_array[jxl_selected]}}</view>
-            </picker>
-          </view>
-        </view>
-        <view class="weui-cell  weui-cell_vcode rp-cell">
-          <view class="weui-cell__hd rp-cell__hd">
-            <view class="weui-label">类型</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker value="{{lx_selected}}" bindchange="bindLxChange" range="{{lx_name_array}}">
-              <view class="weui-select weui-select_in-select-after">{{lx_name_array[lx_selected]}}</view>
-            </picker>
-          </view>
-        </view>
+    <rp-searchbar placeholder="搜索课程/活动" focus="{{showSearch}}" value="{{keyword}}"
+      bindfocus="onFocus" bindinput="onInput" bindsearch="onSearch" />
+    <view class="rp-search__pickers">
+      <view class="rp-search__picker">
+        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日', '周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" key="1" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect"/>
+      </view>
+      <view class="rp-search__picker">
+        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect" button="当前日期" bindbutton="onButton" />
+      </view>
+      <view class="rp-search__picker">
+        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect" />
       </view>
     </view>
   </view>
-  
-  <!-- Result -->
-  <view  wx:if="{{showResult}}">
-    <view wx:if="{{service=='on'}}" class="rp-cells__title">共找到 {{result_size}} 条结果。</view>
-    <view wx:else class="rp-cells__title">本学期已经结束，南师教室也放假啦~~~</view>
-    <view class="weui-panel weui-panel_access">
-      <view class="weui-panel__bd">
-        <view wx:for="{{display_list}}" wx:key="key">
-          <rp-row extClass="weui-media-box weui-media-box_appmsg" hoverClass="weui-cell_active"
-            zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.jxl}}{{item.jsmph}}&emsp;{{rq_array[item.dayIndex]}}{{item.jc_ks}}-{{item.jc_js}}节"
-            bindtap="showDialog" data-index="{{index}}"/>
-        </view>
-      </view>
-    </view>
-  </view>
-  <!-- Result -->
-    
-  <!-- Tips -->
-  <view wx:else class="rp-bar">
-    <text class="rp-cell__hd">Tips：</text>
-    <text decode="true">使用更多搜索，可以方便地根据课程或活动名称查到其所在的教室以及时间，支持通过筛选缩小搜索范围。点击上方搜索栏开始搜索。\n\n例1：基础英语\n例2：团日活动</text>
-  </view>
-  <!-- Tips -->
 </view>
-
-<!-- Dialog -->
-<mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
-  <view style="text-align:left">
-    <block wx:for="{{dialog.detail}}" wx:key="key">
-      <view>{{item.field}}：{{item.value}}</view>
-    </block>
-  </view>
-</mp-dialog>
-<!-- Dialog -->

@@ -1,48 +1,12 @@
 /* miniprogram/pages/explore/pages/search/search.wxss */
 .rp-search {
-  padding: 8px;
+  margin-top: 4px;
 }
 
-.rp-search__filter {
-  position: relative;
-  padding: 8px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  box-sizing: border-box;
-  background-color: #ededed;
-  -webkit-text-size-adjust: 100%;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
+.rp-search__pickers {
+  margin: -8px 12px 0 12px;
 }
 
-.rp-bar {
-  color: rgba(0,0,0,.5);
-  padding: 0 16px;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.rp-cell {
-  height: 48px;
-}
-
-.rp-cell__hd {
-  font-weight: 700;
-}
-
-.rp-cell__bd {
-  margin-left: 1px;
-  padding-left: 1px;
-  left: 1px;
-}
-
-.rp-cells__title {
-  margin-bottom: 3px;
-  padding-left: 16px;
-  padding-right: 16px;
-  color: rgba(0,0,0,.5);
-  font-size: 14px;
-  line-height: 1.4;
+.rp-search__picker {
+  margin: 4px 0;
 }
