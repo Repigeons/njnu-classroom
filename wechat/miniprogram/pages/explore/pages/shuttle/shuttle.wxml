@@ -14,13 +14,13 @@
       </picker>
     </view>
     <view class="rp-topbox-arrow">
-      <image src="/images/arrow.png" class="rp-topbox-arrow__image"/>
+      <image src="/images/arrow.png" class="rp-topbox-arrow__image" />
     </view>
     <view class="rp-topbox-button__right" bindtap="redirect">
       <view class="rp-topbox-title">{{terminus}}方向</view>
       <view class="rp-topbox-exchange">
         <view class="rp-topbox-exchange__bd">
-          <image src="/images/exchange.png" class="rp-topbox-exchange__image"/>
+          <image src="/images/exchange.png" class="rp-topbox-exchange__image" />
         </view>
         <view>换向</view>
       </view>
@@ -33,7 +33,7 @@
     <scroll-view class="rp-scrollzone__scrollview" scroll-y="true" scroll-into-view="{{scrollId}}" scroll-with-animation>
       <block wx:for="{{routes}}" wx:key="key">
         <rp-row id="row{{index}}" time="{{item[0]}}" from="{{item[1]}}" to="{{item[2]}}"
-        via="{{(selectedStation >= name2index[item[1]] && selectedStation <= name2index[item[2]]) || (selectedStation >= name2index[item[2]] && selectedStation <= name2index[item[1]])}}"/>
+        via="{{(selectedStation >= name2index[item[1]] && selectedStation <= name2index[item[2]]) || (selectedStation >= name2index[item[2]] && selectedStation <= name2index[item[1]])}}" />
       </block>
     </scroll-view>
   </view>

@@ -14,7 +14,7 @@
   <view class="cell__ft">
     <view class="station">{{from}}</view>
     <view class="cellarrow">
-      <image src="/images/arrow.png" class="cellarrow__image"></image>
+      <image src="/images/arrow.png" class="cellarrow__image" />
     </view>
     <view class="station">{{to}}</view>
   </view>

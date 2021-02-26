@@ -78,7 +78,11 @@
         <view class="rp-bar rp-bar_{{item.usage}}"
           style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.day1}}px; top: {{(cellHeight+1)*(item.jc_ks-1)}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px"
           bindtap="showDialog" data-index="{{index}}"
-        ><block wx:if="{{item.usage!='empty'}}"><text>{{bar_list[index]['shortkcmc']}}</text></block></view>
+        >
+          <block wx:if="{{item.usage!='empty'}}">
+            <text>{{bar_list[index]['shortkcmc']}}</text>
+          </block>
+        </view>
       </block>
     </view>
     <!--~ 数据内容 -->

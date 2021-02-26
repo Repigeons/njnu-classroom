@@ -1,6 +1,6 @@
 <view class="cell" hover-class="cell_active">
   <view class="cell__hd">
-    <image class="item-logo" src="/images/{{icon[zylxdm]}}"/>
+    <image class="item-logo" src="/images/{{icon[zylxdm]}}" />
   </view>
   <view class="cell__bd">
     <view class="item-title">
