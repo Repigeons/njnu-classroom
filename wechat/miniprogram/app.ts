@@ -16,10 +16,10 @@ App<IAppOption>({
   clearStorage(): void {
     const keys = [
       "notice",
-      md5(`${this.globalData.server}/classroom/position.json`),
-      md5(`${this.globalData.server}/classroom/list.json`),
-      md5(`${this.globalData.server}/classroom/zylxdm.json`),
-      md5(`${this.globalData.server}/explore/grids.json`),
+      md5(`${this.globalData.server}/static/classroom/position.json`),
+      md5(`${this.globalData.server}/static/classroom/list.json`),
+      md5(`${this.globalData.server}/static/classroom/zylxdm.json`),
+      md5(`${this.globalData.server}/static/explore/grids.json`),
       md5(`${this.globalData.server}/explore/shuttle.json`),
     ]
     const storageInfo = wx.getStorageInfoSync().keys
@@ -80,7 +80,7 @@ App<IAppOption>({
   getJxlPosition(request: boolean): Promise<Array<IPosition>> {
     return new Promise((resolve, reject) => {
       this._getCache({
-        url: `${this.globalData.server}/classroom/position.json`,
+        url: `${this.globalData.server}/static/classroom/position.json`,
         request
       })
       .then (data=>resolve(data as Array<IPosition>))
@@ -91,7 +91,7 @@ App<IAppOption>({
   getClassrooms(request: boolean): Promise<Record<string, Array<IJasInfo>>> {
     return new Promise((resolve, reject) => {
       this._getCache({
-        url: `${this.globalData.server}/classroom/list.json`,
+        url: `${this.globalData.server}/static/classroom/list.json`,
         request
       })
       .then (data=>resolve(data as Record<string, Array<IJasInfo>>))
@@ -102,7 +102,7 @@ App<IAppOption>({
   getZylxdm(request: boolean): Promise<Record<string, string>> {
     return new Promise((resolve, reject) => {
       this._getCache({
-        url: `${this.globalData.server}/classroom/zylxdm.json`,
+        url: `${this.globalData.server}/static/classroom/zylxdm.json`,
         request
       })
       .then (data=>resolve(data as Record<string, string>))
@@ -113,7 +113,7 @@ App<IAppOption>({
   getExploreGrids(request: boolean): Promise<Array<IGrid>> {
     return new Promise((resolve, reject) => {
       this._getCache({
-        url: `${this.globalData.server}/explore/grids.json`,
+        url: `${this.globalData.server}/static/explore/grids.json`,
         request
       })
       .then (data=>resolve(data as Array<IGrid>))
