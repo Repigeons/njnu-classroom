@@ -4,8 +4,8 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    inputVal: { type: String },
     focus: { type: Boolean },
+    value: { type: String },
     placeholder: {
       type: String,
       value: "搜索"
@@ -13,30 +13,29 @@ Component({
     buttonText: {
       type: String,
       value: "搜索"
-    }
+    },
   },
 
   /**
    * 组件的初始数据
    */
   data: {
-
   },
 
   /**
    * 组件的方法列表
    */
   methods: {
-    showInput: function () {
-      this.triggerEvent('focus')
+    onFocus() {
+      if (!this.properties.focus) this.triggerEvent('focus')
     },
-    clearInput: function () {
+    clearInput() {
       this.triggerEvent('input', { value: "" })
     },
-    onInput: function (e) {
+    onInput(e) {
       this.triggerEvent('input', e.detail)
     },
-    onSearch: function (e) {
+    onSearch(e) {
         this.triggerEvent('search', e.detail)
     },
   }

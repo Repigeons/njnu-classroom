@@ -1,11 +1,13 @@
 <!--components/global/searchbar/searchbar.wxml-->
-<view class="search-bar {{focus ? 'search-bar_focusing' : ''}}">
-  <form class="search-bar__form">
-    <view class="search-bar__box">
-      <i class="icon-search"></i>
-      <input type="text" class="search-bar__input" placeholder="{{placeholder}}" value="{{inputVal}}" focus="{{focus}}" bindtap="showInput" bindinput="onInput" bindconfirm="onSearch" />
-      <span class="icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput"></span>
-    </view>
-  </form>
-  <view class="search-bar__search" bindtap="onSearch">{{buttonText}}</view>
+<view class="searchbar">
+  <view class="searchbar__box" bindtap="onFocus">
+    <icon class="icon-search" type="search" size="16" color="rgba(0,0,0,.7)" />
+    <input class="searchbar__input {{value||focus ? 'searchbar__input_flexfull' : ''}}" confirm-type="search"
+      value="{{value}}" placeholder="{{placeholder}}"
+      bindinput="onInput" bindconfirm="onSearch" />
+    <icon class="icon-clear" type="cancel" size="16" color="rgba(0,0,0,.7)" wx:if="{{value}}" bindtap="clearInput" />
+  </view>
+  <label wx:if="{{focus}}" class="searchbar__label" bindtap="onSearch">
+    {{buttonText}}
+  </label>
 </view>
