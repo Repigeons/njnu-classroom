@@ -20,7 +20,7 @@ Page({
       {key: '5', value: "周五"},
       {key: '6', value: "周六"},
       {key: '0', value: "周日"},
-    ],
+    ] as Array<KeyValue>,
     rq_selected: 0,
     rq_scroll: 0,
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
