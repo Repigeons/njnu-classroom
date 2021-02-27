@@ -4,7 +4,7 @@ interface IAppOption {
   globalData: {
     readonly server: string
   }
-  clearStorage(): void
+  flushStorage(): void
   preload(): void
   _getCache(args: {url: string, request: boolean}): Promise<string|Record<string,any>|ArrayBuffer>
   getNotice(): Promise<INotice>

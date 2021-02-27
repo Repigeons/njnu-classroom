@@ -9,14 +9,14 @@
             <view bindtap="bindFormer">◀</view>
           </view>
           <view class="weui-cell__bd rp-bd_left">
-            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_name_array}}">
-              <view class="rp-bd_text">{{jxl_name_array[jxl_selected]}}</view>
+            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
+              <view class="rp-bd_text">{{jxl_array[jxl_selected]}}</view>
             </picker>
           </view>
           <view class="weui-cell__bd rp-bd_right">
-            <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{jsmph_array}}">
+            <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{classrooms[jxl_array[jxl_selected]]}}" range-key="JSMPH">
               <view class="rp-bd_text">
-                <text decode="true">{{jsmph_array[jsmph_selected]}}</text>
+                <text decode="true">{{classrooms[jxl_array[jxl_selected]][jsmph_selected].JSMPH}}</text>
               </view>
             </picker>
           </view>

@@ -40,8 +40,8 @@
       },
       {
         "pagePath": "pages/explore/index/index",
-        "iconPath": "images/gdss.png",
-        "selectedIconPath": "images/gdss_1.png",
+        "iconPath": "images/explore.png",
+        "selectedIconPath": "images/explore_1.png",
         "text": "发现"
       }
     ]

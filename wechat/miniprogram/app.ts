@@ -1,39 +1,42 @@
 // app.ts
-import * as hash from "md5"
-function md5(s: string) {
-  return hash(s).substr(8, 16)
-}
+import encrypt from "./utils/encrypt"
 
 App<IAppOption>({
   globalData: {
     server: 'https://classroom.njnu.xyz'
   },
+  
   onLaunch() {
-    this.clearStorage()
+    this.flushStorage()
     this.preload()
   },
 
-  clearStorage(): void {
-    const keys = [
+  flushStorage(): void {
+    const userData = [
+      "last_overview",
       "notice",
-      md5(`${this.globalData.server}/static/classroom/position.json`),
-      md5(`${this.globalData.server}/static/classroom/list.json`),
-      md5(`${this.globalData.server}/static/classroom/zylxdm.json`),
-      md5(`${this.globalData.server}/static/explore/grids.json`),
-      md5(`${this.globalData.server}/explore/shuttle.json`),
+    ],
+    cache = [
+      `${this.globalData.server}/static/classroom/position.json`,
+      `${this.globalData.server}/static/classroom/list.json`,
+      `${this.globalData.server}/static/classroom/zylxdm.json`,
+      `${this.globalData.server}/static/explore/grids.json`,
+      `${this.globalData.server}/explore/shuttle.json`,
     ]
     const storageInfo = wx.getStorageInfoSync().keys
     const storage: Record<string, any> = {}
-    for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-      let key = keys[keyIndex]
-      if (storageInfo.indexOf(key) != -1) {
+    userData.forEach(key => {
+      if (storageInfo.indexOf(key) != -1)
         storage[key] = wx.getStorageSync(key)
-      }
-    }
+    })
+    cache.forEach(url => {
+      let key = encrypt(url)
+      if (storageInfo.indexOf(key) != -1)
+        storage[key] = wx.getStorageSync(key)
+    })
     wx.clearStorageSync()
-    for (let key in storage) {
+    for (let key in storage)
       wx.setStorage({ key, data: storage[key] })
-    }
   },
 
   preload(): void {
@@ -45,7 +48,7 @@ App<IAppOption>({
   },
 
   _getCache(args: {url: string, request: boolean}): Promise<string|Record<string,any>|ArrayBuffer> {
-    let key = md5(args.url)
+    let key = encrypt(args.url)
     if (args.request) {
       wx.request({
         url: args.url,
