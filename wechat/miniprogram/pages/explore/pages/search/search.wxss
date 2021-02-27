@@ -1,12 +1,33 @@
 /* miniprogram/pages/explore/pages/search/search.wxss */
 .rp-search {
-  margin-top: 4px;
+  margin-top: 8px;
 }
 
 .rp-search__pickers {
-  margin: -8px 12px 0 12px;
+  margin: 4px 12px;
 }
 
 .rp-search__picker {
-  margin: 4px 0;
+  margin-top: 1px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.rp-search__picker_cells {
+  display: flex;
+  padding-left: 8px;
+}
+.rp-search__picker_cell__hd {
+  width: 20px;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  margin-left: 8px;
+  margin-right: -4px;
+  z-index: 2;
+}
+.rp-search__picker_cell__bd {
+  flex-grow: 1;
+  z-index: 1;
 }

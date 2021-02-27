@@ -3,15 +3,21 @@
   <view class="rp-search">
     <rp-searchbar placeholder="搜索课程/活动" focus="{{showSearch}}" value="{{keyword}}"
       bindfocus="onFocus" bindinput="onInput" bindsearch="onSearch" />
-    <view class="rp-search__pickers">
+    <view class="rp-search__pickers" wx:if="{{showSearch}}">
       <view class="rp-search__picker">
-        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日', '周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" key="1" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect"/>
+        <rp-picker list="{{jxl_array}}" key="value" selected="{{jxl_selected}}" bindchange="bindJxlChange" />
       </view>
       <view class="rp-search__picker">
-        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect" button="当前日期" bindbutton="onButton" />
+        <rp-picker list="{{rq_array}}" key="value" selected="{{rq_selected}}" bindchange="bindRqChange" />
+      </view>
+      <view class="rp-search__picker rp-search__picker_cells">
+        <view class="rp-search__picker_cell__hd">从</view>
+        <rp-picker class="rp-search__picker_cell__bd" list="{{jc_array}}" selected="{{jc_ks_selected}}" scroll="{{jc_ks_selected}}" bindchange="bindJcChange" data-jc="ks" />
+        <view class="rp-search__picker_cell__hd">到</view>
+        <rp-picker class="rp-search__picker_cell__bd"list="{{jc_array}}" selected="{{jc_js_selected}}" scroll="{{jc_js_selected}}" bindchange="bindJcChange" data-jc="js" />
       </view>
       <view class="rp-search__picker">
-        <rp-picker list="{{['周一', '周二', '周三', '周四', '周五', '周六', '周日']}}" selected="{{selected}}" scroll="{{selected}}" bindselect="onSelect" />
+        <rp-picker list="{{zylxdm_array}}" key="value" selected="{{zylxdm_selected}}" bindchange="bindZylxChange" />
       </view>
     </view>
   </view>
