@@ -4,44 +4,106 @@
   border-radius: 16px;
   background-color: #FFFFFF;
   width:calc(100% - 40px);
-  height:16px; 
+  height:18px; 
   margin:8px;
   padding:12px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
 }
 
 .cell_active {
   background-color: #cee6f2;
+  opacity: 0.8;
 }
 
-.cell__bd {
-  -webkit-box-flex: 1;
-  flex: 1;
+.cell__hd {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.item-logo {
-  vertical-align: middle;
-  height: 24px;
-  width: 24px;
-  margin-right: 16px;
+.cell__ft{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 }
 
-.item-title {
-  font-size: 17px;
-  font-weight: 700;
+.mark{
+  width:14px;
+  height:14px;
 }
 
-.item-text {
-  font-size: 14px;
+.classroom-sign{
+  font-size:22px;
+  line-height:22px;
+  text-align: right;
+  width: 41px;
+  padding-left: 8px;
 }
 
-.item-text_jc {
-  color: #e58600;
-  font-weight: 700;
+.classroom-text{
+  font-size:14px;
+  line-height:14px;
+  white-space:nowrap;
+  text-align: left;
+  padding:3px 8px 0 2px;
 }
 
-.item-text_yan {
+.vline{
+  width:2px;
+  height:20px;
+}
+
+.section{
+  font-size:16px;
+  line-height:16px;
+  white-space:nowrap;
+  margin: 0 4px;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #e5f7ff;
+  letter-spacing:1px;
+}
+
+.yan-text {
   color: #535353;
+  font-size: 12px;
+  line-height:12px;
+  white-space:nowrap;
+  padding-right: 4px;
 }
+
+.seat{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 4px 0px 4px;
+}
+
+.seat__image {
+  height: 12px;
+  width: 12px;
+}
+
+.seat-number{
+  font-size:14px;
+  line-height:14px;
+  white-space:nowrap;
+  text-align: left;
+  width: 22px;
+}
+
+.mark_color0        { background-color: #00F324; }
+.mark_color1        { background-color: #0090F2; }
+.vline_color0{ 
+  background: linear-gradient(#006000A0,#006000FF, #006000A0); 
+}
+.vline_color1{ 
+  background: linear-gradient(#005A8CA0,#005A8CFF, #005A8CA0) 
+}
+.seat_color0        { color: #006000; }
+.seat_color1        { color: #005A8C; }

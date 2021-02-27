@@ -1,15 +1,16 @@
 <view class="cell" hover-class="cell_active">
   <view class="cell__hd">
-    <image class="item-logo" src="/images/{{icon[zylxdm]}}" />
+    <view class="mark mark_color{{zylxdm=='10'?1:0}}"></view>
+    <view class="classroom-sign">{{jsmph}}</view>
+    <view class="classroom-text">教室</view>
+    <!-- <view class="vline vline_color{{zylxdm=='10'?1:0}}"></view> -->
+    <view class="section">{{jc_ks}}-{{jc_js}}节</view>
   </view>
-  <view class="cell__bd">
-    <view>
-      <text class="item-title">{{jsmph}}教室</text>
-      <text class="item-text item-text_jc" decode="true">&ensp;『{{jc_ks}}-{{jc_js}}节』</text>
-      <text class="item-text" decode="true">&ensp;容量：{{skzws}}</text>
+  <view class="cell__ft">
+    <view wx:if="{{zylxdm=='10'}}" class="yan-text">可能为空教室</view>
+    <view class="seat">
+      <image src="/images/seat{{zylxdm=='10'?2:1}}.png" class="seat__image" />
     </view>
-    <view wx:if="{{zylxdm=='10'}}">
-      <text class="item-text item-text_yan">研究生课程，可能为空教室</text>
-    </view>
+    <view class="seat-number seat_color{{zylxdm=='10'?1:0}}">{{skzws}}</view>
   </view>
 </view>
