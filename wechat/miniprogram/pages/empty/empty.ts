@@ -12,7 +12,15 @@ Page({
     jxl_array: {} as Array<IPosition>,
     jxl_selected: 0,
     jxl_scroll: 0,
-    rq_array: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    rq_array: [
+      {key: '1', value: "周一"},
+      {key: '2', value: "周二"},
+      {key: '3', value: "周三"},
+      {key: '4', value: "周四"},
+      {key: '5', value: "周五"},
+      {key: '6', value: "周六"},
+      {key: '0', value: "周日"},
+    ],
     rq_selected: 0,
     rq_scroll: 0,
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
@@ -88,7 +96,7 @@ Page({
             method: 'POST',
             header: { 'Content-Type': 'application/x-www-form-urlencoded' },
             data: {
-                day: (this.data.rq_selected + 1) % 7,
+                day: this.data.rq_array[this.data.rq_selected].key,
                 jxl: this.data.jxl_array[this.data.jxl_selected].name,
                 dqjc: this.data.jc_selected + 1,
                 resultList: JSON.stringify(this.data.result),
@@ -205,7 +213,7 @@ Page({
     wx.request({
       url: `${app.globalData.server}/api/empty.json`,
       data: {
-        day: (this.data.rq_selected + 1) % 7,
+        day: this.data.rq_array[this.data.rq_selected].key,
         jxl: this.data.jxl_array[this.data.jxl_selected].name,
         dqjc: this.data.jc_selected + 1
       },
@@ -247,11 +255,14 @@ Page({
   /**
    * 隐藏用户反馈弹出层
    */
-  hideLayer(): void {
-    this.setData({
-      layer_display: false,
-      confirm_display: false,
-    })
+  hideLayer(e?: any): void {
+    let layer = e?.target.id == 'layer'
+    if (!layer) {
+      this.setData({
+        layer_display: false,
+        confirm_display: false,
+      })
+    }
   },
 
   onShareAppMessage() {

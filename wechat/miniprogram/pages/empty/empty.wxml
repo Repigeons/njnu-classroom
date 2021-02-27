@@ -1,11 +1,11 @@
 <!--pages/empty/empty.wxml-->
-<view class="page">
-  <view class="rp-pickers" bindtouchstart="hideLayer">
+<view class="page" bindtouchstart="hideLayer">
+  <view class="rp-pickers">
     <view class="rp-picker">
       <rp-picker list="{{jxl_array}}" key="name" selected="{{jxl_selected}}" scroll="{{jxl_scroll}}" bindchange="bindJxlChange" button="重新定位" bindbutton="dingwei" />
     </view>
     <view class="rp-picker">
-      <rp-picker list="{{rq_array}}" selected="{{rq_selected}}" scroll="{{rq_scroll}}" bindchange="bindRqChange" button="当前日期" bindbutton="dangqianriqi" />
+      <rp-picker list="{{rq_array}}" key="value" selected="{{rq_selected}}" scroll="{{rq_scroll}}" bindchange="bindRqChange" button="当前日期" bindbutton="dangqianriqi" />
     </view>
     <view class="rp-picker">
       <rp-picker list="{{jc_array}}" selected="{{jc_selected}}" scroll="{{jc_scroll}}" bindchange="bindJcChange" button="当前节次" bindbutton="dangqianjieci" />
@@ -15,16 +15,16 @@
   <view class="rp-result" wx:if="{{serve}}">
     <scroll-view class="rp-result__scrollview" scroll-y scroll-with-animation>
       <block wx:for="{{result}}" wx:key="key">
-        <rp-row zylxdm="{{item.zylxdm}}" jsmph="{{item.jsmph}}" skzws="{{item.SKZWS}}" jc_ks="{{item.jc_ks}}" jc_js="{{item.jc_js}}" bindlongpress="showLayer" data-index="{{index}}" bindtouchstart="hideLayer" />
+        <rp-row zylxdm="{{item.zylxdm}}" jsmph="{{item.jsmph}}" skzws="{{item.SKZWS}}" jc_ks="{{item.jc_ks}}" jc_js="{{item.jc_js}}" bindlongpress="showLayer" data-index="{{index}}" />
       </block>
       <view class="rp-result__desc">
         共发现 {{result.length}} 条结果，如果发现某一条目与事实情况不符，可长按相应条目提交错误。
       </view>
       <!-- feedback -->
-      <rp-layer class="rp-layer" wx:if="{{layer_display}}"
+      <rp-layer id="layer" class="rp-layer" wx:if="{{layer_display}}"
       buttons="{{layer_buttons}}" BackColor="#434343" ForeColor="#fff"
       style="top:{{11 + layer_index * 50}}px" />
-      <rp-layer class="rp-layer" wx:if="{{confirm_display}}"
+      <rp-layer id="layer" class="rp-layer" wx:if="{{confirm_display}}"
       buttons="{{confirm_buttons}}" BackColor="#434343" ForeColor="#fff"
       style="top:{{11 + layer_index * 50}}px" />
       <!-- feedback -->
