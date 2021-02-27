@@ -6,6 +6,12 @@ import { getJc } from '../../utils/util'
 
 Page({
   data: {
+    // 选择教室
+    classrooms: Object() as Record<string, Array<IJasInfo>>,
+    jxl_array: Array<string>(),
+    jxl_selected: 0,
+    jsmph_selected: 0,
+    // 布局
     cellHeight: 0,
     cellWidth: 0,
     leftBorder: 8,
@@ -19,16 +25,11 @@ Page({
       ['13:30', '14:10'], ['14:15', '14:55'], ['15:10', '15:50'], ['15:55', '16:35'],
       ['18:30', '19:10'], ['19:20', '20:00'], ['20:10', '20:50'],
     ],
-
-    classrooms: Object() as Record<string, Array<IJasInfo>>,
-    jxl_name_array: Array<string>(),
-    jxl_selected: 0,
-    jsmph_array: Array<string>(),
-    jsmph_selected: 0,
-    dialog: {},
-    closeDialog: [{text:"关闭"}],
+    // 结果集
     bar_list: Array<IClassroomRow>(),
     empty: true,
+    dialog: {},
+    closeDialog: [{text:"关闭"}],
   },
 
   /**
@@ -37,17 +38,17 @@ Page({
    */
   onLoad(options: Record<string, string>): void {
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
-    let cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
-    let cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
+    const cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
+    const cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
     this.setData({ cellHeight, cellWidth })
     app.getClassrooms().then(data => this.setData({
       classrooms: data,
-      jxl_name_array: Object.keys(data)
+      jxl_array: Object.keys(data)
     }))
 
     if (options.page == 'overview') {
-      const {JXLMC, JSMPH} = options
-      this.switchClassroom(JXLMC, JSMPH)
+      let {jxlmc, jsmph} = options
+      this.switchClassroom(jxlmc, jsmph)
     }
   },
 
@@ -56,8 +57,8 @@ Page({
     wx.getStorage({
       key: 'last_overview',
       success: res => {
-        let {jxl, js} = res.data
-        this.switchClassroom(jxl, js)
+        let {jxlmc, jsmph} = res.data
+        this.switchClassroom(jxlmc, jsmph)
       },
       fail: () => this.bindJxlChange({detail:{value:0}})
     })
@@ -66,39 +67,51 @@ Page({
   /**
    * 选择教学楼
    */
-  bindJxlChange(e: AnyObject): void {
-    const jxl_selected = +e.detail.value
-    const jxl = this.data.jxl_name_array[jxl_selected]
-    const list = this.data.classrooms[jxl]
-    let jsmph_array = []
-    for (let i=0; i< list.length; i++) {
-      jsmph_array.push(list[i]['JSMPH'])
-    }
-    this.setData({ jxl_selected, jsmph_array })
-    this.bindJsChange(0)
+  bindJxlChange(e: any): void {
+    this.setData({ jxl_selected: +e.detail.value })
+    this.bindJsChange({detail:{value:0}})
   },
 
   /**
    * 选择教室
    */
-  bindJsChange(e: AnyObject): void {
-    const jsmph_selected = (typeof e == 'number') ? e : +e.detail.value
+  bindJsChange(e: any): void {
+    let jsmph_selected = +e.detail.value,
+        jxlmc = this.data.jxl_array[this.data.jxl_selected],
+        jsmph = this.data.classrooms[jxlmc][jsmph_selected].JSMPH
     this.setData({ jsmph_selected })
     wx.setStorage({
       key: 'last_overview',
-      data: {
-        jxl: this.data.jxl_name_array[this.data.jxl_selected],
-        js: this.data.jsmph_array[this.data.jsmph_selected],
-      }
+      data: { jxlmc, jsmph }
     })
-    
+    this.submit()
+  },
+  
+  /**
+   * 前一个教室
+   */
+  bindFormer(): void {
+    let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
+        value = (this.data.jsmph_selected - 1 + jasList.length) % jasList.length
+    this.bindJsChange({detail:{value}})
+  },
+  /**
+   * 后一个教室
+   */
+  bindLatter(): void {
+    let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
+        value = (this.data.jsmph_selected + 1) % jasList.length
+    this.bindJsChange({detail:{value}})
+  },
+
+  submit() {
+    let jxlmc = this.data.jxl_array[this.data.jxl_selected],
+        jasdm = this.data.classrooms[jxlmc][this.data.jsmph_selected].JASDM
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
-      data: {
-        jasdm: this.data.classrooms[this.data.jxl_name_array[this.data.jxl_selected]][jsmph_selected]['JASDM']
-      },
+      data: { jasdm },
       success: res => {
-        let resData = res.data as Record<string, AnyObject>
+        let resData = res.data as Record<string, any>
         let bar_list = resData.data as Array<IClassroomRow>
         let kcmclimit = 0
         for (let i = 0; i < bar_list.length; i++) {
@@ -137,57 +150,41 @@ Page({
     })
   },
 
-  bindFormer(): void {
-    let value = (this.data.jsmph_selected - 1 + this.data.jsmph_array.length) % this.data.jsmph_array.length
-    this.bindJsChange(value)
-  },
-
-  bindLatter(): void {
-    let value = (this.data.jsmph_selected + 1) % this.data.jsmph_array.length
-    this.bindJsChange(value)
-  },
-
   /**
    * 显示详细信息
    */
-  showDialog(e: AnyObject): void {
+  showDialog(e: any): void {
     const rq_array = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
     const rq: string = rq_array[item.day]
     this.setData({dialog: item2dialog(item, rq)})
   },
-
   closeDialog(): void {
     this.setData({dialog: {}})
   },
 
-  switchClassroom(jxl: string, js: string): void {
-    let jsmph_array = [], jxl_selected = 0, jsmph_selected = 0
-    
-    for (let i=0; i<this.data.jxl_name_array.length; i++) {
-      if (this.data.jxl_name_array[i] == jxl) {
-        jxl_selected = i
-        break
-      }
-    }
-    let list = this.data.classrooms[this.data.jxl_name_array[jxl_selected]]
-    for (let i=0; i< list.length; i++) {
-      jsmph_array.push(list[i]['JSMPH'])
-      if (list[i]['JSMPH'] == js)
-        jsmph_selected = i
-    }
-    this.setData({ jxl_selected, jsmph_array })
-    this.bindJsChange(jsmph_selected)
+  switchClassroom(jxl: string, jsmph: string): void {
+    let jxl_selected = 0, jsmph_selected = 0
+    this.data.jxl_array.forEach((jxlmc, jxlIndex) => {
+      if (jxlmc == jxl) jxl_selected = jxlIndex
+    })
+    this.data.classrooms[jxl].forEach((jas, jsmphIndex) => {
+      if (jas.JSMPH == jsmph) jsmph_selected = jsmphIndex
+    })
+    this.setData({ jxl_selected, jsmph_selected })
+    this.submit()
   },
 
   onShareAppMessage() {
+    let jxlmc = this.data.jxl_array[this.data.jxl_selected],
+        jsmph = this.data.classrooms[jxlmc][this.data.jsmph_selected].JSMPH
     return {
       title: '教室概览',
       path: 'pages/overview/overview'
       + `?page=overview`
-      + `&JXLMC=${this.data.jxl_name_array[this.data.jxl_selected]}`
-      + `&JSMPH=${this.data.jsmph_array[this.data.jsmph_selected]}`,
+      + `&jxlmc=${jxlmc}`
+      + `&jsmph=${jsmph}`,
       image: 'images/logo.png'
     }
   }

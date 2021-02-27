@@ -15,6 +15,7 @@ App<IAppOption>({
 
   clearStorage(): void {
     const keys = [
+      "last_overview",
       "notice",
       md5(`${this.globalData.server}/static/classroom/position.json`),
       md5(`${this.globalData.server}/static/classroom/list.json`),
