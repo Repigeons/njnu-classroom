@@ -1,19 +1,19 @@
 /* components/empty-classroom/empty-classroom.wxss */
+
 .cell {
-  height: 18px;
-  line-height: 20px;
-  margin: 8px;
-  padding: 12px;
-  position: relative;
-  display: flex;
-  align-items: center;
-  position: relative;
-  background-color: #fff;
   border-radius: 16px;
+  background-color: #FFFFFF;
+  width:calc(100% - 40px);
+  height:16px; 
+  margin:8px;
+  padding:12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .cell_active {
-  background-color: #b8ced9;
+  background-color: #cee6f2;
 }
 
 .cell__bd {
