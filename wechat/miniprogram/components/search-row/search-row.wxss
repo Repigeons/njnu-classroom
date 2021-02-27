@@ -8,7 +8,7 @@
 }
 
 .cell_active {
-  background-color: #b8ced9;
+  background-color: #cee6f2;
 }
 
 .cell__hd {

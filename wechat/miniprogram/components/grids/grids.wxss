@@ -17,7 +17,7 @@
   margin: 4px;
 }
 .grid-hover {
-  background-color: #b8ced9;
+  background-color: #cee6f2;
 }
 
 .grid__icon {
