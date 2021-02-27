@@ -4,13 +4,17 @@
 }
 
 .rp-search__pickers {
-  margin: 8px 12px;
+  margin: 8px;
   border-radius: 8px;
   overflow: hidden;
 }
 
 .rp-search__picker {
-  margin-top: 1px;
+  margin-bottom: 1px;
+  background-color: #fff;
+}
+
+.rp-search__lastpicker{
   background-color: #fff;
 }
 
@@ -25,6 +29,7 @@
   text-align: center;
   margin: 0 4px;
   z-index: 2;
+  font-weight: 400;
 }
 
 .rp-search__picker_cell__bd {

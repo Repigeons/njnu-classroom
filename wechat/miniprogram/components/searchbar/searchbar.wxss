@@ -5,17 +5,16 @@
   align-items: center;
   justify-content: center;
   height: 36px;
-  padding: 0 12px;
+  padding: 0 8px;
 }
 
 .searchbar__box {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   flex-grow: 1;
   height: 100%;
-  margin: 0 4px;
   padding: 0 8px;
   border-radius: 8px;
   background-color: #fff;
@@ -45,6 +44,6 @@
 
 .searchbar__label {
   position: relative;
-  color: #666;
+  color: #576B95;
   margin-left: 8px;
 }

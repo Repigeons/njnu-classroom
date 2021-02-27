@@ -15,7 +15,7 @@
         <view class="rp-search__picker_cell__hd">至</view>
         <rp-picker class="rp-search__picker_cell__bd"list="{{jc_array}}" selected="{{jc_js_selected}}" scroll="{{jc_js_selected}}" bindchange="bindJcChange" data-jc="js" />
       </view>
-      <view class="rp-search__picker">
+      <view class=".rp-search__lastpicker">
         <rp-picker list="{{zylxdm_array}}" key="value" selected="{{zylxdm_selected}}" bindchange="bindZylxChange" />
       </view>
     </view>
