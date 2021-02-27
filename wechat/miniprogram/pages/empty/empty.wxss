@@ -6,8 +6,8 @@
 .rp-result {
   position: absolute;
   text-align: left;
-  top: 136px;
-  height: calc(100% - 136px);
+  top: 135px;
+  height: calc(100% - 135px);
   width: 100%;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .rp-result__desc {
-  padding: 0 16px 4px;
+  padding: 0 16px 8px;
   font-size: 14px;
   color: rgba(0,0,0,.5);
 }
