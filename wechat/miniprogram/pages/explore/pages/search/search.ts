@@ -1,5 +1,5 @@
 // miniprogram/pages/explore/pages/search/search.js
-import { parseKcm } from "../../../../utils/parser"
+import { item2dialog, parseKcm } from "../../../../utils/parser"
 // 获取应用实例
 const app = getApp<IAppOption>()
 const perPage = 50
@@ -31,7 +31,13 @@ Page({
     jc_ks_selected: 0,
     jc_js_selected: 11,
     zylxdm_array: Array<KeyValue>(),
-    zylxdm_selected: 0
+    zylxdm_selected: 0,
+    // 结果
+    serve: true,
+    result: Array<IClassroomRow>(),
+    results: Array<IClassroomRow>(),
+    dialog: {},
+    closeDialog: [{text:"关闭"}],
   },
 
   /**
@@ -106,10 +112,9 @@ Page({
             data[i].dayIndex = data[i].day + 1
           }
           this.setData({
-            service: resData.service,
-            search_result: data,
-            result_size: data.length,
-            display_list: data.slice(0, perPage),
+            serve: resData.service == 'on',
+            results: data,
+            result: data.slice(0, perPage),
             showResult: true,
           })
         },
@@ -119,14 +124,27 @@ Page({
         }
       })
     }
-
-    this.setData({
-      showSearch: false,
-      showResult: true,
-    })
-    wx.showToast({ title: `搜索关键词：`+this.data.keyword })
   },
 
+  onReachBottom() {
+    let {result, results} = this.data
+    this.setData({
+      result: result.concat(results.slice(result.length, result.length + perPage))
+    })
+  },
+
+  /**
+    * 显示详细信息
+    */
+   showDialog(e: AnyObject): void {
+    let index: number = e.currentTarget.dataset.index,
+        item = this.data.result[index],
+        rq = this.data.rq_array[item.dayIndex].value
+    this.setData({dialog: item2dialog(item, rq)})
+  },
+  closeDialog(): void {
+    this.setData({dialog: {}})
+  },
   onShareAppMessage() {
     return {
       title: '更多搜索',

@@ -21,4 +21,30 @@
       </view>
     </view>
   </view>
+
+  <view class="rp-tip" wx:if="{{!showResult}}">
+    <text>Tips：</text>
+    <text decode="true">
+      使用更多搜索，可以方便地根据课程或活动名称查到其所在的教室以及时间，支持通过筛选缩小搜索范围。点击上方搜索栏开始搜索。\n\n例1：基础英语\n例2：团日活动
+    </text>
+  </view>
+
+  <view class="rp-result" wx:if="{{showResult}}">
+    <scroll-view class="rp-result__scrollview" scroll-y bindscrolltolower="onReachBottom" wx:if="{{serve}}">
+      <block wx:for="{{result}}" wx:key="key">
+        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.jxl}}{{item.jsmph}}&emsp;{{rq_array[item.dayIndex].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
+      </block>
+    </scroll-view>
+    <view class="rp-result__desc" wx:else>
+      本学期已经结束，南师教室也放假啦~~~
+    </view>
+  </view>
 </view>
+
+<mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
+  <view style="text-align:left">
+    <block wx:for="{{dialog.detail}}" wx:key="key">
+      <view>{{item.field}}：{{item.value}}</view>
+    </block>
+  </view>
+</mp-dialog>
