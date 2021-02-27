@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   height: 36px;
-  padding: 12px;
+  padding: 0 12px;
 }
 
 .searchbar__box {
