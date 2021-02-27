@@ -86,7 +86,7 @@ App<IAppOption>({
         url: `${this.globalData.server}/static/classroom/position.json`,
         request
       })
-      .then (data=>resolve(data as Array<IPosition>))
+      .then (data => resolve(data as Array<IPosition>))
       .catch(reject)
     })
   },
@@ -97,18 +97,18 @@ App<IAppOption>({
         url: `${this.globalData.server}/static/classroom/list.json`,
         request
       })
-      .then (data=>resolve(data as Record<string, Array<IJasInfo>>))
+      .then (data => resolve(data as Record<string, Array<IJasInfo>>))
       .catch(reject)
     })
   },
   
-  getZylxdm(request: boolean): Promise<Record<string, string>> {
+  getZylxdm(request: boolean): Promise<Array<KeyValue>> {
     return new Promise((resolve, reject) => {
       this._getCache({
         url: `${this.globalData.server}/static/classroom/zylxdm.json`,
         request
       })
-      .then (data=>resolve(data as Record<string, string>))
+      .then (data => resolve(data as Array<KeyValue>))
       .catch(reject)
     })
   },
@@ -119,7 +119,7 @@ App<IAppOption>({
         url: `${this.globalData.server}/static/explore/grids.json`,
         request
       })
-      .then (data=>resolve(data as Array<IGrid>))
+      .then (data => resolve(data as Array<IGrid>))
       .catch(reject)
     })
   },
@@ -130,7 +130,7 @@ App<IAppOption>({
         url: `${this.globalData.server}/explore/shuttle.json`,
         request
       })
-      .then (data=>resolve(data as IShuttle))
+      .then (data => resolve(data as IShuttle))
       .catch(reject)
     })
   },

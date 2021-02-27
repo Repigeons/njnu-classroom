@@ -10,7 +10,7 @@ interface IAppOption {
   getNotice(): Promise<INotice>
   getJxlPosition(request?: boolean): Promise<Array<IPosition>>
   getClassrooms(request?: boolean): Promise<Record<string, Array<IJasInfo>>>
-  getZylxdm(request?: boolean): Promise<Record<string, string>>
+  getZylxdm(request?: boolean): Promise<Array<KeyValue>>
   getExploreGrids(request?: boolean): Promise<Array<IGrid>>
   getShuttle(request?: boolean): Promise<IShuttle>
 }
