@@ -11,9 +11,8 @@
         <rp-picker list="{{rq_array}}" key="value" selected="{{rq_selected}}" bindchange="bindRqChange" />
       </view>
       <view class="rp-search__picker rp-search__picker_cells">
-        <view class="rp-search__picker_cell__hd">从</view>
         <rp-picker class="rp-search__picker_cell__bd" list="{{jc_array}}" selected="{{jc_ks_selected}}" scroll="{{jc_ks_selected}}" bindchange="bindJcChange" data-jc="ks" />
-        <view class="rp-search__picker_cell__hd">到</view>
+        <view class="rp-search__picker_cell__hd">至</view>
         <rp-picker class="rp-search__picker_cell__bd"list="{{jc_array}}" selected="{{jc_js_selected}}" scroll="{{jc_js_selected}}" bindchange="bindJcChange" data-jc="js" />
       </view>
       <view class="rp-search__picker">

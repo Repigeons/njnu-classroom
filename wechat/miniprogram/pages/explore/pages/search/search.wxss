@@ -16,7 +16,6 @@
 
 .rp-search__picker_cells {
   display: flex;
-  padding-left: 8px;
 }
 
 .rp-search__picker_cell__hd {
@@ -24,8 +23,7 @@
   height: 44px;
   line-height: 44px;
   text-align: center;
-  margin-left: 8px;
-  margin-right: -4px;
+  margin: 0 4px;
   z-index: 2;
 }
 
