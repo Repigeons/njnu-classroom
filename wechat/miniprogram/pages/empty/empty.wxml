@@ -31,7 +31,7 @@
     </scroll-view>
   </view>
   <view class="rp-result" wx:else>
-    <view class="rp-result__title">
+    <view class="rp-result__desc">
       本学期已经结束，南师教室也放假啦~~~
     </view>
   </view>
