@@ -93,20 +93,20 @@ def get_cookie_dict() -> dict:
     else:
         raise Exception(f"Unresolved selenium driver `{driver}`")
 
-    browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
+    try:
+        browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
 
-    browser.switch_to.default_content()
-    text1 = browser.find_element_by_id("username")  # 账号
-    text1.send_keys(username)
-    text2 = browser.find_element_by_id("password")  # 密码
-    text2.send_keys(password)
-    browser.find_element_by_class_name("auth_login_btn").click()  # 登录按钮
+        browser.switch_to.default_content()
+        browser.find_element_by_id("username").send_keys(username)
+        browser.find_element_by_id("password").send_keys(password)
+        browser.find_element_by_id("login_submit1").click()  # 登录按钮
 
-    cookie = {item['name']: item['value'] for item in browser.get_cookies()}
-    browser.close()
-    browser.quit()
+        cookie = {item['name']: item['value'] for item in browser.get_cookies()}
 
-    return {
-        'MOD_AUTH_CAS': cookie['MOD_AUTH_CAS'],
-        '_WEU': cookie['_WEU']
-    }
+        return {
+            'MOD_AUTH_CAS': cookie['MOD_AUTH_CAS'],
+            '_WEU': cookie['_WEU']
+        }
+    finally:
+        browser.close()
+        browser.quit()
