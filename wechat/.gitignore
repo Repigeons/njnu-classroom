@@ -12,7 +12,6 @@ $RECYCLE.BIN/
 
 # Node.js
 node_modules/
-package-lock.json
 miniprogram_npm/
 
 # TypeScript
