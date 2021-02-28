@@ -165,7 +165,7 @@ Page({
    * 将选择的日期设为当天
    */
   dangqianriqi(): void {
-    let rq = new Date().getDay()
+    let rq = (new Date().getDay() + 6) % 7
     this.setData({
       rq_selected: rq,
       rq_scroll: rq,
