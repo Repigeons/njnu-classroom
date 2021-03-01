@@ -5,9 +5,9 @@ import {getDistance} from '../../../../utils/util'
 
 Page({
   data: {
-    selectedStation: 0,
+    station_selected: 0,
     stations_display: Array<string>(),
-    stations: Array<IShuttleStation>(),
+    stations: Array<IPosition>(),
     routes: Array<IShuttleRoute>(),
     direction1: Array<IShuttleRoute>(),
     direction2: Array<IShuttleRoute>(),
@@ -22,11 +22,9 @@ Page({
   
   onShow() {
     app.getShuttle().then((data: IShuttle) => {
-      this.setData(data)
       let name2index: Record<string, number> = {}
-      for (let stationIndex = 0; stationIndex < data.stations.length; stationIndex++) {
-        name2index[data.stations[stationIndex][0]] = stationIndex
-      }
+      data.stations.forEach((station, index) => name2index[station.name] = index)
+      this.setData(data)
       this.setData({ name2index })
 
       wx.getLocation({
@@ -35,23 +33,23 @@ Page({
           let stations_display: Array<string> = [],
               stationDistance: Array<number> = [],
               nearestStation: Array<{name:string, distance:number}> = []
-          for (let stationIndex = 0; stationIndex < this.data.stations.length; stationIndex++) {
-            let element = this.data.stations[stationIndex]
+          this.data.stations.forEach((station) => {
+            console.log(station)
             let distance = Math.floor(getDistance({
-              latitude1: element[1],
-              longitude1: element[2],
+              latitude1: station.position[0],
+              longitude1: station.position[1],
               longitude2: res.longitude,
               latitude2: res.latitude,
             }))
-            nearestStation.push({ name: element[0], distance })
+            nearestStation.push({ name: station.name, distance })
             stationDistance.push(distance)
-            stations_display.push(element[0])
-          }
-          nearestStation.sort((a,b)=>a.distance-b.distance)
+            stations_display.push(station.name)
+          })
+          nearestStation.sort((a,b) => a.distance - b.distance)
           for (let index = 0; index < stations_display.length; index++) {
             if (stations_display[index] == nearestStation[0].name) {
               stations_display[index] += this.data.nearestHint
-              this.setData({ selectedStation: index })
+              this.setData({ station_selected: index })
               break
             }
           }
@@ -69,12 +67,12 @@ Page({
     }
     if (!this.data.direction) {
       this.setData({
-        terminus: this.data.stations[this.data.stations.length-1][0],
+        terminus: this.data.stations[this.data.stations.length-1].name,
         routes: this.data.direction1
       })
     } else {
       this.setData({
-        terminus: this.data.stations[0][0],
+        terminus: this.data.stations[0].name,
         routes: this.data.direction2
       })
     }
@@ -92,7 +90,7 @@ Page({
   },
 
   bindStationChange(e: AnyObject): void {
-    this.setData({ selectedStation: +e.detail.value })
+    this.setData({ station_selected: +e.detail.value })
   },
 
   onShareAppMessage() {

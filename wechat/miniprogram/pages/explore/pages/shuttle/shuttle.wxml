@@ -3,13 +3,13 @@
   <!-- 站点信息（固定） -->
   <view class="rp-topbox">
     <view class="rp-topbox-button__left">
-      <picker range="{{stations_display}}" value="{{selectedStation}}" bindchange="bindStationChange">
+      <picker range="{{stations_display}}" value="{{station_selected}}" bindchange="bindStationChange">
         <view class="rp-topbox-title">
-          {{stations[selectedStation][0]}}
+          {{stations[station_selected].name}}
         </view>
         <view class="rp-topbox-distance">
-          距我{{stationDistance[selectedStation]}}米
-          <block wx:if="{{stations_display[selectedStation]==stations[selectedStation][0]+nearestHint}}">（最近）</block>
+          距我{{stationDistance[station_selected]}}米
+          <block wx:if="{{stations_display[station_selected]==stations[station_selected].name+nearestHint}}">（最近）</block>
         </view>
       </picker>
     </view>
@@ -33,7 +33,7 @@
     <scroll-view class="rp-scrollzone__scrollview" scroll-y="true" scroll-into-view="{{scrollId}}" scroll-with-animation>
       <block wx:for="{{routes}}" wx:key="key">
         <rp-row id="row{{index}}" time="{{item[0]}}" from="{{item[1]}}" to="{{item[2]}}"
-        via="{{(selectedStation >= name2index[item[1]] && selectedStation <= name2index[item[2]]) || (selectedStation >= name2index[item[2]] && selectedStation <= name2index[item[1]])}}" />
+        via="{{(station_selected >= name2index[item[1]] && station_selected <= name2index[item[2]]) || (station_selected >= name2index[item[2]] && station_selected <= name2index[item[1]])}}" />
       </block>
     </scroll-view>
   </view>
