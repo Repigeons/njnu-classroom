@@ -19,7 +19,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         // 行政班
         XZB: kcxx[4] ? kcxx[4] : '',
         // 
-        title: kcxx[2] ? kcxx[2] : '',
+        title: kcxx[2] ? kcxx[2] : '未知',
       }
       break
     case '02':
@@ -50,7 +50,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         // 
         PKLY: pklysz['04'],
         // 
-        title: kcxx[4] ? kcxx[4] : '',
+        title: kcxx[4] ? kcxx[4] : '未知',
       }
       break
     case '05':
@@ -83,7 +83,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         // 
         PKLY: pklysz[kcxx[7]],
         // 
-        title: kcxx[0] ? kcxx[0] : '',
+        title: kcxx[0] ? kcxx[0] : '未知',
       }
       break
     default:
