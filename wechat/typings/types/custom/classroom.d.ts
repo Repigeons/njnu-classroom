@@ -1,13 +1,3 @@
-interface IPosition {
-  readonly name: string
-  readonly positon: {
-    readonly 0: number
-    readonly 1: number
-  }
-}
-
-interface IJxlPosition extends Record<string, Array<number>> {}
-
 interface IJasInfo {
   readonly JXLMC: string
   readonly JSMPH: string
