@@ -43,7 +43,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (/*options*/) {
+  onLoad: function (options) {
     app.getClassrooms().then(data => {
       let jxl_array = this.data.jxl_array
       Object.keys(data).forEach(jxlmc => {
@@ -52,6 +52,19 @@ Page({
       this.setData({ jxl_array })
     })
     app.getZylxdm().then(zylxdm_array => this.setData({ zylxdm_array }))
+
+    if (options.page === "search") {
+      let {keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected} = options
+      this.setData({
+        keyword,
+        jxl_selected: Number(jxl_selected),
+        rq_selected: Number(rq_selected),
+        jc_ks_selected: Number(jc_ks_selected),
+        jc_js_selected: Number(jc_js_selected),
+        zylxdm_selected: Number(zylxdm_selected),
+      })
+      this.submit()
+    }
   },
 
   onFocus(): void {
@@ -88,7 +101,7 @@ Page({
     this.setData({ zylxdm_selected: e.detail.value })
   },
 
-  onSearch() {
+  submit() {
     this.setData({ showSearch: false })
     if (this.data.keyword) {
       wx.request({
@@ -149,15 +162,14 @@ Page({
     return {
       title: '更多搜索',
       path: 'pages/explore/pages/search/search'
-      // + `?page=search`
-      // + `&keyword=${this.data.keyword}`
-      // + `&rq_selected=${this.data.rq_selected}`
-      // + `&jc_ks_selected=${this.data.jc_ks_selected}`
-      // + `&jc_js_selected=${this.data.jc_js_selected}`
-      // + `&jxl_selected=${this.data.jxl_selected}`
-      // + `&lx_selected=${this.data.lx_selected}`
-      // + `&showSearch=${this.data.showSearch}`,
-      // image: 'images/logo.png'
+      + `?page=search`
+      + `&keyword=${this.data.keyword}`
+      + `&jxl_selected=${this.data.jxl_selected}`
+      + `&rq_selected=${this.data.rq_selected}`
+      + `&jc_ks_selected=${this.data.jc_ks_selected}`
+      + `&jc_js_selected=${this.data.jc_js_selected}`
+      + `&zylxdm_selected=${this.data.zylxdm_selected}`,
+      image: 'images/logo.png'
     }
   }
 })

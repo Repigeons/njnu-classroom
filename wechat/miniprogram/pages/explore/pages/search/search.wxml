@@ -2,7 +2,7 @@
 <view class="page">
   <view class="rp-search">
     <rp-searchbar placeholder="搜索课程/活动" focus="{{showSearch}}" value="{{keyword}}"
-      bindfocus="onFocus" bindinput="onInput" bindsearch="onSearch" />
+      bindfocus="onFocus" bindinput="onInput" bindsearch="submit" />
     <view class="rp-search__pickers" wx:if="{{showSearch}}">
       <view class="rp-search__picker">
         <rp-picker list="{{jxl_array}}" key="value" selected="{{jxl_selected}}" bindchange="bindJxlChange" />
