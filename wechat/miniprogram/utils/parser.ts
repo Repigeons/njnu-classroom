@@ -9,17 +9,17 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
       return {
         KCZYFLAG: true,
         // 开课单位
-        KKDW: kcxx[0],
+        KKDW: kcxx[0] ? kcxx[0] : '',
         // 上课教师
-        SKJS: kcxx[1],
+        SKJS: kcxx[1] ? kcxx[1] : '',
         // 课程名称
-        KCMC: kcxx[2],
+        KCMC: kcxx[2] ? kcxx[2] : '',
         // 选课人数
-        XKRS: +kcxx[3],
+        XKRS: kcxx[3] ? +kcxx[3] : 0,
         // 行政班
-        XZB: kcxx[4],
+        XZB: kcxx[4] ? kcxx[4] : '',
         // 
-        title: kcxx[2],
+        title: kcxx[2] ? kcxx[2] : '',
       }
       break
     case '02':
@@ -38,19 +38,19 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
       return {
         PTJYZYFLAG: true,
         // 借用单位
-        JYDW: kcxx[0],
+        JYDW: kcxx[0] ? kcxx[0] : '',
         // 借用人姓名
-        JYRXM: kcxx[1],
+        JYRXM: kcxx[1] ? kcxx[1] : '',
         // 负责老师
-        FZLS: kcxx[2],
+        FZLS: kcxx[2] ? kcxx[2] : '',
         // 联系人电话
-        LXDH: kcxx[3],
+        LXDH: kcxx[3] ? kcxx[3] : '',
         // 借用说明
-        JYYTMS: kcxx[4],
+        JYYTMS: kcxx[4] ? kcxx[4] : '',
         // 
         PKLY: pklysz['04'],
         // 
-        title: kcxx[4],
+        title: kcxx[4] ? kcxx[4] : '',
       }
       break
     case '05':
@@ -67,23 +67,23 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
       return {
         FBKSPKZYFLAG: true,
         // 课程名称
-        KCMC: kcxx[0],
+        KCMC: kcxx[0] ? kcxx[0] : '',
         // 上课教师
-        SKJS: kcxx[1],
+        SKJS: kcxx[1] ? kcxx[1] : '',
         // 上课人数
-        SKRS: kcxx[2],
+        SKRS: kcxx[2] ? +kcxx[2] : 0,
         // 借用单位
-        JYDW: kcxx[3],
+        JYDW: kcxx[3] ? kcxx[3] : '',
         // 借用人姓名
-        JYRXM: kcxx[4],
+        JYRXM: kcxx[4] ? kcxx[4] : '',
         // 负责老师
-        FZLS: kcxx[5],
+        FZLS: kcxx[5] ? kcxx[5] : '',
         // 联系电话
-        LXDH: kcxx[6],
+        LXDH: kcxx[6] ? kcxx[6] : '',
         // 
         PKLY: pklysz[kcxx[7]],
         // 
-        title: kcxx[0]
+        title: kcxx[0] ? kcxx[0] : '',
       }
       break
     default:

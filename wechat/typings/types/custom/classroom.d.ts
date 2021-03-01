@@ -72,7 +72,7 @@ interface IClassroomInfo extends Record<string, any> {
   /**
    * 上课人数
    */
-  SKRS?: string,
+  SKRS?: number,
   /**
    * 
    */
