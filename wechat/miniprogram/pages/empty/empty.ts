@@ -105,8 +105,8 @@ Page({
         let minDistance: number = 0xffffffff
         for (let jxlIndex = 0; jxlIndex < this.data.jxl_array.length; jxlIndex++) {
           let distance: number = getDistance({
-            latitude1: this.data.jxl_array[jxlIndex].positon[0],
-            longitude1: this.data.jxl_array[jxlIndex].positon[1],
+            latitude1: this.data.jxl_array[jxlIndex].position[0],
+            longitude1: this.data.jxl_array[jxlIndex].position[1],
             longitude2: res.longitude,
             latitude2: res.latitude,
           })
