@@ -101,23 +101,23 @@ Page({
     wx.getLocation({
       type: 'gcj02',
       success: res => {
-        let minId: number = 0
+        let minIndex: number = 0
         let minDistance: number = 0xffffffff
-        for (let jxlIndex = 0; jxlIndex < this.data.jxl_array.length; jxlIndex++) {
+        this.data.jxl_array.forEach((jxl, index) => {
           let distance: number = getDistance({
-            latitude1: this.data.jxl_array[jxlIndex].position[0],
-            longitude1: this.data.jxl_array[jxlIndex].position[1],
+            latitude1: jxl.position[0],
+            longitude1: jxl.position[1],
             longitude2: res.longitude,
             latitude2: res.latitude,
           })
           if (minDistance > distance) {
             minDistance = distance
-            minId = jxlIndex
+            minIndex = index
           }
-        }
+        })
         this.setData({
-          jxl_selected: minId,
-          jxl_scroll: minId,
+          jxl_selected: minIndex,
+          jxl_scroll: minIndex,
         })
         this.submit()
       },

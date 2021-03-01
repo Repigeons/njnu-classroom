@@ -33,7 +33,7 @@ Page({
           let stations_display: Array<string> = [],
               stationDistance: Array<number> = [],
               nearestStation: Array<{name:string, distance:number}> = []
-          this.data.stations.forEach((station) => {
+          this.data.stations.forEach(station => {
             console.log(station)
             let distance = Math.floor(getDistance({
               latitude1: station.position[0],
@@ -77,7 +77,7 @@ Page({
       })
     }
     // 滚动到最近位置
-    let now = new Date(),scrollIndex = this.data.routes.length - 1
+    let now = new Date(), scrollIndex = this.data.routes.length - 1
     while (scrollIndex > 0) {
       let deltaTime = Date.parse(`0 ${this.data.routes[scrollIndex][0]}`) - Date.parse(`0 ${now.getHours()}:${now.getMinutes()}`)
       deltaTime = deltaTime / 1000 / 60
