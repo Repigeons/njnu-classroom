@@ -73,7 +73,10 @@ def __init__shuttle(config: dict) -> None:
     with open(config['resource'], encoding='utf8') as f:
         stream = f.read().split('\n\n')
         f.close()
-    stations = [[sp[0], float(sp[1]), float(sp[2])] for sp in [station.split('|') for station in stream[0].split(',')]]
+    stations = [
+        {'name': sp[0], 'position': [float(sp[1]), float(sp[2])]}
+        for sp in [station.split('|') for station in stream[0].split(',')]
+    ]
     direction1 = [
         line.split(',')
         for line in stream[1].split()
