@@ -33,31 +33,34 @@ def route_feedback():
 
 
 def backend_process(request_args: dict):
-    request_args['resultList'] = json.loads(request_args['resultList'])
-    request_args['index'] = int(request_args['index'])
-    request_args['item'] = request_args['resultList'][request_args['index']]
-    request_args['id'] = request_args['item']['id']
-    jc, day = request_args['dqjc'], int(request_args['day'])
-    jxl = request_args['item']['JXLMC']
-    jsmph = request_args['item']['jsmph']
-    jasdm = request_args['item']['JASDM']
-    zylxdm = request_args['item']['zylxdm']
     try:
-        if check_with_ehall(jasdm=jasdm, day=day, jc=jc, zylxdm=zylxdm):
+        jc: int = request_args['jc']
+        results: list = json.loads(request_args['results'])
+        index: int = int(request_args['index'])
+        item: dict = results[index]
+        jxl, jsmph, jasdm, = item['JXLMC'], item['jsmph'], item['JASDM']
+        id_, day, zylxdm = item['id'], item['day'], item['zylxdm']
+        obj = {
+            'jc': jc,
+            'item': item,
+            'index': index,
+            'results': results,
+        }
 
+        if check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
             if zylxdm == '00':
-                week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=jc)
+                week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
                 send_email(
                     subject=f"南师教室：用户反馈 "
                             f"{jxl} "
                             f"{jsmph}教室 "
-                            f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致\n"
                             f"上报计数：{total_count}\n"
                             f"本周计数：{week_count}\n"
                             f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
-                            f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+                            f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
                 )
 
             else:
@@ -65,11 +68,11 @@ def backend_process(request_args: dict):
                     subject=f"南师教室：用户反馈 "
                             f"{jxl} "
                             f"{jsmph}教室 "
-                            f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致（非空教室）\n"
                             f"操作方案：None"
-                            f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+                            f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
                 )
 
         else:
@@ -82,11 +85,11 @@ def backend_process(request_args: dict):
                 subject=f"南师教室：用户反馈 "
                         f"{jxl} "
                         f"{jsmph}教室 "
-                        f"{request_args['item']['jc_ks']}-{request_args['item']['jc_js']}节有误 "
+                        f"{item['jc_ks']}-{item['jc_js']}节有误 "
                         f"（当前为第{jc}节）",
                 message=f"验证一站式平台：数据不一致\n"
                         f"操作方案：更新数据库\n"
-                        f"反馈数据详情：{json.dumps(request_args, ensure_ascii=False, indent=2)}\n"
+                        f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
             )
 
     except Exception as e:

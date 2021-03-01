@@ -72,7 +72,7 @@ def handler(args: dict) -> dict:
         if classroom['jc_ks'] <= dqjc <= classroom['jc_js']:
             classrooms.append(classroom)
     for i in range(len(classrooms)):
-        classrooms[i]['id'] = classrooms[i]['rank'] = i + 1
+        classrooms[i]['id'] = i + 1
 
     return {
         'status': 0,

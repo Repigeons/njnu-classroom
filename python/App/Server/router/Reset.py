@@ -77,25 +77,11 @@ def reset_empty():
                 key=f"{jxlmc}_{day}",
                 value=json.dumps([
                     {
-                        'jasdm': row.JASDM,
-                        'JASDM': row.JASDM,
-
-                        'jxl': row.JXLMC,
-                        'JXLMC': row.JXLMC,
-
-                        'classroom': row.jsmph,
-                        'jsmph': row.jsmph,
-
-                        'capacity': row.SKZWS,
-                        'SKZWS': row.SKZWS,
-
-                        'day': Context.day_mapper[row.day],
-                        'jc_ks': row.jc_ks,
-                        'jc_js': row.jc_js,
-
-                        'zylxdm': row.zylxdm,
-                        'jyytms': row.jyytms,
-                        'kcm': row.kcm,
+                        'jsmph': row.jsmph,  # 教室门牌号
+                        'SKZWS': row.SKZWS,  # 上课座位数
+                        'jc_ks': row.jc_ks,  # 开始节次
+                        'jc_js': row.jc_js,  # 结束节次
+                        'zylxdm': row.zylxdm,  # 资源类型代码
                     } for row in cursor.fetchall()
                 ])
             )
