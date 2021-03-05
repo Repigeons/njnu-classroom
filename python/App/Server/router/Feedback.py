@@ -9,6 +9,7 @@ import json
 import logging
 from multiprocessing import Process
 
+import mariadb
 import requests
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
@@ -131,45 +132,57 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
     connection, cursor = Context.mysql.get_connection_cursor()
-    cursor.execute(
-        "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
-        {
-            'jasdm': jasdm,
-            'jc': jc,
-            'day': day
-        }
-    )
-    cursor.execute(
-        "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
-        "FROM `feedback_metadata` "
-        "WHERE `JASDM`=%(jasdm)s "
-        "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
-        "AND `jc`=%(jc)s "
-        "GROUP BY `date` "
-        "ORDER BY `date`",
-        {
-            'jasdm': jasdm,
-            'jc': jc,
-            'day': day
-        }
-    )
+    try:
+        cursor.execute(
+            "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
+            {
+                'jasdm': jasdm,
+                'jc': jc,
+                'day': day
+            }
+        )
+    except mariadb.Error as e:
+        cursor.close(), connection.close()
+        raise e
+    try:
+        cursor.execute(
+            "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
+            "FROM `feedback_metadata` "
+            "WHERE `JASDM`=%(jasdm)s "
+            "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
+            "AND `jc`=%(jc)s "
+            "GROUP BY `date` "
+            "ORDER BY `date`",
+            {
+                'jasdm': jasdm,
+                'jc': jc,
+                'day': day
+            }
+        )
+    except mariadb.Error as e:
+        cursor.close(), connection.close()
+        raise e
     statistic = cursor.fetchall()
     week_count = statistic[-1].count
     total_count = sum([row.count for row in statistic])
     if week_count != total_count:
-        cursor.execute(
-            "INSERT INTO `correction` ("
-            "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
-            ") VALUES ("
-            "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
-            ")",
-            {
-                'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
-                'JXLMC': jxl,
-                'jsmph': jsmph,
-                'JASDM': jasdm,
-                'jc': jc
-            }
-        )
+        try:
+            cursor.execute(
+                "INSERT INTO `correction` ("
+                "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
+                ") VALUES ("
+                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
+                ")",
+                {
+                    'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
+                    'JXLMC': jxl,
+                    'jsmph': jsmph,
+                    'JASDM': jasdm,
+                    'jc': jc
+                }
+            )
+        except mariadb.Error as e:
+            cursor.close(), connection.close()
+            raise e
     cursor.close(), connection.close()
     return week_count, total_count

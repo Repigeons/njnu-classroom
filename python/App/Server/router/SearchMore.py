@@ -7,6 +7,7 @@
 """"""
 import logging
 
+import mariadb
 from flask import current_app as app, request, jsonify
 
 import App.Server._ApplicationContext as Context
@@ -70,7 +71,11 @@ def handler(args: dict) -> dict:
     args['keyword'] = f"%{args['kcm']}%"
 
     connection, cursor = Context.mysql.get_connection_cursor()
-    cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
+    try:
+        cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
+    except mariadb.Error as e:
+        cursor.close(), connection.close()
+        raise e
     result = [
         {
             'jasdm': row.JASDM,

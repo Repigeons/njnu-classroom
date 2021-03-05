@@ -9,6 +9,7 @@ import json
 import logging
 from threading import Thread
 
+import mariadb
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
@@ -62,16 +63,24 @@ def reset():
 def reset_empty():
     redis = StrictRedis(connection_pool=Context.redis_pool)
     connection, cursor = Context.mysql.get_connection_cursor()
-    cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
+    try:
+        cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
+    except mariadb.Error as e:
+        cursor.close(), connection.close()
+        raise e
     for jxl in cursor.fetchall():
         jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
-            cursor.execute(
-                "SELECT * FROM `pro` "
-                "WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `SFYXZX` "
-                "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
-                {'JXLMC': jxlmc, 'day': Context.day_mapper[day]}
-            )
+            try:
+                cursor.execute(
+                    "SELECT * FROM `pro` "
+                    "WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `SFYXZX` "
+                    "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
+                    {'JXLMC': jxlmc, 'day': Context.day_mapper[day]}
+                )
+            except mariadb.Error as e:
+                cursor.close(), connection.close()
+                raise e
             redis.hset(
                 name="Empty",
                 key=f"{jxlmc}_{day}",
@@ -91,9 +100,17 @@ def reset_empty():
 def reset_overview():
     redis = StrictRedis(connection_pool=Context.redis_pool)
     connection, cursor = Context.mysql.get_connection_cursor()
-    cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
+    try:
+        cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
+    except mariadb.Error as e:
+        cursor.close(), connection.close()
+        raise e
     for jas in cursor.fetchall():
-        cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
+        try:
+            cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
+        except mariadb.Error as e:
+            cursor.close(), connection.close()
+            raise e
         redis.hset(
             name="Overview",
             key=jas.JASDM,
