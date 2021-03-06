@@ -9,13 +9,12 @@ import json
 import logging
 from threading import Thread
 
-import mariadb
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from App.Server._ApplicationContext import send_email, mysql_reset as mysql
 
 
 @app.route('/reset', methods=['POST'])
@@ -62,15 +61,16 @@ def reset():
 
 def reset_empty():
     redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
-    except mariadb.Error as e:
+        jxl_list = cursor.fetchall()
+    finally:
         cursor.close(), connection.close()
-        raise e
-    for jxl in cursor.fetchall():
+    for jxl in jxl_list:
         jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
+            connection, cursor = mysql.get_connection_cursor()
             try:
                 cursor.execute(
                     "SELECT * FROM `pro` "
@@ -78,9 +78,9 @@ def reset_empty():
                     "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
                     {'JXLMC': jxlmc, 'day': Context.day_mapper[day]}
                 )
-            except mariadb.Error as e:
+                rows = cursor.fetchall()
+            finally:
                 cursor.close(), connection.close()
-                raise e
             redis.hset(
                 name="Empty",
                 key=f"{jxlmc}_{day}",
@@ -91,26 +91,26 @@ def reset_empty():
                         'jc_ks': row.jc_ks,  # 开始节次
                         'jc_js': row.jc_js,  # 结束节次
                         'zylxdm': row.zylxdm,  # 资源类型代码
-                    } for row in cursor.fetchall()
+                    } for row in rows
                 ])
             )
-    cursor.close(), connection.close()
 
 
 def reset_overview():
     redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
-    except mariadb.Error as e:
+        jas_list = cursor.fetchall()
+    finally:
         cursor.close(), connection.close()
-        raise e
-    for jas in cursor.fetchall():
+    for jas in jas_list:
+        connection, cursor = mysql.get_connection_cursor()
         try:
             cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
-        except mariadb.Error as e:
+            rows = cursor.fetchall()
+        finally:
             cursor.close(), connection.close()
-            raise e
         redis.hset(
             name="Overview",
             key=jas.JASDM,
@@ -135,7 +135,6 @@ def reset_overview():
                     'zylxdm': row.zylxdm,
                     'jyytms': row.jyytms,
                     'kcm': row.kcm,
-                } for row in cursor.fetchall()
+                } for row in rows
             ])
         )
-    cursor.close(), connection.close()

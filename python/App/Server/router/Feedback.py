@@ -9,14 +9,13 @@ import json
 import logging
 from multiprocessing import Process
 
-import mariadb
 import requests
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from App.Server._ApplicationContext import send_email, mysql_feedback as mysql
 from App.Spider.app import save_cookies, save_time
 
 
@@ -131,7 +130,7 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(
             "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
@@ -141,9 +140,9 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
                 'day': day
             }
         )
-    except mariadb.Error as e:
+    finally:
         cursor.close(), connection.close()
-        raise e
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(
             "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
@@ -159,14 +158,14 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
                 'day': day
             }
         )
-    except mariadb.Error as e:
+        statistic = cursor.fetchall()
+    finally:
         cursor.close(), connection.close()
-        raise e
-    statistic = cursor.fetchall()
     week_count = statistic[-1].count
     total_count = sum([row.count for row in statistic])
     if week_count != total_count:
         try:
+            connection, cursor = mysql.get_connection_cursor()
             cursor.execute(
                 "INSERT INTO `correction` ("
                 "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
@@ -181,8 +180,6 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
                     'jc': jc
                 }
             )
-        except mariadb.Error as e:
+        finally:
             cursor.close(), connection.close()
-            raise e
-    cursor.close(), connection.close()
     return week_count, total_count

@@ -7,11 +7,10 @@
 """"""
 import logging
 
-import mariadb
 from flask import current_app as app, request, jsonify
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from App.Server._ApplicationContext import send_email, mysql_search as mysql
 
 
 @app.route('/searchmore.json', methods=['GET'])
@@ -70,12 +69,12 @@ def handler(args: dict) -> dict:
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
 
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
-    except mariadb.Error as e:
+        rows = cursor.fetchall()
+    finally:
         cursor.close(), connection.close()
-        raise e
     result = [
         {
             'jasdm': row.JASDM,
@@ -97,9 +96,8 @@ def handler(args: dict) -> dict:
             'zylxdm': row.zylxdm,
             'jyytms': row.jyytms,
             'kcm': row.kcm,
-        } for row in cursor.fetchall()
+        } for row in rows
     ]
-    cursor.close(), connection.close()
 
     return {
         'status': 0,
