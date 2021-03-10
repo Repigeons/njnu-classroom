@@ -38,11 +38,18 @@ def route_feedback():
     }), 202
 
 
-def backend_process(jc: int, results: list, index: int, request_args: dict):
+def backend_process(
+        request_args: dict,
+        jc: int,
+        results: list,
+        index: int,
+):
     try:
         item: dict = results[index]
-        jxl, jsmph, jasdm, = item['JXLMC'], item['jsmph'], item['JASDM']
-        id_, day, zylxdm = item['id'], item['day'], item['zylxdm']
+        jxlmc, jasdm, = item['JXLMC'], item['JASDM']  # TODO: DELETE
+        jsmph = item['jsmph']
+        item_id, day, zylxdm = item['id'], item['day'], item['zylxdm']
+        jc_ks, jc_js = item['jc_ks'], item['jc_js']
         obj = {
             'jc': jc,
             'item': item,
@@ -52,12 +59,12 @@ def backend_process(jc: int, results: list, index: int, request_args: dict):
 
         if check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
             if zylxdm == '00':
-                week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
+                week_count, total_count = auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
                 send_email(
                     subject=f"南师教室：用户反馈 "
-                            f"{jxl} "
+                            f"{jxlmc} "
                             f"{jsmph}教室 "
-                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                            f"{jc_ks}-{jc_js}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致\n"
                             f"上报计数：{total_count}\n"
@@ -69,9 +76,9 @@ def backend_process(jc: int, results: list, index: int, request_args: dict):
             else:
                 send_email(
                     subject=f"南师教室：用户反馈 "
-                            f"{jxl} "
+                            f"{jxlmc} "
                             f"{jsmph}教室 "
-                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                            f"{jc_ks}-{jc_js}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致（非空教室）\n"
                             f"操作方案：None"
@@ -86,9 +93,9 @@ def backend_process(jc: int, results: list, index: int, request_args: dict):
 
             send_email(
                 subject=f"南师教室：用户反馈 "
-                        f"{jxl} "
+                        f"{jxlmc} "
                         f"{jsmph}教室 "
-                        f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                        f"{jc_ks}-{jc_js}节有误 "
                         f"（当前为第{jc}节）",
                 message=f"验证一站式平台：数据不一致\n"
                         f"操作方案：更新数据库\n"
