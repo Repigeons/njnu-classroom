@@ -21,7 +21,7 @@ class MariaDB(mariadb.ConnectionPool):
             password: str = '',
             database: str = '',
             autocommit: bool = True,
-            pool_reset_connection: bool = False,
+            pool_reset_connection: bool = True,
     ):
         super().__init__(
             pool_name=name,
