@@ -86,6 +86,7 @@ def reset_empty():
                 key=f"{jxlmc}_{day}",
                 value=json.dumps([
                     {
+                        'JXLMC': jxlmc,  # 教学楼名称
                         'jsmph': row.jsmph,  # 教室门牌号
                         'SKZWS': row.SKZWS,  # 上课座位数
                         'jc_ks': row.jc_ks,  # 开始节次
@@ -116,16 +117,11 @@ def reset_overview():
             key=jas.JASDM,
             value=json.dumps([
                 {
-                    'jasdm': row.JASDM,
-                    'JASDM': row.JASDM,
+                    'jxl': row.JXLMC,  # TODO: DELETE
+                    'classroom': row.jsmph,  # TODO: DELETE
 
-                    'jxl': row.JXLMC,
                     'JXLMC': row.JXLMC,
-
-                    'classroom': row.jsmph,
                     'jsmph': row.jsmph,
-
-                    'capacity': row.SKZWS,
                     'SKZWS': row.SKZWS,
 
                     'day': Context.day_mapper[row.day],

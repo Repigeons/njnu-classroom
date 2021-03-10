@@ -77,16 +77,10 @@ def handler(args: dict) -> dict:
         cursor.close(), connection.close()
     result = [
         {
-            'jasdm': row.JASDM,
-            'JASDM': row.JASDM,
+            'jxl': row.JXLMC,  # TODO: DELETE
 
-            'jxl': row.JXLMC,
             'JXLMC': row.JXLMC,
-
-            'classroom': row.jsmph,
             'jsmph': row.jsmph,
-
-            'capacity': row.SKZWS,
             'SKZWS': row.SKZWS,
 
             'day': Context.day_mapper[row.day],
