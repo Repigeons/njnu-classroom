@@ -46,9 +46,9 @@ def backend_process(
 ):
     try:
         item: dict = results[index]
-        jxlmc, jasdm, = item['JXLMC'], item['JASDM']  # TODO: DELETE
-        jsmph = item['jsmph']
-        item_id, day, zylxdm = item['id'], item['day'], item['zylxdm']
+        jxlmc, day = item['JXLMC'], item['day']  # TODO: DELETE
+        jsmph, jasdm = item['jsmph'], item['JASDM']
+        item_id, zylxdm = item['id'], item['zylxdm']
         jc_ks, jc_js = item['jc_ks'], item['jc_js']
         obj = {
             'jc': jc,
