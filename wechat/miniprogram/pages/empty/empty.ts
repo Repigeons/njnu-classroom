@@ -221,6 +221,8 @@ Page({
           jc: this.data.jc_selected + 1,
           results: JSON.stringify(this.data.result),
           index: this.data.layer_index,
+          day: this.data.rq_array[this.data.rq_selected].key,
+          jxl: this.data.jxl_array[this.data.jxl_selected].name,
       },
       success: () => {
         wx.hideToast({
