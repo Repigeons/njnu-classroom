@@ -21,9 +21,15 @@ from App.Spider.app import save_cookies, save_time
 
 @app.route('/feedback', methods=['POST'])
 def route_feedback():
+    form_data = request.form.to_dict()
     Process(
         target=backend_process,
-        args=(request.form.to_dict())
+        kwargs={
+            'jc': form_data['jc'],
+            'results': json.loads(form_data['results']),
+            'index': int(form_data['index']),
+            'request_args': form_data
+        }
     ).start()
     return jsonify({
         'status': 0,
@@ -32,11 +38,8 @@ def route_feedback():
     }), 202
 
 
-def backend_process(request_args: dict):
+def backend_process(jc: int, results: list, index: int, request_args: dict):
     try:
-        jc: int = request_args['jc']
-        results: list = json.loads(request_args['results'])
-        index: int = int(request_args['index'])
         item: dict = results[index]
         jxl, jsmph, jasdm, = item['JXLMC'], item['jsmph'], item['JASDM']
         id_, day, zylxdm = item['id'], item['day'], item['zylxdm']
