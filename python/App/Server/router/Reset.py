@@ -87,6 +87,7 @@ def reset_empty():
                 value=json.dumps([
                     {
                         'JXLMC': jxlmc,  # 教学楼名称  # TODO: DELETE
+                        'day': day,
 
                         'JASDM': row.JASDM,
                         'jsmph': row.jsmph,  # 教室门牌号
