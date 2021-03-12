@@ -116,27 +116,29 @@ def backend_process(
 def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
     redis = StrictRedis(connection_pool=Context.redis_pool)
     lock = Lock(redis, "Spider")
-    lock.acquire()
-    save_cookies(), save_time()
-    cookies = json.loads(redis.hget("Spider", "cookies"))
-    time_info = json.loads(redis.hget("Spider", "time_info"))
-    redis.delete("Spider")
-    lock.release()
+    if lock.acquire():
+        try:
+            save_cookies(), save_time()
+            cookies = json.loads(redis.hget("Spider", "cookies"))
+            time_info = json.loads(redis.hget("Spider", "time_info"))
+            redis.delete("Spider")
+            res = requests.post(
+                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                cookies=cookies,
+                data={
+                    'XNXQDM': time_info['XNXQDM'][0],
+                    'ZC': time_info['ZC'],
+                    'JASDM': jasdm
+                }
+            ).json()
+            kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
+            for row in kcb:
+                if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
+                    return True  # 数据一致，待纠错
+            return False  # 数据不一致，待更新
 
-    res = requests.post(
-        url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-        cookies=cookies,
-        data={
-            'XNXQDM': time_info['XNXQDM'][0],
-            'ZC': time_info['ZC'],
-            'JASDM': jasdm
-        }
-    ).json()
-    kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
-    for row in kcb:
-        if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
-            return True  # 数据一致，待纠错
-    return False  # 数据不一致，待更新
+        finally:
+            lock.release()
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
