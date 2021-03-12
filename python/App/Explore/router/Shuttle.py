@@ -44,14 +44,14 @@ def reset():
                         {'day': 1 << 6 >> day}
                     )
                     for row in cursor.fetchall():
-                        for i in range(row.count):
+                        for i in range(row.shuttle_count):
                             direction1.append([row.start_time, row.start_station, row.end_station])
                     cursor.execute(
                         "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=2",
                         {'day': 1 << 6 >> day}
                     )
                     for row in cursor.fetchall():
-                        for i in range(row.count):
+                        for i in range(row.shuttle_count):
                             direction2.append([row.start_time, row.start_station, row.end_station])
                 finally:
                     cursor.close(), connection.close()
