@@ -16,6 +16,13 @@ application:
     port: 8001
     service: on
 
+  explore:
+    host: "localhost"
+    port: 8002
+    service: on
+    shuttle:
+      resource: "stations.csv"
+
   notice:
     host: "localhost"
     port: 8000

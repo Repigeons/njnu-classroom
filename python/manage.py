@@ -42,9 +42,10 @@ def main(args: Namespace):
     logging.info("Starting Application with PID [%d]", os.getpid())
 
     if args.run:
-        os.environ['application.yml'] = os.getenv("application.yml", "resources/application.yml")
-        if not os.path.exists(os.getenv("application.yml")):
-            logging.error("FileNotFoundError: No such file [%s]", os.getenv("application.yml"))
+        os.environ['resources'] = os.getenv("resources", "resources")
+        application_yml = os.path.join(os.getenv("resources"), "application.yml")
+        if not os.path.exists(application_yml):
+            logging.error("FileNotFoundError: No such file [%s]", application_yml)
             exit(-1)
 
         try:

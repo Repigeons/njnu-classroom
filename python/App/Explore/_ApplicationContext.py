@@ -5,6 +5,7 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  _ApplicationContext.py
 """"""
+import csv
 import logging
 import os
 import time
@@ -12,13 +13,17 @@ from threading import Thread
 from typing import Any
 
 import yaml
+from redis import ConnectionPool
 
-from utils import SMTP
+from utils import SMTP, MariaDB
 
 host: str
 port: int
 shuttle: dict
+stations: list
 
+redis_pool: ConnectionPool
+mysql: MariaDB
 __send_email: Any
 
 
@@ -30,10 +35,12 @@ def __init__():
     start_time = time.time() * 1000
     logging.info("Initializing ApplicationContext...")
 
-    yml = yaml.safe_load(open(os.getenv("application.yml")))
+    yml = yaml.safe_load(open(os.path.join(os.getenv("resources"), "application.yml")))
     __init__base_field(config=yml['application']['explore'])
     __init__mail_server(config=yml['mail'])
     __init__shuttle(config=yml['application']['explore']['shuttle'])
+    __init__mysql(config=yml['database']['mysql'])
+    __init__redis(config=yml['database']['redis'])
 
     complete_time = time.time() * 1000
     logging.info("ApplicationContext: initialization completed in %d ms", complete_time - start_time)
@@ -43,6 +50,30 @@ def __init__base_field(config: dict) -> None:
     global host, port
     host = config['host']
     port = config['port']
+
+
+def __init__redis(config: dict) -> None:
+    start_time = time.time() * 1000
+    logging.info("Initializing RedisConnectionPool...")
+
+    global redis_pool
+    redis_pool = ConnectionPool(**config)
+
+    complete_time = time.time() * 1000
+    logging.info("RedisConnectionPool: initialization completed in %d ms", complete_time - start_time)
+
+
+def __init__mysql(config: dict) -> None:
+    start_time = time.time() * 1000
+    logging.info("Initializing MariaDBConnectionPool...")
+
+    global mysql_reset, mysql_search, mysql_feedback
+    mysql_reset = MariaDB(name="Server_reset", **config)
+    mysql_search = MariaDB(name="Server_search", **config)
+    mysql_feedback = MariaDB(name="Server_feedback", **config)
+
+    complete_time = time.time() * 1000
+    logging.info("MariaDBConnectionPool: initialization completed in %d ms", complete_time - start_time)
 
 
 def __init__mail_server(config: dict) -> None:
@@ -69,27 +100,19 @@ def __init__mail_server(config: dict) -> None:
 
 
 def __init__shuttle(config: dict) -> None:
-    global shuttle
-    with open(config['resource'], encoding='utf8') as f:
-        stream = f.read().split('\n\n')
-        f.close()
+    global stations
     stations = [
-        {'name': sp[0], 'position': [float(sp[1]), float(sp[2])]}
-        for sp in [station.split('|') for station in stream[0].split(',')]
+        {
+            'name': row['name'],
+            'position': [
+                float(row['latitude']),
+                float(row['longitude'])
+            ]
+        }
+        for row in csv.DictReader(
+            open(os.path.join(os.getenv("resources"), config['resource']), encoding='utf8')
+        )
     ]
-    direction1 = [
-        line.split(',')
-        for line in stream[1].split()
-    ]
-    direction2 = [
-        line.split(',')
-        for line in stream[2].split()
-    ]
-    shuttle = {
-        'stations': stations,
-        'direction1': direction1,
-        'direction2': direction2,
-    }
 
 
 __init__()
