@@ -66,3 +66,6 @@ def reset():
                 )
         finally:
             lock.release()
+
+
+reset()
