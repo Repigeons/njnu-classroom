@@ -17,12 +17,14 @@ import App.Explore._ApplicationContext as Context
 
 @app.route('/shuttle.json', methods=['GET'])
 def shuttle():
-    day = datetime.datetime.now().weekday()
     redis = StrictRedis(connection_pool=Context.redis_pool)
     lock = Lock(redis, "Explore-Shuttle")
     if lock.acquire():
         try:
-            return jsonify(redis.hget("Shuttle", str(day)))
+            return jsonify(redis.hget(
+                "Shuttle",
+                str(datetime.datetime.now().weekday())
+            ))
         finally:
             lock.release()
 
@@ -34,19 +36,19 @@ def reset():
         try:
             redis.delete("Shuttle")
             connection, cursor = Context.mysql.get_connection_cursor()
-            for day, offset in enumerate([0x1, 0x40, 0x20, 0x10, 0x8, 0x4, 0x2]):
+            for day in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
                 try:
                     cursor.execute(
-                        "SELECT * FROM `shuttle` WHERE (`working`& %(offset)s) AND `route`=1",
-                        {'offset': offset}
+                        "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=1",
+                        {'day': 1 << 6 >> day}
                     )
                     for row in cursor.fetchall():
                         for i in range(row.count):
                             direction1.append([row.start_time, row.start_station, row.end_station])
                     cursor.execute(
-                        "SELECT * FROM `shuttle` WHERE (`working`& %(offset)s) AND `route`=2",
-                        {'offset': offset}
+                        "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=2",
+                        {'day': 1 << 6 >> day}
                     )
                     for row in cursor.fetchall():
                         for i in range(row.count):
