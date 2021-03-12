@@ -6,3 +6,7 @@
 # @FileName :  __init__.py
 """"""
 from . import Shuttle
+
+
+def reset():
+    Shuttle.reset()
