@@ -21,10 +21,10 @@ def shuttle():
     lock = Lock(redis, "Explore-Shuttle")
     if lock.acquire():
         try:
-            return jsonify(redis.hget(
+            return jsonify(json.loads(redis.hget(
                 "Shuttle",
                 str(datetime.datetime.now().weekday())
-            ))
+            )))
         finally:
             lock.release()
 
@@ -35,9 +35,9 @@ def reset():
     if lock.acquire(blocking=False):
         try:
             redis.delete("Shuttle")
-            connection, cursor = Context.mysql.get_connection_cursor()
             for day in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
+                connection, cursor = Context.mysql.get_connection_cursor()
                 try:
                     cursor.execute(
                         "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=1",
