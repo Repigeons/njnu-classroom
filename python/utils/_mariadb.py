@@ -34,6 +34,12 @@ class MariaDB(mariadb.ConnectionPool):
             autocommit=autocommit,
             pool_reset_connection=pool_reset_connection,
         )
+        self.host = host
+        self.port = port
+        self.user = user
+        self.password = password
+        self.database = database
+        self.autocommit = autocommit
 
     class Connection:
         class Cursor:
@@ -59,8 +65,22 @@ class MariaDB(mariadb.ConnectionPool):
             pass
 
     def get_connection(self, *args, **kwargs) -> Connection:
-        return super().get_connection(*args, **kwargs)
+        try:
+            connection = super().get_connection(*args, **kwargs)
+            return connection
+        except mariadb.PoolError:
+            connection = mariadb.connect(
+                host=self.host,
+                port=self.port,
+                user=self.user,
+                password=self.password,
+                database=self.database,
+                autocommit=self.autocommit,
+            )
+            self.add_connection(connection)
+            return connection
 
     def get_connection_cursor(self) -> Tuple[Connection, Connection.Cursor]:
         connection = self.get_connection()
-        return connection, connection.cursor(named_tuple=True)
+        cursor = connection.cursor(named_tuple=True)
+        return connection, cursor
