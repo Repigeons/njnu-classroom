@@ -19,6 +19,8 @@ logging.info("FlaskApplication: initialization completed in %d ms", complete_tim
 with app.app_context():
     from App.Server import router
 
+    _ = router
+
 start_time = time.time() * 1000
 logging.info("Initializing Cache...")
 router.reset()

@@ -15,15 +15,21 @@ from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from App.Server._ApplicationContext import send_email, mysql_feedback as mysql
 from App.Spider.app import save_cookies, save_time
 
 
 @app.route('/feedback', methods=['POST'])
 def route_feedback():
+    form_data = request.form.to_dict()
     Process(
         target=backend_process,
-        args=(request.form.to_dict())
+        kwargs={
+            'jc': form_data['jc'],
+            'results': json.loads(form_data['results']),
+            'index': int(form_data['index']),
+            'request_args': form_data
+        }
     ).start()
     return jsonify({
         'status': 0,
@@ -32,14 +38,18 @@ def route_feedback():
     }), 202
 
 
-def backend_process(request_args: dict):
+def backend_process(
+        request_args: dict,
+        jc: int,
+        results: list,
+        index: int,
+):
     try:
-        jc: int = request_args['jc']
-        results: list = json.loads(request_args['results'])
-        index: int = int(request_args['index'])
         item: dict = results[index]
-        jxl, jsmph, jasdm, = item['JXLMC'], item['jsmph'], item['JASDM']
-        id_, day, zylxdm = item['id'], item['day'], item['zylxdm']
+        jxlmc, day = item['JXLMC'], item['day']  # TODO: DELETE
+        jsmph, jasdm = item['jsmph'], item['JASDM']
+        item_id, zylxdm = item['id'], item['zylxdm']
+        jc_ks, jc_js = item['jc_ks'], item['jc_js']
         obj = {
             'jc': jc,
             'item': item,
@@ -49,12 +59,12 @@ def backend_process(request_args: dict):
 
         if check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
             if zylxdm == '00':
-                week_count, total_count = auto_correct(jxl=jxl, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
+                week_count, total_count = auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
                 send_email(
                     subject=f"南师教室：用户反馈 "
-                            f"{jxl} "
+                            f"{jxlmc} "
                             f"{jsmph}教室 "
-                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                            f"{jc_ks}-{jc_js}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致\n"
                             f"上报计数：{total_count}\n"
@@ -66,9 +76,9 @@ def backend_process(request_args: dict):
             else:
                 send_email(
                     subject=f"南师教室：用户反馈 "
-                            f"{jxl} "
+                            f"{jxlmc} "
                             f"{jsmph}教室 "
-                            f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                            f"{jc_ks}-{jc_js}节有误 "
                             f"（当前为第{jc}节）",
                     message=f"验证一站式平台：数据一致（非空教室）\n"
                             f"操作方案：None"
@@ -83,9 +93,9 @@ def backend_process(request_args: dict):
 
             send_email(
                 subject=f"南师教室：用户反馈 "
-                        f"{jxl} "
+                        f"{jxlmc} "
                         f"{jsmph}教室 "
-                        f"{item['jc_ks']}-{item['jc_js']}节有误 "
+                        f"{jc_ks}-{jc_js}节有误 "
                         f"（当前为第{jc}节）",
                 message=f"验证一站式平台：数据不一致\n"
                         f"操作方案：更新数据库\n"
@@ -106,70 +116,82 @@ def backend_process(request_args: dict):
 def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
     redis = StrictRedis(connection_pool=Context.redis_pool)
     lock = Lock(redis, "Spider")
-    lock.acquire()
-    save_cookies(), save_time()
-    cookies = json.loads(redis.hget("Spider", "cookies"))
-    time_info = json.loads(redis.hget("Spider", "time_info"))
-    redis.delete("Spider")
-    lock.release()
+    if lock.acquire():
+        try:
+            save_cookies(), save_time()
+            cookies = json.loads(redis.hget("Spider", "cookies"))
+            time_info = json.loads(redis.hget("Spider", "time_info"))
+            redis.delete("Spider")
+            res = requests.post(
+                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                cookies=cookies,
+                data={
+                    'XNXQDM': time_info['XNXQDM'][0],
+                    'ZC': time_info['ZC'],
+                    'JASDM': jasdm
+                }
+            ).json()
+            kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
+            for row in kcb:
+                if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
+                    return True  # 数据一致，待纠错
+            return False  # 数据不一致，待更新
 
-    res = requests.post(
-        url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-        cookies=cookies,
-        data={
-            'XNXQDM': time_info['XNXQDM'][0],
-            'ZC': time_info['ZC'],
-            'JASDM': jasdm
-        }
-    ).json()
-    kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
-    for row in kcb:
-        if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
-            return True  # 数据一致，待纠错
-    return False  # 数据不一致，待更新
+        finally:
+            lock.release()
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
-    connection, cursor = Context.mysql.get_connection_cursor()
-    cursor.execute(
-        "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
-        {
-            'jasdm': jasdm,
-            'jc': jc,
-            'day': day
-        }
-    )
-    cursor.execute(
-        "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
-        "FROM `feedback_metadata` "
-        "WHERE `JASDM`=%(jasdm)s "
-        "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
-        "AND `jc`=%(jc)s "
-        "GROUP BY `date` "
-        "ORDER BY `date`",
-        {
-            'jasdm': jasdm,
-            'jc': jc,
-            'day': day
-        }
-    )
-    statistic = cursor.fetchall()
+    connection, cursor = mysql.get_connection_cursor()
+    try:
+        cursor.execute(
+            "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
+            {
+                'jasdm': jasdm,
+                'jc': jc,
+                'day': day
+            }
+        )
+    finally:
+        cursor.close(), connection.close()
+    connection, cursor = mysql.get_connection_cursor()
+    try:
+        cursor.execute(
+            "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
+            "FROM `feedback_metadata` "
+            "WHERE `JASDM`=%(jasdm)s "
+            "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
+            "AND `jc`=%(jc)s "
+            "GROUP BY `date` "
+            "ORDER BY `date`",
+            {
+                'jasdm': jasdm,
+                'jc': jc,
+                'day': day
+            }
+        )
+        statistic = cursor.fetchall()
+    finally:
+        cursor.close(), connection.close()
     week_count = statistic[-1].count
     total_count = sum([row.count for row in statistic])
     if week_count != total_count:
-        cursor.execute(
-            "INSERT INTO `correction` ("
-            "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
-            ") VALUES ("
-            "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
-            ")",
-            {
-                'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
-                'JXLMC': jxl,
-                'jsmph': jsmph,
-                'JASDM': jasdm,
-                'jc': jc
-            }
-        )
-    cursor.close(), connection.close()
+        try:
+            connection, cursor = mysql.get_connection_cursor()
+            cursor.execute(
+                "INSERT INTO `correction` ("
+                "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
+                ") VALUES ("
+                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
+                ")",
+                {
+                    'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
+                    'JXLMC': jxl,
+                    'jsmph': jsmph,
+                    'JASDM': jasdm,
+                    'jc': jc
+                }
+            )
+        finally:
+            cursor.close(), connection.close()
     return week_count, total_count

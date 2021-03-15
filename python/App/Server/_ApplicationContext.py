@@ -21,8 +21,10 @@ port: int
 serve: bool
 day_mapper: dict
 
-mysql: MariaDB
 redis_pool: ConnectionPool
+mysql_reset: MariaDB
+mysql_search: MariaDB
+mysql_feedback: MariaDB
 
 __send_email: Any
 
@@ -35,7 +37,7 @@ def __init__():
     start_time = time.time() * 1000
     logging.info("Initializing ApplicationContext...")
 
-    yml = yaml.safe_load(open(os.getenv("application.yml")))
+    yml = yaml.safe_load(open(os.path.join(os.getenv("resources"), "application.yml")))
     __init__base_field(config=yml['application']['server'])
     __init__mysql(config=yml['database']['mysql'])
     __init__redis(config=yml['database']['redis'])
@@ -61,8 +63,10 @@ def __init__mysql(config: dict) -> None:
     start_time = time.time() * 1000
     logging.info("Initializing MariaDBConnectionPool...")
 
-    global mysql
-    mysql = MariaDB(name="Server", **config)
+    global mysql_reset, mysql_search, mysql_feedback
+    mysql_reset = MariaDB(name="Server_reset", **config)
+    mysql_search = MariaDB(name="Server_search", **config)
+    mysql_feedback = MariaDB(name="Server_feedback", **config)
 
     complete_time = time.time() * 1000
     logging.info("MariaDBConnectionPool: initialization completed in %d ms", complete_time - start_time)

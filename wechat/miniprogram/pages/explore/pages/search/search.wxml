@@ -31,7 +31,7 @@
   <view class="rp-result" wx:if="{{showResult}}">
     <scroll-view class="rp-result__scrollview" scroll-y bindscrolltolower="onReachBottom" wx:if="{{serve}}">
       <block wx:for="{{result}}" wx:key="key">
-        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.jxl}}{{item.jsmph}}&emsp;{{rq_array[item.dayIndex].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
+        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.JXLMC}}{{item.jsmph}}&emsp;{{rq_array[item.dayIndex].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
       </block>
     </scroll-view>
     <view class="rp-result__desc" wx:else>

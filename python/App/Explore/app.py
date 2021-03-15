@@ -18,3 +18,5 @@ logging.info("FlaskApplication: initialization completed in %d ms", complete_tim
 
 with app.app_context():
     from App.Explore import router
+
+    _ = router

@@ -10,6 +10,7 @@ import logging
 
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
+from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
 from App.Server._ApplicationContext import send_email
@@ -52,18 +53,22 @@ def handler(args: dict) -> dict:
         }
 
     redis = StrictRedis(connection_pool=Context.redis_pool)
+    lock = Lock(redis, "Server-Overview")
+    if lock.acquire():
+        try:
+            if 'jasdm' not in args.keys() or not redis.hexists("Overview", args['jasdm']):
+                raise KeyError('jasdm')
 
-    if 'jasdm' not in args.keys() or not redis.hexists("Overview", args['jasdm']):
-        raise KeyError('jasdm')
+            value = json.loads(redis.hget(
+                name="Overview",
+                key=args['jasdm']
+            ))
 
-    value = json.loads(redis.hget(
-        name="Overview",
-        key=args['jasdm']
-    ))
-
-    return {
-        'status': 0,
-        'message': "ok",
-        'service': "on",
-        'data': value
-    }
+            return {
+                'status': 0,
+                'message': "ok",
+                'service': "on",
+                'data': value
+            }
+        finally:
+            lock.release()

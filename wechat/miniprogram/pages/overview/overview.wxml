@@ -80,7 +80,7 @@
           bindtap="showDialog" data-index="{{index}}"
         >
           <block wx:if="{{item.usage!='empty'}}">
-            <text>{{bar_list[index]['shortkcmc']}}</text>
+            <text>{{item.shortkcmc}}</text>
           </block>
         </view>
       </block>

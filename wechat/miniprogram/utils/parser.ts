@@ -97,7 +97,7 @@ export const item2dialog = (item: Record<string, any>, rq: string) => {
     field: string;
     value: string;
   }> = [
-    { field: '教室门牌', value: `${item.jxl}${item.classroom}` },
+    { field: '教室门牌', value: `${item.JXLMC}${item.jsmph}` },
     { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
   ]
   if (item.KCMC) detail.push({ field: '课程名称', value: item.KCMC })
