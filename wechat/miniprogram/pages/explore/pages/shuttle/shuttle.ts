@@ -2,6 +2,7 @@
 // 获取应用实例
 const app = getApp<IAppOption>()
 import {getDistance} from '../../../../utils/util'
+import parseTime from "../../../../utils/timeParser"
 
 Page({
   data: {
@@ -34,7 +35,6 @@ Page({
               stationDistance: Array<number> = [],
               nearestStation: Array<{name:string, distance:number}> = []
           this.data.stations.forEach(station => {
-            console.log(station)
             let distance = Math.floor(getDistance({
               latitude1: station.position[0],
               longitude1: station.position[1],
@@ -79,9 +79,7 @@ Page({
     // 滚动到最近位置
     let now = new Date(), scrollIndex = this.data.routes.length - 1
     while (scrollIndex > 0) {
-      let deltaTime = Date.parse(`0 ${this.data.routes[scrollIndex][0]}`) - Date.parse(`0 ${now.getHours()}:${now.getMinutes()}`)
-      deltaTime = deltaTime / 1000 / 60
-      if (deltaTime < -15) {
+      if (parseTime(this.data.routes[scrollIndex][0]) - parseTime(`${now.getHours()}:${now.getMinutes()}`) < -15) {
         break
       }
       scrollIndex--

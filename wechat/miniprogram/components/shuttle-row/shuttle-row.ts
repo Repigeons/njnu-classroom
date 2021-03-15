@@ -1,4 +1,5 @@
 // components/shuttle/shuttle-row/shuttle-row.js
+import parseTime from "../../utils/timeParser"
 
 Component({
   /**
@@ -26,15 +27,14 @@ Component({
   methods: {
     render(): void {
       let now = new Date(),
-          deltaTime = Date.parse(`0 ${this.properties.time}`) - Date.parse(`0 ${now.getHours()}:${now.getMinutes()}`)
-      deltaTime = deltaTime / 1000 / 60
+          deltaTime = parseTime(this.properties.time) - parseTime(`${now.getHours()}:${now.getMinutes()}`)
       if (!this.properties.via) {
         this.setData({ state: 0 })
-      } else if (deltaTime < -15) {
+      } else if (deltaTime <= -15) {
         this.setData({ state: 1, deltaTime: -deltaTime })
-      } else if(deltaTime < 0) {
+      } else if(deltaTime <= 0) {
         this.setData({ state: 2, deltaTime: -deltaTime })
-      } else if(deltaTime < 15) {
+      } else if(deltaTime <= 15) {
         this.setData({ state: 3, deltaTime })
       } else {
         this.setData({ state: 4, deltaTime })
