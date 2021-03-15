@@ -28,7 +28,9 @@ def route_feedback():
             'jc': form_data['jc'],
             'results': json.loads(form_data['results']),
             'index': int(form_data['index']),
-            'request_args': form_data
+            'request_args': form_data,
+            'jxlmc': form_data['jxl'],
+            'day': int(form_data['day'])
         }
     ).start()
     return jsonify({
@@ -43,10 +45,11 @@ def backend_process(
         jc: int,
         results: list,
         index: int,
+        jxlmc: str,
+        day: int,
 ):
     try:
         item: dict = results[index]
-        jxlmc, day = item['JXLMC'], item['day']  # TODO: DELETE
         jsmph, jasdm = item['jsmph'], item['JASDM']
         item_id, zylxdm = item['id'], item['zylxdm']
         jc_ks, jc_js = item['jc_ks'], item['jc_js']

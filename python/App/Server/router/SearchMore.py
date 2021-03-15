@@ -77,8 +77,6 @@ def handler(args: dict) -> dict:
         cursor.close(), connection.close()
     result = [
         {
-            'jxl': row.JXLMC,  # TODO: DELETE
-
             'JXLMC': row.JXLMC,
             'jsmph': row.jsmph,
             'SKZWS': row.SKZWS,

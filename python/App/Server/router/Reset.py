@@ -86,9 +86,6 @@ def reset_empty():
                 key=f"{jxlmc}_{day}",
                 value=json.dumps([
                     {
-                        'JXLMC': jxlmc,  # 教学楼名称  # TODO: DELETE
-                        'day': day,
-
                         'JASDM': row.JASDM,
                         'jsmph': row.jsmph,  # 教室门牌号
                         'SKZWS': row.SKZWS,  # 上课座位数
@@ -120,9 +117,6 @@ def reset_overview():
             key=jas.JASDM,
             value=json.dumps([
                 {
-                    'jxl': row.JXLMC,  # TODO: DELETE
-                    'classroom': row.jsmph,  # TODO: DELETE
-
                     'JXLMC': row.JXLMC,
                     'jsmph': row.jsmph,
                     'SKZWS': row.SKZWS,
