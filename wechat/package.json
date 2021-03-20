@@ -12,8 +12,8 @@
     "Zhou-Tx <z.t.x@foxmail.com>",
     "ZzDaniel <zz.daniel@foxmail.com>"
   ],
-  "repository": "github:repigeons/NjnuClassroom",
-  "homepage": "https://repigeons.github.io/NjnuClassroom.html",
+  "repository": "github:Repigeons/NjnuClassroom",
+  "homepage": "https://classroom.njnu.xyz/",
   "bugs": "https://github.com/Repigeons/NjnuClassroom/issues",
   "scripts": {
     "compile": "./node_modules/typescript/bin/tsc",
