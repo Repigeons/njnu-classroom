@@ -1,11 +1,7 @@
 #!/usr/bin/sh
 
-# environment variables
-export env=pro
+cd /opt/NjnuClassroom
+env/bin/python src/manage.py --run Spider --log /var/log/NjnuClassroom/spider.log
 
-
-source env/bin/activate
-python /usr/local/src/NjnuClassroom/manage.py --run Spider --log /var/log/NjnuClassroom/spider.log
-
-# post a request to server for latest data
+# update data
 curl -X POST http://localhost:8001/reset

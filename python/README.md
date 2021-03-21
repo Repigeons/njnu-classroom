@@ -51,7 +51,7 @@ Werkzeug==1.0.1
 
 镜像地址：docker.io/repigeons/njnu-classroom
 
-运行所依赖的 python3, redis, nginx 和 firefox 已被添加至镜像中，宿主机中仅需安装 mariadb-server 并设置相应权限即可。
+运行所依赖的 python3, redis, nginx 和 chromium 已被添加至镜像中，宿主机中仅需安装 mariadb-server 并设置相应权限即可。
 
 docker容器 使用方式：
 

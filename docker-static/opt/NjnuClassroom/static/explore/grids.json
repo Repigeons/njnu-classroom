@@ -1,0 +1,35 @@
+[
+  {
+    "text": "更多搜索",
+    "imgUrl": "/images/searchmore.png",
+    "url": "../pages/search/search"
+  },
+  {
+    "text": "校车时刻表",
+    "imgUrl": "/images/shuttle.png",
+    "url": "../pages/shuttle/shuttle"
+  },
+  {
+    "text": "校历",
+    "imgUrl": "/images/calendar.png",
+    "method": "calendar"
+  },
+  {
+    "text": "收藏",
+    "imgUrl": "/images/collection.png",
+    "method": "developing"
+  },
+  {
+    "text": "一键支持",
+    "imgUrl": "/images/support.png",
+    "url": "index",
+    "method": "support"
+  },
+  {
+    "text": "反馈",
+    "imgUrl": "/images/feedback.png",
+    "button": {
+        "openType": "feedback"
+    }
+  }
+]

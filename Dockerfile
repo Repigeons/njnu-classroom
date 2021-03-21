@@ -1,35 +1,41 @@
 # Dockerfile
-FROM centos:latest
-MAINTAINER Repigeons
+FROM centos:8
+LABEL name="NjnuClassroom"
+LABEL description="南师教室"
+LABEL author="Repigeons"
+LABEL repository="github:Repigeons/NjnuClassroom"
 VOLUME ["/tmp/NjnuClassroom"]
 
 # Install the base service
-RUN yum  install -y python3 firefox redis nginx
-RUN pip3 install --upgrade pip setuptools wheel
-RUN pip3 install virtualenv
+RUN yum install -y epel-release
+RUN yum update  -y
+RUN yum install -y cronie nginx redis
+RUN yum install -y gcc python38 python38-devel
+RUN yum install -y chromedriver chromium chromium-headless
+RUN yum install -y mariadb-connector-c mariadb-connector-c-devel
+RUN yum clean all
+RUN python3 -m pip install --upgrade pip setuptools wheel
+RUN python3 -m pip install virtualenv
 
 # Initialize the project directory
-RUN mkdir /usr/local/src/NjnuClassroom
-RUN mkdir /var/log/NjnuClassroom
 RUN mkdir /opt/NjnuClassroom
+RUN mkdir /var/log/NjnuClassroom
 
 # Copy project files and deployment
-ADD python/manage.py        /usr/local/src/NjnuClassroom/manage.py
-ADD python/App              /usr/local/src/NjnuClassroom/App
-ADD python/utils            /usr/local/src/NjnuClassroom/utils
-ADD python/requirements.txt /opt/NjnuClassroom/requirements.txt
+ADD python/manage.py        /opt/NjnuClassroom/src/manage.py
+ADD python/App              /opt/NjnuClassroom/src/App
+ADD python/utils            /opt/NjnuClassroom/src/utils
 ADD python/resources        /opt/NjnuClassroom/resources
+ADD python/requirements.txt /opt/NjnuClassroom/requirements.txt
 
-# Initialize the runtime environment
-WORKDIR /opt/NjnuClassroom
-RUN virtualenv env
-RUN env/bin/python -m pip install --upgrade pip setuptools wheel
-RUN env/bin/python -m pip install -r requirements.txt
+# Initialize the virtual environment
+RUN virtualenv /opt/NjnuClassroom/env
+RUN /opt/NjnuClassroom/env/bin/pip install --upgrade pip setuptools wheel
+RUN /opt/NjnuClassroom/env/bin/pip install -r /opt/NjnuClassroom/requirements.txt
 
-# Copy shell script and system config files
-ADD systemd/    /usr/lib/systemd/system/
-ADD shell/      /opt/NjnuClassroom/
-ADD docker/     /
+# Copy shell script and configuration files
+ADD shell/         /opt/NjnuClassroom/bin/
+ADD docker-static/ /
 
 # Set environment variables
 ENV env pro
@@ -38,7 +44,7 @@ ENV FLASK_ENV production
 # Expose port 80 (http)
 EXPOSE 80
 
-# startup
+# Startup
 WORKDIR /root
 RUN chmod 111 init
 ENTRYPOINT ["/root/init"]

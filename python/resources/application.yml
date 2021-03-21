@@ -35,7 +35,7 @@ application:
       password: ""
       gid: ""
     selenium:
-      driver: "firefox"
+      driver: "chrome"
       list:
         phantomjs:
           executable_path: "phantomjs"

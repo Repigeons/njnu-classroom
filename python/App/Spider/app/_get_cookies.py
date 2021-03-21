@@ -83,6 +83,8 @@ def get_cookie_dict() -> dict:
     elif driver.lower() == "chrome":
         option = webdriver.ChromeOptions()
         option.add_argument("--headless")
+        option.add_argument("--no-sandbox")
+        option.add_argument('--disable-dev-shm-usage')
         browser = webdriver.Chrome(options=option, **args)
 
     elif driver.lower() == "firefox":
