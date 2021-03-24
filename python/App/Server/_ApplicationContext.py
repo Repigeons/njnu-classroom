@@ -71,10 +71,8 @@ def __init__mysql(config: dict) -> None:
     start_time = time.time() * 1000
     logging.info("Initializing MariaDBConnectionPool...")
 
-    global mysql_reset, mysql_search, mysql_feedback
-    mysql_reset = MariaDB(name="Server_reset", **config)
-    mysql_search = MariaDB(name="Server_search", **config)
-    mysql_feedback = MariaDB(name="Server_feedback", **config)
+    global mysql
+    mysql = MariaDB(name="Server", **config)
 
     complete_time = time.time() * 1000
     logging.info("MariaDBConnectionPool: initialization completed in %d ms", complete_time - start_time)
