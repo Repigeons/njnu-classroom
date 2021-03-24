@@ -6,11 +6,16 @@
 # @FileName :  _smtp.py
 """"""
 from email.header import Header
-from email.mime.text import MIMEText
-from smtplib import SMTP_SSL
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from smtplib import SMTP_SSL, SMTPRecipientsRefused
+from typing import List
 
 
 class SMTP:
+    class NonReceiversError(TypeError or SMTPRecipientsRefused):
+        pass
+
     def __init__(
             self,
             host: str,
@@ -26,30 +31,25 @@ class SMTP:
     def send(
             self,
             subject: str,
-            message: str,
-            message_type: str = 'plain',
             header_from: str = '',
-            *header_to: dict
+            header_to: str = '',
+            receivers: List[str] = None,
+            mime_parts: List[MIMEBase] = None
     ):
-        """
-        Send An Email
-        :param subject: 邮件标题
-        :param message: 邮件内容
-        :param message_type: 邮件格式（plain/html）
-        :param header_from: 发件人
-        :param header_to: 收件人: List<dict> [{'name':'', 'addr':''}, ...]
-        :return: None
-        """
-        smtp = SMTP_SSL(host=self.__host)
-        smtp.connect(host=self.__host, port=self.__port)
-        smtp.login(user=self.__user, password=self.__password)
-        message = MIMEText(message, message_type, 'utf-8')
+        if receivers is None:
+            raise SMTP.NonReceiversError("unresolved receivers: [%s]" % receivers)
+        if len(receivers) == 0:
+            raise SMTP.NonReceiversError("empty receivers: %s" % receivers)
+
+        message = MIMEMultipart()
         message['Subject'] = Header(subject)
-        message['From'] = Header(header_from)
-        message['To'] = Header(';'.join(['%(name)s<%(addr)s>' % to for to in header_to]))
-        smtp.sendmail(
-            from_addr=self.__user,
-            to_addrs=[to['addr'] for to in header_to],
-            msg=message.as_string(),
-        )
-        smtp.close()
+        message['From'] = Header(f"{header_from}<{self.__user}>")
+        message['To'] = Header(header_to)
+        if mime_parts is not None:
+            for mime_part in mime_parts:
+                message.attach(mime_part)
+
+        server = SMTP_SSL(host=self.__host, port=self.__port)
+        server.login(user=self.__user, password=self.__password)
+        server.sendmail(from_addr=self.__user, to_addrs=receivers, msg=message.as_string())
+        server.quit()

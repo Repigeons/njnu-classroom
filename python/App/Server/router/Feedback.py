@@ -15,7 +15,7 @@ from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email, mysql_feedback as mysql
+from App.Server._ApplicationContext import send_email, mysql
 from App.Spider.app import save_cookies, save_time
 
 

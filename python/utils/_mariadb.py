@@ -14,25 +14,21 @@ class MariaDB(mariadb.ConnectionPool):
     def __init__(
             self,
             name: str = 'pool',
-            size: int = 1,
             host: str = 'localhost',
             port: int = 3306,
             user: str = 'root',
             password: str = '',
             database: str = '',
             autocommit: bool = True,
-            pool_reset_connection: bool = True,
     ):
         super().__init__(
             pool_name=name,
-            pool_size=size,
             host=host,
             port=port,
             user=user,
             password=password,
             database=database,
             autocommit=autocommit,
-            pool_reset_connection=pool_reset_connection,
         )
         self.host = host
         self.port = port
