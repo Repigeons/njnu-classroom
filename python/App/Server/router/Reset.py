@@ -14,7 +14,7 @@ from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email, mysql
+from App.Server._ApplicationContext import send_email
 
 
 @app.route('/reset', methods=['POST'])
@@ -61,7 +61,7 @@ def reset():
 
 def reset_empty():
     redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = mysql.get_connection_cursor()
+    connection, cursor = Context.mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
         jxl_list = cursor.fetchall()
@@ -70,7 +70,7 @@ def reset_empty():
     for jxl in jxl_list:
         jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
-            connection, cursor = mysql.get_connection_cursor()
+            connection, cursor = Context.mysql.get_connection_cursor()
             try:
                 cursor.execute(
                     "SELECT * FROM `pro` "
@@ -99,14 +99,14 @@ def reset_empty():
 
 def reset_overview():
     redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = mysql.get_connection_cursor()
+    connection, cursor = Context.mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
         jas_list = cursor.fetchall()
     finally:
         cursor.close(), connection.close()
     for jas in jas_list:
-        connection, cursor = mysql.get_connection_cursor()
+        connection, cursor = Context.mysql.get_connection_cursor()
         try:
             cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
             rows = cursor.fetchall()
