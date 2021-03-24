@@ -14,7 +14,7 @@ from redis import StrictRedis
 from redis_lock import Lock
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email, mysql_reset as mysql
+from App.Server._ApplicationContext import send_email, mysql
 
 
 @app.route('/reset', methods=['POST'])

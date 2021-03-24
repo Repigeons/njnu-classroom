@@ -10,7 +10,7 @@ import logging
 from flask import current_app as app, request, jsonify
 
 import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email, mysql_search as mysql
+from App.Server._ApplicationContext import send_email, mysql
 
 
 @app.route('/searchmore.json', methods=['GET'])

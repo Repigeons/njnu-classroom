@@ -21,10 +21,8 @@ port: int
 serve: bool
 day_mapper: dict
 
+mysql: MariaDB
 redis_pool: ConnectionPool
-mysql_reset: MariaDB
-mysql_search: MariaDB
-mysql_feedback: MariaDB
 
 __send_email: Any
 
