@@ -8,8 +8,9 @@
 import logging
 import os
 import time
+from collections import namedtuple
+from email.mime.text import MIMEText
 from threading import Thread
-from typing import Any
 
 import yaml
 from redis import ConnectionPool
@@ -24,11 +25,20 @@ day_mapper: dict
 mysql: MariaDB
 redis_pool: ConnectionPool
 
-__send_email: Any
+__mail: namedtuple('MailConfig', ['function', 'receivers'])
 
 
 def send_email(subject: str, message: str):
-    __send_email(subject=subject, message=message)
+    Thread(
+        target=__mail.function,
+        kwargs={
+            'subject': subject,
+            'header_from': "Repigeons",
+            'header_to': "南师教室运维人员",
+            'receivers': [receiver['addr'] for receiver in __mail.receivers],
+            'mime_parts': [MIMEText(message)]
+        }
+    ).start()
 
 
 def __init__():
@@ -39,7 +49,7 @@ def __init__():
     __init__base_field(config=yml['application']['server'])
     __init__mysql(config=yml['database']['mysql'])
     __init__redis(config=yml['database']['redis'])
-    __init__mail_server(config=yml['mail'])
+    __init__mail(config=yml['mail'])
 
     complete_time = time.time() * 1000
     logging.info("ApplicationContext: initialization completed in %d ms", complete_time - start_time)
@@ -81,24 +91,15 @@ def __init__redis(config: dict) -> None:
     logging.info("RedisConnectionPool: initialization completed in %d ms", complete_time - start_time)
 
 
-def __init__mail_server(config: dict) -> None:
+def __init__mail(config: dict) -> None:
     start_time = time.time() * 1000
     logging.info("Initializing SMTPServer...")
 
-    global __send_email
-    mail_server = SMTP(**config['sender'])
-
-    def _send_email(subject: str, message: str):
-        Thread(
-            target=mail_server.send,
-            args=(
-                subject, message, "plain",
-                "Repigeons<info@njnu.xyz>",
-                *config['receivers']
-            )
-        ).start()
-
-    __send_email = _send_email
+    global __mail
+    __mail = namedtuple('MailConfig', ['function', 'receivers'])(
+        function=SMTP(**config['sender']).send,
+        receivers=config['receivers']
+    )
 
     complete_time = time.time() * 1000
     logging.info("SMTPServer: initialization completed in %d ms", complete_time - start_time)
