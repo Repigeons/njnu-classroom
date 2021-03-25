@@ -8,11 +8,9 @@
 import json
 
 from redis import StrictRedis
+
+from App.Spider import dao
 from utils.aop import autowired
-
-
-@autowired()
-def mysql(): pass
 
 
 @autowired()
@@ -25,20 +23,15 @@ def merge() -> None:
     """
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     redis = StrictRedis(connection_pool=redis_pool)
-    connection, cursor = mysql.get_connection_cursor()
-    cursor.execute("SELECT DISTINCT `JXLMC` FROM `dev`")
-    jxl_list = [jxl.JXLMC for jxl in cursor.fetchall()]
-    # 全部保存到文件
+    jxl_list = [jxl.JXLMC for jxl in dao.get_distinct_jxl_in_dev]
+    # 全部缓存到redis
     for jxl in jxl_list:
         print("开始下载：", jxl, "...")
         jxl_classrooms = []
         for day in days:
             classrooms = []
-            cursor.execute(
-                "SELECT * FROM `dev` WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s ORDER BY `jsmph`,`jc_js`",
-                {'JXLMC': jxl, 'day': day}
-            )
-            for row in cursor.fetchall():
+            rows = dao.get_origin_by_jxlmc_and_day(jxlmc=jxl, day=day)
+            for row in rows:
                 item = {
                     'id': row.id,
                     'JXLMC': row.JXLMC,
@@ -63,18 +56,8 @@ def merge() -> None:
             jxl_classrooms.extend(classrooms)
         redis.hset("Spider", jxl, json.dumps(jxl_classrooms))
     # 清空数据库
-    cursor.execute("TRUNCATE TABLE `dev`")
+    dao.truncate_dev()
     # 重新插入数据库
     for jxl in jxl_list:
-        cursor.executemany(
-            "INSERT INTO `dev`("
-            "`JXLMC`,`jsmph`,`JASDM`,`SKZWS`,`zylxdm`,"
-            "`jc_ks`,`jc_js`,`jyytms`,`kcm`,`day`,`SFYXZX`"
-            ") VALUES ("
-            "%(JXLMC)s,%(jsmph)s,%(JASDM)s,%(SKZWS)s,%(zylxdm)s,"
-            "%(jc_ks)s,%(jc_js)s,%(jyytms)s,%(kcm)s,%(day)s,%(SFYXZX)s"
-            ")",
-            json.loads(redis.hget("Spider", jxl))
-        )
+        dao.insert_into_dev(*json.loads(redis.hget("Spider", jxl)))
         print("归并完成：", jxl)
-    cursor.close(), connection.close()

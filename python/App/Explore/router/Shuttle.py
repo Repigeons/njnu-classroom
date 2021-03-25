@@ -13,11 +13,8 @@ from flask import current_app as app, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
+from App.Explore import dao
 from utils.aop import autowired
-
-
-@autowired()
-def mysql(): pass
 
 
 @autowired()
@@ -58,24 +55,12 @@ def reset():
             redis.delete("Shuttle")
             for day in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
-                connection, cursor = mysql.get_connection_cursor()
-                try:
-                    cursor.execute(
-                        "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=1",
-                        {'day': 1 << 6 >> day}
-                    )
-                    for row in cursor.fetchall():
-                        for i in range(row.shuttle_count):
-                            direction1.append([row.start_time, row.start_station, row.end_station])
-                    cursor.execute(
-                        "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=2",
-                        {'day': 1 << 6 >> day}
-                    )
-                    for row in cursor.fetchall():
-                        for i in range(row.shuttle_count):
-                            direction2.append([row.start_time, row.start_station, row.end_station])
-                finally:
-                    cursor.close(), connection.close()
+                for row in dao.get_shuttles(day=1 << 6 >> day, route=1):
+                    for i in range(row.shuttle_count):
+                        direction1.append([row.start_time, row.start_station, row.end_station])
+                for row in dao.get_shuttles(day=1 << 6 >> day, route=2):
+                    for i in range(row.shuttle_count):
+                        direction2.append([row.start_time, row.start_station, row.end_station])
                 redis.hset(
                     name="Shuttle",
                     key=str(day),

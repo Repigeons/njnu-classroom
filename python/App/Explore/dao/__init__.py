@@ -3,10 +3,6 @@
 # @Time     :  2021/3/25
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  _connections.py
+# @FileName :  __init__.py.py
 """"""
-from ..aop import autowired
-
-
-@autowired("mysql")
-def connections(): pass
+from .Shuttle import get_shuttles

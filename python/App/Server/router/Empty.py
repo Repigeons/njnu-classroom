@@ -12,7 +12,7 @@ from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
-from utils.aop import configuration, autowired
+from utils.aop import autowired, configuration
 
 
 @autowired()

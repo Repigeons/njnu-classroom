@@ -13,6 +13,8 @@ import requests
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
+
+from App.Server import dao
 from utils.aop import autowired, configuration
 
 from App.Spider.app import save_cookies, save_time
@@ -20,10 +22,6 @@ from App.Spider.app import save_cookies, save_time
 
 @autowired()
 def send_email(subject: str, message: str): _ = subject, message
-
-
-@autowired()
-def mysql(): pass
 
 
 @autowired()
@@ -162,56 +160,16 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
-    connection, cursor = mysql.get_connection_cursor()
-    try:
-        cursor.execute(
-            "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
-            {
-                'jasdm': jasdm,
-                'jc': jc,
-                'day': day
-            }
-        )
-    finally:
-        cursor.close(), connection.close()
-    connection, cursor = mysql.get_connection_cursor()
-    try:
-        cursor.execute(
-            "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
-            "FROM `feedback_metadata` "
-            "WHERE `JASDM`=%(jasdm)s "
-            "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
-            "AND `jc`=%(jc)s "
-            "GROUP BY `date` "
-            "ORDER BY `date`",
-            {
-                'jasdm': jasdm,
-                'jc': jc,
-                'day': day
-            }
-        )
-        statistic = cursor.fetchall()
-    finally:
-        cursor.close(), connection.close()
+    dao.add_feedback(jc=jc, jasdm=jasdm)
+    statistic = dao.get_feedback(jasdm=jasdm, day=day, jc=jc)
     week_count = statistic[-1].count
     total_count = sum([row.count for row in statistic])
     if week_count != total_count:
-        try:
-            connection, cursor = mysql.get_connection_cursor()
-            cursor.execute(
-                "INSERT INTO `correction` ("
-                "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
-                ") VALUES ("
-                "%(day)s, %(JXLMC)s, %(jsmph)s, %(JASDM)s,  %(jc)s, %(jc)s, '占用','####占用'"
-                ")",
-                {
-                    'day': ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
-                    'JXLMC': jxl,
-                    'jsmph': jsmph,
-                    'JASDM': jasdm,
-                    'jc': jc
-                }
-            )
-        finally:
-            cursor.close(), connection.close()
+        dao.add_correction(
+            day=['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
+            jxlmc=jxl,
+            jsmph=jsmph,
+            jasdm=jasdm,
+            jc=jc
+        )
     return week_count, total_count

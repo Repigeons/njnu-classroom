@@ -18,11 +18,11 @@ from App.Server.app import app
 def send_email(subject: str, message: str): _ = subject, message
 
 
-@configuration("application.explore.host")
+@configuration("application.server.host")
 def host(): pass
 
 
-@configuration("application.explore.port")
+@configuration("application.server.port")
 def port(): pass
 
 

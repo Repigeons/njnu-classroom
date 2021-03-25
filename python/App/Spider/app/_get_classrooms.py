@@ -10,11 +10,9 @@ import logging
 from typing import Dict, List
 
 from redis import StrictRedis
+
+from App.Spider import dao
 from utils.aop import autowired
-
-
-@autowired()
-def mysql(): pass
 
 
 @autowired()
@@ -53,12 +51,11 @@ def get_classrooms() -> Dict[str, List[dict]]:
     :return: {教学楼:[{教室信息}]}
     """
     result = {}
-    connection, cursor = mysql.get_connection_cursor()
-    cursor.execute("SELECT DISTINCT `JXLDM`,`JXLDM_DISPLAY` FROM `JAS`")
-    for jxl in cursor.fetchall():
+    jxl_list = dao.get_distinct_jxl_in_jas()
+    for jxl in jxl_list:
         result[jxl.JXLDM_DISPLAY] = []
-        cursor.execute("SELECT * FROM `JAS` WHERE JXLDM=%(JSLDM)s", {'JSLDM': jxl.JXLDM})
-        for jas in cursor.fetchall():
+        jas_list = dao.get_jas_list_by_jxldm(jxldm=jxl.JXLDM)
+        for jas in jas_list:
             result[jxl.JXLDM_DISPLAY].append({
                 'JXLMC': jas.JXLDM_DISPLAY,
                 'JASMC': jas.JASMC,
@@ -68,5 +65,4 @@ def get_classrooms() -> Dict[str, List[dict]]:
                 'jsmph': jas.JASMC.replace(jas.JXLDM_DISPLAY, '')
             })
         result[jxl.JXLDM_DISPLAY].sort(key=lambda item: item['jsmph'])
-    cursor.close(), connection.close()
     return result

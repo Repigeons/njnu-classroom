@@ -90,7 +90,7 @@ def core():
         for classroom in classrooms[jxl]:
             print("正在查询教室：", classroom['JXLMC'], classroom['jsmph'])
             result = app.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
-            app.insert_into_kcb(class_list=result)
+            app.insert_into_kcb(result)
     time.sleep(5)
     logging.info("详细信息采集完成")
 

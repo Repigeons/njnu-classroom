@@ -9,15 +9,12 @@ import logging
 
 from flask import current_app as app, request, jsonify
 
+from App.Server import dao
 from utils.aop import autowired, configuration
 
 
 @autowired()
 def send_email(subject: str, message: str): _ = subject, message
-
-
-@autowired()
-def mysql(): pass
 
 
 @autowired()
@@ -81,19 +78,15 @@ def handler(args: dict) -> dict:
     elif 'kcm' not in args.keys():
         raise KeyError('kcm')
 
-    jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'"
-    jxl = True if args['jxl'] == "#" else "`JXLMC`=%(jxl)s"
-    zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
-    keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
-
-    connection, cursor = mysql.get_connection_cursor()
-    try:
-        cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
-        rows = cursor.fetchall()
-    finally:
-        cursor.close(), connection.close()
+    rows = dao.search(
+        _day=True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'",
+        _jc="`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s",
+        _jxl=True if args['jxl'] == "#" else "`JXLMC`=%(jxl)s",
+        _zylxdm=True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s",
+        _keyword="`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s",
+        **args
+    )
     result = [
         {
             'JXLMC': row.JXLMC,

@@ -10,20 +10,14 @@ import json
 
 import requests
 
-from utils.aop import autowired
-
-
-@autowired()
-def mysql(): pass
+from App.Spider import dao
 
 
 def truncate_kcb() -> None:
     """
     清空`kcb`表
     """
-    connection, cursor = mysql.get_connection_cursor()
-    cursor.execute("TRUNCATE TABLE `KCB`")
-    cursor.close(), connection.close()
+    dao.truncate_kcb()
 
 
 def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
@@ -90,13 +84,4 @@ def insert_into_kcb(class_list: list) -> None:
     """
     将课程信息插入`kcb`表
     """
-    connection, cursor = mysql.get_connection_cursor()
-    cursor.executemany(
-        "INSERT INTO `KCB`("
-        "`JXLMC`,`jsmph`,`JASDM`,`SKZWS`,`zylxdm`,`jc_ks`,`jc_js`,`jyytms`,`kcm`,`day`,`SFYXZX`"
-        ") VALUES ("
-        "%(JXLMC)s,%(jsmph)s,%(JASDM)s,%(SKZWS)s,%(zylxdm)s,%(jc_ks)s,%(jc_js)s,%(jyytms)s,%(kcm)s,%(day)s,%(SFYXZX)s"
-        ")",
-        class_list
-    )
-    cursor.close(), connection.close()
+    dao.insert_into_kcb(*class_list)
