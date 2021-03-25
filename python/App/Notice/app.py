@@ -9,18 +9,25 @@ import datetime
 import json
 import logging
 import os
-import shutil
 import time
 
 from flask import Flask, request, jsonify
 
-import App.Notice._ApplicationContext as Context
+from utils.aop import configuration
 
 start_time = time.time() * 1000
 logging.info("Initializing FlaskApplication...")
 app = Flask(__name__)
 complete_time = time.time() * 1000
 logging.info("FlaskApplication: initialization completed in %d ms", complete_time - start_time)
+
+
+@configuration("application.notice.token")
+def token(): pass
+
+
+@configuration("application.notice.file")
+def notice_file(): pass
 
 
 @app.route('/', methods=['PUT'])
@@ -32,15 +39,15 @@ def index():
             raise KeyError("Expected field `text`")
         if 'HTTP_TOKEN' not in request_headers.keys():
             raise KeyError("Expected field `token`")
-        if Context.token != request_headers['HTTP_TOKEN']:
+        if token != request_headers['HTTP_TOKEN']:
             raise ValueError("Invalid token")
 
         # Save to notice history
-        if os.path.exists(Context.file):
-            file = os.path.abspath(Context.file)
+        if os.path.exists(notice_file):
+            file = os.path.abspath(notice_file)
             history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
             history_list = json.load(open(history, encoding='utf8')) if os.path.exists(history) else []
-            history_list.append(json.load(open(Context.file, encoding='utf8')))
+            history_list.append(json.load(open(file, encoding='utf8')))
             json.dump(history_list, open(history, 'w', encoding='utf8'))
 
         # Save to [notice.json]
@@ -55,7 +62,7 @@ def index():
         }
         json.dump(
             obj=data,
-            fp=open(Context.file, 'w', encoding='utf8'),
+            fp=open(notice_file, 'w', encoding='utf8'),
             ensure_ascii=False,
             indent=2
         )

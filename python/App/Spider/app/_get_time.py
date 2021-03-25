@@ -13,8 +13,15 @@ from json.decoder import JSONDecodeError
 import requests
 from redis import StrictRedis
 
-import App.Spider._ApplicationContext as Context
-from App.Spider._ApplicationContext import send_email
+from utils.aop import autowired
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
 
 
 def save_time() -> None:
@@ -22,7 +29,7 @@ def save_time() -> None:
     将时间信息保存至Redis
     """
     try:
-        redis = StrictRedis(connection_pool=Context.redis_pool)
+        redis = StrictRedis(connection_pool=redis_pool)
         cookies = json.loads(redis.hget("Spider", "cookies"))
         logging.info("开始查询时间信息...")
         time_info = get_time_info(cookies=cookies)

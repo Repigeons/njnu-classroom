@@ -10,16 +10,27 @@ import os
 import time
 from wsgiref.simple_server import make_server
 
-import App.Explore._ApplicationContext as Context
-from App.Explore._ApplicationContext import send_email
+from utils.aop import autowired, configuration
 
 from App.Explore.app import app
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@configuration("application.explore.host")
+def host(): pass
+
+
+@configuration("application.explore.port")
+def port(): pass
 
 
 def main():
     try:
         logging.info("Using environment [%s]", app.config['ENV'])
-        logging.info("Flask started with port [%d] (http) on [%s]", Context.port, Context.host)
+        logging.info("Flask started with port [%d] (http) on [%s]", port, host)
         now = time.time() * 1000
         logging.info(
             "Started Application in %f seconds",
@@ -27,17 +38,16 @@ def main():
         )
         if app.config['ENV'] == "production":
             make_server(
-                host=Context.host,
-                port=Context.port,
+                host=host,
+                port=port,
                 app=app
             ).serve_forever()
             app.run()
 
         else:
             app.run(
-                host=Context.host,
-                port=Context.port,
-                app=app,
+                host=host,
+                port=port,
                 debug=True
             )
 

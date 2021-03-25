@@ -10,9 +10,19 @@ import logging
 from typing import Dict, List
 
 from redis import StrictRedis
+from utils.aop import autowired
 
-import App.Spider._ApplicationContext as Context
-from App.Spider._ApplicationContext import send_email
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
 
 
 def save_classrooms() -> None:
@@ -20,7 +30,7 @@ def save_classrooms() -> None:
     将教学楼及教室信息保存至Redis
     """
     try:
-        redis = StrictRedis(connection_pool=Context.redis_pool)
+        redis = StrictRedis(connection_pool=redis_pool)
         logging.info("开始查询教学楼及教室信息...")
         classrooms = get_classrooms()
         logging.info("教学楼及教室信息查询成功")
@@ -43,7 +53,7 @@ def get_classrooms() -> Dict[str, List[dict]]:
     :return: {教学楼:[{教室信息}]}
     """
     result = {}
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     cursor.execute("SELECT DISTINCT `JXLDM`,`JXLDM_DISPLAY` FROM `JAS`")
     for jxl in cursor.fetchall():
         result[jxl.JXLDM_DISPLAY] = []

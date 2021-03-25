@@ -12,8 +12,19 @@ from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
-import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from utils.aop import configuration, autowired
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@configuration("application.server.service")
+def serve(): pass
 
 
 @app.route('/empty.json', methods=['GET'])
@@ -44,7 +55,7 @@ def route_empty():
 
 
 def handler(args: dict) -> dict:
-    if not Context.serve:
+    if not serve:
         return {
             'status': 1,
             'message': "service off",
@@ -52,7 +63,7 @@ def handler(args: dict) -> dict:
             'data': []
         }
 
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock = Lock(redis, "Server-Empty")
     if lock.acquire():
         try:

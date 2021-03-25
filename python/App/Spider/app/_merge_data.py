@@ -8,8 +8,15 @@
 import json
 
 from redis import StrictRedis
+from utils.aop import autowired
 
-import App.Spider._ApplicationContext as Context
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
 
 
 def merge() -> None:
@@ -17,8 +24,8 @@ def merge() -> None:
     将`dev`表中连续的空教室记录合并为单条记录
     """
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-    redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = Context.mysql.get_connection_cursor()
+    redis = StrictRedis(connection_pool=redis_pool)
+    connection, cursor = mysql.get_connection_cursor()
     cursor.execute("SELECT DISTINCT `JXLMC` FROM `dev`")
     jxl_list = [jxl.JXLMC for jxl in cursor.fetchall()]
     # 全部保存到文件

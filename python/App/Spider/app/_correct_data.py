@@ -5,14 +5,18 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  _correct_data.py
 """"""
-import App.Spider._ApplicationContext as Context
+from utils.aop import autowired
+
+
+@autowired()
+def mysql(): pass
 
 
 def correct() -> None:
     """
     从`correction`表读取数据，依此对`dev`表进行校正
     """
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     print("待校正数据：")
     cursor.execute("SELECT * FROM `correction`")
     correction_list = cursor.fetchall()
@@ -60,7 +64,7 @@ def copy_to_dev() -> None:
     """
     将原始课程数据从`KCB`表复制到`dev`表，待后续处理
     """
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     cursor.execute("TRUNCATE TABLE `dev`")
     cursor.execute("INSERT INTO `dev` SELECT * FROM `KCB`")
     cursor.close(), connection.close()
@@ -70,7 +74,7 @@ def copy_to_pro() -> None:
     """
     将课程数据从`dev`表复制到`pro`表，用于生产环境
     """
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     cursor.execute("TRUNCATE TABLE `pro`")
     cursor.execute("INSERT INTO `pro` SELECT * FROM `dev`")
     cursor.close(), connection.close()

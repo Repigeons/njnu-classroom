@@ -13,8 +13,27 @@ from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
-import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from utils.aop import autowired, configuration
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@autowired()
+def day_mapper(): pass
+
+
+@configuration("application.server.service")
+def serve(): pass
 
 
 @app.route('/reset', methods=['POST'])
@@ -42,7 +61,7 @@ def route_reset():
 
 
 def reset():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock1 = Lock(redis, "Server-Empty")
     lock2 = Lock(redis, "Server-Overview")
     if lock1.acquire(blocking=False):
@@ -60,8 +79,8 @@ def reset():
 
 
 def reset_empty():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = Context.mysql.get_connection_cursor()
+    redis = StrictRedis(connection_pool=redis_pool)
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JXLDM_DISPLAY` FROM `JAS` WHERE `SFYXZX`")
         jxl_list = cursor.fetchall()
@@ -70,13 +89,13 @@ def reset_empty():
     for jxl in jxl_list:
         jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
-            connection, cursor = Context.mysql.get_connection_cursor()
+            connection, cursor = mysql.get_connection_cursor()
             try:
                 cursor.execute(
                     "SELECT * FROM `pro` "
                     "WHERE `JXLMC`=%(JXLMC)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `SFYXZX` "
                     "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
-                    {'JXLMC': jxlmc, 'day': Context.day_mapper[day]}
+                    {'JXLMC': jxlmc, 'day': day_mapper[day]}
                 )
                 rows = cursor.fetchall()
             finally:
@@ -98,15 +117,15 @@ def reset_empty():
 
 
 def reset_overview():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
-    connection, cursor = Context.mysql.get_connection_cursor()
+    redis = StrictRedis(connection_pool=redis_pool)
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute("SELECT DISTINCT `JASDM` FROM `JAS`")
         jas_list = cursor.fetchall()
     finally:
         cursor.close(), connection.close()
     for jas in jas_list:
-        connection, cursor = Context.mysql.get_connection_cursor()
+        connection, cursor = mysql.get_connection_cursor()
         try:
             cursor.execute("SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s", {'jasdm': jas.JASDM})
             rows = cursor.fetchall()
@@ -121,7 +140,7 @@ def reset_overview():
                     'jsmph': row.jsmph,
                     'SKZWS': row.SKZWS,
 
-                    'day': Context.day_mapper[row.day],
+                    'day': day_mapper[row.day],
                     'jc_ks': row.jc_ks,
                     'jc_js': row.jc_js,
 

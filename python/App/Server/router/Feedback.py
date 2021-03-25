@@ -13,14 +13,31 @@ import requests
 from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
+from utils.aop import autowired, configuration
 
-import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
 from App.Spider.app import save_cookies, save_time
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@configuration("application.server.service")
+def serve(): pass
 
 
 @app.route('/feedback', methods=['POST'])
 def route_feedback():
+    if not serve:
+        return None, 400
     form_data = request.form.to_dict()
     Process(
         target=backend_process,
@@ -117,7 +134,7 @@ def backend_process(
 
 
 def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock = Lock(redis, "Spider")
     if lock.acquire():
         try:
@@ -145,7 +162,7 @@ def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
 
 
 def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(
             "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
@@ -157,7 +174,7 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
         )
     finally:
         cursor.close(), connection.close()
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(
             "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
@@ -180,7 +197,7 @@ def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
     total_count = sum([row.count for row in statistic])
     if week_count != total_count:
         try:
-            connection, cursor = Context.mysql.get_connection_cursor()
+            connection, cursor = mysql.get_connection_cursor()
             cursor.execute(
                 "INSERT INTO `correction` ("
                 "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"

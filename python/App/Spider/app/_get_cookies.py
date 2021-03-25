@@ -11,9 +11,23 @@ from json.decoder import JSONDecodeError
 
 from redis import StrictRedis
 from selenium import webdriver
+from utils.aop import autowired, configuration
 
-import App.Spider._ApplicationContext as Context
-from App.Spider._ApplicationContext import send_email
+
+@configuration("application.spider.account")
+def account(): pass
+
+
+@configuration("application.spider.selenium")
+def selenium(): pass
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
 
 
 def save_cookies() -> None:
@@ -21,7 +35,7 @@ def save_cookies() -> None:
     将cookies内容保存至Redis
     """
     try:
-        redis = StrictRedis(connection_pool=Context.redis_pool)
+        redis = StrictRedis(connection_pool=redis_pool)
         logging.info("开始尝试获取cookies...")
         cookies = get_cookie_dict()
         logging.info("cookies获取成功")
@@ -73,9 +87,9 @@ def get_cookie_dict() -> dict:
     模拟登录，获取所需cookie
     :return:dict{_WEU, MOD_AUTH_CAS}
     """
-    username, password, gid = Context.account.values()
-    driver = Context.selenium['driver']
-    args = Context.selenium['list'][driver]
+    username, password, gid = account.values()
+    driver = selenium['driver']
+    args = selenium['list'][driver]
 
     if driver.lower() == "phantomjs":
         browser = webdriver.PhantomJS(**args)

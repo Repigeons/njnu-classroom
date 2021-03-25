@@ -13,13 +13,20 @@ import time
 from redis import StrictRedis
 from redis_lock import Lock
 
-import App.Spider._ApplicationContext as Context
 import App.Spider.app as app
-from App.Spider._ApplicationContext import send_email
+from utils.aop import autowired
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@autowired()
+def redis_pool(): pass
 
 
 def main():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock = Lock(redis, "Spider")
     try:
         if lock.acquire(blocking=False):
@@ -73,7 +80,7 @@ def prepare():
 
 def core():
     logging.info("开始采集详细信息...")
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     cookies = json.loads(redis.hget("Spider", "cookies"))
     time_info = json.loads(redis.hget("Spider", "time_info"))
     classrooms = json.loads(redis.hget("Spider", "classrooms"))

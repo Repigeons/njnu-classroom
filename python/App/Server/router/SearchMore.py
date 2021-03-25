@@ -9,8 +9,27 @@ import logging
 
 from flask import current_app as app, request, jsonify
 
-import App.Server._ApplicationContext as Context
-from App.Server._ApplicationContext import send_email
+from utils.aop import autowired, configuration
+
+
+@autowired()
+def send_email(subject: str, message: str): _ = subject, message
+
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
+
+
+@autowired()
+def day_mapper(): pass
+
+
+@configuration("application.server.service")
+def serve(): pass
 
 
 @app.route('/searchmore.json', methods=['GET'])
@@ -41,7 +60,7 @@ def route_search_more():
 
 
 def handler(args: dict) -> dict:
-    if not Context.serve:
+    if not serve:
         return {
             'status': 1,
             'message': "service off",
@@ -63,13 +82,13 @@ def handler(args: dict) -> dict:
         raise KeyError('kcm')
 
     jc = "`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s"
-    day = True if args['day'] == "#" else f"`day`='{Context.day_mapper[int(args['day'])]}'"
+    day = True if args['day'] == "#" else f"`day`='{day_mapper[int(args['day'])]}'"
     jxl = True if args['jxl'] == "#" else "`JXLMC`=%(jxl)s"
     zylxdm = True if args['zylxdm'] == "#" else "`zylxdm`=%(zylxdm)s"
     keyword = "`jyytms` LIKE %(keyword)s OR `kcm` LIKE %(keyword)s"
     args['keyword'] = f"%{args['kcm']}%"
 
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     try:
         cursor.execute(f"SELECT * FROM `pro` WHERE ({day}) AND ({jc}) AND ({jxl}) AND ({zylxdm}) AND ({keyword})", args)
         rows = cursor.fetchall()
@@ -81,7 +100,7 @@ def handler(args: dict) -> dict:
             'jsmph': row.jsmph,
             'SKZWS': row.SKZWS,
 
-            'day': Context.day_mapper[row.day],
+            'day': day_mapper[row.day],
             'jc_ks': row.jc_ks,
             'jc_js': row.jc_js,
 

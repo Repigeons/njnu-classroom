@@ -5,6 +5,7 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  Shuttle.py
 """"""
+import csv
 import datetime
 import json
 
@@ -12,12 +13,20 @@ from flask import current_app as app, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
-import App.Explore._ApplicationContext as Context
+from utils.aop import autowired
+
+
+@autowired()
+def mysql(): pass
+
+
+@autowired()
+def redis_pool(): pass
 
 
 @app.route('/shuttle.json', methods=['GET'])
 def shuttle():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock = Lock(redis, "Explore-Shuttle")
     if lock.acquire():
         try:
@@ -30,14 +39,26 @@ def shuttle():
 
 
 def reset():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=redis_pool)
     lock = Lock(redis, "Explore-Shuttle")
     if lock.acquire(blocking=False):
         try:
+            with open("resources/stations.csv", encoding='utf8') as f:
+                stations = [
+                    {
+                        'name': row['name'],
+                        'position': [
+                            float(row['latitude']),
+                            float(row['longitude'])
+                        ]
+                    }
+                    for row in csv.DictReader(f)
+                ]
+                f.close()
             redis.delete("Shuttle")
             for day in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
-                connection, cursor = Context.mysql.get_connection_cursor()
+                connection, cursor = mysql.get_connection_cursor()
                 try:
                     cursor.execute(
                         "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=1",
@@ -61,7 +82,7 @@ def reset():
                     value=json.dumps(({
                         'direction1': direction1,
                         'direction2': direction2,
-                        'stations': Context.stations
+                        'stations': stations
                     }))
                 )
         finally:

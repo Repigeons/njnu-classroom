@@ -10,6 +10,17 @@ import time
 
 from flask import Flask
 
+from utils.aop import bean
+
+
+@bean()
+def day_mapper():
+    return {
+        0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday',
+        'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+    }
+
+
 start_time = time.time() * 1000
 logging.info("Initializing FlaskApplication...")
 app = Flask(__name__)

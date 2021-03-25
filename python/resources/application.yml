@@ -20,8 +20,6 @@ application:
     host: "localhost"
     port: 8002
     service: on
-    shuttle:
-      resource: "stations.csv"
 
   notice:
     host: "localhost"

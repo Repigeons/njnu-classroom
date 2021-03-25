@@ -10,14 +10,18 @@ import json
 
 import requests
 
-import App.Spider._ApplicationContext as Context
+from utils.aop import autowired
+
+
+@autowired()
+def mysql(): pass
 
 
 def truncate_kcb() -> None:
     """
     清空`kcb`表
     """
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     cursor.execute("TRUNCATE TABLE `KCB`")
     cursor.close(), connection.close()
 
@@ -86,7 +90,7 @@ def insert_into_kcb(class_list: list) -> None:
     """
     将课程信息插入`kcb`表
     """
-    connection, cursor = Context.mysql.get_connection_cursor()
+    connection, cursor = mysql.get_connection_cursor()
     cursor.executemany(
         "INSERT INTO `KCB`("
         "`JXLMC`,`jsmph`,`JASDM`,`SKZWS`,`zylxdm`,`jc_ks`,`jc_js`,`jyytms`,`kcm`,`day`,`SFYXZX`"
