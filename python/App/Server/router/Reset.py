@@ -81,7 +81,7 @@ def reset_empty():
     for jxl in jxl_list:
         jxlmc = jxl.JXLDM_DISPLAY
         for day in range(7):
-            dao.get_empty_classroom(jxlmc=jxlmc, day=day_mapper[day])
+            rows = dao.get_empty_classroom(jxlmc=jxlmc, day=day_mapper[day])
             redis.hset(
                 name="Empty",
                 key=f"{jxlmc}_{day}",
