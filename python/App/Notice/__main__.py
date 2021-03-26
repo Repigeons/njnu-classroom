@@ -6,8 +6,6 @@
 # @FileName :  __main__.py
 """"""
 import logging
-import os
-import time
 
 from utils.aop import autowired, configuration
 
@@ -27,10 +25,6 @@ def port(): pass
 def main():
     try:
         from App.Notice import app
-        logging.info(
-            "Started Application in %f seconds",
-            (int(time.time() * 1000) - int(os.getenv("startup_time"))) / 1000
-        )
         app.startup()
 
     except KeyboardInterrupt as e:
