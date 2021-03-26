@@ -5,6 +5,7 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  _Delete.py
 """"""
+import json
 import logging
 
 from ._connections import connections
@@ -13,10 +14,14 @@ from ._connections import connections
 def delete(sql: str):
     def func(_):
         def f(**kwargs):
-            logging.info(f"Submit sql sentence [{sql % kwargs}] with param:\n{kwargs}")
             connection, cursor = connections.get_connection_cursor()
             try:
                 cursor.execute(sql % kwargs, kwargs)
+                logging.info(
+                    "Submit [%s] with param: \n%s",
+                    cursor.statement,
+                    json.dumps(kwargs, ensure_ascii=False)
+                )
                 return None
             finally:
                 cursor.close(), connection.close()
@@ -29,13 +34,14 @@ def delete(sql: str):
 def delete_many(sql: str):
     def func(_):
         def f(*args: dict, **kwargs):
-            logging.info(
-                f"Submit sql sentence [{sql % kwargs}] with param:\n%s",
-                '\n'.join([str(param) for param in args])
-            )
             connection, cursor = connections.get_connection_cursor()
             try:
                 cursor.execute(sql % kwargs, args)
+                logging.info(
+                    "Submit [%s] with param: \n%s",
+                    cursor.statement,
+                    '\n'.join([json.dumps(param, ensure_ascii=False) for param in args])
+                )
                 return None
             finally:
                 cursor.close(), connection.close()
