@@ -12,4 +12,4 @@ from .Reset import get_jxl_list
 from .Reset import get_empty_classroom
 from .Reset import get_jas_list
 from .Reset import get_overview_row
-from .SearchMore import search
+from .Search import search
