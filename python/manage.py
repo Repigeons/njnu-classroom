@@ -48,7 +48,6 @@ def main(args: Namespace):
             exit(-1)
 
         try:
-            os.environ['startup_module'] = args.run
             logging.info("Initializing module [%s]", args.run)
             module = __import__(f"App.{args.run}.__main__", fromlist=("App", args.run, "__main__"))
         except ModuleNotFoundError as e:

@@ -23,7 +23,7 @@ def redis(): pass
 
 @bean("mysql")
 def mysql_pool():
-    return MariaDB(name=os.getenv('startup_module'), **mysql)
+    return MariaDB(**mysql)
 
 
 @bean()
