@@ -1,23 +1,22 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2020/12/4 0004
-# @Author   :  Zhou Tianxing
+# @Time     :  2021/3/26
+# @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
 # @FileName :  Feedback.py
 """"""
 import json
 import logging
-from multiprocessing import Process
 
 import requests
-from flask import current_app as app, request, jsonify
+from flask import request
 from redis import StrictRedis
 from redis_lock import Lock
 
-from App.Server import dao
-from utils.aop import autowired, configuration
+from utils.aop import autowired
 
-from App.Spider.app import save_cookies, save_time
+from App.Server import dao
+from App.Spider.service import save_cookies, save_time
 
 
 @autowired()
@@ -28,34 +27,7 @@ def send_email(subject: str, message: str): _ = subject, message
 def redis_pool(): pass
 
 
-@configuration("application.server.service")
-def serve(): pass
-
-
-@app.route('/feedback', methods=['POST'])
-def route_feedback():
-    if not serve:
-        return None, 400
-    form_data = request.form.to_dict()
-    Process(
-        target=backend_process,
-        kwargs={
-            'jc': form_data['jc'],
-            'results': json.loads(form_data['results']),
-            'index': int(form_data['index']),
-            'request_args': form_data,
-            'jxlmc': form_data['jxl'],
-            'day': int(form_data['day'])
-        }
-    ).start()
-    return jsonify({
-        'status': 0,
-        'message': "ok",
-        'data': "feedback"
-    }), 202
-
-
-def backend_process(
+def process(
         request_args: dict,
         jc: int,
         results: list,
@@ -105,7 +77,7 @@ def backend_process(
 
         else:
             import manage
-            from .Reset import reset
+            from . import reset
             manage.main(manage.Namespace(run="Spider"))
             reset()
 

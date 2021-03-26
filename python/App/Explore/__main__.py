@@ -8,59 +8,33 @@
 import logging
 import os
 import time
-from wsgiref.simple_server import make_server
 
-from utils.aop import autowired, configuration
-
-from App.Explore.app import app
+from utils.aop import autowired
 
 
 @autowired()
 def send_email(subject: str, message: str): _ = subject, message
 
 
-@configuration("application.explore.host")
-def host(): pass
-
-
-@configuration("application.explore.port")
-def port(): pass
-
-
 def main():
     try:
-        logging.info("Using environment [%s]", app.config['ENV'])
-        logging.info("Flask started with port [%d] (http) on [%s]", port, host)
-        now = time.time() * 1000
+        from App.Explore import app
         logging.info(
             "Started Application in %f seconds",
-            (int(now) - int(os.getenv("startup_time"))) / 1000
+            (int(time.time() * 1000) - int(os.getenv("startup_time"))) / 1000
         )
-        if app.config['ENV'] == "production":
-            make_server(
-                host=host,
-                port=port,
-                app=app
-            ).serve_forever()
-            app.run()
-
-        else:
-            app.run(
-                host=host,
-                port=port,
-                debug=True
-            )
+        app.startup()
 
     except KeyboardInterrupt as e:
         raise e
 
     except Exception as e:
-        logging.error(f"{type(e), e}")
         send_email(
             subject="南师教室：错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
+        logging.error(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)
 

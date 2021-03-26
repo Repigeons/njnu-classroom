@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2020/10/18 0018
-# @Author   :  Zhou Tianxing
+# @Time     :  2021/3/26
+# @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
 # @FileName :  Empty.py
 """"""
 import json
-import logging
+from typing import Dict, Any
 
-from flask import current_app as app, request, jsonify
 from redis import StrictRedis
 from redis_lock import Lock
 
 from utils.aop import autowired, configuration
-
-
-@autowired()
-def send_email(subject: str, message: str): _ = subject, message
 
 
 @autowired()
@@ -27,34 +22,7 @@ def redis_pool(): pass
 def serve(): pass
 
 
-@app.route('/empty.json', methods=['GET'])
-def route_empty():
-    try:
-        request_args = request.args.to_dict()
-        response_body = handler(request_args)
-        return jsonify(response_body), 200
-    except KeyError as e:
-        return jsonify({
-            'status': 2,
-            'message': f"Expected or unresolved key `{e}`",
-            'data': []
-        }), 400
-    except Exception as e:
-        logging.warning(f"{type(e), e}")
-        send_email(
-            subject="南师教室：错误报告",
-            message=f"{type(e), e}\n"
-                    f"{request.url}\n"
-                    f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-        )
-        return jsonify({
-            'status': -1,
-            'message': f"{type(e), e}",
-            'data': None
-        }), 500
-
-
-def handler(args: dict) -> dict:
+def handle_empty(args: Dict[str, str]) -> Dict[str, Any]:
     if not serve:
         return {
             'status': 1,
