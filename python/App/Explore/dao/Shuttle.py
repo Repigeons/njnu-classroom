@@ -8,5 +8,5 @@
 from utils.repdbanno import select
 
 
-@select("SELECT * FROM `shuttle` WHERE (`working`& %s) AND `route`= %s" % ('%%(day)', '%%(route)s'))
+@select("SELECT * FROM `shuttle` WHERE (`working`& %s) AND `route`= %s" % ('%%(day)s', '%%(route)s'))
 def get_shuttles(day: int, route: int): _ = day, route
