@@ -6,5 +6,3 @@
 # @FileName :  __init__.py
 """"""
 from .Shuttle import reset as reset_shuttle
-
-reset_shuttle()

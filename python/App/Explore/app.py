@@ -53,3 +53,13 @@ def startup():
             port=port,
             debug=True
         )
+
+
+if True:
+    from App.Explore.service import reset_shuttle
+
+    start_time = time.time() * 1000
+    logging.info("Initializing Cache...")
+    reset_shuttle()
+    complete_time = time.time() * 1000
+    logging.info("Cache: initialization completed in %d ms", complete_time - start_time)
