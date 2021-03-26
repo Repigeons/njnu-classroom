@@ -3,7 +3,7 @@
 # @Time     :  2021/3/25
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  __init__.py.py
+# @FileName :  __init__.py
 """"""
 from ._non_param import truncate_kcb
 from ._non_param import truncate_dev

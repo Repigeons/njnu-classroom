@@ -3,6 +3,6 @@
 # @Time     :  2021/3/25
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  __init__.py.py
+# @FileName :  __init__.py
 """"""
 from .Shuttle import get_shuttles
