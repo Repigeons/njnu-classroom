@@ -37,6 +37,9 @@ class MariaDB(mariadb.ConnectionPool):
         self.database = database
         self.autocommit = autocommit
 
+    def __str__(self):
+        return f"MariadbConnectionPool<host={self.host},port={self.port},database={self.database}>"
+
     class Connection:
         class Cursor:
             def execute(self, statement: str, data: Any) -> None:
