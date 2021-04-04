@@ -5,8 +5,6 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  _database.py
 """"""
-import os
-
 from redis import ConnectionPool
 
 from utils import MariaDB

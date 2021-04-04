@@ -17,11 +17,14 @@ def select(sql: str):
             connection, cursor = connections.get_connection_cursor()
             try:
                 cursor.execute(sql % kwargs, kwargs)
-                logging.info(
-                    "Submit [%s] with param: \n%s",
-                    cursor.statement,
-                    json.dumps(kwargs, ensure_ascii=False)
-                )
+                if len(kwargs):
+                    logging.info(
+                        "Submit [%s] with parameter:\n%s",
+                        cursor.statement,
+                        json.dumps(kwargs, ensure_ascii=False)
+                    )
+                else:
+                    logging.info("Submit [%s]", cursor.statement)
                 return cursor.fetchall()
             finally:
                 cursor.close(), connection.close()

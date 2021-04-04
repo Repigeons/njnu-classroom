@@ -23,7 +23,7 @@ def merge() -> None:
     """
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     redis = StrictRedis(connection_pool=redis_pool)
-    jxl_list = [jxl.JXLMC for jxl in dao.get_distinct_jxl_in_dev]
+    jxl_list = [jxl.JXLMC for jxl in dao.get_distinct_jxl_in_dev()]
     # 全部缓存到redis
     for jxl in jxl_list:
         print("开始下载：", jxl, "...")

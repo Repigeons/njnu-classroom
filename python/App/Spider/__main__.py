@@ -40,8 +40,6 @@ def main():
                 core()
                 # 校正并归并数据
                 correct_and_merge()
-                # 从Redis清除缓存数据
-                redis.delete("Spider")
                 # 将数据放入生产环境
                 service.copy_to_pro() if os.getenv("env") == "pro" else None
 
@@ -67,6 +65,9 @@ def main():
         logging.error(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)
+    finally:
+        # 从Redis清除缓存数据
+        redis.delete("Spider")
 
 
 def prepare():

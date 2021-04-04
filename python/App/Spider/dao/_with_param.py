@@ -13,8 +13,8 @@ from utils.repdbanno import insert_many, delete_many, update, select
              ") VALUES ("
              "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s"
              ")" %
-             ('%(JXLMC)s', '%(_jsmph)s', '%(_JASDM)s', '%(_SKZWS)s', '%(_zylxdm)s', '%(_jc_ks)s', '%(_jc_js)s',
-              '%(_jyytms)s', '%(_kcm)s', '%(_day)s', '%(_SFYXZX)s'))
+             ('%%(JXLMC)s', '%%(jsmph)s', '%%(JASDM)s', '%%(SKZWS)s', '%%(zylxdm)s',
+              '%%(jc_ks)s', '%%(jc_js)s', '%%(jyytms)s', '%%(kcm)s', '%%(day)s', '%%(SFYXZX)s'))
 def insert_into_kcb(*args: dict): _ = args
 
 
