@@ -122,7 +122,6 @@ Page({
             if (info == null) continue
             for (let k in info)
               data[i][k] = info[k]
-            data[i].dayIndex = data[i].day + 1
           }
           this.setData({
             serve: resData.service == 'on',
@@ -152,7 +151,7 @@ Page({
    showDialog(e: AnyObject): void {
     let index: number = e.currentTarget.dataset.index,
         item = this.data.result[index],
-        rq = this.data.rq_array[item.dayIndex].value
+        rq = this.data.rq_array[item.day].value
     this.setData({dialog: item2dialog(item, rq)})
   },
   closeDialog(): void {

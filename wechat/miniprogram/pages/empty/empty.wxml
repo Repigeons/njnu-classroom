@@ -18,7 +18,7 @@
         <rp-row zylxdm="{{item.zylxdm}}" jsmph="{{item.jsmph}}" skzws="{{item.SKZWS}}" jc_ks="{{item.jc_ks}}" jc_js="{{item.jc_js}}" bindlongpress="showLayer" data-index="{{index}}" />
       </block>
       <view class="rp-result__desc">
-        共发现 {{result.length}} 条结果，如果发现某一条目与事实情况不符，可长按相应条目提交错误。
+        共发现 {{result.length}} 条结果。如果发现某一条目与事实情况不符，可长按相应条目提交错误。
       </view>
       <!-- feedback -->
       <rp-layer id="layer" class="rp-layer" wx:if="{{layer_display}}"
