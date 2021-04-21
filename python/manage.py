@@ -19,8 +19,8 @@ def __init__logging(filename: str) -> None:
     logging.basicConfig(
         level=logging.INFO,
         format="[%(asctime)s] "
-               "[ %(levelname)s ]  "
-               "[ %(module)20s  ]    "
+               "[ %(levelname)7s ] "
+               "[ %(module)16s ] "
                ": %(message)s"
     )
     # 日志文件
@@ -42,8 +42,7 @@ def main(args: Namespace):
     logging.info("Starting Application with PID [%d]", os.getpid())
 
     if args.run:
-        os.environ['resources'] = os.path.abspath(os.getenv("resources", "resources"))
-        application_yml = os.path.join(os.getenv("resources"), "application.yml")
+        application_yml = "resources/application.yml"
         if not os.path.exists(application_yml):
             logging.error("FileNotFoundError: No such file [%s]", application_yml)
             exit(-1)

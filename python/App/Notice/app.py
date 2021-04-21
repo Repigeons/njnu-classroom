@@ -5,16 +5,22 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  app.py
 """"""
-import datetime
-import json
 import logging
 import os
-import shutil
 import time
+from wsgiref.simple_server import make_server
 
-from flask import Flask, request, jsonify
+from flask import Flask
+from ztxlib.rpspring import Value
 
-import App.Notice._ApplicationContext as Context
+
+class __Application:
+    @Value("application.notice.host")
+    def host(self) -> str: pass
+
+    @Value("application.notice.port")
+    def port(self) -> int: pass
+
 
 start_time = time.time() * 1000
 logging.info("Initializing FlaskApplication...")
@@ -22,67 +28,27 @@ app = Flask(__name__)
 complete_time = time.time() * 1000
 logging.info("FlaskApplication: initialization completed in %d ms", complete_time - start_time)
 
+with app.app_context():
+    from . import controller
 
-@app.route('/', methods=['PUT'])
-def index():
-    try:
-        request_args: dict = request.form.to_dict()
-        request_headers: dict = request.headers.environ
-        if 'text' not in request_args.keys():
-            raise KeyError("Expected field `text`")
-        if 'HTTP_TOKEN' not in request_headers.keys():
-            raise KeyError("Expected field `token`")
-        if Context.token != request_headers['HTTP_TOKEN']:
-            raise ValueError("Invalid token")
+    _ = controller
 
-        # Save to notice history
-        if os.path.exists(Context.file):
-            file = os.path.abspath(Context.file)
-            history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
-            history_list = json.load(open(history, encoding='utf8')) if os.path.exists(history) else []
-            history_list.append(json.load(open(Context.file, encoding='utf8')))
-            json.dump(history_list, open(history, 'w', encoding='utf8'))
 
-        # Save to [notice.json]
-        text: str = request_args['text']
-        for ch in [('\\n', '\n')]:
-            text = text.replace(*ch)
-        now = datetime.datetime.now()
-        data = {
-            'timestamp': int(now.timestamp()),
-            'date': now.strftime("%Y-%m-%d"),
-            'text': text,
-        }
-        json.dump(
-            obj=data,
-            fp=open(Context.file, 'w', encoding='utf8'),
-            ensure_ascii=False,
-            indent=2
+def startup():
+    logging.info("Using environment [%s]", app.env)
+    logging.info("Flask start with port [%d] (http) on [%s]", __Application.port, __Application.host)
+    logging.info("Started Application in %f seconds", (int(time.time() * 1000) - int(os.getenv("startup_time"))) / 1000)
+    if app.env == "production":
+        make_server(
+            host=__Application.host,
+            port=__Application.port,
+            app=app
+        ).serve_forever()
+        app.run()
+
+    else:
+        app.run(
+            host=__Application.host,
+            port=__Application.port,
+            debug=True
         )
-        return jsonify({
-            'status': 0,
-            'message': "ok",
-            'data': data
-        }), 202
-    except KeyError as e:
-        return jsonify({
-            'status': 1,
-            'message': "KeyError",
-            'detail': e.args[0]
-        }), 400
-    except ValueError as e:
-        return jsonify({
-            'status': 1,
-            'message': "TokenError",
-            'detail': e.args[0]
-        }), 403
-    except Exception as e:
-        logging.warning(
-            f"{type(e), e}"
-            f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-        )
-        return jsonify({
-            'status': 1,
-            'message': type(e),
-            'detail': e.args[0]
-        }), 500

@@ -12,14 +12,22 @@ import time
 
 from redis import StrictRedis
 from redis_lock import Lock
+from ztxlib.rpspring import Autowired
 
-import App.Spider._ApplicationContext as Context
-import App.Spider.app as app
-from App.Spider._ApplicationContext import send_email
+from App.Spider import service
+
+
+class __Application:
+
+    @Autowired
+    def redis_pool(self): pass
+
+    @Autowired
+    def send_email(self) -> None: pass
 
 
 def main():
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=__Application.redis_pool)
     lock = Lock(redis, "Spider")
     try:
         if lock.acquire(blocking=False):
@@ -33,10 +41,8 @@ def main():
                 core()
                 # 校正并归并数据
                 correct_and_merge()
-                # 从Redis清除缓存数据
-                redis.delete("Spider")
                 # 将数据放入生产环境
-                app.copy_to_pro() if os.getenv("env") == "pro" else None
+                service.copy_to_pro() if os.getenv("env") == "pro" else None
 
                 now = time.time() * 1000
                 logging.info(
@@ -52,38 +58,41 @@ def main():
         raise e
 
     except Exception as e:
-        logging.error(f"{type(e), e}")
-        send_email(
+        __Application.send_email(
             subject="南师教室：错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
+        logging.error(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)
+    finally:
+        # 从Redis清除缓存数据
+        redis.delete("Spider")
 
 
 def prepare():
     logging.info("开始采集基础信息...")
-    app.save_cookies()
-    app.save_time()
-    app.save_classrooms()
+    service.save_cookies()
+    service.save_time()
+    service.save_classrooms()
     time.sleep(5)
     logging.info("基础信息采集完成")
 
 
 def core():
     logging.info("开始采集详细信息...")
-    redis = StrictRedis(connection_pool=Context.redis_pool)
+    redis = StrictRedis(connection_pool=__Application.redis_pool)
     cookies = json.loads(redis.hget("Spider", "cookies"))
     time_info = json.loads(redis.hget("Spider", "time_info"))
     classrooms = json.loads(redis.hget("Spider", "classrooms"))
-    app.truncate_kcb()
+    service.truncate_kcb()
     for jxl in classrooms:
         print("开始查询教学楼：", jxl)
         for classroom in classrooms[jxl]:
             print("正在查询教室：", classroom['JXLMC'], classroom['jsmph'])
-            result = app.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
-            app.insert_into_kcb(class_list=result)
+            result = service.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
+            service.insert_into_kcb(result)
     time.sleep(5)
     logging.info("详细信息采集完成")
 
@@ -91,14 +100,14 @@ def core():
 def correct_and_merge():
     # 校正数据
     logging.info("开始校正数据...")
-    app.copy_to_dev()
-    app.correct()
+    service.copy_to_dev()
+    service.correct()
     time.sleep(5)
     logging.info("校正数据完成")
 
     # 归并数据
     logging.info("开始归并数据...")
-    app.merge()
+    service.merge()
     time.sleep(5)
     logging.info("归并数据完成")
 
