@@ -15,7 +15,7 @@ from redis_lock import Lock
 from ztxlib.rpspring import Autowired
 
 from App.Server import dao
-from App.Spider.service import save_cookies, save_time  # TODO
+from App.Spider.service import save_cookies, save_time
 
 
 class __Application:
