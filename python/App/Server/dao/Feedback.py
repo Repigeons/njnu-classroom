@@ -23,7 +23,7 @@ def add_feedback(jc: str, jasdm: str): pass
 def get_feedback(jasdm: str, day: int, jc: str): pass
 
 
-@insert("INSERT INTO `correction` ("
+@Insert("INSERT INTO `correction` ("
         "day, JXLMC, jsmph, JASDM, jc_ks, jc_js, jyytms, kcm"
         ") VALUES ("
         "%s, %s, %s, %s,  %s, %s, '占用','####占用')" %
