@@ -32,7 +32,7 @@
     <view wx:if="{{serve}}" class="rp-tip">共发现 {{results.length}} 条结果。</view>
     <scroll-view class="rp-result__scrollview" scroll-y bindscrolltolower="onReachBottom" wx:if="{{serve}}">
       <block wx:for="{{result}}" wx:key="key">
-        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.JXLMC}}{{item.jsmph}}&emsp;{{rq_array[item.day].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
+        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.JXLMC}}{{item.jsmph}}&emsp;{{rq_array[item.day ? item.day : 7].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
       </block>
     </scroll-view>
     <view class="rp-result__desc" wx:else>

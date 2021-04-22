@@ -151,7 +151,7 @@ Page({
    showDialog(e: AnyObject): void {
     let index: number = e.currentTarget.dataset.index,
         item = this.data.result[index],
-        rq = this.data.rq_array[item.day].value
+        rq = this.data.rq_array[item.day ? item.day : 7].value
     this.setData({dialog: item2dialog(item, rq)})
   },
   closeDialog(): void {
