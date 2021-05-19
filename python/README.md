@@ -74,6 +74,8 @@ Python语言具备良好的跨平台特性，可通过`virtualenv`模块快速�
 # Windows PowerShell
 virtualenv env
 ./env/Script/activate
+# cd ZTxLib
+python -m setup install  # install ZTxLib
 pip install -r requirements.txt
 ```
 
@@ -81,6 +83,8 @@ pip install -r requirements.txt
 # Linux Bash
 virtualenv env
 source env/bin/activate
+# cd ZTxLib
+python -m setup install  # install ZTxLib
 pip install -r requirements.txt
 ```
 
@@ -113,16 +117,14 @@ service 文件示例位于 systemd 文件夹中。
 python(NjnuClassroom)
 ├── manage.py               # 模块主入口
 ├── App                     # 应用模块
+│   ├── _public             # 公共模块
 │   ├── Spider              # 爬虫服务模块
 │   ├── Server              # 数据服务模块
 │   └── Notice              # 公告服务模块
-├── utils                   # 工具类
-│   ├── __init__.py
-│   ├── _mariadb.py         # 数据库操作类
-│   └── _smtp.py            # 发件服务器操作类
-├── requirements.txt        # pip依赖包列表
-└── resources               # 资源文件
-    └── application.yml     # 应用配置文件
+├── resources               # 资源文件
+│   ├── ZTxLib              # submodule
+│   └── application.yml     # 应用配置文件
+└── requirements.txt        # pip依赖包列表
 ```
 
 ### 10、附录
