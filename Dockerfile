@@ -9,7 +9,7 @@ VOLUME ["/tmp/NjnuClassroom"]
 # Install the base service
 RUN yum install -y epel-release
 RUN yum update  -y
-RUN yum install -y cronie nginx redis
+RUN yum install -y cronie git nginx redis
 RUN yum install -y gcc python38 python38-devel
 RUN yum install -y chromedriver chromium chromium-headless
 RUN yum install -y mariadb-connector-c mariadb-connector-c-devel
@@ -32,6 +32,12 @@ ADD python/requirements.txt /opt/NjnuClassroom/requirements.txt
 RUN virtualenv /opt/NjnuClassroom/env
 RUN /opt/NjnuClassroom/env/bin/pip install --upgrade pip setuptools wheel
 RUN /opt/NjnuClassroom/env/bin/pip install -r /opt/NjnuClassroom/requirements.txt
+
+# Git submodule (ZTxLib)
+WORKDIR /root
+RUN git clone https://github.com/Zhou-Tx/ZTxLib-Python.git --branch master --depth=1
+WORKDIR /root/ZTxLib-Python/ZTxLib
+RUN /opt/NjnuClassroom/env/bin/python -m setup install
 
 # Copy shell script and configuration files
 ADD shell/         /opt/NjnuClassroom/bin/
