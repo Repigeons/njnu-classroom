@@ -5,6 +5,9 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
       <excludeFolder url="file://$MODULE_DIR$/firefox" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/systemd" />
+      <excludeFolder url="file://$MODULE_DIR$/shell" />
+      <excludeFolder url="file://$MODULE_DIR$/docker" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (NjnuClassroom)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

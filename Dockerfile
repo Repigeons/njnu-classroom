@@ -40,8 +40,8 @@ WORKDIR /root/ZTxLib-Python/ZTxLib
 RUN /opt/NjnuClassroom/env/bin/python -m setup install
 
 # Copy shell script and configuration files
-ADD shell/         /opt/NjnuClassroom/bin/
-ADD docker-static/ /
+ADD python/shell/  /opt/NjnuClassroom/bin/
+ADD python/docker/ /
 
 # Set environment variables
 ENV env pro
