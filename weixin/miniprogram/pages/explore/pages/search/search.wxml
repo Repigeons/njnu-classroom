@@ -1,8 +1,8 @@
 <!--miniprogram/pages/explore/pages/search/search.wxml-->
 <view class="page">
   <view class="rp-search">
-    <rp-searchbar placeholder="搜索课程/活动" focus="{{showSearch}}" value="{{keyword}}"
-      bindfocus="onFocus" bindinput="onInput" bindsearch="submit" />
+    <rp-searchbar placeholder="搜索课程/活动" focus="{{showSearch}}" value="{{keyword}}" bindfocus="onFocus"
+      bindinput="onInput" bindsearch="submit" />
     <view class="rp-search__pickers" wx:if="{{showSearch}}">
       <view class="rp-search__picker">
         <rp-picker list="{{jxl_array}}" key="value" selected="{{jxl_selected}}" bindchange="bindJxlChange" />
@@ -11,9 +11,11 @@
         <rp-picker list="{{rq_array}}" key="value" selected="{{rq_selected}}" bindchange="bindRqChange" />
       </view>
       <view class="rp-search__picker rp-search__picker_cells">
-        <rp-picker class="rp-search__picker_cell__bd" list="{{jc_array}}" selected="{{jc_ks_selected}}" scroll="{{jc_ks_selected}}" bindchange="bindJcChange" data-jc="ks" />
+        <rp-picker class="rp-search__picker_cell__bd" list="{{jc_array}}" selected="{{jc_ks_selected}}"
+          scroll="{{jc_ks_selected}}" bindchange="bindJcChange" data-jc="ks" />
         <view class="rp-search__picker_cell__hd">至</view>
-        <rp-picker class="rp-search__picker_cell__bd"list="{{jc_array}}" selected="{{jc_js_selected}}" scroll="{{jc_js_selected}}" bindchange="bindJcChange" data-jc="js" />
+        <rp-picker class="rp-search__picker_cell__bd" list="{{jc_array}}" selected="{{jc_js_selected}}"
+          scroll="{{jc_js_selected}}" bindchange="bindJcChange" data-jc="js" />
       </view>
       <view class=".rp-search__lastpicker">
         <rp-picker list="{{zylxdm_array}}" key="value" selected="{{zylxdm_selected}}" bindchange="bindZylxChange" />
@@ -32,7 +34,9 @@
     <view wx:if="{{serve}}" class="rp-tip">共发现 {{results.length}} 条结果。</view>
     <scroll-view class="rp-result__scrollview" scroll-y bindscrolltolower="onReachBottom" wx:if="{{serve}}">
       <block wx:for="{{result}}" wx:key="key">
-        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}" text="{{item.JXLMC}}{{item.jsmph}}&emsp;{{rq_array[item.day ? item.day : 7].value}}{{item.jc_ks}}-{{item.jc_js}}节" bindtap="showDialog" data-index="{{index}}" />
+        <rp-row zylxdm="{{item.zylxdm}}" title="{{item.title}}"
+          text="{{item.JXLMC}}{{item.jsmph}}&emsp;{{rq_array[item.day ? item.day : 7].value}}{{item.jc_ks}}-{{item.jc_js}}节"
+          bindtap="showDialog" data-index="{{index}}" />
       </block>
     </scroll-view>
     <view class="rp-result__desc" wx:else>
@@ -41,7 +45,7 @@
   </view>
 </view>
 
-<rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
+<rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{dialog_buttons}}">
   <view style="text-align:left">
     <block wx:for="{{dialog.detail}}" wx:key="key">
       <view>{{item.field}}：{{item.value}}</view>

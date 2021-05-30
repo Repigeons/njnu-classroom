@@ -14,17 +14,17 @@ Page({
     showSearch: Boolean(),
     showResult: Boolean(),
     // 筛选
-    jxl_array: [{key: '#', value: "不限"}] as Array<KeyValue>,
+    jxl_array: [{ key: '#', value: "不限" }] as Array<KeyValue>,
     jxl_selected: 0,
     rq_array: [
-      {key: '#', value: "不限"},
-      {key: '1', value: "周一"},
-      {key: '2', value: "周二"},
-      {key: '3', value: "周三"},
-      {key: '4', value: "周四"},
-      {key: '5', value: "周五"},
-      {key: '6', value: "周六"},
-      {key: '0', value: "周日"},
+      { key: '#', value: "不限" },
+      { key: '1', value: "周一" },
+      { key: '2', value: "周二" },
+      { key: '3', value: "周三" },
+      { key: '4', value: "周四" },
+      { key: '5', value: "周五" },
+      { key: '6', value: "周六" },
+      { key: '0', value: "周日" },
     ],
     rq_selected: 0,
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
@@ -37,7 +37,7 @@ Page({
     result: Array<IClassroomRow>(),
     results: Array<IClassroomRow>(),
     dialog: {},
-    closeDialog: [{text:"关闭"}],
+    dialog_buttons: Array<IButton>(),
   },
 
   /**
@@ -53,8 +53,15 @@ Page({
     })
     app.getZylxdm().then(zylxdm_array => this.setData({ zylxdm_array }))
 
+    this.setData({
+      dialog_buttons: [{
+        text: "关闭",
+        tap: () => this.setData({ dialog: {} })
+      }]
+    })
+
     if (options.page === "search") {
-      let {keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected} = options
+      let { keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected } = options
       this.setData({
         keyword,
         jxl_selected: Number(jxl_selected),
@@ -89,7 +96,7 @@ Page({
     data[`jc_${e.target.dataset.jc}_selected`] = e.detail.value
     this.setData(data)
 
-    let {jc_ks_selected, jc_js_selected} = this.data
+    let { jc_ks_selected, jc_js_selected } = this.data
     if (jc_ks_selected > jc_js_selected) {
       this.setData({
         jc_ks_selected: jc_js_selected,
@@ -106,7 +113,7 @@ Page({
     if (this.data.keyword) {
       wx.request({
         url: `${app.globalData.server}/api/searchmore.json`,
-        data:{
+        data: {
           day: this.data.rq_array[this.data.rq_selected].key,
           jc_ks: this.data.jc_ks_selected + 1,
           jc_js: this.data.jc_js_selected + 1,
@@ -115,7 +122,7 @@ Page({
           kcm: this.data.keyword
         },
         success: res => {
-          let resData = res.data as Record<string,any>
+          let resData = res.data as Record<string, any>
           let data = resData.data as Array<IClassroomRow>
           for (let i = 0; i < data.length; i++) {
             let info = parseKcm(data[i].zylxdm, data[i].kcm)
@@ -139,7 +146,7 @@ Page({
   },
 
   onReachBottom() {
-    let {result, results} = this.data
+    let { result, results } = this.data
     this.setData({
       result: result.concat(results.slice(result.length, result.length + perPage))
     })
@@ -148,28 +155,26 @@ Page({
   /**
     * 显示详细信息
     */
-   showDialog(e: AnyObject): void {
+  showDialog(e: AnyObject): void {
     let index: number = e.currentTarget.dataset.index,
-        item = this.data.result[index],
-        rq = this.data.rq_array[item.day ? item.day : 7].value
-    this.setData({dialog: item2dialog(item, rq)})
+      item = this.data.result[index],
+      rq = this.data.rq_array[item.day ? item.day : 7].value
+    this.setData({ dialog: item2dialog(item, rq) })
   },
-  closeDialog(): void {
-    this.setData({dialog: {}})
-  },
+
   onShareAppMessage() {
     return {
       title: '更多搜索',
       path: 'pages/explore/pages/search/search'
-      + `?page=search`
-      + `&keyword=${this.data.keyword}`
-      + `&jxl_selected=${this.data.jxl_selected}`
-      + `&rq_selected=${this.data.rq_selected}`
-      + `&jc_ks_selected=${this.data.jc_ks_selected}`
-      + `&jc_js_selected=${this.data.jc_js_selected}`
-      + `&zylxdm_selected=${this.data.zylxdm_selected}`,
+        + `?page=search`
+        + `&keyword=${this.data.keyword}`
+        + `&jxl_selected=${this.data.jxl_selected}`
+        + `&rq_selected=${this.data.rq_selected}`
+        + `&jc_ks_selected=${this.data.jc_ks_selected}`
+        + `&jc_js_selected=${this.data.jc_js_selected}`
+        + `&zylxdm_selected=${this.data.zylxdm_selected}`,
       image: 'images/logo.png'
     }
   }
 })
-export {}
+export { }

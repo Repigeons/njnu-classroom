@@ -38,7 +38,7 @@
 </view>
 
 <!-- Notice -->
-<rp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{DoNotShowButton}}" bindbuttontap="DoNotShow">
+<rp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{dialog_buttons}}">
   <view style="text-align:left">
     <text decode="true">{{notice.text}}</text>
   </view>

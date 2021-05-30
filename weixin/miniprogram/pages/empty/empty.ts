@@ -7,19 +7,19 @@ Page({
   data: {
     // 公告
     notice: {} as INotice,
-    DoNotShowButton: [{text: "不再显示"}],
+    dialog_buttons: Array<IButton>(),
     // 筛选
     jxl_array: {} as Array<IPosition>,
     jxl_selected: 0,
     jxl_scroll: 0,
     rq_array: [
-      {key: '1', value: "周一"},
-      {key: '2', value: "周二"},
-      {key: '3', value: "周三"},
-      {key: '4', value: "周四"},
-      {key: '5', value: "周五"},
-      {key: '6', value: "周六"},
-      {key: '0', value: "周日"},
+      { key: '1', value: "周一" },
+      { key: '2', value: "周二" },
+      { key: '3', value: "周三" },
+      { key: '4', value: "周四" },
+      { key: '5', value: "周五" },
+      { key: '6', value: "周六" },
+      { key: '0', value: "周日" },
     ] as Array<KeyValue>,
     rq_selected: 0,
     rq_scroll: 0,
@@ -33,8 +33,8 @@ Page({
     layer_index: 0,
     layer_display: false,
     confirm_display: false,
-    layer_buttons: Array<ILayerButton>(),
-    confirm_buttons: Array<ILayerButton>(),
+    layer_buttons: Array<IButton>(),
+    confirm_buttons: Array<IButton>(),
     feedbackTime: 0,
   },
 
@@ -48,7 +48,7 @@ Page({
       let notice = wx.getStorageSync('notice') as number
       this.setData({
         notice: {
-          timestamp: (data.timestamp==notice) ? 0 : data.timestamp,
+          timestamp: (data.timestamp == notice) ? 0 : data.timestamp,
           date: data.date,
           text: data.text
         }
@@ -79,6 +79,14 @@ Page({
       }, {
         text: '取消',
         tap: () => this.setData({ confirm_display: false })
+      }],
+      dialog_buttons: [{
+        text: '不再显示',
+        tap: () => wx.setStorage({
+          key: 'notice',
+          data: this.data.notice.timestamp,
+          success: () => this.setData({ notice: { timestamp: 0, date: '', text: '' } })
+        })
       }]
     })
 
@@ -181,7 +189,7 @@ Page({
         dqjc: this.data.jc_selected + 1
       },
       success: res => {
-        let resData = res.data as Record<string,any>
+        let resData = res.data as Record<string, any>
         this.setData({
           serve: resData.service == 'on',
           result: resData.data
@@ -218,11 +226,11 @@ Page({
       method: 'POST',
       header: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: {
-          jc: this.data.jc_selected + 1,
-          results: JSON.stringify(this.data.result),
-          index: this.data.layer_index,
-          day: this.data.rq_array[this.data.rq_selected].key,
-          jxl: this.data.jxl_array[this.data.jxl_selected].name,
+        jc: this.data.jc_selected + 1,
+        results: JSON.stringify(this.data.result),
+        index: this.data.layer_index,
+        day: this.data.rq_array[this.data.rq_selected].key,
+        jxl: this.data.jxl_array[this.data.jxl_selected].name,
       },
       success: () => {
         wx.hideToast({
@@ -242,8 +250,8 @@ Page({
   showLayer(e: any): void {
     let index: number = e.currentTarget.dataset.index
     this.setData({
-        layer_index: index,
-        layer_display: true
+      layer_index: index,
+      layer_display: true
     })
   },
   /**
@@ -259,24 +267,13 @@ Page({
     }
   },
 
-  /**
-   * 关闭公告栏
-   */
-  DoNotShow(): void {
-    wx.setStorage({
-      key: 'notice',
-      data: this.data.notice.timestamp,
-      success: () => this.setData({notice: {timestamp: 0, date: '', text: ''}})
-    })
-  },
-
   onShareAppMessage() {
     return {
       title: '空教室查询',
       path: 'pages/empty/empty'
-      + `?page=empty`,
+        + `?page=empty`,
       image: 'images/logo.png'
     }
   }
 })
-export {}
+export { }

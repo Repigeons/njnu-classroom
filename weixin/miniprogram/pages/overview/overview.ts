@@ -29,7 +29,7 @@ Page({
     bar_list: Array<IClassroomRow>(),
     empty: true,
     dialog: {},
-    closeDialog: [{text:"关闭"}],
+    dialog_buttons: Array<IButton>(),
   },
 
   /**
@@ -46,8 +46,15 @@ Page({
       jxl_array: Object.keys(data)
     }))
 
+    this.setData({
+      dialog_buttons: [{
+        text: "关闭",
+        tap: () => this.setData({ dialog: {} })
+      }]
+    })
+
     if (options.page == 'overview') {
-      let {jxlmc, jsmph} = options
+      let { jxlmc, jsmph } = options
       this.switchClassroom(jxlmc, jsmph)
     }
   },
@@ -57,10 +64,10 @@ Page({
     wx.getStorage({
       key: 'last_overview',
       success: res => {
-        let {jxlmc, jsmph} = res.data
+        let { jxlmc, jsmph } = res.data
         this.switchClassroom(jxlmc, jsmph)
       },
-      fail: () => this.bindJxlChange({detail:{value:0}})
+      fail: () => this.bindJxlChange({ detail: { value: 0 } })
     })
   },
 
@@ -69,7 +76,7 @@ Page({
    */
   bindJxlChange(e: any): void {
     this.setData({ jxl_selected: +e.detail.value })
-    this.bindJsChange({detail:{value:0}})
+    this.bindJsChange({ detail: { value: 0 } })
   },
 
   /**
@@ -77,8 +84,8 @@ Page({
    */
   bindJsChange(e: any): void {
     let jsmph_selected = +e.detail.value,
-        jxlmc = this.data.jxl_array[this.data.jxl_selected],
-        jsmph = this.data.classrooms[jxlmc][jsmph_selected].JSMPH
+      jxlmc = this.data.jxl_array[this.data.jxl_selected],
+      jsmph = this.data.classrooms[jxlmc][jsmph_selected].JSMPH
     this.setData({ jsmph_selected })
     wx.setStorage({
       key: 'last_overview',
@@ -86,27 +93,27 @@ Page({
     })
     this.submit()
   },
-  
+
   /**
    * 前一个教室
    */
   bindFormer(): void {
     let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
-        value = (this.data.jsmph_selected - 1 + jasList.length) % jasList.length
-    this.bindJsChange({detail:{value}})
+      value = (this.data.jsmph_selected - 1 + jasList.length) % jasList.length
+    this.bindJsChange({ detail: { value } })
   },
   /**
    * 后一个教室
    */
   bindLatter(): void {
     let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
-        value = (this.data.jsmph_selected + 1) % jasList.length
-    this.bindJsChange({detail:{value}})
+      value = (this.data.jsmph_selected + 1) % jasList.length
+    this.bindJsChange({ detail: { value } })
   },
 
   submit() {
     let jxlmc = this.data.jxl_array[this.data.jxl_selected],
-        jasdm = this.data.classrooms[jxlmc][this.data.jsmph_selected].JASDM
+      jasdm = this.data.classrooms[jxlmc][this.data.jsmph_selected].JASDM
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
       data: { jasdm },
@@ -130,10 +137,10 @@ Page({
               break;
           }
           if (bar_list[i].day == this.data.day)
-          if (bar_list[i].jc_ks <= this.data.dqjc + 1)
-          if (bar_list[i].jc_js >= this.data.dqjc + 1) {
-            this.setData({ empty: bar_list[i].zylxdm == '00' })
-          }
+            if (bar_list[i].jc_ks <= this.data.dqjc + 1)
+              if (bar_list[i].jc_js >= this.data.dqjc + 1) {
+                this.setData({ empty: bar_list[i].zylxdm == '00' })
+              }
           // day1: 周一~0
           bar_list[i].day1 = (bar_list[i].day + 6) % 7
           let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
@@ -141,7 +148,7 @@ Page({
           for (let k in info) {
             bar_list[i][k] = info[k]
           }
-          kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio/3*1.3) * 3
+          kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
           bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
         }
         this.setData({ bar_list })
@@ -158,10 +165,7 @@ Page({
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
     const rq: string = rq_array[item.day]
-    this.setData({dialog: item2dialog(item, rq)})
-  },
-  closeDialog(): void {
-    this.setData({dialog: {}})
+    this.setData({ dialog: item2dialog(item, rq) })
   },
 
   switchClassroom(jxl: string, jsmph: string): void {
@@ -178,15 +182,15 @@ Page({
 
   onShareAppMessage() {
     let jxlmc = this.data.jxl_array[this.data.jxl_selected],
-        jsmph = this.data.classrooms[jxlmc][this.data.jsmph_selected].JSMPH
+      jsmph = this.data.classrooms[jxlmc][this.data.jsmph_selected].JSMPH
     return {
       title: '教室概览',
       path: 'pages/overview/overview'
-      + `?page=overview`
-      + `&jxlmc=${jxlmc}`
-      + `&jsmph=${jsmph}`,
+        + `?page=overview`
+        + `&jxlmc=${jxlmc}`
+        + `&jsmph=${jsmph}`,
       image: 'images/logo.png'
     }
   }
 })
-export {}
+export { }

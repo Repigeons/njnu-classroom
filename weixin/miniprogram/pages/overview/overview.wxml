@@ -88,14 +88,13 @@
     <!--~ 数据内容 -->
   </view>
   <!--~ body -->
-
-  <!-- Dialog -->
-  <mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
-    <view style="text-align:left">
-      <block wx:for="{{dialog.detail}}" wx:key="key">
-        <view>{{item.field}}：{{item.value}}</view>
-      </block>
-    </view>
-  </mp-dialog>
-  <!-- Dialog -->
 </view>
+<!-- Dialog -->
+<rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{dialog_buttons}}">
+  <view style="text-align:left">
+    <block wx:for="{{dialog.detail}}" wx:key="key">
+      <view>{{item.field}}：{{item.value}}</view>
+    </block>
+  </view>
+</rp-dialog>
+<!-- Dialog -->

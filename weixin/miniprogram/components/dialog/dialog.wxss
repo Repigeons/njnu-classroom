@@ -1,0 +1,69 @@
+/* components/dialog/dialog.wxss */
+.mask {
+  z-index: 1000;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  background-color: rgba(0, 0, 0, .6);
+}
+
+.dialog {
+  z-index: 1001;
+  position: fixed;
+  top: 50%;
+  left: 16px;
+  right: 16px;
+  transform: translateY(-50%);
+  background-color: #fff;
+  text-align: center;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-direction: column;
+  max-height: 90%;
+  width: 320px;
+  margin: 0 auto;
+}
+
+.header {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.4;
+  padding: 32px 24px 16px;
+}
+
+.body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 24px;
+  margin-bottom: 32px;
+  font-size: 17px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  hyphens: auto;
+  color: rgba(0, 0, 0, .5);
+}
+
+.footer {
+  display: flex;
+  position: relative;
+  line-height: 56px;
+  min-height: 56px;
+  font-size: 17px;
+}
+
+.footer>.a {
+  display: block;
+  -webkit-box-flex: 1;
+  flex: 1;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  position: relative;
+  color: rgba(0, 0, 0, .9);
+  margin: -1px;
+  border: solid 1px rgba(0, 0, 0, .2);
+}

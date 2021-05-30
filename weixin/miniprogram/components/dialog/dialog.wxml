@@ -1,0 +1,13 @@
+<view wx:if="{{show}}" class="mask" bindtap="onClose"></view>
+<view wx:if="{{show}}" class="dialog">
+  <view class="header">{{title}}</view>
+  <view class="body">
+    <slot></slot>
+  </view>
+  <view class="footer">
+    <block wx:for="{{buttons}}" wx:key="key" wx:if="{{index<3}}">
+      <!-- 最多显示3项 -->
+      <a class="a" data-index="{{index}}" bindtap="onButton">{{item.text}}</a>
+    </block>
+  </view>
+</view>
