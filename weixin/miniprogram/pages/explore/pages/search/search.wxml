@@ -41,10 +41,10 @@
   </view>
 </view>
 
-<mp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
+<rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{closeDialog}}" bindbuttontap="closeDialog">
   <view style="text-align:left">
     <block wx:for="{{dialog.detail}}" wx:key="key">
       <view>{{item.field}}：{{item.value}}</view>
     </block>
   </view>
-</mp-dialog>
+</rp-dialog>
