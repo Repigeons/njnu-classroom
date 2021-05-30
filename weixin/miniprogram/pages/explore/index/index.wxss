@@ -2,11 +2,12 @@
 .rp-userInfo {
   position: relative;
   width: 100%;
-  margin: 16px auto 12px auto;
+  margin: 10px auto;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .rp-userInfo .rp-avatar {
   display: block;
   height: 64px;
@@ -17,6 +18,7 @@
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
+
 .rp-userInfo .rp-nickname {
   text-align: center;
   font-size: 28px;
@@ -32,7 +34,35 @@
 }
 
 .ad {
-  padding: 5px;
-  margin-top: -10px;
-  border-radius: 15px;
+  /* padding: 20px; */
+  /* margin-top: -15px; */
+  margin: 15px 20px 20px 20px;
+}
+
+.rp-footer {
+  text-align: center;
+  font-size: 14px;
+  color: rgba(0, 0, 0, .3);
+  line-height: 1.4;
+  position: fixed;
+  bottom: 0;
+  padding-top: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  left: env(safe-area-inset-left);
+  right: env(safe-area-inset-right);
+  margin-bottom: 0;
+}
+
+.rp-footer__link {
+  color: #576b95;
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 8px;
+  position: relative;
+  font-size: 14px;
+}
+
+.rp-footer__text {
+  padding: 0 16px;
+  font-size: 12px;
 }

@@ -8,19 +8,16 @@
       <open-data type="userNickName" />
     </view>
   </view>
-  <!--
-  <view class="ad">
-    <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
-  </view>
-  -->
   <view class="rp-grids">
     <rp-grids grids="{{grids}}" column="3" bindtapgrids="onTapGrids" />
   </view>
+  
+  <view class="ad">
+    <ad unit-id="adunit-ae9ee773a5fe2e92"></ad>
+  </view>
 
-  <view class="weui-footer weui-footer_fixed-bottom">
-    <view class="weui-footer__links">
-      <a class="weui-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</a>
-    </view>
-    <view class="weui-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
+  <view class="rp-footer">
+    <view class="rp-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</view>
+    <view class="rp-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
   </view>
 </view>
