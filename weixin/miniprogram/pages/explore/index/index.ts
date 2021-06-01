@@ -1,4 +1,5 @@
-// explore.ts
+// explore/index
+import { getExploreGrids } from "../../../utils/getCache"
 // 获取应用实例
 const app = getApp<IAppOption>()
 let interstitialAd: WechatMiniprogram.InterstitialAd
@@ -16,7 +17,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(/*options*/): void {
-    app.getExploreGrids().then(data => this.setData({ grids: data}))
+    getExploreGrids().then(data => this.setData({ grids: data}))
     if (wx.createInterstitialAd) {
       interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-cbb4c40d86d77b8b' })
       interstitialAd.onLoad(() => {})

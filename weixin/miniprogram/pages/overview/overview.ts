@@ -1,8 +1,9 @@
-// overview.ts
-// 获取应用实例
-const app = getApp<IAppOption>()
+// overview
+import { getClassrooms } from '../../utils/getCache'
 import { parseKcm, item2dialog } from '../../utils/parser'
 import { getJc } from '../../utils/util'
+// 获取应用实例
+const app = getApp<IAppOption>()
 
 Page({
   data: {
@@ -41,7 +42,7 @@ Page({
     const cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     const cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
     this.setData({ cellHeight, cellWidth })
-    app.getClassrooms().then(data => this.setData({
+    getClassrooms().then(data => this.setData({
       classrooms: data,
       jxl_array: Object.keys(data)
     }))

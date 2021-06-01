@@ -1,7 +1,8 @@
-// empty.ts
+// empty
+import { getJxlPosition, getNotice } from '../../utils/getCache'
+import { getDistance, getJc } from '../../utils/util'
 // 获取应用实例
 const app = getApp<IAppOption>()
-import { getDistance, getJc } from '../../utils/util'
 
 Page({
   data: {
@@ -44,7 +45,7 @@ Page({
    */
   onLoad(options: Record<string, string>): void {
     // 公告
-    app.getNotice().then(data => {
+    getNotice().then(data => {
       let notice = wx.getStorageSync('notice') as number
       this.setData({
         notice: {
@@ -56,7 +57,7 @@ Page({
     })
 
     // 加载教学楼位置
-    app.getJxlPosition().then(data => {
+    getJxlPosition().then(data => {
       this.setData({ jxl_array: data })
       // 初始化至当前状态
       this.dangqianriqi()
@@ -203,7 +204,7 @@ Page({
   },
 
   /**
-   * 
+   *
    */
   feedback(): void {
     this.setData({ confirm_display: false })

@@ -1,4 +1,5 @@
-// miniprogram/pages/explore/pages/search/search.js
+// explore/search
+import { getClassrooms, getZylxdm } from "../../../../utils/getCache"
 import { item2dialog, parseKcm } from "../../../../utils/parser"
 // 获取应用实例
 const app = getApp<IAppOption>()
@@ -44,14 +45,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    app.getClassrooms().then(data => {
+    getClassrooms().then(data => {
       let jxl_array = this.data.jxl_array
       Object.keys(data).forEach(jxlmc => {
         jxl_array.push({ key: jxlmc, value: jxlmc })
       })
       this.setData({ jxl_array })
     })
-    app.getZylxdm().then(zylxdm_array => this.setData({ zylxdm_array }))
+    getZylxdm().then(zylxdm_array => this.setData({ zylxdm_array }))
 
     this.setData({
       dialog_buttons: [{

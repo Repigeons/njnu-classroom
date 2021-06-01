@@ -1,8 +1,7 @@
-// explore/pages/shuttlebus/shuttlebus.js
-// 获取应用实例
-const app = getApp<IAppOption>()
+// explore/shuttlebus
 import {getDistance} from '../../../../utils/util'
 import parseTime from "../../../../utils/timeParser"
+import { getShuttle } from '../../../../utils/getCache'
 
 Page({
   data: {
@@ -20,9 +19,9 @@ Page({
 
     nearestHint: "（离我最近）",
   },
-  
+
   onShow() {
-    app.getShuttle().then((data: IShuttle) => {
+    getShuttle().then((data: IShuttle) => {
       let name2index: Record<string, number> = {}
       data.stations.forEach((station, index) => name2index[station.name] = index)
       this.setData(data)
