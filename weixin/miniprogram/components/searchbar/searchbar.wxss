@@ -16,7 +16,7 @@
   flex-grow: 1;
   height: 100%;
   padding: 0 8px;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: #fff;
 }
 
@@ -44,6 +44,7 @@
 
 .searchbar__label {
   position: relative;
+  font-size: 16px;
   color: #576B95;
-  margin-left: 8px;
+  margin: 0 4px 0 12px;
 }
