@@ -1,25 +1,30 @@
 /* pages/overview/overview.wxss */
 .rp-search-bar {
-  padding-top: 8px;
-}
-
-.rp-cell {
+  margin: 8px 8px 0 8px;
   position: relative;
-  display: -webkit-box;
-  -webkit-box-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   height: 40px;
+  background-color: #ffffff;
+  border-radius: 16px;
 }
 
 .rp-label {
   text-align: center;
-  width: 15%;
+  width: 40px;
   font-weight: 700;
   color: unset;
 }
 
+.rp-picker{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .rp-bd_left {
   text-align: right;
-  width: 38%;
 }
 
 .rp-bd_text {
@@ -33,7 +38,6 @@
 .rp-bd_right {
   text-align: left;
   padding-left: 20px;
-  width: 32%;
 }
 
 .rp-title_cell {

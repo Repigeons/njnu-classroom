@@ -2,29 +2,23 @@
 <view class="page">
   <view class="page__bd">
     <!-- 选择教室 -->
-    <view class="weui-search-bar rp-search-bar">
-      <view class="weui-search-bar__form">
-        <view class="rp-cell">
-          <view class="weui-cell__hd rp-label">
-            <view bindtap="bindFormer">◀</view>
-          </view>
-          <view class="weui-cell__bd rp-bd_left">
-            <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
-              <view class="rp-bd_text">{{jxl_array[jxl_selected]}}</view>
-            </picker>
-          </view>
-          <view class="weui-cell__bd rp-bd_right">
-            <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{classrooms[jxl_array[jxl_selected]]}}" range-key="JSMPH">
-              <view class="rp-bd_text">
-                <text decode="true">{{classrooms[jxl_array[jxl_selected]][jsmph_selected].JSMPH}}</text>
-              </view>
-            </picker>
-          </view>
-          <view class="weui-cell__ft rp-label">
-            <view bindtap="bindLatter">▶</view>
-          </view>
+    <view class="rp-search-bar">
+      <view class="rp-label" bindtap="bindFormer">◀</view>
+      <view class="rp-picker">
+        <view class="rp-bd_left">
+          <picker value="{{jxl_selected}}" bindchange="bindJxlChange" range="{{jxl_array}}">
+            <view class="rp-bd_text">{{jxl_array[jxl_selected]}}</view>
+          </picker>
+        </view>
+        <view class="rp-bd_right">
+          <picker value="{{jsmph_selected}}" bindchange="bindJsChange" range="{{classrooms[jxl_array[jxl_selected]]}}" range-key="JSMPH">
+            <view class="rp-bd_text">
+              <text decode="true">{{classrooms[jxl_array[jxl_selected]][jsmph_selected].JSMPH}}</text>
+            </view>
+          </picker>
         </view>
       </view>
+      <view class="rp-label" bindtap="bindLatter">▶</view>
     </view>
     <!--~ 选择教室 -->
 
