@@ -4,7 +4,7 @@
   <view class="body">
     <slot></slot>
   </view>
-  <view class="footer">
+  <view class="footer" hover-class="footer_active">
     <block wx:for="{{buttons}}" wx:key="key" wx:if="{{index<3}}">
       <!-- 最多显示3项 -->
       <a class="a" data-index="{{index}}" bindtap="onButton">{{item.text}}</a>
