@@ -5,9 +5,9 @@
 		<view class="rp-search-bar">
 			<view class="rp-label" bindtap="bindFormer">◀</view>
 			<view class="rp-picker">
-				<picker mode="multiSelector" range="{{selecter}}" range-key="text" value="{{selected}}" bindcolumnchange="onPickerChange">
-					<view class="rp-bd_text">{{selecter[0][selected[0]].text}}</view>
-					<view class="rp-bd_text">{{selecter[1][selected[1]].text}}</view>
+				<picker mode="multiSelector" range="{{[jxl_list,jas_picker_list]}}" range-key="text" value="{{[jxl_picker_selected,jas_picker_selected]}}" bindcolumnchange="onPickerChange" bindcancel="onPickerCancel" bindchange="onSubmit">
+					<view class="rp-bd_text">{{jxl_list[jxl_display_selected].text}}</view>
+					<view class="rp-bd_text">{{jas_display_list[jas_display_selected].text}}</view>
 				</picker>
 			</view>
 			<view class="rp-label" bindtap="bindLatter">▶</view>

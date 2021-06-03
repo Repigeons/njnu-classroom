@@ -9,8 +9,13 @@ Page({
   data: {
     // 选择教室
     classrooms: Object() as Record<string, Array<IJasInfo>>,
-    selecter: [Array(), Array()],
-    selected: [0, 0],
+    jxl_list: Array<IJasInfo>(),
+    jxl_picker_selected: 0,
+    jxl_display_selected: 0,
+    jas_picker_list: Array<IJasInfo>(),
+    jas_picker_selected: 0,
+    jas_display_list: Array<IJasInfo>(),
+    jas_display_selected: 0,
     // 布局
     cellHeight: 0,
     cellWidth: 0,
@@ -43,10 +48,9 @@ Page({
     this.setData({ cellHeight, cellWidth })
 
     getClassrooms().then(data => {
-      const jxl_list = Object.keys(data)
       this.setData({
         classrooms: data,
-        selecter: [jxl_list.map(v => Object({ text: v })), []]
+        jxl_list: Object.keys(data).map(v => Object({ text: v }))
       })
     })
 
@@ -71,49 +75,47 @@ Page({
         let { jxlmc, jsmph } = res.data
         this.switchClassroom(jxlmc, jsmph)
       },
-      fail: () => this.onPickerChange({ detail: { column: 0, value: 0 } })
+      fail: () => {
+        this.onPickerChange({ detail: { column: 0, value: 0 } })
+        this.onSubmit()
+      }
     })
   },
 
   switchClassroom(jxlmc: string, jsmph: string) {
-    let selecter = this.data.selecter
+    let jxl_list = this.data.jxl_list
     this.onPickerChange({
       detail: {
         column: 0,
-        value: selecter[0].findIndex(item => item.text == jxlmc)
+        value: jxl_list.findIndex(item => item.text == jxlmc)
       }
     })
-    selecter = this.data.selecter
+    let jas_picker_list = this.data.jas_picker_list
     this.onPickerChange({
       detail: {
         column: 1,
-        value: selecter[1].findIndex(item => item.text == jsmph)
+        value: jas_picker_list.findIndex(item => item.text == jsmph)
       }
     })
+    this.onSubmit()
   },
 
   onPickerChange(e: any) {
-    const selecter = this.data.selecter
-    const selected = this.data.selected
     const { column, value } = e.detail
-    selected[column] = value
     if (column == 0) {
-      selected[1] = 0
-      const jxl_name = selecter[0][value].text
-      selecter[1] = this.data.classrooms[jxl_name].map((v: any) => {
+      const jxl_name = this.data.jxl_list[value].text
+      const jas_picker_list = this.data.classrooms[jxl_name].map(v => {
         v.text = v.JSMPH
         return v
       })
+      this.setData({
+        jxl_picker_selected: value,
+        jas_picker_list,
+        jas_picker_selected: 0
+      })
+    } else {
+      this.setData({ jas_picker_selected: value })
     }
-    this.setData({ selecter, selected })
-    this.submit()
-    wx.setStorage({
-      key: 'last_overview',
-      data: {
-        jxlmc: selecter[0][selected[0]].text,
-        jsmph: selecter[1][selected[1]].text,
-      }
-    })
   },
 
   /**
@@ -123,9 +125,10 @@ Page({
     this.onPickerChange({
       detail: {
         column: 1,
-        value: (this.data.selected[1] + this.data.selecter[1].length - 1) % (this.data.selecter[1].length)
+        value: (this.data.jas_picker_selected + this.data.jas_picker_list.length - 1) % (this.data.jas_picker_list.length)
       }
     })
+    this.onSubmit()
   },
   /**
    * 后一个教室
@@ -134,15 +137,34 @@ Page({
     this.onPickerChange({
       detail: {
         column: 1,
-        value: (this.data.selected[1] + 1) % (this.data.selecter[1].length)
+        value: (this.data.jas_picker_selected + 1) % (this.data.jas_picker_list.length)
       }
+    })
+    this.onSubmit()
+  },
+
+  onPickerCancel() {
+    this.setData({
+      jxl_picker_selected: this.data.jxl_display_selected,
+      jas_picker_list: this.data.jas_display_list,
+      jas_picker_selected: this.data.jas_display_selected
     })
   },
 
-  submit() {
-    const selecter = this.data.selecter
-    const selected = this.data.selected
-    const jasdm = selecter[1][selected[1]].JASDM
+  onSubmit() {
+    this.setData({
+      jxl_display_selected: this.data.jxl_picker_selected,
+      jas_display_list: this.data.jas_picker_list,
+      jas_display_selected: this.data.jas_picker_selected
+    })
+    const jas = this.data.jas_display_list[this.data.jas_display_selected]
+    const jxlmc = jas.JXLMC
+    const jsmph = jas.JSMPH
+    const jasdm = jas.JASDM
+    wx.setStorage({
+      key: 'last_overview',
+      data: { jxlmc, jsmph }
+    })
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
       data: { jasdm },
@@ -182,7 +204,7 @@ Page({
         }
         this.setData({ bar_list })
       },
-      fail: err => console.error(err)
+      fail: console.error
     })
   },
 
@@ -198,10 +220,9 @@ Page({
   },
 
   onShareAppMessage() {
-    const selecter = this.data.selecter
-    const selected = this.data.selected
-    const jxlmc = selecter[1][selected[1]].JXLMC
-    const jsmph = selecter[1][selected[1]].JSMPH
+    const jas = this.data.jas_display_list[this.data.jas_display_selected]
+    const jxlmc = jas.JXLMC
+    const jsmph = jas.JSMPH
     return {
       title: '教室概览',
       path: 'pages/overview/overview'

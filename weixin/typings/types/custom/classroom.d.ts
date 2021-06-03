@@ -1,4 +1,4 @@
-interface IJasInfo {
+interface IJasInfo extends Record<string, any> {
   readonly JXLMC: string
   readonly JSMPH: string
   readonly JASDM: string
@@ -74,7 +74,7 @@ interface IClassroomInfo extends Record<string, any> {
    */
   SKRS?: number,
   /**
-   * 
+   *
    */
   PKLY?: string,
 }
