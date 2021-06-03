@@ -9,9 +9,8 @@ Page({
   data: {
     // 选择教室
     classrooms: Object() as Record<string, Array<IJasInfo>>,
-    jxl_array: Array<string>(),
-    jxl_selected: 0,
-    jsmph_selected: 0,
+    selecter: [Array(), Array()],
+    selected: [0, 0],
     // 布局
     cellHeight: 0,
     cellWidth: 0,
@@ -42,10 +41,14 @@ Page({
     const cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
     const cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
     this.setData({ cellHeight, cellWidth })
-    getClassrooms().then(data => this.setData({
-      classrooms: data,
-      jxl_array: Object.keys(data)
-    }))
+
+    getClassrooms().then(data => {
+      const jxl_list = Object.keys(data)
+      this.setData({
+        classrooms: data,
+        selecter: [jxl_list.map(v => Object({ text: v })), []]
+      })
+    })
 
     this.setData({
       dialog_buttons: [{
@@ -68,53 +71,78 @@ Page({
         let { jxlmc, jsmph } = res.data
         this.switchClassroom(jxlmc, jsmph)
       },
-      fail: () => this.bindJxlChange({ detail: { value: 0 } })
+      fail: () => this.onPickerChange({ detail: { column: 0, value: 0 } })
     })
   },
 
-  /**
-   * 选择教学楼
-   */
-  bindJxlChange(e: any): void {
-    this.setData({ jxl_selected: +e.detail.value })
-    this.bindJsChange({ detail: { value: 0 } })
+  switchClassroom(jxlmc: string, jsmph: string) {
+    let selecter = this.data.selecter
+    this.onPickerChange({
+      detail: {
+        column: 0,
+        value: selecter[0].findIndex(item => item.text == jxlmc)
+      }
+    })
+    selecter = this.data.selecter
+    this.onPickerChange({
+      detail: {
+        column: 1,
+        value: selecter[1].findIndex(item => item.text == jsmph)
+      }
+    })
   },
 
-  /**
-   * 选择教室
-   */
-  bindJsChange(e: any): void {
-    let jsmph_selected = +e.detail.value,
-      jxlmc = this.data.jxl_array[this.data.jxl_selected],
-      jsmph = this.data.classrooms[jxlmc][jsmph_selected].JSMPH
-    this.setData({ jsmph_selected })
+  onPickerChange(e: any) {
+    const selecter = this.data.selecter
+    const selected = this.data.selected
+    const { column, value } = e.detail
+    selected[column] = value
+    if (column == 0) {
+      selected[1] = 0
+      const jxl_name = selecter[0][value].text
+      selecter[1] = this.data.classrooms[jxl_name].map((v: any) => {
+        v.text = v.JSMPH
+        return v
+      })
+    }
+    this.setData({ selecter, selected })
+    this.submit()
     wx.setStorage({
       key: 'last_overview',
-      data: { jxlmc, jsmph }
+      data: {
+        jxlmc: selecter[0][selected[0]].text,
+        jsmph: selecter[1][selected[1]].text,
+      }
     })
-    this.submit()
   },
 
   /**
    * 前一个教室
    */
   bindFormer(): void {
-    let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
-      value = (this.data.jsmph_selected - 1 + jasList.length) % jasList.length
-    this.bindJsChange({ detail: { value } })
+    this.onPickerChange({
+      detail: {
+        column: 1,
+        value: (this.data.selected[1] + this.data.selecter[1].length - 1) % (this.data.selecter[1].length)
+      }
+    })
   },
   /**
    * 后一个教室
    */
   bindLatter(): void {
-    let jasList = this.data.classrooms[this.data.jxl_array[this.data.jxl_selected]],
-      value = (this.data.jsmph_selected + 1) % jasList.length
-    this.bindJsChange({ detail: { value } })
+    this.onPickerChange({
+      detail: {
+        column: 1,
+        value: (this.data.selected[1] + 1) % (this.data.selecter[1].length)
+      }
+    })
   },
 
   submit() {
-    let jxlmc = this.data.jxl_array[this.data.jxl_selected],
-      jasdm = this.data.classrooms[jxlmc][this.data.jsmph_selected].JASDM
+    const selecter = this.data.selecter
+    const selected = this.data.selected
+    const jasdm = selecter[1][selected[1]].JASDM
     wx.request({
       url: `${app.globalData.server}/api/overview.json`,
       data: { jasdm },
@@ -169,21 +197,11 @@ Page({
     this.setData({ dialog: item2dialog(item, rq) })
   },
 
-  switchClassroom(jxl: string, jsmph: string): void {
-    let jxl_selected = 0, jsmph_selected = 0
-    this.data.jxl_array.forEach((jxlmc, jxlIndex) => {
-      if (jxlmc == jxl) jxl_selected = jxlIndex
-    })
-    this.data.classrooms[jxl].forEach((jas, jsmphIndex) => {
-      if (jas.JSMPH == jsmph) jsmph_selected = jsmphIndex
-    })
-    this.setData({ jxl_selected, jsmph_selected })
-    this.submit()
-  },
-
   onShareAppMessage() {
-    let jxlmc = this.data.jxl_array[this.data.jxl_selected],
-      jsmph = this.data.classrooms[jxlmc][this.data.jsmph_selected].JSMPH
+    const selecter = this.data.selecter
+    const selected = this.data.selected
+    const jxlmc = selecter[1][selected[1]].JXLMC
+    const jsmph = selecter[1][selected[1]].JSMPH
     return {
       title: '教室概览',
       path: 'pages/overview/overview'
