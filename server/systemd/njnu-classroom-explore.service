@@ -7,7 +7,7 @@ Type=simple
 User=root
 Restart=on-failure
 RestartSec=5s
-ExecStart=/opt/NjnuClassroom/explore.sh
+ExecStart=/opt/NjnuClassroom/bin/explore.sh
 
 [Install]
 WantedBy=multi-user.target

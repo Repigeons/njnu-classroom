@@ -22,11 +22,11 @@ RUN mkdir /opt/NjnuClassroom
 RUN mkdir /var/log/NjnuClassroom
 
 # Copy project files and deployment
-ADD python/manage.py        /opt/NjnuClassroom/src/manage.py
-ADD python/App              /opt/NjnuClassroom/src/App
-ADD python/utils            /opt/NjnuClassroom/src/utils
-ADD python/resources        /opt/NjnuClassroom/resources
-ADD python/requirements.txt /opt/NjnuClassroom/requirements.txt
+ADD server/manage.py        /opt/NjnuClassroom/src/manage.py
+ADD server/App              /opt/NjnuClassroom/src/App
+ADD server/utils            /opt/NjnuClassroom/src/utils
+ADD server/resources        /opt/NjnuClassroom/resources
+ADD server/requirements.txt /opt/NjnuClassroom/requirements.txt
 
 # Initialize the virtual environment
 RUN virtualenv /opt/NjnuClassroom/env
@@ -40,8 +40,8 @@ WORKDIR /root/ZTxLib-Python/ZTxLib
 RUN /opt/NjnuClassroom/env/bin/python -m setup install
 
 # Copy shell script and configuration files
-ADD python/shell/  /opt/NjnuClassroom/bin/
-ADD python/docker/ /
+ADD server/shell/  /opt/NjnuClassroom/bin/
+ADD server/docker/ /
 
 # Set environment variables
 ENV env pro
