@@ -1,5 +1,6 @@
 SET NAMES utf8mb4;
 
+drop schema if exists NjnuClassroom;
 create schema NjnuClassroom collate utf8mb4_general_ci;
 use NjnuClassroom;
 

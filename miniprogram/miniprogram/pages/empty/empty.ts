@@ -1,3 +1,4 @@
+export { }
 // empty
 import { getJxlPosition, getNotice } from '../../utils/getCache'
 import { getDistance, getJc } from '../../utils/util'
@@ -277,4 +278,3 @@ Page({
     }
   }
 })
-export { }

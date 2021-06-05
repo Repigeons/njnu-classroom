@@ -1,3 +1,4 @@
+export { }
 // overview
 import { getClassrooms } from '../../utils/getCache'
 import { parseKcm, item2dialog } from '../../utils/parser'
@@ -233,4 +234,3 @@ Page({
     }
   }
 })
-export { }

@@ -1,3 +1,4 @@
+export { }
 // explore/index
 import { getExploreGrids } from "../../../utils/getCache"
 // 获取应用实例
@@ -17,12 +18,12 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(/*options*/): void {
-    getExploreGrids().then(data => this.setData({ grids: data}))
+    getExploreGrids().then(data => this.setData({ grids: data }))
     if (wx.createInterstitialAd) {
       interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-cbb4c40d86d77b8b' })
-      interstitialAd.onLoad(() => {})
+      interstitialAd.onLoad(() => { })
       interstitialAd.onError(console.error)
-      interstitialAd.onClose(() => {})
+      interstitialAd.onClose(() => { })
     }
   },
 
@@ -36,10 +37,10 @@ Page({
   onTapGrids(e: any): void {
     const methods: Record<string, () => void> = {
       developing: () => wx.showToast({ title: "敬请期待", icon: 'none' }),
-      calendar: () =>  wx.previewImage({urls: [`${app.globalData.server}/images/calendar.jpg`]}),
-      support: () =>  interstitialAd?.show().catch(console.error),
+      calendar: () => wx.previewImage({ urls: [`${app.globalData.server}/images/calendar.jpg`] }),
+      support: () => interstitialAd?.show().catch(console.error),
     },
-    method = methods[e.detail.method]
+      method = methods[e.detail.method]
     if (typeof method == "function") method()
   },
 
@@ -57,9 +58,8 @@ Page({
     return {
       title: '发现',
       path: 'pages/explore/explore'
-      + `?page=explore`,
+        + `?page=explore`,
       image: "images/logo.png"
     }
   }
 })
-export {}

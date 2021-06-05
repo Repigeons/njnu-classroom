@@ -1,3 +1,4 @@
+export { }
 // explore/search
 import { getClassrooms, getZylxdm } from "../../../../utils/getCache"
 import { item2dialog, parseKcm } from "../../../../utils/parser"
@@ -178,4 +179,3 @@ Page({
     }
   }
 })
-export { }

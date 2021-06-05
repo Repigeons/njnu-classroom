@@ -1,5 +1,6 @@
+export { }
 // explore/shuttlebus
-import {getDistance} from '../../../../utils/util'
+import { getDistance } from '../../../../utils/util'
 import parseTime from "../../../../utils/timeParser"
 import { getShuttle } from '../../../../utils/getCache'
 
@@ -31,8 +32,8 @@ Page({
         type: 'gcj02',
         success: res => {
           let stations_display: Array<string> = [],
-              stationDistance: Array<number> = [],
-              nearestStation: Array<{name:string, distance:number}> = []
+            stationDistance: Array<number> = [],
+            nearestStation: Array<{ name: string, distance: number }> = []
           this.data.stations.forEach(station => {
             let distance = Math.floor(getDistance({
               latitude1: station.position[0],
@@ -44,7 +45,7 @@ Page({
             stationDistance.push(distance)
             stations_display.push(station.name)
           })
-          nearestStation.sort((a,b) => a.distance - b.distance)
+          nearestStation.sort((a, b) => a.distance - b.distance)
           for (let index = 0; index < stations_display.length; index++) {
             if (stations_display[index] == nearestStation[0].name) {
               stations_display[index] += this.data.nearestHint
@@ -62,11 +63,11 @@ Page({
 
   redirect(e?: boolean): void {
     if (e) {
-      this.setData({ direction: !this.data.direction})
+      this.setData({ direction: !this.data.direction })
     }
     if (!this.data.direction) {
       this.setData({
-        terminus: this.data.stations[this.data.stations.length-1].name,
+        terminus: this.data.stations[this.data.stations.length - 1].name,
         routes: this.data.direction1
       })
     } else {
@@ -94,9 +95,8 @@ Page({
     return {
       title: '校内班车时刻表',
       path: 'pages/explore/pages/shuttle/shuttle'
-      + `?page=shuttle`,
+        + `?page=shuttle`,
       image: 'images/logo.png'
     }
   }
 })
-export {}
