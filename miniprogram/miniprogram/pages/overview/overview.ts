@@ -44,8 +44,8 @@ Page({
    */
   onLoad(options: Record<string, string>): void {
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
-    const cellHeight = (windowHeight - (this.data.topBorder + 20)) / 13
-    const cellWidth = (windowWidth - this.data.leftBorder * 2) / 8 - 1
+    const cellHeight = (windowHeight - (this.data.topBorder + 20 + 2)) / 13
+    const cellWidth = (windowWidth - (this.data.leftBorder * 2 + 2)) / 8 - 1
     this.setData({ cellHeight, cellWidth })
 
     getClassrooms().then(data => {

@@ -11,10 +11,15 @@
 }
 
 .rp-label {
-  text-align: center;
   width: 40px;
-  font-weight: 700;
-  color: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-label .image {
+  height: 16px;
+  width: 10px;
 }
 
 .rp-picker{
@@ -26,13 +31,21 @@
 .rp-bd_text {
   position: relative;
   display: inline;
-  margin: 0 3px;
-  padding-top: 2px;
+  margin: 0 6px;
   line-height: 16px;
   font-weight: 700;
 }
 
-.rp-title_cell {
+.rp-outerborder {
+  position: absolute;
+  border-radius: 16px;
+  background-color:#ffffff;
+  z-index: -1;
+  overflow: hidden;
+  border: 1px solid #ffffff;
+}
+
+.rp-outerborder .title {
   position: absolute;
   background-color:#e5e5e5;
   margin-bottom: 1px;
@@ -41,51 +54,42 @@
   text-align: center;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
 }
 
-.rp-title_cell_jc{
+.rp-outerborder .title .image {
+  height: 20px;
+  width: 20px;
+}
+
+.rp-outerborder .title .jc{
   position:absolute;
   font-weight:600;
   color:#000
 }
 
-.rp-title_cell_time{
+.rp-outerborder .title .time{
   position:absolute;
   letter-spacing:1;
   color:#535353;
 }
 
-.rp-title_cell_xq{
+.rp-outerborder .title .xq{
   font-weight:600;
   color:#000
 }
 
-.rp-title_cell-text{
-  text-align: center;
-  font-weight: 600;
-}
-
-.rp-title_cell_highlight {
+.rp-outerborder .highlight_cell {
   background-color: #b8ced9;
+  background-color: #c9c9c9;
 }
 
-.rp-line {
-  position: absolute;
-  background-color:#d2d2d2;
-  height: 2px;
+.rp-data{
+  background-color: #e5e5e5;
 }
 
-.rp-midline {
-  position: absolute;
-  background-color:#898989;
-  height: 2px;
-}
-
-.rp-bar {
+.rp-data .bar {
   position: absolute;
   transition: height .6s, top .6s, background-color .6s;
-  opacity: 0.75;
   border-radius: 8px;
   display: flex;
   text-align: center;
@@ -93,17 +97,23 @@
   justify-content: center;
   overflow: hidden;
   word-break:break-all;
-  color: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
 }
 
-.rp-bar_empty {
-  background-color:#5dc45d;
+.rp-data .empty {
+  background-color:#ace5ac;
 }
 
-.rp-bar_class {
-  background-color:#1579eb;
+.rp-data .class {
+  background-color:#9ac8ed;
 }
 
-.rp-bar_others {
-  background-color:#d6844e;
+.rp-data .others {
+  background-color:#f2c7aa;
+}
+
+.rp-data .active {
+  background-color: #cee6f2;
+  opacity: 0.8;
 }
