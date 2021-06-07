@@ -43,13 +43,15 @@
 .cover__left {
   left: 0;
   background: linear-gradient(to right, #ffffffff, #ffffff00);
+  background: -webkit-gradient(linear, 0 0, 100% 0, from(#ffffffff), to(#ffffff00));
 }
 .cover__right {
   right: 0;
   background: linear-gradient(to left, #ffffffff, #ffffff00);
+  background: -webkit-gradient(linear, 100% 0, 0 0, from(#ffffffff), to(#ffffff00));
 }
 .pickerWithButton .cover__right {
-  right: 20%;
+  right: calc(20% + 1px);
 }
 
 .button {
@@ -59,7 +61,7 @@
   right: 0;
   width: 20%;
   height: 44px;
-  border-left: 1px solid #000;
+  border-left: 1px solid #EDEDED;
 }
 
 .button__text {
