@@ -40,7 +40,7 @@
 .classroom-sign{
   font-size:22px;
   line-height:22px;
-  text-align: right;
+  text-align: center;
   width: 41px;
   padding-left: 8px;
 }
