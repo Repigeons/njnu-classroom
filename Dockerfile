@@ -24,7 +24,6 @@ RUN mkdir /var/log/NjnuClassroom
 # Copy project files and deployment
 ADD server/manage.py        /opt/NjnuClassroom/src/manage.py
 ADD server/App              /opt/NjnuClassroom/src/App
-ADD server/utils            /opt/NjnuClassroom/src/utils
 ADD server/resources        /opt/NjnuClassroom/resources
 ADD server/requirements.txt /opt/NjnuClassroom/requirements.txt
 
