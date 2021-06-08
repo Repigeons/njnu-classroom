@@ -3,6 +3,8 @@ export { }
 import { getDistance } from '../../../../utils/util'
 import parseTime from "../../../../utils/timeParser"
 import { getShuttle } from '../../../../utils/getCache'
+// 获取应用实例
+const app = getApp<IAppOption>()
 
 Page({
   data: {
@@ -89,6 +91,25 @@ Page({
 
   bindStationChange(e: AnyObject): void {
     this.setData({ station_selected: +e.detail.value })
+  },
+
+  uploadFile() {
+    wx.chooseImage({
+      count: 1,
+      fail: console.error,
+      success: (res) => {
+        wx.uploadFile({
+          url: `${app.globalData.server}/explore/shuttle/upload`,
+          filePath: res.tempFiles[0].path,
+          name: 'file',
+          success: () => {
+            wx.showToast({ title: '上传成功！' })
+          },
+          fail: console.error,
+        })
+      }
+    })
+    // 发送文件到服务器
   },
 
   onShareAppMessage() {
