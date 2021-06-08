@@ -21,14 +21,19 @@ def config() -> dict: pass
 def receivers() -> list: pass
 
 
+_smtp = SMTP(**config)
+
+
+@Bean
+def smtp():
+    return _smtp
+
+
 @Bean
 class SendEmail:
-    def __init__(self):
-        self.smtp = SMTP(**config)
-
     def __call__(self, subject: str, message: str):
         Thread(
-            target=self.smtp.send,
+            target=_smtp.send,
             kwargs={
                 'subject': subject,
                 'header_from': "Repigeons",

@@ -2,12 +2,11 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
-      <excludeFolder url="file://$MODULE_DIR$/firefox" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
       <excludeFolder url="file://$MODULE_DIR$/systemd" />
       <excludeFolder url="file://$MODULE_DIR$/shell" />
       <excludeFolder url="file://$MODULE_DIR$/docker" />
+      <excludeFolder url="file://$MODULE_DIR$/ZTxLib" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (NjnuClassroom)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

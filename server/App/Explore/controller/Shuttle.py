@@ -8,10 +8,14 @@
 import datetime
 import json
 
-from flask import current_app as app, jsonify
+from flask import current_app as app
+from flask import jsonify
+from flask import request
 from redis import StrictRedis
 from redis_lock import Lock
 from ztxlib.rpspring import Autowired
+
+from App.Explore.service import EmailFile
 
 
 class __Application:
@@ -19,7 +23,7 @@ class __Application:
     def redis_pool(self): pass
 
 
-@app.route('/shuttle.json', methods=['GET'])
+@app.get('/shuttle.json')
 def shuttle():
     redis = StrictRedis(connection_pool=__Application.redis_pool)
     lock = Lock(redis, "Explore-Shuttle")
@@ -31,3 +35,15 @@ def shuttle():
             )))
         finally:
             lock.release()
+
+
+@app.post('/shuttle/upload')
+def upload():
+    file = request.files.get('file')
+    EmailFile.email_file(
+        content=file.stream.read(),
+        subject='校车时刻表',
+    )
+    return jsonify(
+        status=0
+    )
