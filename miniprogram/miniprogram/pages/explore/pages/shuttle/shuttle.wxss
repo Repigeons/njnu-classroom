@@ -1,4 +1,8 @@
 /* explore/pages/shuttlebus/shuttlebus.wxss */
+.rp-page-top {
+  height: 104px;
+}
+
 .rp-topbox {
   position: absolute;
   width: calc(100% - 40px);
@@ -6,10 +10,11 @@
   flex-direction: row;
   align-items: center;
   height: 56px; 
-  margin: 16px 8px;
-  background-color: #DDDDDD;
+  margin: 16px 8px 8px 8px;
+  background-color: #f2cc8f;
   border-radius: 16px;
   padding: 12px;
+  box-shadow: 0 0 8px #d9b780;
 }
 
 .rp-topbox-button__left {
@@ -55,15 +60,16 @@
 }
 
 .rp-topbox-title {
+  padding-top: 4px;
   font-size: 21px; 
-  font-weight: 500; 
+  font-weight: 700; 
   height: 28px; 
   white-space: nowrap;
 }
 
 .rp-topbox-arrow__image {
-  height: 10px;
-  width: 40px;
+  height: 15px;
+  width: 30px;
 }
 
 .rp-topbox-exchange__bd {
@@ -74,17 +80,34 @@
 }
 
 .rp-topbox-exchange__image {
-  height: 8px;
-  width: 12px;
+  height: 10px;
+  width: 10px;
 }
 
 .rp-scrollzone {
   position: absolute;
-  top: 112px;
-  height: calc(100% - 112px);
+  top: 104px;
+  height: calc(100% - 104px);
   width: 100%;
+  z-index: 0;
 }
 
 .rp-scrollzone__scrollview {
   height: 100%;
 }
+
+.cover {
+  position: absolute;
+  left: 0;
+  height: 8px;
+  width: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cover__top {
+  top: 104px;
+  background: linear-gradient(to bottom, #edededff, #ededed00);
+  background: -webkit-gradient(linear, 0 0, 0 100%, from(#edededff), to(#ededed00));
+}
+
