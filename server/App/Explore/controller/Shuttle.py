@@ -42,7 +42,7 @@ def upload():
     file = request.files.get('file')
     EmailFile.email_file(
         content=file.stream.read(),
-        subject=f"【南师教室】有人上传校车时刻表：{file.filename}",
+        subject=f"【南师教室】有人上传校车时刻表.{file.filename.split('.')[-1]}",
     )
     return jsonify(
         status=0
