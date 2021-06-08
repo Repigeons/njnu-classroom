@@ -18,6 +18,7 @@
 .rp-result__desc {
   padding: 0 16px 8px;
   font-size: 14px;
+  line-height: 20px;
   color: rgba(0,0,0,.5);
 }
 

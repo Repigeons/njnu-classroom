@@ -40,6 +40,7 @@
 .rp-tip {
   padding: 0 18px;
   font-size: 14px;
+  line-height: 20px;
   color: rgba(0,0,0,.5);
 }
 
