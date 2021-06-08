@@ -38,7 +38,7 @@ def save_time() -> None:
     except JSONDecodeError as e:
         logging.error("cookies无效")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"cookies无效\n"
                     f"JSONDecodeError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
@@ -48,7 +48,7 @@ def save_time() -> None:
     except KeyError as e:
         logging.error("获取时间信息失败")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"获取时间信息失败\n"
                     f"KeyError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
@@ -58,7 +58,7 @@ def save_time() -> None:
     except Exception as e:
         logging.error(f"{type(e), e}")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )

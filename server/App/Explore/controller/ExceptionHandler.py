@@ -8,8 +8,8 @@
 import logging
 
 from flask import current_app as app
-from flask import request
 from flask import jsonify
+from flask import request
 from werkzeug.exceptions import HTTPException, InternalServerError
 from ztxlib.rpspring import Autowired
 
@@ -25,7 +25,7 @@ def handle_exception(e: Exception):
         raise e
     logging.warning(f"{type(e), e}")
     __Application.send_email(
-        subject="南师教室：错误报告",
+        subject="【南师教室】错误报告",
         message=f"{type(e), e}\n"
                 f"{request.url}\n"
                 f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"

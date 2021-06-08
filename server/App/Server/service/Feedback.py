@@ -50,12 +50,12 @@ def process(
             if zylxdm == '00':
                 week_count, total_count = auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
                 __Application.send_email(
-                    subject=f"南师教室：用户反馈 "
+                    subject="【南师教室】用户反馈："
                             f"{jxlmc} "
                             f"{jsmph}教室 "
                             f"{jc_ks}-{jc_js}节有误 "
                             f"（当前为第{jc}节）",
-                    message=f"验证一站式平台：数据一致\n"
+                    message="验证一站式平台：数据一致\n"
                             f"上报计数：{total_count}\n"
                             f"本周计数：{week_count}\n"
                             f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
@@ -64,7 +64,7 @@ def process(
 
             else:
                 __Application.send_email(
-                    subject=f"南师教室：用户反馈 "
+                    subject="【南师教室】用户反馈："
                             f"{jxlmc} "
                             f"{jsmph}教室 "
                             f"{jc_ks}-{jc_js}节有误 "
@@ -81,7 +81,7 @@ def process(
             reset()
 
             __Application.send_email(
-                subject=f"南师教室：用户反馈 "
+                subject="【南师教室】用户反馈："
                         f"{jxlmc} "
                         f"{jsmph}教室 "
                         f"{jc_ks}-{jc_js}节有误 "
@@ -94,7 +94,7 @@ def process(
     except Exception as e:
         logging.warning(f"{type(e), e}")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"{type(e), e}\n"
                     f"{request.url}\n"
                     f"{request_args}\n"

@@ -43,7 +43,7 @@ def save_cookies() -> None:
     except FileNotFoundError as e:
         logging.error("配置文件缺失")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"配置文件缺失\n"
                     f"FileNotFoundError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
@@ -53,7 +53,7 @@ def save_cookies() -> None:
     except JSONDecodeError as e:
         logging.error("配置文件解析失败")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"配置文件解析失败\n"
                     f"JSONDecodeError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
@@ -63,7 +63,7 @@ def save_cookies() -> None:
     except KeyError as e:
         logging.error("登录失败")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"登录失败\n"
                     f"KeyError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
@@ -73,7 +73,7 @@ def save_cookies() -> None:
     except Exception as e:
         logging.error(f"{type(e), e}")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )

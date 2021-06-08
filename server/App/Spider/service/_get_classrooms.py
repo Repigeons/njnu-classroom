@@ -37,7 +37,7 @@ def save_classrooms() -> None:
     except Exception as e:
         logging.error(f"{type(e), e}")
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )

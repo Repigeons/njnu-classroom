@@ -59,7 +59,7 @@ def main():
 
     except Exception as e:
         __Application.send_email(
-            subject="南师教室：错误报告",
+            subject="【南师教室】错误报告",
             message=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
