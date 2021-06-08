@@ -36,6 +36,10 @@
         <rp-row id="row{{index}}" time="{{item[0]}}" from="{{item[1]}}" to="{{item[2]}}"
         via="{{(station_selected >= name2index[item[1]] && station_selected <= name2index[item[2]]) || (station_selected >= name2index[item[2]] && station_selected <= name2index[item[1]])}}" />
       </block>
+      <view class="rp-feedback" bindtap="uploadFile"> 
+        <view class="text">我有新版，</view>
+        <view class="link">上传</view>
+      </view>
     </scroll-view>
   </view>
   <!--~ 校车信息（滑动区域） -->

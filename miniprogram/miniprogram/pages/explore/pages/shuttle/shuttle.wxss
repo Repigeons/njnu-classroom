@@ -96,6 +96,24 @@
   height: 100%;
 }
 
+.rp-feedback {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  padding: 0 8px 8px 8px;
+}
+
+.rp-feedback .link {
+  color: #576b95;
+  text-decoration: underline;
+}
+
+.rp-feedback .text {
+  color: rgba(0, 0, 0,.5);
+}
+
 .cover {
   position: absolute;
   left: 0;
