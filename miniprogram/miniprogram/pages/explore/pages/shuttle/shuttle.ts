@@ -10,6 +10,8 @@ Page({
   data: {
     station_selected: 0,
     stations_display: Array<string>(),
+    week_selected: 0,
+    week_display: ['周一','周二','周三','周四','周五','周六','周日'],
     stations: Array<IPosition>(),
     routes: Array<IShuttleRoute>(),
     direction1: Array<IShuttleRoute>(),
@@ -91,6 +93,11 @@ Page({
 
   bindStationChange(e: AnyObject): void {
     this.setData({ station_selected: +e.detail.value })
+  },
+
+  bindWeekChange(e: AnyObject): void {
+    this.setData({ week_selected: +e.detail.value })
+    //下面交给ztx了
   },
 
   uploadFile() {

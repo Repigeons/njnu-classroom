@@ -2,25 +2,33 @@
 <view class="page rp-page-top">
   <!-- 站点信息（固定） -->
   <view class="rp-topbox">
-    <view class="rp-topbox-button__left">
+    <view class="button__left">
       <picker range="{{stations_display}}" value="{{station_selected}}" bindchange="bindStationChange">
-        <view class="rp-topbox-title">
+        <view class="title">
           {{stations[station_selected].name}}
         </view>
-        <view class="rp-topbox-distance">
+        <view class="distance">
           距我{{stationDistance[station_selected]}}米
           <block wx:if="{{stations_display[station_selected]==stations[station_selected].name+nearestHint}}">（最近）</block>
         </view>
       </picker>
     </view>
-    <view class="rp-topbox-arrow">
-      <image src="/images/arrow.png" class="rp-topbox-arrow__image" />
+    <view class="arrow">
+      <image src="/images/arrow.png" class="image-arrow" />
+      <picker range="{{week_display}}" value="{{week_selected}}" bindchange="bindWeekChange">
+        <view class="weekPicker">
+          <view class="imagebox">
+            <image src="/images/switch.png" class="image-switch" />
+          </view>
+          <view>{{week_display[week_selected]}}</view>
+        </view>
+      </picker>
     </view>
-    <view class="rp-topbox-button__right" bindtap="redirect">
-      <view class="rp-topbox-title">{{terminus}}方向</view>
-      <view class="rp-topbox-exchange">
-        <view class="rp-topbox-exchange__bd">
-          <image src="/images/exchange.png" class="rp-topbox-exchange__image" />
+    <view class="button__right" bindtap="redirect">
+      <view class="title">{{terminus}}方向</view>
+      <view class="exchange">
+        <view class="imagebox">
+          <image src="/images/exchange.png" class="image-exchange" />
         </view>
         <view>换向</view>
       </view>
