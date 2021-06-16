@@ -144,7 +144,7 @@ python(NjnuClassroom)
 
 - 用户反馈汇总信息 `feedback`
 
-** 数据库创建语句可在 [`create.sql`](../create.sql) 文件中查询。
+** 数据库创建语句可在 [`create_main.sql`](../create_main.sql) 文件中查询。
 
 #### 10.2 项目中使用到的api地址
 

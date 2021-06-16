@@ -12,9 +12,9 @@
 
 该项目共包含以下两个子项目：
 
-（一）[数据服务器](python/README.md)
+（一）[数据服务器](server/README.md)
 
-（二）[微信/QQ小程序](wechat/README.md)
+（二）[微信/QQ小程序](miniprogram/README.md)
 
 ### 3、子项目说明
 
