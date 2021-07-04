@@ -8,7 +8,7 @@
 import datetime
 import json
 
-import requests
+import aiohttp
 
 from App.Spider import dao
 
@@ -20,7 +20,7 @@ def truncate_kcb() -> None:
     dao.truncate_kcb()
 
 
-def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
+async def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
     """
     获取具体课程信息
     """
@@ -28,29 +28,34 @@ def get_detail(cookies: dict, time_info: dict, classroom: dict) -> list:
     this_week = time_info['ZC']
     next_week = time_info['ZC'] + 1 if time_info['ZC'] < time_info['ZJXZC'] else time_info['ZJXZC']
     term_code = time_info['XNXQDM'][0]
-    res = requests.post(
-        url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-        cookies=cookies,
-        data={
-            'XNXQDM': term_code,
-            'ZC': this_week,
-            'JASDM': classroom['JASDM']
-        }
-    ).json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                cookies=cookies,
+                data=dict(
+                    XNXQDM=term_code,
+                    ZC=this_week,
+                    JASDM=classroom['JASDM'],
+                )
+        ) as resp:
+            res = await resp.json()
     try:
         kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
     except KeyError:
         return []
+
     if next_week != this_week:
-        res = requests.post(
-            url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-            cookies=cookies,
-            data={
-                'XNXQDM': term_code,
-                'ZC': next_week,
-                'JASDM': classroom['JASDM']
-            }
-        ).json()
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                    url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                    cookies=cookies,
+                    data=dict(
+                        XNXQDM=term_code,
+                        ZC=next_week,
+                        JASDM=classroom['JASDM'],
+                    )
+            ) as resp:
+                res = await resp.json()
         try:
             kcb_next = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
             for day in range(today):

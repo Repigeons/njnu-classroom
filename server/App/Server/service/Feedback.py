@@ -8,7 +8,7 @@
 import json
 import logging
 
-import requests
+import aiohttp
 from flask import request
 from redis import StrictRedis
 from redis_lock import Lock
@@ -102,24 +102,26 @@ def process(
         )
 
 
-def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
+async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
     redis = StrictRedis(connection_pool=__Application.redis_pool)
     lock = Lock(redis, "Spider")
     if lock.acquire():
         try:
-            save_cookies(), save_time()
+            await save_cookies(), await save_time()
             cookies = json.loads(redis.hget("Spider", "cookies"))
             time_info = json.loads(redis.hget("Spider", "time_info"))
             redis.delete("Spider")
-            res = requests.post(
-                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-                cookies=cookies,
-                data={
-                    'XNXQDM': time_info['XNXQDM'][0],
-                    'ZC': time_info['ZC'],
-                    'JASDM': jasdm
-                }
-            ).json()
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                        url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                        cookies=cookies,
+                        data=dict(
+                            XNXQDM=time_info['XNXQDM'][0],
+                            ZC=time_info['ZC'],
+                            JASDM=jasdm,
+                        )
+                ) as resp:
+                    res = await resp.json()
             kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
             for row in kcb:
                 if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):

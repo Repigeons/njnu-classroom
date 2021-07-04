@@ -8,7 +8,7 @@
 from App.Spider import dao
 
 
-def correct() -> None:
+async def correct() -> None:
     """
     从`correction`表读取数据，依此对`dev`表进行校正
     """

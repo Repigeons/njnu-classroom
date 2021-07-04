@@ -5,6 +5,7 @@
 # @Software :  PyCharm Professional x64
 # @FileName :  __main__.py
 """"""
+import asyncio
 import json
 import logging
 import os
@@ -36,11 +37,11 @@ def main():
                 logging.info("初始化工作环境...")
                 redis.delete("Spider")
                 # 采集基础信息
-                prepare()
+                asyncio.run(prepare())
                 # 采集详细信息
-                core()
+                asyncio.run(core())
                 # 校正并归并数据
-                correct_and_merge()
+                asyncio.run(correct_and_merge())
                 # 将数据放入生产环境
                 service.copy_to_pro() if os.getenv("env") == "pro" else None
 
@@ -71,16 +72,16 @@ def main():
         redis.delete("Spider")
 
 
-def prepare():
+async def prepare():
     logging.info("开始采集基础信息...")
-    service.save_cookies()
-    service.save_time()
-    service.save_classrooms()
+    await service.save_cookies()
+    await service.save_time()
+    await service.save_classrooms()
     time.sleep(5)
     logging.info("基础信息采集完成")
 
 
-def core():
+async def core():
     logging.info("开始采集详细信息...")
     redis = StrictRedis(connection_pool=__Application.redis_pool)
     cookies = json.loads(redis.hget("Spider", "cookies"))
@@ -91,17 +92,17 @@ def core():
         print("开始查询教学楼：", jxl)
         for classroom in classrooms[jxl]:
             print("正在查询教室：", classroom['JXLMC'], classroom['jsmph'])
-            result = service.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
+            result = await service.get_detail(cookies=cookies, time_info=time_info, classroom=classroom)
             service.insert_into_kcb(result)
     time.sleep(5)
     logging.info("详细信息采集完成")
 
 
-def correct_and_merge():
+async def correct_and_merge():
     # 校正数据
     logging.info("开始校正数据...")
     service.copy_to_dev()
-    service.correct()
+    await service.correct()
     time.sleep(5)
     logging.info("校正数据完成")
 

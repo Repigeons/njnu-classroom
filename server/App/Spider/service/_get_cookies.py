@@ -29,7 +29,7 @@ class __Application:
     def selenium(self): pass
 
 
-def save_cookies() -> None:
+async def save_cookies() -> None:
     """
     将cookies内容保存至Redis
     """

@@ -10,7 +10,7 @@ import logging
 import time
 from json.decoder import JSONDecodeError
 
-import requests
+import aiohttp
 from redis import StrictRedis
 from ztxlib.rpspring import Autowired
 
@@ -23,7 +23,7 @@ class __Application:
     def send_email(self) -> None: pass
 
 
-def save_time() -> None:
+async def save_time() -> None:
     """
     将时间信息保存至Redis
     """
@@ -31,7 +31,7 @@ def save_time() -> None:
         redis = StrictRedis(connection_pool=__Application.redis_pool)
         cookies = json.loads(redis.hget("Spider", "cookies"))
         logging.info("开始查询时间信息...")
-        time_info = get_time_info(cookies=cookies)
+        time_info = await get_time_info(cookies=cookies)
         logging.info("时间信息查询成功")
         redis.hset("Spider", "time_info", json.dumps(time_info))
         logging.info("时间信息存储完成")
@@ -66,7 +66,7 @@ def save_time() -> None:
         exit(-1)
 
 
-def get_time_info(cookies: dict) -> dict:
+async def get_time_info(cookies: dict) -> dict:
     """
     获取时间相关信息
     :param cookies:dict{MOD_AUTH_CAS, _WEU}
@@ -75,37 +75,43 @@ def get_time_info(cookies: dict) -> dict:
     result = {}
 
     # 查询当前学年学期
-    res = requests.post(
-        url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do',
-        cookies=cookies
-    ).json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do',
+                cookies=cookies
+        ) as resp:
+            res = await resp.json()
     result['XNXQDM'] = res['datas']['cxdqxnxq']['rows'][0]['DM'],
     result['XNDM'] = res['datas']['cxdqxnxq']['rows'][0]['XNDM'],
     result['XQDM'] = res['datas']['cxdqxnxq']['rows'][0]['XQDM']
 
     # 查询当前周次和总周次
-    res = requests.post(
-        url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do',
-        cookies=cookies,
-        data={
-            'XN': result['XNDM'],
-            'XQ': result['XQDM'],
-            'RQ': time.strftime("%Y-%m-%d", time.localtime())
-        }
-    ).json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do',
+                cookies=cookies,
+                data=dict(
+                    XN=result['XNDM'],
+                    XQ=result['XQDM'],
+                    RQ=time.strftime("%Y-%m-%d", time.localtime()),
+                )
+        ) as resp:
+            res = await resp.json()
     result['ZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZC']
     result['ZZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZZC']
 
     # 查询总教学周次
-    res = requests.post(
-        url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do',
-        cookies=cookies,
-        data={
-            'XN': result['XNDM'],
-            'XQ': result['XQDM'],
-            'SFSY': 1
-        }
-    ).json()
+    async with aiohttp.ClientSession() as session:
+        async with session.post(
+                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do',
+                cookies=cookies,
+                data=dict(
+                    XN=result['XNDM'],
+                    XQ=result['XQDM'],
+                    SFSY=1,
+                )
+        ) as resp:
+            res = await resp.json()
     result['ZJXZC'] = res['datas']['cxxljc']['rows'][0]['ZJXZC']
 
     return result

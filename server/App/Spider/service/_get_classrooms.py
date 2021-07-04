@@ -23,7 +23,7 @@ class __Application:
     def send_email(self) -> None: pass
 
 
-def save_classrooms() -> None:
+async def save_classrooms() -> None:
     """
     将教学楼及教室信息保存至Redis
     """
