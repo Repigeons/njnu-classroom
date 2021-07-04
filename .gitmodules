@@ -1,3 +1,0 @@
-[submodule "server/ZTxLib"]
-	path = server/ZTxLib
-	url = https://github.com/Zhou-Tx/ZTxLib-Python.git

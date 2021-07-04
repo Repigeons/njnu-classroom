@@ -32,18 +32,12 @@ RUN virtualenv /opt/NjnuClassroom/env
 RUN /opt/NjnuClassroom/env/bin/pip install --upgrade pip setuptools wheel
 RUN /opt/NjnuClassroom/env/bin/pip install -r /opt/NjnuClassroom/requirements.txt
 
-# Git submodule (ZTxLib)
-WORKDIR /root
-RUN git clone https://github.com/Zhou-Tx/ZTxLib-Python.git --branch master --depth=1
-WORKDIR /root/ZTxLib-Python/ZTxLib
-RUN /opt/NjnuClassroom/env/bin/python -m setup install
-
 # Copy shell script and configuration files
 ADD server/shell/  /opt/NjnuClassroom/bin/
 ADD server/docker/ /
 
 # Set environment variables
-ENV env pro
+ENV env       pro
 ENV FLASK_ENV production
 
 # Expose port 80 (http)

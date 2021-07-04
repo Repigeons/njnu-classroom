@@ -6,7 +6,6 @@
       <excludeFolder url="file://$MODULE_DIR$/systemd" />
       <excludeFolder url="file://$MODULE_DIR$/shell" />
       <excludeFolder url="file://$MODULE_DIR$/docker" />
-      <excludeFolder url="file://$MODULE_DIR$/ZTxLib" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9 (NjnuClassroom)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
