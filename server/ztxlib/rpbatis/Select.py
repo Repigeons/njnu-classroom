@@ -3,14 +3,14 @@
 # @Time     :  2021/4/17
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  _Select
+# @FileName :  Select
 """"""
 import inspect
 import json
 import logging
 
 from ._Connections import connections
-from ._Statement import Statement
+from .Statement import Statement
 
 
 class Select:

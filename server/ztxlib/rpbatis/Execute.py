@@ -3,14 +3,14 @@
 # @Time     :  2021/4/17
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm Professional x64
-# @FileName :  _Execute
+# @FileName :  Execute
 """"""
 import inspect
 import json
 import logging
 
 from ._Connections import connections
-from ._Statement import Statement
+from .Statement import Statement
 
 
 class Execute:
@@ -97,27 +97,3 @@ class ExecuteMany:
                 cursor.close(), connection.close()
 
         return executemany
-
-
-class Insert(Execute):
-    pass
-
-
-class Delete(Execute):
-    pass
-
-
-class Update(Execute):
-    pass
-
-
-class InsertMany(ExecuteMany):
-    pass
-
-
-class DeleteMany(ExecuteMany):
-    pass
-
-
-class UpdateMany(ExecuteMany):
-    pass
