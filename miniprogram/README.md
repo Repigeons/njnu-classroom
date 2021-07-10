@@ -22,7 +22,7 @@ TypeScript 是由微软开发的开源跨平台编程语言，作为JavaScript �
 
 ### 4、项目结构
 
-```Markdown
+```text
 ├── tsconfig.json           # TypeScript 配置文件
 ├── project.config.json     # 小程序配置文件
 ├── package.json            # npm 配置文件

@@ -114,7 +114,7 @@ Page({
     this.setData({ showSearch: false })
     if (this.data.keyword) {
       wx.request({
-        url: `${app.globalData.server}/api/searchmore.json`,
+        url: `${app.globalData.server}/api/search.json`,
         data: {
           day: this.data.rq_array[this.data.rq_selected].key,
           jc_ks: this.data.jc_ks_selected + 1,

@@ -1,67 +1,87 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2020/12/5 0005
-# @Author   :  Zhou Tianxing
-# @Software :  PyCharm Professional x64
-# @FileName :  manage.py
+# @Time     :  2021/7/1
+# @Author   :  ZhouTianxing
+# @Software :  PyCharm x64
 """"""
-from logging.handlers import TimedRotatingFileHandler
+import asyncio
 import logging
 import os
 import time
-from argparse import ArgumentParser, Namespace
+from argparse import ArgumentParser
+from logging.handlers import TimedRotatingFileHandler
+
+import aiofiles
+
+from app import app, initialize, finalize
 
 os.environ["startup_time"] = str(int(time.time() * 1000))
 
 
-def __init__logging(filename: str) -> None:
-    # 基础配置
+async def initialize_log(log_level: str):
+    level = logging.getLevelName(str(log_level).upper())
+    level = level if isinstance(level, int) else logging.INFO
     logging.basicConfig(
-        level=logging.INFO,
+        level=level,
         format="[%(asctime)s] "
-               "[ %(levelname)7s ] "
+               "[ %(levelname)8s ] "
                "[ %(module)16s ] "
                ": %(message)s"
     )
-    # 日志文件
-    if filename:
-        # get logging file
-        filename = os.path.abspath(os.path.join("/var/log/NjnuClassroom", filename))
-        os.makedirs(os.path.dirname(filename), exist_ok=True)
-        # set logger configuration
-        logger = logging.getLogger()
-        formatter = logger.handlers[0].formatter
-        handler = TimedRotatingFileHandler(filename=filename, encoding="utf8", when='D', backupCount=10)
-        handler.setFormatter(formatter)
-        logger.addHandler(handler)
 
 
-def main(args: Namespace):
-    __init__logging(args.log)
+async def initialize_logfile(logfile: str):
+    # get logging file
+    logfile = os.path.abspath(logfile)
+    os.makedirs(os.path.dirname(logfile), exist_ok=True)
+    async with aiofiles.open(logfile, 'a') as f:
+        await f.write('\n')
+    # set logger configuration
+    logger = logging.getLogger()
+    formatter = logger.handlers[0].formatter
+    handler = TimedRotatingFileHandler(filename=logfile, encoding="UTF-8", when='D', backupCount=10)
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
 
+
+def main(module: str, log_level: str = None):
+    loop = asyncio.get_event_loop()
+    # 初始化
+    loop.run_until_complete(
+        asyncio.gather(
+            initialize_log(log_level),
+            initialize(),
+        )
+    )
+
+    # 启动模块
     logging.info("Starting Application with PID [%d]", os.getpid())
+    try:
+        logging.info("Initializing module [%s]", module)
+        starter = __import__(f"modules.{module}", fromlist=("modules", module))
+        config = app['config']['application'][module]
+        if 'log' in config and config['log']:
+            loop.run_until_complete(initialize_logfile(logfile=config['log']))
+        logging.info("Starting service [%s]", module)
+        starter.main()
 
-    if args.run:
-        application_yml = "resources/application.yml"
-        if not os.path.exists(application_yml):
-            logging.error("FileNotFoundError: No such file [%s]", application_yml)
+    except ModuleNotFoundError as e:
+        if e.name == f"modules.{module}":
+            logging.critical("ModuleNotFoundError: No such module [%s]", module)
+            logging.info("Exit with code %d", -1)
             exit(-1)
-
-        try:
-            logging.info("Initializing module [%s]", args.run)
-            module = __import__(f"App.{args.run}.__main__", fromlist=("App", args.run, "__main__"))
-        except ModuleNotFoundError as e:
-            if e.name == f"App.{args.run}":
-                logging.error("ModuleNotFoundError: No such module [%s]", args.run)
-                exit(-1)
-            raise e
-
-        logging.info("Starting Service [%s]", args.run)
-        module.main()
+        raise e
+    finally:
+        loop.run_until_complete(finalize())
 
 
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-r', '--run', type=str, help="Service module")
-    parser.add_argument('-l', '--log', type=str, help="Logging file")
-    main(args=parser.parse_args())
+    parser.add_argument('-l', '--log', type=str, help="Logging level")
+    args = parser.parse_args()
+    if isinstance(args.run, str):
+        main(
+            module=args.run,
+            log_level=args.log
+        )

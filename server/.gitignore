@@ -127,12 +127,3 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
-# temp files
-~tmp/
-
-# executable file
-*.exe
-
-/[Cc]hrome/
-/[Ff]irefox/

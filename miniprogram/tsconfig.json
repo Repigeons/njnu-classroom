@@ -3,7 +3,7 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "module": "CommonJS",
-    "target": "ES5",
+    "target": "ES6",
     "allowJs": false,
     "experimentalDecorators": true,
     "noImplicitThis": true,
@@ -20,7 +20,7 @@
     "strictPropertyInitialization": true,
     "skipLibCheck": true,
     "lib": [
-      "ES5",
+      "ES6",
       "ES2015"
     ],
     "typeRoots": [
