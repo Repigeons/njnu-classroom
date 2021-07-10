@@ -8,8 +8,6 @@ import csv
 import json
 from email.mime.application import MIMEApplication
 
-import aiofiles
-
 from app import app
 from ztxlib import *
 
