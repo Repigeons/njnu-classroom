@@ -71,7 +71,6 @@ docker run --name njnu-classroom -p 8000:80 -v /var/log/NjnuClassroom:/var/log/N
 Python语言具备良好的跨平台特性，可通过`virtualenv`模块快速建立项目虚拟环境。 具体命令如下：
 
 ```bash
-# Bash
 virtualenv env
 source env/bin/activate
 pip install -r requirements.txt
@@ -82,7 +81,6 @@ pip install -r requirements.txt
 在激活虚拟环境后，使用以下方式启动：
 
 ```shell
-# 方式二：通过 manage 模块启动服务模块
 python -m manage --run spider  --log <log level(INFO)>
 python -m manage --run server  --log <log level(INFO)>
 python -m manage --run explore --log <log level(INFO)>
