@@ -40,7 +40,7 @@ async def merge():
                     classrooms.append(row)
             jxl_classrooms.extend(classrooms)
         async with aioredis.start(app['redis']) as redis:
-            await redis.hset("spider", jxl, json.dumps([item.json for item in jxl_classrooms]))
+            await redis.hset("spider", jxl, json.dumps([item.dict for item in jxl_classrooms]))
     # 清空数据库
     await mysql.execute("TRUNCATE TABLE `dev`")
     # 重新插入数据库

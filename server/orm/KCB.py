@@ -4,7 +4,7 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from orm.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 class KCB(BaseModel):
@@ -21,20 +21,3 @@ class KCB(BaseModel):
         self.kcm = row['kcm']
         self.day = row['day']
         self.SFYXZX = bool(row['SFYXZX'] == b'\x01')
-
-    @property
-    def json(self) -> dict:
-        return dict(
-            id=self.id,
-            JXLMC=self.JXLMC,
-            jsmph=self.jsmph,
-            JASDM=self.JASDM,
-            SKZWS=self.SKZWS,
-            zylxdm=self.zylxdm,
-            jc_ks=self.jc_ks,
-            jc_js=self.jc_js,
-            jyytms=self.jyytms,
-            kcm=self.kcm,
-            day=self.day,
-            SFYXZX=self.SFYXZX,
-        )

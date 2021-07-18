@@ -55,5 +55,5 @@ async def get_classrooms() -> dict[str, list[dict]]:
         )
         jas_list = [JAS(row) for row in res]
         jas_list.sort(key=lambda item: item.jsmph)
-        result[jxlmc] = [item.json for item in jas_list]
+        result[jxlmc] = [item.dict for item in jas_list]
     return result

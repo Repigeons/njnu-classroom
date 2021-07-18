@@ -4,13 +4,9 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from orm.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 class Shuttle(BaseModel):
     def __init__(self):
-        pass
-
-    @property
-    def json(self) -> dict:
-        return dict()
+        pass  # TODO

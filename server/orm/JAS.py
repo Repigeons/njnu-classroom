@@ -6,7 +6,7 @@
 """"""
 import re
 
-from orm.BaseModel import BaseModel
+from .BaseModel import BaseModel
 
 
 class JAS(BaseModel):
@@ -44,41 +44,3 @@ class JAS(BaseModel):
         self.SFYXJY = bool(row['SFYXJY'] == b'\x01')
         self.SFYXZX = bool(row['SFYXZX'] == b'\x01')
         self.jsmph = re.sub(pattern='^' + self.JXLMC, repl='', string=self.JASMC)
-
-    @property
-    def json(self) -> dict:
-        return dict(
-            JASDM=self.JASDM,
-            JASMC=self.JASMC,
-            JXLDM=self.JXLDM,
-            JXLMC=self.JXLMC,
-            XXXQDM=self.XXXQDM,
-            XXXQDM_DISPLAY=self.XXXQDM_DISPLAY,
-            JASLXDM=self.JASLXDM,
-            JASLXDM_DISPLAY=self.JASLXDM_DISPLAY,
-            ZT=self.ZT,
-            LC=self.LC,
-            JSYT=self.JSYT,
-            SKZWS=self.SKZWS,
-            KSZWS=self.KSZWS,
-            XNXQDM=self.XNXQDM,
-            XNXQDM2=self.XNXQDM2,
-            DWDM=self.DWDM,
-            DWDM_DISPLAY=self.DWDM_DISPLAY,
-            ZWSXDM=self.ZWSXDM,
-            XGDD=self.XGDD,
-            SYRQ=self.SYRQ,
-            SYSJ=self.SYSJ,
-            SXLB=self.SXLB,
-            BZ=self.BZ,
-            SFYPK=self.SFYPK,
-            SFYXPK=self.SFYXPK,
-            PKYXJ=self.PKYXJ,
-            SFKSWH=self.SFKSWH,
-            SFYXKS=self.SFYXKS,
-            KSYXJ=self.KSYXJ,
-            SFYXCX=self.SFYXCX,
-            SFYXJY=self.SFYXJY,
-            SFYXZX=self.SFYXZX,
-            jsmph=self.jsmph,
-        )
