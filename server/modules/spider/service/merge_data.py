@@ -6,7 +6,6 @@
 """"""
 import json
 import logging
-from typing import List
 
 from app import app
 from orm.KCB import KCB
@@ -20,7 +19,7 @@ async def merge():
     mysql: aiomysql.MySQL = app['mysql']
     days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
     res = await mysql.fetchall("SELECT DISTINCT `JXLMC` FROM `dev`")
-    jxl_list: List[str] = [row['JXLMC'] for row in res]
+    jxl_list: list[str] = [row['JXLMC'] for row in res]
     # 全部缓存到redis
     for jxl in jxl_list:
         logging.info("[%s] Start merging...", jxl)
