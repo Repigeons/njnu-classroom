@@ -6,7 +6,7 @@
 """"""
 import re
 
-from .BaseModel import BaseModel
+from ._BaseModel import BaseModel
 
 
 class JAS(BaseModel):

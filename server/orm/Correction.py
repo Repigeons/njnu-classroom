@@ -4,7 +4,7 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from .BaseModel import BaseModel
+from ._BaseModel import BaseModel
 
 
 class Correction(BaseModel):

@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: UTF-8 -*-
-# @Time     :  2021/7/1
-# @Author   :  ZhouTianxing
-# @Software :  PyCharm x64
-""""""
 import json
 from abc import ABCMeta, abstractmethod
 
@@ -28,7 +22,7 @@ class BaseModel(metaclass=ABCMeta):
         return {
             _to_small_hump(attr): self.__getattribute__(attr)
             for attr in dir(self)
-            if attr[0] != '_'
+            if attr != 'dict' and attr[0] != '_'
         }
 
     def __repr__(self) -> str:
