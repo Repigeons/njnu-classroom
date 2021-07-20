@@ -7,13 +7,11 @@ LABEL repository="github:Repigeons/NjnuClassroom"
 VOLUME ["/tmp/NjnuClassroom"]
 
 # Install the base service
-RUN yum install -y epel-release
-RUN yum update  -y
-RUN yum install -y cronie git nginx redis
-RUN yum install -y gcc python38 python38-devel
-RUN yum install -y chromedriver chromium chromium-headless
-RUN yum install -y mariadb-connector-c mariadb-connector-c-devel
-RUN yum clean all
+RUN dnf install -y epel-release
+RUN dnf update  -y
+RUN dnf install -y git python39 nginx redis cronie
+RUN dnf install -y chromedriver chromium chromium-headless
+RUN dnf clean all
 RUN python3 -m pip install --upgrade pip setuptools wheel
 RUN python3 -m pip install virtualenv
 
@@ -23,7 +21,10 @@ RUN mkdir /var/log/NjnuClassroom
 
 # Copy project files and deployment
 ADD server/manage.py        /opt/NjnuClassroom/src/manage.py
-ADD server/App              /opt/NjnuClassroom/src/App
+ADD server/app              /opt/NjnuClassroom/src/app
+ADD server/orm              /opt/NjnuClassroom/src/orm
+ADD server/modules          /opt/NjnuClassroom/src/modules
+ADD server/ztxlib           /opt/NjnuClassroom/src/ztxlib
 ADD server/resources        /opt/NjnuClassroom/resources
 ADD server/requirements.txt /opt/NjnuClassroom/requirements.txt
 
@@ -37,8 +38,7 @@ ADD server/shell/  /opt/NjnuClassroom/bin/
 ADD server/docker/ /
 
 # Set environment variables
-ENV env       pro
-ENV FLASK_ENV production
+ENV env pro
 
 # Expose port 80 (http)
 EXPOSE 80
