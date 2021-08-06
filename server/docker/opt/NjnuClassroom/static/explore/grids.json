@@ -29,7 +29,7 @@
     "text": "反馈",
     "imgUrl": "/images/feedback.png",
     "button": {
-        "openType": "feedback"
+      "openType": "feedback"
     }
   }
 ]

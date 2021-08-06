@@ -81,10 +81,10 @@ pip install -r requirements.txt
 在激活虚拟环境后，使用以下方式启动：
 
 ```shell
-python -m manage --run spider  --log <log level(INFO)>
-python -m manage --run server  --log <log level(INFO)>
-python -m manage --run explore --log <log level(INFO)>
-python -m manage --run notice  --log <log level(INFO)>
+python manage.py --run spider  --log <log level(INFO)>
+python manage.py --run server  --log <log level(INFO)>
+python manage.py --run explore --log <log level(INFO)>
+python manage.py --run notice  --log <log level(INFO)>
 ```
 
 ### 8、systemd 守护进程
@@ -94,22 +94,26 @@ python -m manage --run notice  --log <log level(INFO)>
 ### 9、项目结构
 
 ```text
-python(NjnuClassroom)
-├── manage.py               # 模块主入口
-├── app                     # 服务器模块
-│   ├── app                 # aiohttp模块
-│   ├── mail                # smtp模块
-│   ├── mysql               # mysql模块
-│   └── redis               # redis模块
-├── modules                 # 服务模块
-│   ├── spider              # 爬虫模块
-│   ├── server              # 数据服务模块
-│   ├── explore             # 发现服务模块
-│   └── notice              # 公告服务模块
-├── orm                     # 对象关系映射
+server\[NjnuClassroom]
+├── systemd                 # Systemd服务配置文件
+├── docker                  # Docker镜像静态文件
+├── shell                   # 启动脚本
 ├── resources               # 资源文件
 │   ├── application.yml     # 应用配置文件
 │   └── stations.csv        # 校车站列表
+├── src                     # Python源码
+│   ├── manage.py           # 模块主入口
+│   ├── app                 # 服务器模块
+│   │   ├── app             # aiohttp模块
+│   │   ├── mail            # smtp模块
+│   │   ├── mysql           # mysql模块
+│   │   └── redis           # redis模块
+│   ├── modules             # 服务模块
+│   │   ├── spider          # 爬虫模块
+│   │   ├── server          # 数据服务模块
+│   │   ├── explore         # 发现服务模块
+│   │   └── notice          # 公告服务模块
+│   └── orm                 # 对象关系映射
 └── requirements.txt        # pip依赖包列表
 ```
 

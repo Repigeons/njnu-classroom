@@ -4,8 +4,8 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from .app import app
 from ztxlib import aiomysql
+from .app import app
 
 __all__ = (
     'initialize',

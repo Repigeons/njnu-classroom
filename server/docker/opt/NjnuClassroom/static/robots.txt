@@ -17,4 +17,3 @@ User-agent: *
 Allow: /static/
 Disallow: /api/
 Allow: 
-

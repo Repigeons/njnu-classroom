@@ -4,8 +4,8 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from .app import app
 from ztxlib import aioredis
+from .app import app
 
 __all__ = (
     'initialize',

@@ -5,7 +5,6 @@
 # @Software :  PyCharm x64
 """"""
 import json
-import logging
 from email.mime.text import MIMEText
 from multiprocessing import Process
 

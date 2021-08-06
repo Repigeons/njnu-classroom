@@ -10,8 +10,6 @@ application:
     port: 8002
     log: "/var/log/NjnuClassroom/explore.log"
     service: on
-    shuttle:
-      resource: "stations.csv"
 
   notice:
     host: "localhost"
@@ -54,7 +52,7 @@ mail:
     host: "smtp.njnu.edu.cn"
     port: 994
     user: "*@njnu.edu.cn"
-    password:
+    password: ""
   receivers:
     - name: "Repigeons"
-      addr: "info@njnu.xyz"
+      addr: "info@repigeons.cn"

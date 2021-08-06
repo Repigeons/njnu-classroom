@@ -20,11 +20,11 @@ RUN mkdir /opt/NjnuClassroom
 RUN mkdir /var/log/NjnuClassroom
 
 # Copy project files and deployment
-ADD server/manage.py        /opt/NjnuClassroom/src/manage.py
-ADD server/app              /opt/NjnuClassroom/src/app
-ADD server/orm              /opt/NjnuClassroom/src/orm
-ADD server/modules          /opt/NjnuClassroom/src/modules
-ADD server/ztxlib           /opt/NjnuClassroom/src/ztxlib
+ADD server/src/manage.py    /opt/NjnuClassroom/src/manage.py
+ADD server/src/app          /opt/NjnuClassroom/src/app
+ADD server/src/orm          /opt/NjnuClassroom/src/orm
+ADD server/src/modules      /opt/NjnuClassroom/src/modules
+ADD server/src/ztxlib       /opt/NjnuClassroom/src/ztxlib
 ADD server/resources        /opt/NjnuClassroom/resources
 ADD server/requirements.txt /opt/NjnuClassroom/requirements.txt
 

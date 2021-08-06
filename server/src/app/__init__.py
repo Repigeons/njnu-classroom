@@ -4,12 +4,12 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from .app import app, initialize, finalize
 from . import (
     mail,
     mysql,
     redis,
 )
+from .app import app, initialize, finalize
 
 __all__ = (
     'app',
