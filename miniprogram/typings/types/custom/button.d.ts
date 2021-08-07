@@ -1,5 +1,5 @@
 interface IButton {
-  text: string,
-  tap?: (e:any) => any,
-  longpress?: (e:any) => any,
+  readonly text: string,
+  tap?: (e: any) => any,
+  longpress?: (e: any) => any,
 }

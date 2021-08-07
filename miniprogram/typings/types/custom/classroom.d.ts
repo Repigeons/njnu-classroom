@@ -8,75 +8,75 @@ interface IClassroomInfo extends Record<string, any> {
   /**
    * 标题
    */
-  title: string,
+  readonly title: string,
   /**
    * 课程占用
    */
-  KCZYFLAG?: boolean,
+  readonly KCZYFLAG?: boolean,
   /**
    * 本科生考试
    */
-  BKSKSZYFLAG?: boolean,
+  readonly BKSKSZYFLAG?: boolean,
   /**
    * 普通教室借用占用
    */
-  PTJYZYFLAG?: boolean,
+  readonly PTJYZYFLAG?: boolean,
   /**
    * 屏蔽占用
    */
-  PBZYFLAG?: boolean,
+  readonly PBZYFLAG?: boolean,
   /**
    * 课程占用
    */
-  FBKSPKZYFLAG?:boolean,
+  readonly FBKSPKZYFLAG?: boolean,
   /**
      * 开课单位
    */
-  KKDW?: string,
+  readonly KKDW?: string,
   /**
    * 上课教师
    */
-  SKJS?: string,
+  readonly SKJS?: string,
   /**
    * 课程名称
    */
-  KCMC?: string,
+  readonly KCMC?: string,
   /**
    * 选课人数
    */
-  XKRS?: number,
+  readonly XKRS?: number,
   /**
    * 行政班
    */
-  XZB?: string,
+  readonly XZB?: string,
   /**
    * 借用单位
    */
-  JYDW?: string,
+  readonly JYDW?: string,
   /**
    * 借用人姓名
    */
-  JYRXM?: string,
+  readonly JYRXM?: string,
   /**
    * 负责老师
    */
-  FZLS?: string,
+  readonly FZLS?: string,
   /**
    * 联系人电话
    */
-  LXDH?: string,
+  readonly LXDH?: string,
   /**
    * 借用说明
    */
-  JYYTMS?: string,
+  readonly JYYTMS?: string,
   /**
    * 上课人数
    */
-  SKRS?: number,
+  readonly SKRS?: number,
   /**
    *
    */
-  PKLY?: string,
+  readonly PKLY?: string,
 }
 
 interface IClassroomRow extends Record<string, any> {

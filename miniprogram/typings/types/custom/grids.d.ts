@@ -1,30 +1,30 @@
 interface IGridNavigator {
-  target?: string
-  url?: string
-  openType?: string
-  delta?: number
-  appId?: string
-  path?: string
-  extraData?: Object
-  version?: string
-  hoverStopPropagation?: boolean
-  hoverStartTime?: number
-  hoverStayTime?: number
-  method?: string
+  readonly target?: string
+  readonly url?: string
+  readonly openType?: string
+  readonly delta?: number
+  readonly appId?: string
+  readonly path?: string
+  readonly extraData?: Object
+  readonly version?: string
+  readonly hoverStopPropagation?: boolean
+  readonly hoverStartTime?: number
+  readonly hoverStayTime?: number
+  readonly method?: string
 }
 
 interface IGridButton {
-  openType?: "" | "contact" | "share" | "getPhoneNumber" | "getUserInfo" | "launchApp" | "openSetting" | "feedback"
-  sessionFrom?: string
-  sendMessageTitle?: string
-  sendMessagePath?: string
-  sendMessageImg?: string
-  appParameter?: string
-  showMessageCard?: boolean
+  readonly openType?: "" | "contact" | "share" | "getPhoneNumber" | "getUserInfo" | "launchApp" | "openSetting" | "feedback"
+  readonly sessionFrom?: string
+  readonly sendMessageTitle?: string
+  readonly sendMessagePath?: string
+  readonly sendMessageImg?: string
+  readonly appParameter?: string
+  readonly showMessageCard?: boolean
 }
 
 interface IGrid extends IGridNavigator {
-  text?: string
-  imgUrl?: string
+  readonly text?: string
+  readonly imgUrl?: string
   button?: IGridButton
 }

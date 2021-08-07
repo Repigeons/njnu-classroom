@@ -1,4 +1,4 @@
-interface IShuttleRoute extends Array<string> {}
+interface IShuttleRoute extends Array<string> { }
 
 interface IShuttle {
   readonly stations: Array<IShuttleStation>

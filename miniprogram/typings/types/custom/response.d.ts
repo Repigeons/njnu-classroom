@@ -1,5 +1,5 @@
 interface IJsonResponse {
-    status: number
-    message?: string
-    data?: any
+  readonly status: number
+  readonly message?: string
+  readonly data?: any
 }

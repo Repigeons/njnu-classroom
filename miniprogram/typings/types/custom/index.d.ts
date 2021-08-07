@@ -1,6 +1,6 @@
 interface KeyValue {
-  key: string
-  value: any
+  readonly key: string
+  readonly value: any
 }
 
 interface IPosition {
