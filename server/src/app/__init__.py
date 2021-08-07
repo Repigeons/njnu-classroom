@@ -10,6 +10,7 @@ from . import (
     redis,
 )
 from .JsonResponse import JsonResponse, HttpStatus
+from .RequestLoader import RequestLoader
 from .app import app, initialize, finalize
 
 __all__ = (

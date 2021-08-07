@@ -17,7 +17,7 @@ config = app['config']['application']['notice']
 
 @routes.put('/')
 async def index(request: Request) -> JsonResponse:
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     token = request.header('token', str)
     text = request.json('text', str)
     if token != config['token']:

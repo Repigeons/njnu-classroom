@@ -4,18 +4,30 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from aiohttp import web
+from aiohttp.web import Request
 
 from exceptions import RequestParameterError
 
 
 class RequestLoader:
-    def __init__(self, request: web.Request):
+    @classmethod
+    async def load(cls, request: Request):
+        self = cls()
         self.request = request
         self.headers = request.headers
         self.query = request.query
-        self.json = yield from request.json()
-        self.data = yield from request.post()
+        if request.content_type[:len('application/json')] == 'application/json':
+            self.json = await request.json()
+        else:
+            self.data = await request.post()
+        return self
+
+    def __init__(self):
+        self.request = None
+        self.headers = None
+        self.query = None
+        self.json = None
+        self.data = None
 
     @staticmethod
     def __verify(value, name: str, typing: type, nullable: bool, default):

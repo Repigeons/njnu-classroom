@@ -19,7 +19,7 @@ async def feedback(request: Request) -> JsonResponse:
             message="service off",
         )
 
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     jc = request.json(name='jc', typing=int)
     results = request.json(name='results', typing=list)
     index = request.json(name='index', typing=int)

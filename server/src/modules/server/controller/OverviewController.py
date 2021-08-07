@@ -20,7 +20,7 @@ async def overview(request: Request) -> JsonResponse:
             data=[],
         )
 
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     jasdm = request.args(name='jasdm', typing=str)
 
     result = await OverviewService.handle(jasdm)

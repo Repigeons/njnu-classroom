@@ -30,7 +30,7 @@ async def shuttle(_: Request) -> JsonResponse:
 
 @routes.post('/shuttle/upload')
 async def upload(request: Request) -> JsonResponse:
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     file: FileField = request.form("file")
     await ShuttleService.email_file(
         content=file.file.read(),

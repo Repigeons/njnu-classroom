@@ -20,7 +20,7 @@ async def empty(request: Request) -> JsonResponse:
             data=[],
         )
 
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     jxl = request.args(name='jxl', typing=str)
     day = request.args(name='day', typing=int)
     dqjc = request.args(name='dqjc', typing=int)

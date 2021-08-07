@@ -20,7 +20,7 @@ async def search(request: Request) -> JsonResponse:
             data=[],
         )
 
-    request = RequestLoader(request)
+    request = await RequestLoader.load(request)
     day = request.args(name='day', typing=str, default='#')
     jc_ks = request.args(name='jc_ks', typing=int, default=1)
     jc_js = request.args(name='jc_js', typing=int, default=12)
