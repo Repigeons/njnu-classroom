@@ -4,7 +4,6 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from threading import Thread
 
 from aiohttp.web import Request
 
@@ -15,5 +14,5 @@ from ..service import ResetService
 
 @routes.post('/reset')
 async def reset(request: Request) -> JsonResponse:
-    Thread(target=ResetService.reset).start()
+    await ResetService.reset()
     return JsonResponse(status=HttpStatus.ACCEPTED)
