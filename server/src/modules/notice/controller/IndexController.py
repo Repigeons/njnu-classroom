@@ -19,7 +19,7 @@ config = app['config']['application']['notice']
 async def index(request: Request) -> JsonResponse:
     request = await RequestLoader.load(request)
     token = request.header('token', str)
-    text = request.json('text', str)
+    text = request.form('text', str)
     if token != config['token']:
         return JsonResponse(
             status=HttpStatus.FORBIDDEN,
