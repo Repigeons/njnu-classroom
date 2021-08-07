@@ -124,20 +124,25 @@ Page({
           kcm: this.data.keyword
         },
         success: res => {
-          let resData = res.data as Record<string, any>
-          let data = resData.data as Array<IClassroomRow>
-          for (let i = 0; i < data.length; i++) {
-            let info = parseKcm(data[i].zylxdm, data[i].kcm)
-            if (info == null) continue
-            for (let k in info)
-              data[i][k] = info[k]
+          const data = res.data as IJsonResponse
+          if (res.statusCode == 200 || res.statusCode == 418) {
+            const rows = data.data as Array<IClassroomRow>
+            for (let i = 0; i < rows.length; i++) {
+              let info = parseKcm(rows[i].zylxdm, rows[i].kcm)
+              if (info == null) continue
+              for (let k in info)
+                rows[i][k] = info[k]
+            }
+            this.setData({
+              serve: data.status == 200,
+              results: rows,
+              result: rows.slice(0, perPage),
+              showResult: true,
+            })
+          } else {
+            console.warn(data.message)
+            this.setData({ display_list: [] })
           }
-          this.setData({
-            serve: resData.service == 'on',
-            results: data,
-            result: data.slice(0, perPage),
-            showResult: true,
-          })
         },
         fail: res => {
           console.error(res)

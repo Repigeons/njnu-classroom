@@ -170,40 +170,45 @@ Page({
       url: `${app.globalData.server}/api/overview.json`,
       data: { jasdm },
       success: res => {
-        let resData = res.data as Record<string, any>
-        let bar_list = resData.data as Array<IClassroomRow>
-        let kcmclimit = 0
-        for (let i = 0; i < bar_list.length; i++) {
-          switch (bar_list[i].zylxdm) {
-            case '00':
-              bar_list[i].usage = 'empty'
-              break;
-            case '01':
-            case '03':
-            case '10':
-            case '11':
-              bar_list[i].usage = 'class'
-              break;
-            default:
-              bar_list[i].usage = 'others'
-              break;
+        const data = res.data as IJsonResponse
+        if (res.statusCode == 200) {
+          const bar_list = data.data as Array<IClassroomRow>
+          let kcmclimit = 0
+          for (let i = 0; i < bar_list.length; i++) {
+            switch (bar_list[i].zylxdm) {
+              case '00':
+                bar_list[i].usage = 'empty'
+                break;
+              case '01':
+              case '03':
+              case '10':
+              case '11':
+                bar_list[i].usage = 'class'
+                break;
+              default:
+                bar_list[i].usage = 'others'
+                break;
+            }
+            if (bar_list[i].day == this.data.day)
+              if (bar_list[i].jc_ks <= this.data.dqjc + 1)
+                if (bar_list[i].jc_js >= this.data.dqjc + 1) {
+                  this.setData({ empty: bar_list[i].zylxdm == '00' })
+                }
+            // day1: 周一~0
+            bar_list[i].day1 = (bar_list[i].day + 6) % 7
+            let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
+            if (info == null) continue
+            for (let k in info) {
+              bar_list[i][k] = info[k]
+            }
+            kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
+            bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
+            this.setData({ bar_list })
           }
-          if (bar_list[i].day == this.data.day)
-            if (bar_list[i].jc_ks <= this.data.dqjc + 1)
-              if (bar_list[i].jc_js >= this.data.dqjc + 1) {
-                this.setData({ empty: bar_list[i].zylxdm == '00' })
-              }
-          // day1: 周一~0
-          bar_list[i].day1 = (bar_list[i].day + 6) % 7
-          let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
-          if (info == null) continue
-          for (let k in info) {
-            bar_list[i][k] = info[k]
-          }
-          kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
-          bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
+        } else {
+          console.warn(data.message)
+          this.setData({ bar_list: [] })
         }
-        this.setData({ bar_list })
       },
       fail: console.error
     })

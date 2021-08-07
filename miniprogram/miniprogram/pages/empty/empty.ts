@@ -4,6 +4,7 @@ import { getJxlPosition, getNotice } from '../../utils/getCache'
 import { getDistance, getJc } from '../../utils/util'
 // 获取应用实例
 const app = getApp<IAppOption>()
+const feedback_interval: number = 5000 // 间隔时间（毫秒）
 
 Page({
   data: {
@@ -191,11 +192,16 @@ Page({
         dqjc: this.data.jc_selected + 1
       },
       success: res => {
-        let resData = res.data as Record<string, any>
-        this.setData({
-          serve: resData.service == 'on',
-          result: resData.data
-        })
+        const data = res.data as IJsonResponse
+        if (res.statusCode == 200 || res.statusCode == 418) {
+          this.setData({
+            serve: data.status == 200,
+            result: data.data
+          })
+        } else {
+          console.warn(data.message)
+          this.setData({ result: [] })
+        }
       },
       fail: err => {
         console.error(err)
@@ -209,9 +215,8 @@ Page({
    */
   feedback(): void {
     this.setData({ confirm_display: false })
-    const interval: number = 60000 // 间隔时间（毫秒）
     let now: number = new Date().getTime()
-    if (now < this.data.feedbackTime + interval) {
+    if (now < this.data.feedbackTime + feedback_interval) {
       wx.showToast({
         title: '操作过于频繁',
         icon: 'loading',
@@ -226,10 +231,9 @@ Page({
     wx.request({
       url: `${app.globalData.server}/api/feedback`,
       method: 'POST',
-      header: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: {
         jc: this.data.jc_selected + 1,
-        results: JSON.stringify(this.data.result),
+        results: this.data.result,
         index: this.data.layer_index,
         day: this.data.rq_array[this.data.rq_selected].key,
         jxl: this.data.jxl_array[this.data.jxl_selected].name,

@@ -28,7 +28,7 @@ function getCache(args: { path: string, request: boolean }): Promise<string | Re
 }
 
 export function getNotice(): Promise<INotice> {
-    let url = `${app.globalData.server}/notice.json`
+    let url = `${app.globalData.server}/static/notice.json`
     return new Promise((resolve, reject) => {
         wx.request({
             url: url,
@@ -87,7 +87,10 @@ export function getShuttle(request: boolean = false): Promise<IShuttle> {
             path: '/explore/shuttle.json',
             request
         })
-            .then(data => resolve(data as IShuttle))
+            .then(data => {
+                data = data as IJsonResponse
+                resolve(data.data as IShuttle)
+            })
             .catch(reject)
     })
 }
