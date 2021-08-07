@@ -13,6 +13,6 @@ from ..service import ResetService
 
 
 @routes.post('/reset')
-async def reset(request: Request) -> JsonResponse:
+async def reset(_: Request) -> JsonResponse:
     await ResetService.reset()
     return JsonResponse(status=HttpStatus.ACCEPTED)

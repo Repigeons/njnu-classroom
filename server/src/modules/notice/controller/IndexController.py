@@ -8,7 +8,7 @@ import logging
 
 from aiohttp.web import Request
 
-from app import app, JsonResponse, HttpStatus
+from app import *
 from .routes import routes
 from ..service import IndexService
 
@@ -17,20 +17,14 @@ config = app['config']['application']['notice']
 
 @routes.put('/')
 async def index(request: Request) -> JsonResponse:
-    token = request.headers.get('token')
-    data = await request.post()
-    text = data['text']
-    if not isinstance(token, str) or token != config['token']:
+    request = RequestLoader(request)
+    token = request.header('token', str)
+    text = request.json('text', str)
+    if token != config['token']:
         return JsonResponse(
             status=HttpStatus.FORBIDDEN,
             message="TokenError",
         )
-    elif not isinstance(text, str):
-        return JsonResponse(
-            status=HttpStatus.BAD_REQUEST,
-            message="TextError",
-        )
-
     try:
         data = await IndexService.handle(text)
         return JsonResponse(data=data)

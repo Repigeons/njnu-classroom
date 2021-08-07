@@ -17,7 +17,7 @@ from ..service import ShuttleService
 
 
 @routes.get('/shuttle.json')
-async def shuttle(request: Request) -> JsonResponse:
+async def shuttle(_: Request) -> JsonResponse:
     async with aioredis.start(app['redis']) as redis:
         data = await redis.hget(
             "shuttle",
