@@ -7,15 +7,16 @@
 import json
 
 from app import app
+from exceptions import RequestParameterError
 from ztxlib import aioredis
 
 
-async def handle(args: dict) -> list:
+async def handle(jasdm: str) -> list:
     async with aioredis.start(app['redis']) as redis:
-        if 'jasdm' not in args.keys() or not await redis.hexists("overview", args['jasdm']):
-            raise KeyError('jasdm')
+        if not await redis.hexists("overview", jasdm):
+            raise RequestParameterError('jasdm')
 
         return json.loads(await redis.hget(
             name="overview",
-            key=args['jasdm']
+            key=jasdm
         ))

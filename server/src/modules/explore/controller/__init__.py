@@ -4,6 +4,7 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
+from . import ExceptionHandler
 from . import ShuttleController
 from .middlewares import middlewares
 from .routes import routes

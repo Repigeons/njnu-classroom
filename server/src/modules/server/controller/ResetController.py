@@ -6,20 +6,14 @@
 """"""
 from threading import Thread
 
-from aiohttp.web import json_response, Request, Response
+from aiohttp.web import Request
 
+from app import JsonResponse, HttpStatus
 from .routes import routes
 from ..service import ResetService
 
 
 @routes.post('/reset')
-async def reset(request: Request) -> Response:
+async def reset(request: Request) -> JsonResponse:
     Thread(target=ResetService.reset).start()
-    return json_response(
-        dict(
-            status=0,
-            message="ok",
-            data=None
-        ),
-        status=202
-    )
+    return JsonResponse(status=HttpStatus.ACCEPTED)

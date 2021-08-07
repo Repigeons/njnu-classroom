@@ -6,9 +6,9 @@
 """"""
 import logging
 
-from aiohttp.web import json_response, Request, Response
+from aiohttp.web import Request
 
-from app import app
+from app import app, JsonResponse, HttpStatus
 from .routes import routes
 from ..service import IndexService
 
@@ -16,49 +16,30 @@ config = app['config']['application']['notice']
 
 
 @routes.put('/')
-async def index(request: Request) -> Response:
+async def index(request: Request) -> JsonResponse:
     token = request.headers.get('token')
     data = await request.post()
     text = data['text']
     if not isinstance(token, str) or token != config['token']:
-        return json_response(
-            dict(
-                status=1,
-                message="TokenError",
-                data=None
-            ),
-            status=403
+        return JsonResponse(
+            status=HttpStatus.FORBIDDEN,
+            message="TokenError",
         )
     elif not isinstance(text, str):
-        return json_response(
-            dict(
-                status=1,
-                message="TextError",
-                data=None
-            ),
-            status=400
+        return JsonResponse(
+            status=HttpStatus.BAD_REQUEST,
+            message="TextError",
         )
 
     try:
         data = await IndexService.handle(text)
-        return json_response(
-            dict(
-                status=0,
-                message="ok",
-                data=data
-            ),
-            status=200
-        )
+        return JsonResponse(data=data)
     except Exception as e:
         logging.error(
             f"{type(e), e}"
             f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
         )
-        return json_response(
-            dict(
-                status=1,
-                message=type(e),
-                data=e.args
-            ),
-            status=500
+        return JsonResponse(
+            status=HttpStatus.INTERNAL_SERVER_ERROR,
+            message=f"{type(e), e}",
         )

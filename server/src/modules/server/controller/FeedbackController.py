@@ -4,37 +4,27 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-import json
+from aiohttp.web import Request
 
-from aiohttp.web import json_response, Request, Response
-
-from app import app
+from app import *
 from .routes import routes
 from ..service import FeedbackService
 
 
 @routes.post('/feedback')
-async def feedback(request: Request) -> Response:
+async def feedback(request: Request) -> JsonResponse:
     if not app['config']['application']['server']['service']:
-        return json_response(
-            dict(),
-            status=403
+        return JsonResponse(
+            status=HttpStatus.IM_A_TEAPOT,
+            message="service off",
         )
 
-    form_data = await request.json()
+    request = RequestLoader(request)
+    jc = request.json(name='jc', typing=int)
+    results = request.args(name='results', typing=list)
+    index = request.args(name='index', typing=int)
+    jxlmc = request.args(name='jxlmc', typing=str)
+    day = request.args(name='day', typing=int)
 
-    await FeedbackService.handle(
-        jc=form_data['jc'],
-        results=json.loads(form_data['results']),
-        index=int(form_data['index']),
-        jxlmc=form_data['jxl'],
-        day=int(form_data['day'])
-    )
-    return json_response(
-        dict(
-            status=0,
-            message="ok",
-            data=None
-        ),
-        status=202
-    )
+    await FeedbackService.handle(jc, results, index, jxlmc, day)
+    return JsonResponse(status=HttpStatus.ACCEPTED)

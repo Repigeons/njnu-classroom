@@ -4,44 +4,24 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from aiohttp.web import json_response, Request, Response
+from aiohttp.web import Request
 
-from app import app
+from app import *
 from .routes import routes
 from ..service import OverviewService
 
 
 @routes.get('/overview.json')
-async def overview(request: Request) -> Response:
+async def overview(request: Request) -> JsonResponse:
     if not app['config']['application']['server']['service']:
-        return json_response(
-            dict(
-                status=1,
-                message="service off",
-                service='off',
-                data=[]
-            ),
-            status=200
+        return JsonResponse(
+            status=HttpStatus.IM_A_TEAPOT,
+            message="service off",
+            data=[],
         )
 
-    try:
-        result = await OverviewService.handle(dict(request.query))
-        return json_response(
-            dict(
-                status=0,
-                message="ok",
-                service='on',
-                data=result
-            ),
-            status=200
-        )
+    request = RequestLoader(request)
+    jasdm = request.args(name='jasdm', typing=str)
 
-    except KeyError as e:
-        return json_response(
-            dict(
-                status=2,
-                message=f"Expected or unresolved key [{e}]",
-                data=[]
-            ),
-            status=400
-        )
+    result = await OverviewService.handle(jasdm)
+    return JsonResponse(data=result)

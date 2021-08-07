@@ -12,8 +12,8 @@ from ztxlib import *
 from .static import day_mapper
 
 
-async def reset():
-    await asyncio.gather(
+def reset():
+    return asyncio.gather(
         reset_empty(),
         reset_overview(),
     )

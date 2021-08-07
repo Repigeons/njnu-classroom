@@ -7,39 +7,33 @@
 import datetime
 import json
 
-from aiohttp.web import json_response, FileField, Request, Response
+from aiohttp.web import Request, FileField
 
-from app import app
+from app import app, JsonResponse
+from app.RequestLoader import RequestLoader
 from ztxlib import aioredis
 from .routes import routes
 from ..service import ShuttleService
 
 
 @routes.get('/shuttle.json')
-async def shuttle(request: Request) -> Response:
+async def shuttle(request: Request) -> JsonResponse:
     async with aioredis.start(app['redis']) as redis:
         data = await redis.hget(
             "shuttle",
             str(datetime.datetime.now().weekday())
         )
-        data = json.loads(await redis.hget(
-            "shuttle",
-            str(datetime.datetime.now().weekday())
-        ))
-    return json_response(
-        data,
-        status=200
+    return JsonResponse(
+        data=json.loads(data)
     )
 
 
 @routes.post('/shuttle/upload')
-async def upload(request: Request) -> Response:
-    file: FileField = (await request.post())['file']
+async def upload(request: Request) -> JsonResponse:
+    request = RequestLoader(request)
+    file: FileField = request.form("file")
     await ShuttleService.email_file(
         content=file.file.read(),
         subject=f"【南师教室】有人上传校车时刻表.{file.filename.split('.')[-1]}",
     )
-    return json_response(
-        dict(),
-        status=200
-    )
+    return JsonResponse()
