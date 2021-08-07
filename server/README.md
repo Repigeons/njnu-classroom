@@ -94,7 +94,7 @@ python manage.py --run notice  --log <log level(INFO)>
 ### 9、项目结构
 
 ```text
-server\[NjnuClassroom]
+server[NjnuClassroom]
 ├── systemd                 # Systemd服务配置文件
 ├── docker                  # Docker镜像静态文件
 ├── shell                   # 启动脚本
