@@ -23,7 +23,7 @@ async def handle(day: str,
             day = day_mapper[int(day)]
         else:
             raise RequestParameterError('day')
-    keyword = '%' if keyword == '#' else keyword = f'%{keyword}%'
+    keyword = '%' if keyword == '#' else f'%{keyword}%'
 
     mysql: aiomysql.MySQL = app['mysql']
     rows = await mysql.fetchall(
