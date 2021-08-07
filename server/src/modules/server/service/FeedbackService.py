@@ -96,17 +96,17 @@ async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
             cookies = json.loads(await redis.hget("spider", "cookies"))
             time_info = json.loads(await redis.hget("spider", "time_info"))
             await redis.delete("spider")
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-                cookies=cookies,
-                data=dict(
-                    XNXQDM=time_info['XNXQDM'][0],
-                    ZC=time_info['ZC'],
-                    JASDM=jasdm,
-                )
-        ) as resp:
-            res = await resp.json()
+    async with aiohttp.request(
+            method="POST",
+            url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+            cookies=cookies,
+            data=dict(
+                XNXQDM=time_info['XNXQDM'][0],
+                ZC=time_info['ZC'],
+                JASDM=jasdm,
+            )
+    ) as resp:
+        res = await resp.json()
     kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
     for row in kcb:
         if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):

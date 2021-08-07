@@ -24,34 +24,34 @@ async def get_data(cookies: dict, time_info: dict, classroom: dict) -> list[dict
     this_week = time_info['ZC']
     next_week = time_info['ZC'] + 1 if time_info['ZC'] < time_info['ZJXZC'] else time_info['ZJXZC']
     term_code = time_info['XNXQDM'][0]
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-                cookies=cookies,
-                data=dict(
-                    XNXQDM=term_code,
-                    ZC=this_week,
-                    JASDM=classroom['JASDM'],
-                )
-        ) as resp:
-            res = await resp.json()
+    async with aiohttp.request(
+            method="POST",
+            url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+            cookies=cookies,
+            data=dict(
+                XNXQDM=term_code,
+                ZC=this_week,
+                JASDM=classroom['JASDM'],
+            )
+    ) as resp:
+        res = await resp.json()
     try:
         kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
     except KeyError:
         return []
 
     if next_week != this_week:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(
-                    url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
-                    cookies=cookies,
-                    data=dict(
-                        XNXQDM=term_code,
-                        ZC=next_week,
-                        JASDM=classroom['JASDM'],
-                    )
-            ) as resp:
-                res = await resp.json()
+        async with aiohttp.request(
+                method="POST",
+                url="http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxyzjskjyqk.do",
+                cookies=cookies,
+                data=dict(
+                    XNXQDM=term_code,
+                    ZC=next_week,
+                    JASDM=classroom['JASDM'],
+                )
+        ) as resp:
+            res = await resp.json()
         try:
             kcb_next = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
             for day in range(today):

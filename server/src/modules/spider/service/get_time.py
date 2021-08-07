@@ -81,43 +81,43 @@ async def get_time_info(cookies: dict) -> dict:
     result = {}
 
     # 查询当前学年学期
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do',
-                cookies=cookies
-        ) as resp:
-            res = await resp.json()
+    async with aiohttp.request(
+            method="POST",
+            url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do',
+            cookies=cookies
+    ) as resp:
+        res = await resp.json()
     result['XNXQDM'] = res['datas']['cxdqxnxq']['rows'][0]['DM'],
     result['XNDM'] = res['datas']['cxdqxnxq']['rows'][0]['XNDM'],
     result['XQDM'] = res['datas']['cxdqxnxq']['rows'][0]['XQDM']
 
     # 查询当前周次和总周次
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do',
-                cookies=cookies,
-                data=dict(
-                    XN=result['XNDM'],
-                    XQ=result['XQDM'],
-                    RQ=time.strftime("%Y-%m-%d", time.localtime()),
-                )
-        ) as resp:
-            res = await resp.json()
+    async with aiohttp.request(
+            method="POST",
+            url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do',
+            cookies=cookies,
+            data=dict(
+                XN=result['XNDM'],
+                XQ=result['XQDM'],
+                RQ=time.strftime("%Y-%m-%d", time.localtime()),
+            )
+    ) as resp:
+        res = await resp.json()
     result['ZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZC']
     result['ZZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZZC']
 
     # 查询总教学周次
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-                url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do',
-                cookies=cookies,
-                data=dict(
-                    XN=result['XNDM'],
-                    XQ=result['XQDM'],
-                    SFSY=1,
-                )
-        ) as resp:
-            res = await resp.json()
+    async with aiohttp.request(
+            method="POST",
+            url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do',
+            cookies=cookies,
+            data=dict(
+                XN=result['XNDM'],
+                XQ=result['XQDM'],
+                SFSY=1,
+            )
+    ) as resp:
+        res = await resp.json()
     result['ZJXZC'] = res['datas']['cxxljc']['rows'][0]['ZJXZC']
 
     return result
