@@ -6,6 +6,8 @@
 """"""
 from email.mime.text import MIMEText
 
+from aiohttp.web_exceptions import HTTPClientError
+
 from app import JsonResponse, HttpStatus
 from exceptions import RequestParameterError
 from .middlewares import middlewares
@@ -21,6 +23,8 @@ async def middleware(app, http_handler):
                 status=HttpStatus.BAD_REQUEST,
                 message="Request parameter error: [%s]" % exception.args[0],
             )
+        except HTTPClientError as exception:
+            raise exception
         except Exception as e:
             async with app['smtp'] as smtp:
                 await smtp.send(
