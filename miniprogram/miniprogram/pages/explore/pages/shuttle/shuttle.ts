@@ -11,7 +11,7 @@ Page({
     station_selected: 0,
     stations_display: Array<string>(),
     week_selected: 0,
-    week_display: ['周一','周二','周三','周四','周五','周六','周日'],
+    week_display: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     stations: Array<IPosition>(),
     routes: Array<IShuttleRoute>(),
     direction1: Array<IShuttleRoute>(),
@@ -26,8 +26,11 @@ Page({
   },
 
   onShow() {
-    getShuttle().then((data: IShuttle) => {
-      let name2index: Record<string, number> = {}
+    this.refresh((new Date().getDay() + 6) % 7)
+  },
+  refresh(day: number) {
+    getShuttle(day).then((data: IShuttle) => {
+      const name2index: Record<string, number> = {}
       data.stations.forEach((station, index) => name2index[station.name] = index)
       this.setData(data)
       this.setData({ name2index })
@@ -35,11 +38,11 @@ Page({
       wx.getLocation({
         type: 'gcj02',
         success: res => {
-          let stations_display: Array<string> = [],
+          const stations_display: Array<string> = [],
             stationDistance: Array<number> = [],
             nearestStation: Array<{ name: string, distance: number }> = []
           this.data.stations.forEach(station => {
-            let distance = Math.floor(getDistance({
+            const distance = Math.floor(getDistance({
               latitude1: station.position[0],
               longitude1: station.position[1],
               longitude2: res.longitude,
@@ -81,7 +84,8 @@ Page({
       })
     }
     // 滚动到最近位置
-    let now = new Date(), scrollIndex = this.data.routes.length - 1
+    const now = new Date()
+    let scrollIndex = this.data.routes.length - 1
     while (scrollIndex > 0) {
       if (parseTime(this.data.routes[scrollIndex][0]) - parseTime(`${now.getHours()}:${now.getMinutes()}`) < -15) {
         break
@@ -96,8 +100,9 @@ Page({
   },
 
   bindWeekChange(e: AnyObject): void {
-    this.setData({ week_selected: +e.detail.value })
-    //TODO:需要实现选择特定星期后，服务端返回选择星期对应的校车时刻表
+    const week_selected = +e.detail.value
+    this.setData({ week_selected })
+    this.refresh(week_selected)
   },
 
   uploadFile() {

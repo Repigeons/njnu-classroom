@@ -63,7 +63,7 @@ Page({
     })
 
     if (options.page == 'overview') {
-      let { jxlmc, jsmph } = options
+      const { jxlmc, jsmph } = options
       this.switchClassroom(jxlmc, jsmph)
     }
   },
@@ -73,7 +73,7 @@ Page({
     wx.getStorage({
       key: 'last_overview',
       success: res => {
-        let { jxlmc, jsmph } = res.data
+        const { jxlmc, jsmph } = res.data
         this.switchClassroom(jxlmc, jsmph)
       },
       fail: () => {
@@ -84,14 +84,14 @@ Page({
   },
 
   switchClassroom(jxlmc: string, jsmph: string) {
-    let jxl_list = this.data.jxl_list
+    const jxl_list = this.data.jxl_list
     this.onPickerChange({
       detail: {
         column: 0,
         value: jxl_list.findIndex(item => item.text == jxlmc)
       }
     })
-    let jas_picker_list = this.data.jas_picker_list
+    const jas_picker_list = this.data.jas_picker_list
     this.onPickerChange({
       detail: {
         column: 1,
@@ -196,9 +196,9 @@ Page({
                 }
             // day1: 周一~0
             bar_list[i].day1 = (bar_list[i].day + 6) % 7
-            let info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
+            const info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
             if (info == null) continue
-            for (let k in info) {
+            for (const k in info) {
               bar_list[i][k] = info[k]
             }
             kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3

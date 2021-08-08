@@ -4,8 +4,8 @@ let app: WechatMiniprogram.App.Instance<IAppOption>
 export function initialize(appInstance: WechatMiniprogram.App.Instance<IAppOption>) { app = appInstance }
 
 function getCache(args: { path: string, request: boolean }): Promise<string | Record<string, any> | ArrayBuffer> {
-    let url = `${app.globalData.server}/${args.path}`
-    let key = encrypt(url)
+    const url = `${app.globalData.server}/${args.path}`
+    const key = encrypt(url)
     if (args.request) {
         wx.request({
             url: url,
@@ -28,7 +28,7 @@ function getCache(args: { path: string, request: boolean }): Promise<string | Re
 }
 
 export function getNotice(): Promise<INotice> {
-    let url = `${app.globalData.server}/static/notice.json`
+    const url = `${app.globalData.server}/static/notice.json`
     return new Promise((resolve, reject) => {
         wx.request({
             url: url,
@@ -81,11 +81,11 @@ export function getExploreGrids(request: boolean = false): Promise<Array<IGrid>>
     })
 }
 
-export function getShuttle(request: boolean = false): Promise<IShuttle> {
+export function getShuttle(day: number): Promise<IShuttle> {
     return new Promise((resolve, reject) => {
         getCache({
-            path: '/explore/shuttle.json',
-            request
+            path: `/explore/shuttle.json?day=${day}`,
+            request: true
         })
             .then(data => {
                 data = data as IJsonResponse

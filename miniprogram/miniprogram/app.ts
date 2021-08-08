@@ -5,7 +5,6 @@ import {
   getJxlPosition,
   getClassrooms,
   getZylxdm,
-  getShuttle,
   getExploreGrids
 } from "./utils/getCache"
 
@@ -39,12 +38,12 @@ App<IAppOption>({
         storage[key] = wx.getStorageSync(key)
     })
     cache.forEach(url => {
-      let key = encrypt(url)
+      const key = encrypt(url)
       if (storageInfo.indexOf(key) != -1)
         storage[key] = wx.getStorageSync(key)
     })
     wx.clearStorageSync()
-    for (let key in storage)
+    for (const key in storage)
       wx.setStorage({ key, data: storage[key] })
   },
 
@@ -52,7 +51,6 @@ App<IAppOption>({
     getJxlPosition(true)
     getClassrooms(true)
     getZylxdm(true)
-    getShuttle(true)
     getExploreGrids(true)
   }
 })

@@ -48,7 +48,7 @@ Page({
   onLoad(options: Record<string, string>): void {
     // 公告
     getNotice().then(data => {
-      let notice = wx.getStorageSync('notice') as number
+      const notice = wx.getStorageSync('notice') as number
       this.setData({
         notice: {
           timestamp: (data.timestamp == notice) ? 0 : data.timestamp,
@@ -115,7 +115,7 @@ Page({
         let minIndex: number = 0
         let minDistance: number = 0xffffffff
         this.data.jxl_array.forEach((jxl, index) => {
-          let distance: number = getDistance({
+          const distance: number = getDistance({
             latitude1: jxl.position[0],
             longitude1: jxl.position[1],
             longitude2: res.longitude,
@@ -139,7 +139,7 @@ Page({
    * 将选择的日期设为当天
    */
   dangqianriqi(): void {
-    let rq = (new Date().getDay() + 6) % 7
+    const rq = (new Date().getDay() + 6) % 7
     this.setData({
       rq_selected: rq,
       rq_scroll: rq,
@@ -150,7 +150,7 @@ Page({
    * 将选择的课程节次设为当前节次
    */
   dangqianjieci(): void {
-    let jc = getJc(new Date())
+    const jc = getJc(new Date())
     this.setData({
       jc_selected: jc,
       jc_scroll: jc,
@@ -215,7 +215,7 @@ Page({
    */
   feedback(): void {
     this.setData({ confirm_display: false })
-    let now: number = new Date().getTime()
+    const now: number = new Date().getTime()
     if (now < this.data.feedbackTime + feedback_interval) {
       wx.showToast({
         title: '操作过于频繁',
@@ -254,7 +254,7 @@ Page({
    * 显示用户反馈弹出层
    */
   showLayer(e: any): void {
-    let index: number = e.currentTarget.dataset.index
+    const index: number = e.currentTarget.dataset.index
     this.setData({
       layer_index: index,
       layer_display: true
@@ -264,7 +264,7 @@ Page({
    * 隐藏用户反馈弹出层
    */
   hideLayer(e?: any): void {
-    let layer = e?.target.id == 'layer'
+    const layer = e?.target.id == 'layer'
     if (!layer) {
       this.setData({
         layer_display: false,

@@ -47,7 +47,7 @@ Page({
    */
   onLoad: function (options) {
     getClassrooms().then(data => {
-      let jxl_array = this.data.jxl_array
+      const jxl_array = this.data.jxl_array
       Object.keys(data).forEach(jxlmc => {
         jxl_array.push({ key: jxlmc, value: jxlmc })
       })
@@ -63,7 +63,7 @@ Page({
     })
 
     if (options.page === "search") {
-      let { keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected } = options
+      const { keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected } = options
       this.setData({
         keyword,
         jxl_selected: Number(jxl_selected),
@@ -94,11 +94,11 @@ Page({
     this.setData({ jxl_selected: e.detail.value })
   },
   bindJcChange(e: any) {
-    let data: Record<string, string> = {}
+    const data: Record<string, string> = {}
     data[`jc_${e.target.dataset.jc}_selected`] = e.detail.value
     this.setData(data)
 
-    let { jc_ks_selected, jc_js_selected } = this.data
+    const { jc_ks_selected, jc_js_selected } = this.data
     if (jc_ks_selected > jc_js_selected) {
       this.setData({
         jc_ks_selected: jc_js_selected,
@@ -128,9 +128,9 @@ Page({
           if (res.statusCode == 200 || res.statusCode == 418) {
             const rows = data.data as Array<IClassroomRow>
             for (let i = 0; i < rows.length; i++) {
-              let info = parseKcm(rows[i].zylxdm, rows[i].kcm)
+              const info = parseKcm(rows[i].zylxdm, rows[i].kcm)
               if (info == null) continue
-              for (let k in info)
+              for (const k in info)
                 rows[i][k] = info[k]
             }
             this.setData({
@@ -153,7 +153,7 @@ Page({
   },
 
   onReachBottom() {
-    let { result, results } = this.data
+    const { result, results } = this.data
     this.setData({
       result: result.concat(results.slice(result.length, result.length + perPage))
     })
@@ -163,7 +163,7 @@ Page({
     * 显示详细信息
     */
   showDialog(e: AnyObject): void {
-    let index: number = e.currentTarget.dataset.index,
+    const index: number = e.currentTarget.dataset.index,
       item = this.data.result[index],
       rq = this.data.rq_array[item.day ? item.day : 7].value
     this.setData({ dialog: item2dialog(item, rq) })

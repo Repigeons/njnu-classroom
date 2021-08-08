@@ -1,9 +1,9 @@
 export default function(str: string): number {
-  let arr = str.split(':')
+  const arr = str.split(':')
   if (arr.length != 2) {
     return NaN
   }
-  let time_arr = arr.map(s => +s)
+  const time_arr = arr.map(s => +s)
   if (time_arr[0] < 0 || time_arr[0] >= 24) {
     return NaN
   }

@@ -1,6 +1,6 @@
-export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
+export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => {
   let kcxx: Array<string>
-  let pklysz: Record<string, string> = {'01':'研', '02':'成', '03':'本', '04':'借', '05':'本考', '11':'研考', '12':'成教'}
+  const pklysz: Record<string, string> = { '01': '研', '02': '成', '03': '本', '04': '借', '05': '本考', '11': '研考', '12': '成教' }
   switch (zylxdm) {
     case '01':
     case '03':
@@ -18,7 +18,7 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         XKRS: kcxx[3] ? +kcxx[3] : 0,
         // 行政班
         XZB: kcxx[4] ? kcxx[4] : '',
-        // 
+        //
         title: kcxx[2] ? kcxx[2] : '未知',
       }
       break
@@ -26,9 +26,9 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
       // 本科生考试
       return {
         BKSKSZYFLAG: true,
-        // 
+        //
         PKLY: pklysz['05'],
-        // 
+        //
         title: KCM,
       }
       break
@@ -47,9 +47,9 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         LXDH: kcxx[3] ? kcxx[3] : '',
         // 借用说明
         JYYTMS: kcxx[4] ? kcxx[4] : '',
-        // 
+        //
         PKLY: pklysz['04'],
-        // 
+        //
         title: kcxx[4] ? kcxx[4] : '未知',
       }
       break
@@ -80,9 +80,9 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo|null => {
         FZLS: kcxx[5] ? kcxx[5] : '',
         // 联系电话
         LXDH: kcxx[6] ? kcxx[6] : '',
-        // 
+        //
         PKLY: pklysz[kcxx[7]],
-        // 
+        //
         title: kcxx[0] ? kcxx[0] : '未知',
       }
       break
@@ -97,9 +97,9 @@ export const item2dialog = (item: Record<string, any>, rq: string) => {
     field: string;
     value: string;
   }> = [
-    { field: '教室门牌', value: `${item.JXLMC}${item.jsmph}` },
-    { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
-  ]
+      { field: '教室门牌', value: `${item.JXLMC}${item.jsmph}` },
+      { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
+    ]
   if (item.KCMC) detail.push({ field: '课程名称', value: item.KCMC })
   if (item.SKJS) detail.push({ field: '上课教师', value: item.SKJS })
   if (item.KKDW) detail.push({ field: '开课单位', value: item.KKDW })
