@@ -89,7 +89,7 @@ export function getShuttle(request: boolean = false): Promise<IShuttle> {
         })
             .then(data => {
                 data = data as IJsonResponse
-                resolve(data as IShuttle)
+                resolve(data.data as IShuttle)
             })
             .catch(reject)
     })
