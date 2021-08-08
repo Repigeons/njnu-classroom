@@ -72,7 +72,10 @@ def main(module: str, log_level: str = None):
             exit(-1)
         raise e
     finally:
-        loop.run_until_complete(finalize())
+        try:
+            loop.run_until_complete(finalize())
+        except RuntimeError:
+            pass
 
 
 if __name__ == '__main__':
