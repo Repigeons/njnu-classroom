@@ -9,4 +9,5 @@ interface IPosition {
     readonly 0: number
     readonly 1: number
   }
+  readonly distance: number
 }

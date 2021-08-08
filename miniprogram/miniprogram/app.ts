@@ -8,7 +8,7 @@ import {
   getExploreGrids
 } from "./utils/getCache"
 
-const useDevelopServer: boolean = false
+const useDevelopServer: boolean = true
 
 App<IAppOption>({
   globalData: {

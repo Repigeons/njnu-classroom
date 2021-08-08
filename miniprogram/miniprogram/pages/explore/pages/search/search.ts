@@ -162,7 +162,7 @@ Page({
   /**
     * 显示详细信息
     */
-  showDialog(e: AnyObject): void {
+  showDialog(e: any): void {
     const index: number = e.currentTarget.dataset.index,
       item = this.data.result[index],
       rq = this.data.rq_array[item.day ? item.day : 7].value

@@ -6,65 +6,64 @@ import { getShuttle } from '../../../../utils/getCache'
 // 获取应用实例
 const app = getApp<IAppOption>()
 
+const nearestHint = "（最近）"
+
 Page({
   data: {
+    /**显示周几*/
+    day_selected: 0,
+    day_display: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    /**显示的车站*/
     station_selected: 0,
-    stations_display: Array<string>(),
-    week_selected: 0,
-    week_display: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+    /**车站列表*/
     stations: Array<IPosition>(),
+    /**当前显示的校车时刻表*/
     routes: Array<IShuttleRoute>(),
+    /**当日的车次1*/
     direction1: Array<IShuttleRoute>(),
+    /**当日的车次2*/
     direction2: Array<IShuttleRoute>(),
+    /**方向*/
     direction: Boolean(),
+    /**终点站*/
     terminus: String(),
+    /**滚动位置*/
     scrollId: String(),
     name2index: Object() as Record<string, number>,
-    stationDistance: Array<number>(),
-
-    nearestHint: "（离我最近）",
   },
 
   onShow() {
-    this.refresh((new Date().getDay() + 6) % 7)
-  },
-  refresh(day: number) {
-    getShuttle(day).then((data: IShuttle) => {
-      const name2index: Record<string, number> = {}
-      data.stations.forEach((station, index) => name2index[station.name] = index)
-      this.setData(data)
-      this.setData({ name2index })
+    wx.getLocation({
+      type: 'gcj02',
+      success: async (res) => {
+        const iShuttle = await getShuttle(0)
+        const name2index: Record<string, number> = {}
+        iShuttle.stations.forEach((station, index) => name2index[station.name] = index)
+        this.setData({ name2index })
 
-      wx.getLocation({
-        type: 'gcj02',
-        success: res => {
-          const stations_display: Array<string> = [],
-            stationDistance: Array<number> = [],
-            nearestStation: Array<{ name: string, distance: number }> = []
-          this.data.stations.forEach(station => {
-            const distance = Math.floor(getDistance({
-              latitude1: station.position[0],
-              longitude1: station.position[1],
-              longitude2: res.longitude,
-              latitude2: res.latitude,
-            }))
-            nearestStation.push({ name: station.name, distance })
-            stationDistance.push(distance)
-            stations_display.push(station.name)
-          })
-          nearestStation.sort((a, b) => a.distance - b.distance)
-          for (let index = 0; index < stations_display.length; index++) {
-            if (stations_display[index] == nearestStation[0].name) {
-              stations_display[index] += this.data.nearestHint
-              this.setData({ station_selected: index })
-              break
-            }
+        const stations = iShuttle.stations.map((station: IPosition) => {
+          const distance = Math.floor(getDistance({
+            latitude1: station.position[0],
+            longitude1: station.position[1],
+            longitude2: res.longitude,
+            latitude2: res.latitude,
+          }))
+          return {
+            name: station.name,
+            position: station.position,
+            distance: distance,
           }
-          this.setData({ stations_display, stationDistance })
-          this.redirect()
-        },
-        fail: console.error
-      })
+        })
+        stations.sort((a, b) => a.distance - b.distance)
+        stations[0].name += nearestHint
+        this.setData({
+          stations: stations,
+          direction1: iShuttle.direction1,
+          direction2: iShuttle.direction2
+        })
+        this.bindWeekChange({ detail: { value: (new Date().getDay() + 6) % 7 } })
+      },
+      fail: console.error
     })
   },
 
@@ -74,12 +73,12 @@ Page({
     }
     if (!this.data.direction) {
       this.setData({
-        terminus: this.data.stations[this.data.stations.length - 1].name,
+        terminus: this.data.stations[this.data.stations.length - 1].name.replace(nearestHint, ''),
         routes: this.data.direction1
       })
     } else {
       this.setData({
-        terminus: this.data.stations[0].name,
+        terminus: this.data.stations[0].name.replace(nearestHint, ''),
         routes: this.data.direction2
       })
     }
@@ -95,14 +94,21 @@ Page({
     this.setData({ scrollId: `row${scrollIndex}` })
   },
 
-  bindStationChange(e: AnyObject): void {
+  bindStationChange(e: { detail: { value: number } }): void {
     this.setData({ station_selected: +e.detail.value })
   },
 
-  bindWeekChange(e: AnyObject): void {
+  bindWeekChange(e: { detail: { value: number } }): void {
     const week_selected = +e.detail.value
-    this.setData({ week_selected })
-    this.refresh(week_selected)
+    this.setData({ day_selected: week_selected })
+    getShuttle(week_selected).then(iShuttle => {
+      this.setData({
+        direction1: iShuttle.direction1,
+        direction2: iShuttle.direction2
+      })
+      this.redirect()
+    })
+    this.redirect()
   },
 
   uploadFile() {
@@ -121,7 +127,6 @@ Page({
         })
       }
     })
-    // 发送文件到服务器
   },
 
   onShareAppMessage() {
