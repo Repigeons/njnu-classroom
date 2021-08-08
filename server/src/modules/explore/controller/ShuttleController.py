@@ -10,6 +10,7 @@ from aiohttp.web import Request, FileField
 
 from app import app, JsonResponse
 from app.RequestLoader import RequestLoader
+from exceptions import RequestParameterError
 from ztxlib import aioredis
 from .routes import routes
 from ..service import ShuttleService
@@ -18,6 +19,9 @@ from ..service import ShuttleService
 @routes.get('/shuttle.json')
 async def shuttle(request: Request) -> JsonResponse:
     request = await RequestLoader.load(request)
+    day = request.args('day', int)
+    if not (0 <= day <= 6):
+        raise RequestParameterError('day')
     async with aioredis.start(app['redis']) as redis:
         data = await redis.hget(
             "shuttle",
