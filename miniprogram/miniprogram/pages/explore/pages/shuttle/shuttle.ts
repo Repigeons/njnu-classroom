@@ -97,8 +97,8 @@ Page({
 
   bindWeekChange(e: AnyObject): void {
     this.setData({ week_selected: +e.detail.value })
+    //TODO:需要实现选择特定星期后，服务端返回选择星期对应的校车时刻表
     //下面交给下一任开发者继续完成
-    //需要实现选择特定星期后，服务端返回选择星期对应的校车时刻表
   },
 
   uploadFile() {
