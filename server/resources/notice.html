@@ -12,7 +12,7 @@
     <script>
     function submit() {
       const text = document.getElementById('text').value
-      if (confirm(`公告\n${}`))
+      if (confirm(`公告\n${text}`))
         fetch('#', {
           method: 'PUT',
           headers: {
