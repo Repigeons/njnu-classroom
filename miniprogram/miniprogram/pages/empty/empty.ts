@@ -51,7 +51,7 @@ Page({
       const notice = wx.getStorageSync('notice') as number
       this.setData({
         notice: {
-          timestamp: (data.timestamp == notice) ? 0 : data.timestamp,
+          timestamp: (data.timestamp < notice) ? 0 : data.timestamp,
           date: data.date,
           text: data.text
         }
