@@ -4,7 +4,6 @@
 # @Author   :  Zhou Tianxing
 # @Software :  PyCharm x64
 """"""
-import datetime
 import json
 
 from aiohttp.web import Request, FileField
@@ -17,11 +16,12 @@ from ..service import ShuttleService
 
 
 @routes.get('/shuttle.json')
-async def shuttle(_: Request) -> JsonResponse:
+async def shuttle(request: Request) -> JsonResponse:
+    request = await RequestLoader.load(request)
     async with aioredis.start(app['redis']) as redis:
         data = await redis.hget(
             "shuttle",
-            str(datetime.datetime.now().weekday())
+            request.args('day')
         )
     return JsonResponse(
         data=json.loads(data)
