@@ -8,9 +8,11 @@ import {
   getExploreGrids
 } from "./utils/getCache"
 
+const useDevelopServer: boolean = false
+
 App<IAppOption>({
   globalData: {
-    server: 'https://classroom.njnu.xyz'
+    server: useDevelopServer ? 'http://t-classroom.njnu.xyz' : 'https://classroom.njnu.xyz'
   },
 
   onLaunch() {

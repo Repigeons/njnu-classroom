@@ -4,7 +4,7 @@ let app: WechatMiniprogram.App.Instance<IAppOption>
 export function initialize(appInstance: WechatMiniprogram.App.Instance<IAppOption>) { app = appInstance }
 
 function getCache(args: { path: string, request: boolean }): Promise<string | Record<string, any> | ArrayBuffer> {
-    const url = `${app.globalData.server}/${args.path}`
+    const url = `${app.globalData.server}${args.path}`
     const key = encrypt(url)
     if (args.request) {
         wx.request({
