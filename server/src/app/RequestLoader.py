@@ -16,6 +16,8 @@ class RequestLoader:
         self.request = request
         self.headers = request.headers
         self.query = request.query
+        if request.method == 'GET':
+            return self
         if request.content_type[:len('application/json')] == 'application/json':
             self.json = await request.json()
         else:
