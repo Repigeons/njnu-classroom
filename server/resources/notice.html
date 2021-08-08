@@ -8,10 +8,9 @@
       width: 70%;
       font-size: xx-large;
     }
-
     </style>
     <script>
-    const submit = () => {
+    function submit() => {
       const text = document.getElementById('text').value
       if (confirm(`公告\n${}`))
         fetch('#', {
@@ -23,7 +22,6 @@
           body: `text=${text}`,
         })
     }
-
     </script>
 </head>
 <body>
