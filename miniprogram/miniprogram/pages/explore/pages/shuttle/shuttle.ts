@@ -6,8 +6,6 @@ import { getShuttle } from '../../../../utils/getCache'
 // 获取应用实例
 const app = getApp<IAppOption>()
 
-const nearestHint = "（最近）"
-
 Page({
   data: {
     /**显示周几*/
@@ -29,7 +27,10 @@ Page({
     terminus: String(),
     /**滚动位置*/
     scrollId: String(),
-    name2index: Object() as Record<string, number>,
+
+    name2Number: {} as Record<string, number>,
+
+    nearestHint: "(最近)",
   },
 
   onShow() {
@@ -37,11 +38,7 @@ Page({
       type: 'gcj02',
       success: async (res) => {
         const iShuttle = await getShuttle(0)
-        const name2index: Record<string, number> = {}
-        iShuttle.stations.forEach((station, index) => name2index[station.name] = index)
-        this.setData({ name2index })
-
-        const stations = iShuttle.stations.map((station: IPosition) => {
+        const stations: Array<IPosition> = iShuttle.stations.map((station: IPosition, index: number) => {
           const distance = Math.floor(getDistance({
             latitude1: station.position[0],
             longitude1: station.position[1],
@@ -50,17 +47,19 @@ Page({
           }))
           return {
             name: station.name,
+            rangeKey: station.name,
             position: station.position,
             distance: distance,
+            number: index
           }
         })
         stations.sort((a, b) => a.distance - b.distance)
-        stations[0].name += nearestHint
-        this.setData({
-          stations: stations,
-          direction1: iShuttle.direction1,
-          direction2: iShuttle.direction2
-        })
+        stations[0].rangeKey += this.data.nearestHint
+        stations.sort((a, b) => a.number - b.number)
+        const name2Number: Record<string, number> = {}
+        stations.forEach(v => name2Number[v.name] = v.number)
+        console.log('name2Number', name2Number)
+        this.setData({ stations, name2Number })
         this.bindWeekChange({ detail: { value: (new Date().getDay() + 6) % 7 } })
       },
       fail: console.error
@@ -73,12 +72,12 @@ Page({
     }
     if (!this.data.direction) {
       this.setData({
-        terminus: this.data.stations[this.data.stations.length - 1].name.replace(nearestHint, ''),
+        terminus: this.data.stations[this.data.stations.length - 1].name,
         routes: this.data.direction1
       })
     } else {
       this.setData({
-        terminus: this.data.stations[0].name.replace(nearestHint, ''),
+        terminus: this.data.stations[0].name,
         routes: this.data.direction2
       })
     }
@@ -104,7 +103,7 @@ Page({
     getShuttle(week_selected).then(iShuttle => {
       this.setData({
         direction1: iShuttle.direction1,
-        direction2: iShuttle.direction2
+        direction2: iShuttle.direction2,
       })
       this.redirect()
     })
