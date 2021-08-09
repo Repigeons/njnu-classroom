@@ -8,13 +8,14 @@ import datetime
 import json
 import os
 from json import JSONDecodeError
+from typing import Optional
 
 from app import app
 
 config = app['config']['application']['notice']
 
 
-async def handle(text: str) -> dict:
+async def put(text: str) -> dict:
     # Save to notice history
     file = os.path.abspath(config['file'])
     if os.path.exists(file):
@@ -52,3 +53,17 @@ async def handle(text: str) -> dict:
             indent=2
         )
     return data
+
+
+async def rollback() -> Optional[dict]:
+    file = os.path.abspath(config['file'])
+    history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
+    if os.path.exists(history):
+        with open(history, 'rb') as f:
+            notices = json.load(f)
+        with open(history, 'w') as f:
+            json.dump(notices[:-1], f)
+        with open('notice.json', 'w') as f:
+            json.dump(notices[-1], f, ensure_ascii=False, indent=2)
+        return notices[-1]
+    return None

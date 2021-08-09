@@ -22,6 +22,13 @@
           body: `text=${text}`,
         })
     }
+    function rollback() {
+      if (confirm("确认回滚？"))
+        fetch('#', {
+          method: 'DELETE',
+          headers: { token: document.getElementById('token').value }
+        })
+    }
     </script>
 </head>
 <body>
@@ -37,6 +44,7 @@
 </p>
 <p>
     <button onclick="submit()">发布</button>
+    <button onclick="rollback()">回滚</button>
 </p>
 </body>
 </html>

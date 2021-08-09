@@ -36,7 +36,33 @@ class NoticeView(View):
                 message="TokenError",
             )
         try:
-            data = await IndexService.handle(text)
+            data = await IndexService.put(text)
+            return JsonResponse(data=data)
+        except Exception as e:
+            logging.error(
+                f"{type(e), e}"
+                f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
+            )
+            return JsonResponse(
+                status=HttpStatus.INTERNAL_SERVER_ERROR,
+                message=f"{type(e), e}",
+            )
+
+    async def delete(self):
+        request = await RequestLoader.load(self.request)
+        token = request.header('token', str)
+        if token != config['token']:
+            return JsonResponse(
+                status=HttpStatus.FORBIDDEN,
+                message="TokenError",
+            )
+        try:
+            data = await IndexService.rollback()
+            if data is None:
+                return JsonResponse(
+                    status=HttpStatus.NOT_FOUND,
+                    message="History Not Found"
+                )
             return JsonResponse(data=data)
         except Exception as e:
             logging.error(
