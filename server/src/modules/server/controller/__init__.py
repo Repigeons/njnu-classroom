@@ -6,7 +6,6 @@
 """"""
 from . import EmptyController
 from . import ExceptionHandler
-from . import FeedbackController
 from . import OverviewController
 from . import ResetController
 from . import SearchController

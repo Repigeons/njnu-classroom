@@ -13,13 +13,12 @@ from ztxlib import aioredis
 
 async def handle(jxl: str, day: int, dqjc: int) -> list:
     async with aioredis.start(app['redis']) as redis:
-        if not await redis.hexists("empty", f"{jxl}_{day}"):
-            raise RequestParameterError('jxl')
         if not (0 <= day <= 6):
             raise RequestParameterError('day')
         if not (1 <= dqjc <= 12):
             raise RequestParameterError('dqjc')
-
+        if not await redis.hexists("empty", f"{jxl}_{day}"):
+            raise RequestParameterError('jxl')
         value = json.loads(await redis.hget("empty", f"{jxl}_{day}"))
 
     classrooms = []
