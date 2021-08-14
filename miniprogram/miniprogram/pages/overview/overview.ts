@@ -203,8 +203,8 @@ Page({
             }
             kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
             bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
-            this.setData({ bar_list })
           }
+          this.setData({ bar_list })
         } else {
           console.warn(data.message)
           this.setData({ bar_list: [] })
