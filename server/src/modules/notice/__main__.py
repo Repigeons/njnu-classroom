@@ -15,21 +15,6 @@ config = app['config']['application']['notice']
 
 
 def main():
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(initialize())
-    _main()
-
-
-async def initialize():
-    from app import mail, mysql, redis
-    await asyncio.gather(
-        mail.initialize(),
-        mysql.initialize(),
-        redis.initialize(),
-    )
-
-
-def _main():
     app.add_routes(routes)
     for middleware in middlewares:
         app.middlewares.append(middleware)

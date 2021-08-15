@@ -18,8 +18,10 @@ config = app['config']['application']['notice']
 async def put(text: str) -> dict:
     # Save to notice history
     file = os.path.abspath(config['file'])
+    directory = os.path.dirname(file)
+    os.makedirs(directory, exist_ok=True)
     if os.path.exists(file):
-        history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
+        history = os.path.join(directory, f"history-{os.path.basename(file)}")
         if os.path.exists(history):
             with open(history, 'rb') as f:
                 try:
@@ -57,13 +59,13 @@ async def put(text: str) -> dict:
 
 async def rollback() -> Optional[dict]:
     file = os.path.abspath(config['file'])
-    history = os.path.join(os.path.dirname(file), f"_{os.path.basename(file)}")
+    history = os.path.join(os.path.dirname(file), f"history-{os.path.basename(file)}")
     if os.path.exists(history):
         with open(history, 'rb') as f:
             notices = json.load(f)
         with open(history, 'w') as f:
             json.dump(notices[:-1], f)
-        with open('notice.json', 'w') as f:
+        with open(file, 'w') as f:
             json.dump(notices[-1], f, ensure_ascii=False, indent=2)
         return notices[-1]
     return None
