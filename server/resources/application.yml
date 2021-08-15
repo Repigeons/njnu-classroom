@@ -2,24 +2,24 @@ application:
   server:
     host: "0.0.0.0"
     port: 80
-    log: "/data/logs/server.log"
+    log: "logs/server.log"
     service: on
 
   explore:
     host: "0.0.0.0"
     port: 80
-    log: "/data/logs/explore.log"
+    log: "logs/explore.log"
     service: on
 
   notice:
     host: "0.0.0.0"
     port: 80
-    log: "/data/logs/notice.log"
+    log: "logs/notice.log"
     token: ""
-    file: "/data/static/notice.json"
+    file: "static/notice.json"
 
   spider:
-    log: "/data/logs/spider.log"
+    log: "logs/spider.log"
     account:
       username: ""
       password: ""
