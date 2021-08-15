@@ -1,5 +1,5 @@
 // components/shuttle/shuttle-row/shuttle-row.js
-import parseTime from "../../utils/timeParser"
+import { parseTime } from "../../utils/parser"
 
 Component({
   /**

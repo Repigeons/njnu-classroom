@@ -13,7 +13,7 @@ export class Md5 {
             .appendAsciiStr(str)
             .end(raw);
     }
-    
+
     // Private Static Variables
     private static stateIdentity = new Int32Array([1732584193, -271733879, -1732584194, 271733878]);
     private static buffer32Identity = new Int32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
@@ -44,7 +44,7 @@ export class Md5 {
         return ho.join('');
     }
 
-    private static _md5cycle(x: Int32Array|Uint32Array, k: Int32Array|Uint32Array) {
+    private static _md5cycle(x: Int32Array | Uint32Array, k: Int32Array | Uint32Array) {
         let a = x[0];
         let b = x[1];
         let c = x[2];

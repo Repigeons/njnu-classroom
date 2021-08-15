@@ -1,7 +1,7 @@
 export { }
 // explore/shuttlebus
 import { getDistance } from '../../../../utils/util'
-import parseTime from "../../../../utils/timeParser"
+import { parseTime } from "../../../../utils/parser"
 import { getShuttle } from '../../../../utils/getCache'
 // 获取应用实例
 const app = getApp<IAppOption>()

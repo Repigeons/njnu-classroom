@@ -1,4 +1,4 @@
-export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => {
+export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
   let kcxx: Array<string>
   const pklysz: Record<string, string> = { '01': '研', '02': '成', '03': '本', '04': '借', '05': '本考', '11': '研考', '12': '成教' }
   switch (zylxdm) {
@@ -21,7 +21,6 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => 
         //
         title: kcxx[2] ? kcxx[2] : '未知',
       }
-      break
     case '02':
       // 本科生考试
       return {
@@ -31,7 +30,6 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => 
         //
         title: KCM,
       }
-      break
     case '04':
       // 普通教室借用占用
       kcxx = KCM.split("#")
@@ -52,14 +50,12 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => 
         //
         title: kcxx[4] ? kcxx[4] : '未知',
       }
-      break
     case '05':
       // 屏蔽占用
       return {
         title: '教室资源屏蔽',
         PBZYFLAG: true,
       }
-      break
     case '10':
     case '11':
       // 课程占用
@@ -85,13 +81,12 @@ export const parseKcm = (zylxdm: string, KCM: string): IClassroomInfo | null => 
         //
         title: kcxx[0] ? kcxx[0] : '未知',
       }
-      break
     default:
       return null
   }
 }
 
-export const item2dialog = (item: Record<string, any>, rq: string) => {
+export function item2dialog(item: Record<string, any>, rq: string) {
   const title: string = item.title
   const detail: Array<{
     field: string;
@@ -113,4 +108,19 @@ export const item2dialog = (item: Record<string, any>, rq: string) => {
   if (item.JYYTMS) detail.push({ field: '借用说明', value: item.JYYTMS })
   else if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
   return { title, detail }
+}
+
+export function parseTime(str: string): number {
+  const arr = str.split(':')
+  if (arr.length != 2) {
+    return NaN
+  }
+  const time_arr = arr.map(s => +s)
+  if (time_arr[0] < 0 || time_arr[0] >= 24) {
+    return NaN
+  }
+  if (time_arr[1] < 0 || time_arr[1] >= 60) {
+    return NaN
+  }
+  return time_arr[0] * 60 + time_arr[1]
 }
