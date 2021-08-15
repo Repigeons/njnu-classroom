@@ -117,6 +117,8 @@ docker run -itd \
 docker run -itd \
   --restart=always \
   --name njnu-classroom-server \
+  --link mysql-for-njnu-classroom:mysql \
+  --link redis-for-njnu-classroom:redis \
   --volume /opt/docker/NjnuClassroom:/data \
   -p 8001:80 \
   -e env=pro \
@@ -127,6 +129,8 @@ docker run -itd \
 docker run -itd \
   --restart=always \
   --name njnu-classroom-explore \
+  --link mysql-for-njnu-classroom:mysql \
+  --link redis-for-njnu-classroom:redis \
   --volume /opt/docker/NjnuClassroom:/data \
   -p 8002:80 \
   repigeons/njnu-classroom \
@@ -144,6 +148,8 @@ docker run -itd \
 # 启动 njnu-classroom-spider
 docker run --rm -d \
   --name njnu-classroom-spider \
+  --link mysql-for-njnu-classroom:mysql \
+  --link redis-for-njnu-classroom:redis \
   --volume /opt/docker/NjnuClassroom:/data \
   -e env=pro \
   repigeons/njnu-classroom \
