@@ -6,13 +6,19 @@
 """"""
 import asyncio
 import json
+import os
 
 from app import app
 from ztxlib import *
 from .static import day_mapper
 
+env: str
+
 
 def reset():
+    global env
+    env = os.getenv('env', 'dev')
+    env = 'pro' if env == 'pro' else 'dev'
     return asyncio.gather(
         reset_empty(),
         reset_overview(),
@@ -55,7 +61,7 @@ async def reset_overview():
 async def reset_empty_once(jxlmc: str, day: int):
     mysql: aiomysql.MySQL = app['mysql']
     rows = await mysql.fetchall(
-        "SELECT * FROM `pro` "
+        f"SELECT * FROM `{env}` "
         "WHERE `JXLMC`=%(jxlmc)s AND `day`=%(day)s AND `zylxdm` in ('00', '10') AND `SFYXZX` "
         "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
         dict(
@@ -83,7 +89,7 @@ async def reset_empty_once(jxlmc: str, day: int):
 async def reset_overview_once(jasdm: str):
     mysql: aiomysql.MySQL = app['mysql']
     rows = await mysql.fetchall(
-        "SELECT * FROM `pro` WHERE `JASDM`=%(jasdm)s",
+        f"SELECT * FROM `{env}` WHERE `JASDM`=%(jasdm)s",
         dict(
             jasdm=jasdm
         )

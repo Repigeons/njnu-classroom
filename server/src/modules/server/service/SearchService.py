@@ -4,6 +4,8 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
+import os
+
 from app import app
 from exceptions import RequestParameterError
 from ztxlib import aiomysql
@@ -25,9 +27,12 @@ async def handle(day: str,
             raise RequestParameterError('day')
     keyword = '%' if keyword == '#' else f'%{keyword}%'
 
+    env = os.getenv('env', 'dev')
+    env = 'pro' if env == 'pro' else 'dev'
+
     mysql: aiomysql.MySQL = app['mysql']
     rows = await mysql.fetchall(
-        "SELECT * FROM `pro` WHERE (%(_day)s) AND (%(_jc)s) AND (%(_jxl)s) AND (%(_zylxdm)s) AND (%(_keyword)s)"
+        f"SELECT * FROM `{env}` WHERE (%(_day)s) AND (%(_jc)s) AND (%(_jxl)s) AND (%(_zylxdm)s) AND (%(_keyword)s)"
         % dict(
             _day=True if day == '#' else f"`day`=%(day)s",
             _jc="`jc_ks`>=%(jc_ks)s AND `jc_js`<=%(jc_js)s",
