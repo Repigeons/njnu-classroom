@@ -1,6 +1,7 @@
 SET NAMES utf8mb4;
 use NjnuClassroom;
 
+drop table if exists shuttle;
 create table shuttle
 (
     route         tinyint(1)                 not null comment '路线方向',
