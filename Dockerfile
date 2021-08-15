@@ -4,46 +4,30 @@ LABEL name="NjnuClassroom"
 LABEL description="南师教室"
 LABEL author="Repigeons"
 LABEL repository="github:Repigeons/NjnuClassroom"
-VOLUME ["/tmp/NjnuClassroom"]
+VOLUME ["/data"]
 
-# Install the base service
-RUN dnf install -y epel-release
-RUN dnf update  -y
-RUN dnf install -y git python39 nginx redis cronie
+# Install python and chromium for selenium
+RUN dnf install -y epel-release python39
 RUN dnf install -y chromedriver chromium chromium-headless
 RUN dnf clean all
+
 RUN python3 -m pip install --upgrade pip setuptools wheel
-RUN python3 -m pip install virtualenv
 
-# Initialize the project directory
-RUN mkdir /opt/NjnuClassroom
-RUN mkdir /var/log/NjnuClassroom
+# Copy source file and create mounting directories
+ADD server/src              /usr/local/src
+ADD server/requirements.txt /tmp/requirements.txt
+ADD server/resources        /data/resources
+ADD server/static           /data/static
+RUN mkdir                   /data/logs
 
-# Copy project files and deployment
-ADD server/src/manage.py    /opt/NjnuClassroom/src/manage.py
-ADD server/src/app          /opt/NjnuClassroom/src/app
-ADD server/src/orm          /opt/NjnuClassroom/src/orm
-ADD server/src/modules      /opt/NjnuClassroom/src/modules
-ADD server/src/ztxlib       /opt/NjnuClassroom/src/ztxlib
-ADD server/resources        /opt/NjnuClassroom/resources
-ADD server/requirements.txt /opt/NjnuClassroom/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --user
 
-# Initialize the virtual environment
-RUN virtualenv /opt/NjnuClassroom/env
-RUN /opt/NjnuClassroom/env/bin/pip install --upgrade pip setuptools wheel
-RUN /opt/NjnuClassroom/env/bin/pip install -r /opt/NjnuClassroom/requirements.txt
+ADD server/shell/notice.sh  /usr/local/sbin/notice
+ADD server/shell/spider.sh  /usr/local/sbin/spider
+ADD server/shell/server.sh  /usr/local/sbin/server
+ADD server/shell/explore.sh /usr/local/sbin/explore
 
-# Copy shell script and configuration files
-ADD server/shell/  /opt/NjnuClassroom/bin/
-ADD server/docker/ /
+RUN chmod  744              /usr/local/sbin/*
 
-# Set environment variables
-ENV env pro
-
-# Expose port 80 (http)
-EXPOSE 80
-
-# Startup
-WORKDIR /root
-RUN chmod 111 init
-ENTRYPOINT ["/root/init"]
+WORKDIR /data
+CMD ["/bin/bash"]

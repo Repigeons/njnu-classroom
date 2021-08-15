@@ -1,25 +1,25 @@
 application:
   server:
-    host: "localhost"
+    host: "0.0.0.0"
     port: 8001
-    log: "/var/log/NjnuClassroom/server.log"
+    log: "/data/logs/server.log"
     service: on
 
   explore:
-    host: "localhost"
+    host: "0.0.0.0"
     port: 8002
-    log: "/var/log/NjnuClassroom/explore.log"
+    log: "/data/logs/explore.log"
     service: on
 
   notice:
-    host: "localhost"
+    host: "0.0.0.0"
     port: 8000
-    log: "/var/log/NjnuClassroom/notice.log"
+    log: "/data/logs/notice.log"
     token: ""
     file: "notice.json"
 
   spider:
-    log: "/var/log/NjnuClassroom/spider.log"
+    log: "/data/logs/spider.log"
     account:
       username: ""
       password: ""
@@ -37,13 +37,13 @@ application:
 
 database:
   mysql:
-    host: "localhost"
+    host: "mysql"
     port: 3306
     user: "root"
     password: ""
     database: ""
   redis:
-    host: "localhost"
+    host: "redis"
     port: 6379
     db: 0
 
