@@ -63,9 +63,10 @@ async def rollback() -> Optional[dict]:
     if os.path.exists(history):
         with open(history, 'rb') as f:
             notices = json.load(f)
-        with open(history, 'w') as f:
-            json.dump(notices[:-1], f)
-        with open(file, 'w') as f:
-            json.dump(notices[-1], f, ensure_ascii=False, indent=2)
-        return notices[-1]
+        if len(notices):
+            with open(history, 'w') as f:
+                json.dump(notices[:-1], f)
+            with open(file, 'w') as f:
+                json.dump(notices[-1], f, ensure_ascii=False, indent=2)
+            return notices[-1]
     return None
