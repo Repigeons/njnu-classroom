@@ -12,15 +12,15 @@ RUN dnf install -y chromedriver chromium chromium-headless
 RUN dnf clean all
 
 RUN python3 -m pip install --upgrade pip setuptools wheel
+ADD server/requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --user
 
 # Copy source file and create mounting directories
 ADD server/src              /usr/local/src
-ADD server/requirements.txt /tmp/requirements.txt
 ADD server/resources        /data/resources
 ADD server/static           /data/static
 RUN mkdir                   /data/logs
 
-RUN pip3 install -r /tmp/requirements.txt --user
 
 ADD server/shell/notice.sh  /usr/local/sbin/notice
 ADD server/shell/spider.sh  /usr/local/sbin/spider
