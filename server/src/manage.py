@@ -74,8 +74,8 @@ def main(module: str, log_level: str = None):
     finally:
         try:
             loop.run_until_complete(finalize())
-        except RuntimeError:
-            pass
+        except Exception as e:
+            logging.warning("%s %s", type(e), e)
 
 
 if __name__ == '__main__':
