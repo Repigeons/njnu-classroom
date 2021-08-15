@@ -6,6 +6,7 @@
 """"""
 import json
 import logging
+import time
 from email.mime.text import MIMEText
 
 from selenium import webdriver
@@ -85,6 +86,7 @@ async def get_cookie_dict() -> dict:
     try:
         browser.get(f"http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_={gid}")
 
+        time.sleep(10)
         browser.switch_to.default_content()
         browser.find_element_by_id("username").send_keys(username)
         browser.find_element_by_id("password").send_keys(password)

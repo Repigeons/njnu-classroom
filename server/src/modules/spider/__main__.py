@@ -33,30 +33,26 @@ async def initialize():
 
 async def _main():
     try:
-        async with aioredis.lock(app['redis'], "spider", wait_timeout=0):
-            async with aioredis.start(app['redis']) as redis:
-                await redis.delete("spider")
-            logging.info("开始课程信息收集工作...")
-            logging.info("初始化工作环境...")
+        async with aioredis.start(app['redis']) as redis:
+            await redis.delete("spider")
+        logging.info("开始课程信息收集工作...")
+        logging.info("初始化工作环境...")
 
-            # 采集基础信息
-            await prepare()
-            # 采集详细信息
-            await core()
-            # 校正并归并数据
-            await correct_and_merge()
-            # 将数据放入生产环境
-            if os.getenv("env") == "pro":
-                await service.copy_to_pro()
+        # 采集基础信息
+        await prepare()
+        # 采集详细信息
+        await core()
+        # 校正并归并数据
+        await correct_and_merge()
+        # 将数据放入生产环境
+        if os.getenv("env") == "pro":
+            await service.copy_to_pro()
 
         now = time.time() * 1000
         logging.info(
             "本轮课程信息收集工作成功完成. 共计耗时 %f seconds",
             (int(now) - int(os.getenv("startup_time"))) / 1000
         )
-
-    except aioredis.exceptions.WaitingTimeoutError:
-        pass
 
     except SystemExit or KeyboardInterrupt as e:
         raise e
