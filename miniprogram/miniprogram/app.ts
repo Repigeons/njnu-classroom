@@ -12,7 +12,7 @@ const useDevelopServer: boolean = false
 
 App<IAppOption>({
   globalData: {
-    server: useDevelopServer ? 'https://t-classroom.njnu.xyz:8443' : 'https://classroom.njnu.xyz:8443'
+    server: useDevelopServer ? 'https://t-classroom.njnu.xyz:8443' : 'https://classroom.njnu.repigeons.cn'
   },
 
   onLaunch() {
