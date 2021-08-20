@@ -2,7 +2,7 @@
 
 interface IAppOption {
   globalData: {
-    readonly server: string
+    server: string
   }
   flushStorage(): void
   preload(): void

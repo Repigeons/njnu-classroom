@@ -8,14 +8,21 @@ import {
   getExploreGrids
 } from "./utils/getCache"
 
-const useDevelopServer: boolean = false
+const servers: Record<string, string> = {
+  develop: "https://t-classroom.njnu.xyz:8443",  // 开发版
+  trial: "https://t-classroom.njnu.xyz:8443",  // 体验版
+  release: "https://classroom.njnu.repigeons.cn",  // 正式版
+}
 
 App<IAppOption>({
   globalData: {
-    server: useDevelopServer ? 'https://t-classroom.njnu.xyz:8443' : 'https://classroom.njnu.repigeons.cn'
+    server: String()
   },
 
   onLaunch() {
+    const { envVersion } = wx.getAccountInfoSync().miniProgram as any
+    this.globalData.server = servers[envVersion as string]
+
     initialize(this)
     this.flushStorage()
     this.preload()
