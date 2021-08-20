@@ -1,4 +1,4 @@
-# 总览 @[南师教室NjnuClassroom](../README.md)
+# 总览 @[南师教室NjnuClassroom](./README.md)
 
 ## 1、概述
 
