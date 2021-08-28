@@ -18,11 +18,8 @@ from app import app, initialize, finalize
 os.environ["startup_time"] = str(int(time.time() * 1000))
 
 
-async def initialize_log(log_level: str):
-    level = logging.getLevelName(str(log_level).upper())
-    level = level if isinstance(level, int) else logging.INFO
+async def initialize_log():
     logging.basicConfig(
-        level=level,
         format="[%(asctime)s] "
                "[ %(levelname)8s ] "
                "[ %(module)16s ] "
@@ -44,12 +41,12 @@ async def initialize_logfile(logfile: str):
     logger.addHandler(handler)
 
 
-def main(module: str, log_level: str = None):
+def main(module: str):
     loop = asyncio.get_event_loop()
     # 初始化
     loop.run_until_complete(
         asyncio.gather(
-            initialize_log(log_level),
+            initialize_log(),
             initialize(),
         )
     )
@@ -81,10 +78,6 @@ def main(module: str, log_level: str = None):
 if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('-r', '--run', type=str, help="Service module")
-    parser.add_argument('-l', '--log', type=str, help="Logging level")
     args = parser.parse_args()
     if isinstance(args.run, str):
-        main(
-            module=args.run,
-            log_level=args.log
-        )
+        main(module=args.run)

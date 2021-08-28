@@ -166,10 +166,10 @@ source env/bin/activate
 pip install -r requirements.txt
 
 # 在激活虚拟环境后，使用以下方式启动：
-(env) python manage.py --run server  --log INFO
-(env) python manage.py --run explore --log INFO
-(env) python manage.py --run notice  --log INFO
-(env) python manage.py --run spider  --log INFO
+(env) python manage.py --run server  --log=INFO
+(env) python manage.py --run explore --log=INFO
+(env) python manage.py --run notice  --log=INFO
+(env) python manage.py --run spider  --log=INFO
 ```
 
 若需要直接运行项目，可使用 systemd 守护进程， service 文件示例位于 systemd 文件夹中。
