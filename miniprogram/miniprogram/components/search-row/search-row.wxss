@@ -60,3 +60,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .cell {
+    background-color: #191919;
+  }
+  
+  .cell_active {
+    background-color: #cee6f2;
+  }
+
+  .item-logo {
+    filter: invert(0.4);
+  }
+  
+  .item-title {
+    color: #FFFFFFCC;
+  }
+  
+  .item-desc {
+    color: rgba(255,255,255,.3);
+  }
+  /* DarkMode 下的样式 end */
+}

@@ -27,3 +27,19 @@
   right:16px;
   opacity: 0.8;
 }
+
+.dialog-text {
+  text-align:left;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .rp-result__desc {
+    color: rgba(255,255,255,.5);
+  }
+
+  .dialog-text {
+    color: #ffffff88;
+  }
+  /* DarkMode 下的样式 end */
+}

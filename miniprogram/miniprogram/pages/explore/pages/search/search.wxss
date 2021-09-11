@@ -61,3 +61,31 @@
   font-size: 14px;
   color: rgba(0,0,0,.5);
 }
+
+.dialog-text {
+  text-align:left;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .rp-search__picker {
+    background-color: #191919;
+  }
+  
+  .rp-search__lastpicker{
+    background-color: #fff;
+  }
+  
+  .rp-tip {
+    color: rgba(255,255,255,.5);
+  }
+
+  .rp-result__desc {
+    color: rgba(0,0,0,.5);
+  }
+
+  .dialog-text {
+    color: #ffffff77;
+  }
+  /* DarkMode 下的样式 end */
+}

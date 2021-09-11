@@ -15,32 +15,33 @@
     }
   ],
   "window": {
-    "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
+    "backgroundTextStyle": "@bgTxtStyle",
+    "navigationBarBackgroundColor": "@navBgColor",
     "navigationBarTitleText": "南师教室",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "@navTxtStyle"
   },
   "tabBar": {
-    "color": "#666",
-    "selectedColor": "#000",
-    "backgroundColor": "#fff",
+    "color": "@tabFontColor",
+    "selectedColor": "@tabSelectedColor",
+    "backgroundColor": "@tabBgColor",
+    "borderStyle": "@tabBorderStyle",
     "list": [
       {
         "pagePath": "pages/empty/empty",
-        "iconPath": "images/kjs.png",
-        "selectedIconPath": "images/kjs_1.png",
+        "iconPath": "@iconPath1",
+        "selectedIconPath": "@selectedIconPath1",
         "text": "空教室"
       },
       {
         "pagePath": "pages/overview/overview",
-        "iconPath": "images/jsgl.png",
-        "selectedIconPath": "images/jsgl_1.png",
+        "iconPath": "@iconPath2",
+        "selectedIconPath": "@selectedIconPath2",
         "text": "教室概览"
       },
       {
         "pagePath": "pages/explore/index/index",
-        "iconPath": "images/explore.png",
-        "selectedIconPath": "images/explore_1.png",
+        "iconPath": "@iconPath3",
+        "selectedIconPath": "@selectedIconPath3",
         "text": "发现"
       }
     ]
@@ -50,6 +51,8 @@
       "desc": "你的位置信息将用于计算离你最近的教学楼"
     }
   },
+  "darkmode": true,
+  "themeLocation": "theme.json",
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

@@ -64,7 +64,7 @@
 </view>
 <!-- Dialog -->
 <rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{dialog_buttons}}">
-	<view style="text-align:left">
+	<view class="dialog-text">
 		<block wx:for="{{dialog.detail}}" wx:key="key">
 			<view>{{item.field}}：{{item.value}}</view>
 		</block>

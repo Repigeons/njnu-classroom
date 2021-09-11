@@ -5,3 +5,10 @@ page {
   font-size: 16px;
   font-family: -apple-system-font,Helvetica Neue,Helvetica,sans-serif;
 }
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  page {
+    background-color: #1E1E1E;
+  }
+  /* DarkMode 下的样式 end */
+}

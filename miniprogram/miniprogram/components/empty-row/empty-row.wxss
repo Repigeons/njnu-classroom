@@ -107,3 +107,20 @@
 }
 .seat_color0        { color: #006000; }
 .seat_color1        { color: #005A8C; }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .cell {
+    background-color: #191919;
+  }
+
+  .cell_active {
+    background-color: #cee6f2;
+    opacity: 0.8;
+  }
+
+  .section{
+    background-color: #162f3a;
+  }
+  /* DarkMode 下的样式 end */
+}

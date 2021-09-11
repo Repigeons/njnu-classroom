@@ -84,3 +84,11 @@
 .interval_color2    { color: #005A8C; }
 .interval_color3    { color: #006000; }
 .interval_color4    { color: #BF6D00; }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .cell {
+    background-color: #191919;
+  }
+  /* DarkMode 下的样式 end */
+}

@@ -145,3 +145,16 @@
   background: -webkit-gradient(linear, 0 0, 0 100%, from(#edededff), to(#ededed00));
 }
 
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .rp-feedback .text {
+    color: rgba(255, 255, 255,.5);
+  }
+
+  .cover__top {
+    top: 104px;
+    background: linear-gradient(to bottom, #edededff, #ededed00);
+    background: -webkit-gradient(linear, 0 0, 0 100%, from(#1E1E1Eff), to(#ededed00));
+  }
+  /* DarkMode 下的样式 end */
+}

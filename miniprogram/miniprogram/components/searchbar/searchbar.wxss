@@ -48,3 +48,15 @@
   color: #576B95;
   margin: 0 4px 0 12px;
 }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .searchbar__box {
+    background-color: #191919;
+  }
+
+  .searchbar__label {
+    color: #576B95;
+  }
+  /* DarkMode 下的样式 end */
+}
