@@ -39,9 +39,7 @@ def initialize():
         password=config['sender']['password'],
     )
     # Initialize unix domain socket
-    directory = os.path.dirname(smtp_socket_address)
-    os.makedirs(directory, exist_ok=True)
-    if not os.path.exists(smtp_socket_address):
+    if os.path.exists(smtp_socket_address):
         os.unlink(smtp_socket_address)
 
 
