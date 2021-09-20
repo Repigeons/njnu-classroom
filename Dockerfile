@@ -15,19 +15,18 @@ RUN python3 -m pip install --upgrade pip setuptools wheel
 ADD server/requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt --user
 
-# Copy source file and create mounting directories
-ADD server/src              /usr/local/src
-ADD server/resources        /data/resources
-ADD server/static           /data/static
-RUN mkdir                   /data/logs
-
+# Append shell file
 ADD server/shell/notice.sh  /usr/local/sbin/notice
 ADD server/shell/spider.sh  /usr/local/sbin/spider
 ADD server/shell/server.sh  /usr/local/sbin/server
 ADD server/shell/explore.sh /usr/local/sbin/explore
 ADD server/shell/mail.sh    /usr/local/sbin/mail
-
 RUN chmod  744              /usr/local/sbin/*
+
+# Copy source file and create mounting directories
+ADD server/src              /usr/local/src
+ADD server/resources        /data/resources
+ADD server/static           /data/static
 
 WORKDIR /data
 CMD ["/bin/bash"]
