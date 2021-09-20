@@ -7,7 +7,6 @@
 import json
 import logging
 import time
-from email.mime.text import MIMEText
 
 from selenium import webdriver
 
@@ -28,28 +27,22 @@ async def save_cookies() -> None:
         logging.info("cookies存储完成")
 
     except KeyError as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"登录失败\n"
+        await app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"登录失败\n"
                     f"KeyError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical("登录失败")
         logging.info("Exit with code %d", 1)
         exit(1)
 
     except Exception as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"{type(e), e}\n"
+        await app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)

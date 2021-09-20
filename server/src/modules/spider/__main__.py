@@ -9,7 +9,6 @@ import json
 import logging
 import os
 import time
-from email.mime.text import MIMEText
 
 from app import app
 from ztxlib import *
@@ -58,14 +57,11 @@ async def _main():
         raise e
 
     except Exception as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"{type(e), e}\n"
+        await app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)

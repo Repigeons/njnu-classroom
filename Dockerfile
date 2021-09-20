@@ -21,11 +21,11 @@ ADD server/resources        /data/resources
 ADD server/static           /data/static
 RUN mkdir                   /data/logs
 
-
 ADD server/shell/notice.sh  /usr/local/sbin/notice
 ADD server/shell/spider.sh  /usr/local/sbin/spider
 ADD server/shell/server.sh  /usr/local/sbin/server
 ADD server/shell/explore.sh /usr/local/sbin/explore
+ADD server/shell/mail.sh    /usr/local/sbin/mail
 
 RUN chmod  744              /usr/local/sbin/*
 

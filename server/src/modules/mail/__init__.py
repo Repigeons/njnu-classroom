@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
-# @Time     :  2021/7/1
+# @Time     :  2021/9/20
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-__all__ = (
-    'mail',
+from .__main__ import main
 
-    'explore',
-    'notice',
-    'server',
-    'spider',
+__all__ = (
+    'main',
 )

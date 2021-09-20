@@ -4,7 +4,9 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from ztxlib import aiosmtp
+import json
+import socket
+
 from .app import app
 
 __all__ = (
@@ -13,15 +15,10 @@ __all__ = (
 
 
 async def initialize():
-    config = app['config']['mail']
-    app['smtp'] = aiosmtp.SMTP(
-        host=config['sender']['host'],
-        port=config['sender']['port'],
-        user=config['sender']['user'],
-        password=config['sender']['password'],
-    )
-    app['mail'] = dict(
-        header_from="Repigeons",
-        header_to="南师教室运维人员",
-        receivers=[receiver['addr'] for receiver in config['receivers']],
+    smtp_socket_address = './run/mail.sock'
+    sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
+    sock.connect(smtp_socket_address)
+
+    app['mail'] = lambda **kwargs: sock.send(
+        json.dumps(kwargs).encode(encoding='utf8')
     )
