@@ -35,6 +35,17 @@ application:
           executable_path: "geckodriver"
           firefox_binary: "firefox"
 
+  mail:
+    sender:
+      host: "smtp.njnu.edu.cn"
+      port: 994
+      user: "*@njnu.edu.cn"
+      password: ""
+    receivers:
+      - name: "Repigeons"
+        addr: "info@repigeons.cn"
+
+
 database:
   mysql:
     host: "mysql"
@@ -46,13 +57,3 @@ database:
     host: "redis"
     port: 6379
     db: 0
-
-mail:
-  sender:
-    host: "smtp.njnu.edu.cn"
-    port: 994
-    user: "*@njnu.edu.cn"
-    password: ""
-  receivers:
-    - name: "Repigeons"
-      addr: "info@repigeons.cn"

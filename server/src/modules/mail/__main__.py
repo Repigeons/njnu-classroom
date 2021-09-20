@@ -14,7 +14,7 @@ from app import app
 from ztxlib import aiosmtp
 
 smtp: aiosmtp.SMTP
-config = app['config']['mail']
+config = app['config']['application']['mail']
 mail_params = dict(
     header_from="Repigeons",
     header_to="南师教室运维人员",
