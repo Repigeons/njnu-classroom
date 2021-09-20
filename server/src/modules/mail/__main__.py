@@ -47,10 +47,14 @@ async def startup():
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     sock.bind(smtp_socket_address)
     while True:
-        data = json.loads(sock.recv(1024))
+        try:
+            data = json.loads(sock.recv(1024))
+            subject, content = data['subject'], data['content']
+        except (json.decoder.JSONDecodeError, KeyError, TypeError):
+            continue
         async with smtp:
             await smtp.send(
                 **mail_params,
-                subject=data['subject'],
-                mime_parts=[MIMEText(data['content'])]
+                subject=subject,
+                mime_parts=[MIMEText(content)]
             )
