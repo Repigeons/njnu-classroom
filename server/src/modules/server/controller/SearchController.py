@@ -13,7 +13,7 @@ from ..service import SearchService
 
 @routes.get('/search.json')
 async def search(request: Request) -> JsonResponse:
-    if not app['config']['application']['server']['service']:
+    if not app['config']['service']:
         return JsonResponse(
             status=HttpStatus.IM_A_TEAPOT,
             message="service off",

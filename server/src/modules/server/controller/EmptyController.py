@@ -13,7 +13,7 @@ from ..service import EmptyService, FeedbackService
 
 @routes.get('/empty.json')
 async def empty(request: Request) -> JsonResponse:
-    if not app['config']['application']['server']['service']:
+    if not app['config']['service']:
         return JsonResponse(
             status=HttpStatus.IM_A_TEAPOT,
             message="service off",
@@ -31,7 +31,7 @@ async def empty(request: Request) -> JsonResponse:
 
 @routes.post('/feedback')
 async def feedback(request: Request) -> JsonResponse:
-    if not app['config']['application']['server']['service']:
+    if not app['config']['service']:
         return JsonResponse(
             status=HttpStatus.IM_A_TEAPOT,
             message="service off",
