@@ -125,6 +125,14 @@ docker run -d \
   -p <宿主机端口>:<容器内端口> \
   -e env=<部署环境:dev/pro> \
   repigeons/njnu-classroom
+  
+# 启动 njnu-classroom-mail
+docker run -d \
+  --restart=always \
+  --name njnu-classroom-mail \
+  --volume /opt/docker/NjnuClassroom:/data \
+  repigeons/njnu-classroom \
+  mail
 
 # 启动 njnu-classroom-server
 docker run -d \
