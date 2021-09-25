@@ -33,9 +33,9 @@ async def handle(
         'results': results,
     }
 
-    if check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
+    if await check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
         if zylxdm == '00':
-            week_count, total_count = auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
+            week_count, total_count = await auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
             await app['mail'](
                 subject="【南师教室】用户反馈："
                         f"{jxlmc} "
