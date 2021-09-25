@@ -19,7 +19,7 @@ class RequestLoader:
         if request.method == 'GET':
             return self
         if request.content_type[:len('application/json')] == 'application/json':
-            self.json = await request.json()
+            self.data = await request.json()
         else:
             self.data = await request.post()
         return self
@@ -28,7 +28,6 @@ class RequestLoader:
         self.request = None
         self.headers = None
         self.query = None
-        self.json = None
         self.data = None
 
     @staticmethod
@@ -70,7 +69,7 @@ class RequestLoader:
              typing: type = None,
              nullable: bool = None,
              default=None):
-        value = self.json.get(name)
+        value = self.data.get(name)
         return self.__verify(value, name, typing, nullable, default)
 
     def form(self,
