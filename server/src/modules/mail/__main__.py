@@ -11,6 +11,7 @@ import socket
 from email.mime.text import MIMEText
 
 from app import app
+from app.mail import smtp_socket_address
 from ztxlib import aiosmtp
 
 smtp: aiosmtp.SMTP
@@ -20,7 +21,6 @@ mail_params = dict(
     header_to="南师教室运维人员",
     receivers=[receiver['addr'] for receiver in config['receivers']],
 )
-smtp_socket_address = './run/mail.sock'
 
 
 def main():

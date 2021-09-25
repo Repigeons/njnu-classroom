@@ -9,13 +9,15 @@ import socket
 
 from .app import app
 
+smtp_socket_address = './run/mail.sock'
+
 __all__ = (
     'initialize',
+    'smtp_socket_address',
 )
 
 
 async def initialize():
-    smtp_socket_address = './run/mail.sock'
     sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
     sock.connect(smtp_socket_address)
 
