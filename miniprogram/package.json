@@ -20,7 +20,7 @@
     "tsc": "node ./node_modules/typescript/lib/tsc.js"
   },
   "devDependencies": {
-    "miniprogram-api-typings": "^3.4.2",
+    "miniprogram-api-typings": "^3.4.3",
     "typescript": "^3.3.3333"
   }
 }
