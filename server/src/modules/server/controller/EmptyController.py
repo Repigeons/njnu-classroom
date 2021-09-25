@@ -41,7 +41,7 @@ async def feedback(request: Request) -> JsonResponse:
     jc = request.json(name='jc', typing=int)
     results = request.json(name='results', typing=list)
     index = request.json(name='index', typing=int)
-    jxlmc = request.json(name='jxlmc', typing=str)
+    jxlmc = request.json(name='jxl', typing=str)
     day = request.json(name='day', typing=int)
 
     await FeedbackService.handle(jc, results, index, jxlmc, day)
