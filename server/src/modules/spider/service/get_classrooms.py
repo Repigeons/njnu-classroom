@@ -25,7 +25,7 @@ async def save_classrooms():
         logging.info("教学楼及教室信息存储完成")
 
     except Exception as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"

@@ -25,7 +25,7 @@ async def middleware(app, http_handler):
         except HTTPClientError as exception:
             raise exception
         except Exception as e:
-            await app['mail'](
+            app['mail'](
                 subject="【南师教室】错误报告",
                 content=f"{type(e), e}\n"
                         f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"

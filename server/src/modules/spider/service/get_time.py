@@ -30,7 +30,7 @@ async def save_time() -> None:
         logging.info("时间信息存储完成")
 
     except JSONDecodeError as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"cookies无效\n"
                     f"JSONDecodeError\n"
@@ -41,7 +41,7 @@ async def save_time() -> None:
         exit(2)
 
     except KeyError as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"获取时间信息失败\n"
                     f"KeyError\n"
@@ -52,7 +52,7 @@ async def save_time() -> None:
         exit(3)
 
     except Exception as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"

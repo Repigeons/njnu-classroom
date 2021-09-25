@@ -27,7 +27,7 @@ async def save_cookies() -> None:
         logging.info("cookies存储完成")
 
     except KeyError as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"登录失败\n"
                     f"KeyError\n"
@@ -38,7 +38,7 @@ async def save_cookies() -> None:
         exit(1)
 
     except Exception as e:
-        await app['mail'](
+        app['mail'](
             subject="【南师教室】错误报告",
             content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
