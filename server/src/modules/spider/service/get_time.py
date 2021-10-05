@@ -7,7 +7,6 @@
 import json
 import logging
 import time
-from email.mime.text import MIMEText
 from json.decoder import JSONDecodeError
 
 import aiohttp
@@ -31,42 +30,33 @@ async def save_time() -> None:
         logging.info("时间信息存储完成")
 
     except JSONDecodeError as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"cookies无效\n"
+        app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"cookies无效\n"
                     f"JSONDecodeError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical("cookies无效")
         logging.info("Exit with code %d", 2)
         exit(2)
 
     except KeyError as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"获取时间信息失败\n"
+        app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"获取时间信息失败\n"
                     f"KeyError\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical("获取时间信息失败")
         logging.info("Exit with code %d", 3)
         exit(3)
 
     except Exception as e:
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】错误报告",
-                mime_parts=[MIMEText(
-                    f"{type(e), e}\n"
+        app['mail'](
+            subject="【南师教室】错误报告",
+            content=f"{type(e), e}\n"
                     f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                )])
+        )
         logging.critical(f"{type(e), e}")
         logging.info("Exit with code %d", -1)
         exit(-1)

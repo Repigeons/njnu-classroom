@@ -54,46 +54,13 @@ yarl==1.6.3
 
 docker容器 使用方式：
 
-(1) 启动 mysql
+(1) 创建 network
 
 ```bash
-# 拉取镜像
-docker pull mariadb
-# 第一次启动需要初始化root密码
-docker run -itd \
-  --name mysql-for-njnu-classroom \
-  --volume /opt/docker/mysql:/var/lib/mysql \
-  --env MYSQL_ROOT_PASSWORD=MyPassword \
-  mariadb
-# 连接数据库
-docker exec -it mysql-for-njnu-classroom mysql -uroot -p
-# 第二次直接启动即可
-docker run -itd \
-  --restart=always \
-  --name mysql-for-njnu-classroom \
-  --volume /opt/docker/mysql:/var/lib/mysql \
-  mariadb
+docker network create njnu-classroom
 ```
 
-(2) 启动 redis
-
-```bash
-# 拉取镜像
-docker pull redis
-# 直接启动
-docker run -itd \
-  --restart=always \
-  --name redis-for-njnu-classroom \
-  redis
-```
-
-(3) 拉取南师教室的镜像
-
-```bash
-docker pull repigeons/njnu-classroom
-```
-
-(4) 建立数据卷（挂载卷）
+(2) 建立数据卷（挂载卷）
 
 ```bash
 # 建立挂载目录
@@ -102,23 +69,76 @@ mkdir /opt/docker/NjnuClassroom/static
 # 原始（模板）数据可以直接从git复制
 ```
 
-(5) 启动容器
+(3) 启动 mysql
+
+```bash
+# 拉取镜像
+docker pull mariadb
+# 第一次启动需要初始化root密码
+docker run -d \
+  --name mysql-for-njnu-classroom \
+  --network njnu-classroom \
+  --network-alias mysql \
+  --volume /opt/docker/mysql:/var/lib/mysql \
+  --env MYSQL_ROOT_PASSWORD=MyPassword \
+  mariadb
+# 连接数据库
+docker exec -it mysql-for-njnu-classroom mysql -uroot -p
+# 第二次直接启动即可
+docker run -d \
+  --restart=always \
+  --name mysql-for-njnu-classroom \
+  --network njnu-classroom \
+  --network-alias mysql \
+  --volume /opt/docker/mysql:/var/lib/mysql \
+  mariadb
+```
+
+(4) 启动 redis
+
+```bash
+# 拉取镜像
+docker pull redis
+# 直接启动
+docker run -d \
+  --restart=always \
+  --name redis-for-njnu-classroom \
+  --network njnu-classroom \
+  --network-alias redis \
+  redis
+```
+
+(5) 拉取南师教室的镜像
+
+```bash
+docker pull repigeons/njnu-classroom
+```
+
+(6) 启动容器
 
 ```bash
 # 启动命令基本格式，各服务启动参数有差别
-docker run -itd \
+docker run -d \
   --name njnu-classroom \
+  --network <网络> \
   --volume <宿主机文件目录>:<容器文件目录> \
   -p <宿主机端口>:<容器内端口> \
   -e env=<部署环境:dev/pro> \
   repigeons/njnu-classroom
+  
+# 启动 njnu-classroom-mail
+docker run -d \
+  --restart=always \
+  --name njnu-classroom-mail \
+  --volume /opt/docker/NjnuClassroom:/data \
+  repigeons/njnu-classroom \
+  mail
 
 # 启动 njnu-classroom-server
-docker run -itd \
+docker run -d \
   --restart=always \
   --name njnu-classroom-server \
-  --link mysql-for-njnu-classroom:mysql \
-  --link redis-for-njnu-classroom:redis \
+  --network njnu-classroom \
   --volume /opt/docker/NjnuClassroom:/data \
   -p 8001:80 \
   -e env=pro \
@@ -126,18 +146,17 @@ docker run -itd \
   server
 
 # 启动 njnu-classroom-explore
-docker run -itd \
+docker run -d \
   --restart=always \
   --name njnu-classroom-explore \
-  --link mysql-for-njnu-classroom:mysql \
-  --link redis-for-njnu-classroom:redis \
+  --network njnu-classroom \
   --volume /opt/docker/NjnuClassroom:/data \
   -p 8002:80 \
   repigeons/njnu-classroom \
   explore
 
 # 启动 njnu-classroom-notice
-docker run -itd \
+docker run -d \
   --restart=always \
   --name njnu-classroom-notice \
   --volume /opt/docker/NjnuClassroom:/data \
@@ -146,10 +165,9 @@ docker run -itd \
   notice
 
 # 启动 njnu-classroom-spider
-docker run --rm -d \
+docker run -d --rm \
   --name njnu-classroom-spider \
-  --link mysql-for-njnu-classroom:mysql \
-  --link redis-for-njnu-classroom:redis \
+  --network njnu-classroom \
   --volume /opt/docker/NjnuClassroom:/data \
   -e env=pro \
   repigeons/njnu-classroom \

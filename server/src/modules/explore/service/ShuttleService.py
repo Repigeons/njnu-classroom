@@ -72,9 +72,7 @@ async def email_file(
 ):
     mime = MIMEApplication(content)
     mime.add_header('Content-Disposition', 'attachment', filename=subject)
-    async with app['smtp'] as smtp:
-        await smtp.send(
-            **app['mail'],
-            subject=subject,
-            mime_parts=[mime]
-        )
+    app['mail'](
+        subject=subject,
+        mime_parts=[mime]
+    )

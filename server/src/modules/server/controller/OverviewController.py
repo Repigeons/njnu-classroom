@@ -13,7 +13,7 @@ from ..service import OverviewService
 
 @routes.get('/overview.json')
 async def overview(request: Request) -> JsonResponse:
-    if not app['config']['application']['server']['service']:
+    if not app['config']['service']:
         return JsonResponse(
             status=HttpStatus.IM_A_TEAPOT,
             message="service off",

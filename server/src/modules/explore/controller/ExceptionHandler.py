@@ -4,7 +4,6 @@
 # @Author   :  ZhouTianxing
 # @Software :  PyCharm x64
 """"""
-from email.mime.text import MIMEText
 
 from aiohttp.web_exceptions import HTTPClientError
 
@@ -26,14 +25,11 @@ async def middleware(app, http_handler):
         except HTTPClientError as exception:
             raise exception
         except Exception as e:
-            async with app['smtp'] as smtp:
-                await smtp.send(
-                    **app['mail'],
-                    subject="【南师教室】错误报告",
-                    mime_parts=[MIMEText(
-                        f"{type(e), e}\n"
+            app['mail'](
+                subject="【南师教室】错误报告",
+                content=f"{type(e), e}\n"
                         f"{e.__traceback__.tb_frame.f_globals['__file__']}:{e.__traceback__.tb_lineno}\n"
-                    )])
+            )
             return JsonResponse(
                 status=HttpStatus.INTERNAL_SERVER_ERROR,
                 message=f"{type(e), e}",

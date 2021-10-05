@@ -5,7 +5,6 @@
 # @Software :  PyCharm x64
 """"""
 import json
-from email.mime.text import MIMEText
 from multiprocessing import Process
 
 import aiohttp
@@ -34,39 +33,33 @@ async def handle(
         'results': results,
     }
 
-    if check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
+    if await check_with_ehall(jasdm=jasdm, day=day, jc=str(jc), zylxdm=zylxdm):
         if zylxdm == '00':
-            week_count, total_count = auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
-            async with app['smtp'] as smtp:
-                await smtp.send(
-                    **app['mail'],
-                    subject="【南师教室】用户反馈："
-                            f"{jxlmc} "
-                            f"{jsmph}教室 "
-                            f"{jc_ks}-{jc_js}节有误 "
-                            f"（当前为第{jc}节）",
-                    mime_parts=[MIMEText(
-                        "验证一站式平台：数据一致\n"
+            week_count, total_count = await auto_correct(jxl=jxlmc, jsmph=jsmph, jasdm=jasdm, day=day, jc=str(jc))
+            app['mail'](
+                subject="【南师教室】用户反馈："
+                        f"{jxlmc} "
+                        f"{jsmph}教室 "
+                        f"{jc_ks}-{jc_js}节有误 "
+                        f"（当前为第{jc}节）",
+                content="验证一站式平台：数据一致\n"
                         f"上报计数：{total_count}\n"
                         f"本周计数：{week_count}\n"
                         f"操作方案：{'自动纠错' if total_count != week_count else None}\n"
                         f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
-                    )])
+            )
 
         else:
-            async with app['smtp'] as smtp:
-                await smtp.send(
-                    **app['mail'],
-                    subject="【南师教室】用户反馈："
-                            f"{jxlmc} "
-                            f"{jsmph}教室 "
-                            f"{jc_ks}-{jc_js}节有误 "
-                            f"（当前为第{jc}节）",
-                    mime_parts=[MIMEText(
-                        f"验证一站式平台：数据一致（非空教室）\n"
+            app['mail'](
+                subject="【南师教室】用户反馈："
+                        f"{jxlmc} "
+                        f"{jsmph}教室 "
+                        f"{jc_ks}-{jc_js}节有误 "
+                        f"（当前为第{jc}节）",
+                content=f"验证一站式平台：数据一致（非空教室）\n"
                         f"操作方案：None"
                         f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
-                    )])
+            )
 
     else:
         import manage
@@ -74,19 +67,16 @@ async def handle(
         spider.start()
         spider.join()
         await service.reset()
-        async with app['smtp'] as smtp:
-            await smtp.send(
-                **app['mail'],
-                subject="【南师教室】用户反馈："
-                        f"{jxlmc} "
-                        f"{jsmph}教室 "
-                        f"{jc_ks}-{jc_js}节有误 "
-                        f"（当前为第{jc}节）",
-                mime_parts=[MIMEText(
-                    f"验证一站式平台：数据不一致\n"
+        app['mail'](
+            subject="【南师教室】用户反馈："
+                    f"{jxlmc} "
+                    f"{jsmph}教室 "
+                    f"{jc_ks}-{jc_js}节有误 "
+                    f"（当前为第{jc}节）",
+            content=f"验证一站式平台：数据不一致\n"
                     f"操作方案：更新数据库\n"
                     f"反馈数据详情：{json.dumps(obj, ensure_ascii=False, indent=2)}\n"
-                )])
+        )
 
 
 async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):

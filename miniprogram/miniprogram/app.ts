@@ -22,6 +22,7 @@ App<IAppOption>({
   onLaunch() {
     const { envVersion } = wx.getAccountInfoSync().miniProgram as any
     this.globalData.server = servers[envVersion as string]
+    console.info("server:", this.globalData.server)
 
     initialize(this)
     this.flushStorage()
