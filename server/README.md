@@ -165,7 +165,7 @@ docker run -d \
   notice
 
 # 启动 njnu-classroom-spider
-docker run -d --itd \
+docker run -d --rm \
   --name njnu-classroom-spider \
   --network njnu-classroom \
   --volume /opt/docker/NjnuClassroom:/data \
