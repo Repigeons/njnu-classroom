@@ -8,13 +8,6 @@ from aiohttp.web import Request
 
 from app import JsonResponse, HttpStatus, initialize
 from .routes import routes
-from ..service import ResetService
-
-
-@routes.post('/reset')
-async def reset(_: Request) -> JsonResponse:
-    await ResetService.reset()
-    return JsonResponse(status=HttpStatus.ACCEPTED)
 
 
 @routes.post('/init')
