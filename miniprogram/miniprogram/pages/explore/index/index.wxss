@@ -66,3 +66,15 @@
   padding: 0 16px;
   font-size: 12px;
 }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .rp-userInfo .rp-nickname {
+    color: rgba(255, 255, 255, .5);
+  }
+  
+  .rp-footer {
+    color: rgba(255, 255, 255, .5);
+  }
+  /* DarkMode 下的样式 end */
+}

@@ -117,3 +117,61 @@
   background-color: #cee6f2;
   opacity: 0.8;
 }
+
+.dialog-text {
+  text-align:left;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .rp-search-bar {
+    background-color: #191919;
+  }
+
+  .rp-label .image {
+    filter: invert(0.6);
+  }
+
+  .rp-outerborder {
+    background-color:#000000;
+    border: 1px solid #000000;
+  }
+  
+  .rp-outerborder .title {
+    background-color:#191919;
+  }
+
+  .rp-outerborder .title .jc{
+    color:#ffffff77
+  }
+  
+  .rp-outerborder .title .xq{
+    color:#ffffff88
+  }
+  
+  .rp-outerborder .highlight_cell {
+    background-color: #ffffff77;
+  }
+  
+  .rp-data{
+    background-color: #1e1e1e;
+  }
+  
+  .rp-data .bar {
+    color: #000000;
+    border: 1px solid #000000;
+  }
+  
+  .rp-data .empty {
+    background-color:#80A780;
+  }
+  
+  .rp-data .class {
+    background-color:#7393AD;
+  }
+
+  .dialog-text {
+    color: #ffffff77;
+  }
+  /* DarkMode 下的样式 end */
+}

@@ -39,7 +39,7 @@
 
 <!-- Notice -->
 <rp-dialog show="{{notice.timestamp}}" title="{{notice.date}} 公告" buttons="{{dialog_buttons}}">
-  <view style="text-align:left">
+  <view class="dialog-text">
     <text decode="true">{{notice.text}}</text>
   </view>
 </rp-dialog>

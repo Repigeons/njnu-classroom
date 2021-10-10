@@ -75,3 +75,30 @@
   color: #576b95;
   font-size: 14px;
 }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .picker {
+    background-color: #191919;
+  }
+
+  .tab-selected {
+    background-color: #162f3a;
+  }
+
+  .cover__left {
+    left: 0;
+    background: linear-gradient(to right, #191919ff, #19191900);
+    background: -webkit-gradient(linear, 0 0, 100% 0, from(#191919ff), to(#19191900));
+  }
+  .cover__right {
+    right: 0;
+    background: linear-gradient(to left, #191919ff, #19191900);
+    background: -webkit-gradient(linear, 100% 0, 0 0, from(#191919ff), to(#19191900));
+  }
+
+  .button {
+    border-left: 1px solid #1E1E1E;
+  }
+  /* DarkMode 下的样式 end */
+}

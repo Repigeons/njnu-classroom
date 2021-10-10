@@ -50,3 +50,19 @@
   height: 100%;
   padding: 0;
 }
+
+@media (prefers-color-scheme: dark) {
+  /* DarkMode 下的样式 start */
+  .grid {
+    background-color: #191919;
+  }
+
+  .grid-hover {
+    background-color: #cee6f2;
+  }
+
+  .grid__icon {
+  filter: invert(1);
+  }
+  /* DarkMode 下的样式 end */
+}
