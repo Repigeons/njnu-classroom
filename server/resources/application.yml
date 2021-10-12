@@ -30,10 +30,11 @@ application:
         phantomjs:
           executable_path: "phantomjs"
         chrome:
+          chrome_binary: ""  # 默认不填
           executable_path: "chromedriver"
         firefox:
-          executable_path: "geckodriver"
           firefox_binary: "firefox"
+          executable_path: "geckodriver"
 
   mail:
     sender:

@@ -63,6 +63,8 @@ async def get_cookie_dict() -> dict:
 
     elif driver.lower() == "chrome":
         option = webdriver.ChromeOptions()
+        if args['binary']:
+            option.binary_location = args['chrome_binary']
         option.add_argument("--headless")
         option.add_argument("--no-sandbox")
         option.add_argument('--disable-dev-shm-usage')
