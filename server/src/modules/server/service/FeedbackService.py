@@ -96,7 +96,7 @@ async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
                 JASDM=jasdm,
             )
     ) as resp:
-        res = await resp.json()
+        res = await resp.json(content_type=None)
     kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
     for row in kcb:
         if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):

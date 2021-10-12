@@ -34,7 +34,7 @@ async def get_data(cookies: dict, time_info: dict, classroom: dict) -> list[dict
                 JASDM=classroom['JASDM'],
             )
     ) as resp:
-        res = await resp.json()
+        res = await resp.json(content_type=None)
     try:
         kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
     except KeyError:
@@ -51,7 +51,7 @@ async def get_data(cookies: dict, time_info: dict, classroom: dict) -> list[dict
                     JASDM=classroom['JASDM'],
                 )
         ) as resp:
-            res = await resp.json()
+            res = await resp.json(content_type=None)
         try:
             kcb_next = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])
             for day in range(today):

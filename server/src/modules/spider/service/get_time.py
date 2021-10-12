@@ -76,7 +76,7 @@ async def get_time_info(cookies: dict) -> dict:
             url='http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do',
             cookies=cookies
     ) as resp:
-        res = await resp.json()
+        res = await resp.json(content_type=None)
     result['XNXQDM'] = res['datas']['cxdqxnxq']['rows'][0]['DM'],
     result['XNDM'] = res['datas']['cxdqxnxq']['rows'][0]['XNDM'],
     result['XQDM'] = res['datas']['cxdqxnxq']['rows'][0]['XQDM']
@@ -92,7 +92,7 @@ async def get_time_info(cookies: dict) -> dict:
                 RQ=time.strftime("%Y-%m-%d", time.localtime()),
             )
     ) as resp:
-        res = await resp.json()
+        res = await resp.json(content_type=None)
     result['ZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZC']
     result['ZZC'] = res['datas']['cxrqdydzcxq']['rows'][0]['ZZC']
 
@@ -107,7 +107,7 @@ async def get_time_info(cookies: dict) -> dict:
                 SFSY=1,
             )
     ) as resp:
-        res = await resp.json()
+        res = await resp.json(content_type=None)
     result['ZJXZC'] = res['datas']['cxxljc']['rows'][0]['ZJXZC']
 
     return result
