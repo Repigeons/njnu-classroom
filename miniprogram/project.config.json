@@ -7,11 +7,6 @@
   "compileType": "miniprogram",
   "libVersion": "2.17.0",
   "projectname": "NjnuClassroom",
-  "scripts": {
-    "beforeCompile": "npm run tsc",
-    "beforePreview": "npm run tsc",
-    "beforeUpload": "npm run tsc"
-  },
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -41,7 +36,7 @@
     "enableEngineNative": false,
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
-    "packNpmManually": true,
+    "packNpmManually": false,
     "packNpmRelationList": [
       {
         "packageJsonPath": "./package.json",
@@ -49,7 +44,11 @@
       }
     ],
     "minifyWXSS": true,
-    "showES6CompileOption": false
+    "disableUseStrict": false,
+    "showES6CompileOption": false,
+    "useCompilerPlugins": [
+      "typescript"
+    ]
   },
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},

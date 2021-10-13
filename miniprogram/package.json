@@ -9,18 +9,13 @@
   "license": "GPL-3.0 License",
   "author": "Repigeons",
   "contributors": [
-    "Zhou-Tx <z.t.x@foxmail.com>",
-    "ZzDaniel <zz.daniel@foxmail.com>"
+    "ZhouTianxing <zhoutianxing@repigeons.cn>",
+    "ZzDaniel <zzdaniel@repigeons.cn>"
   ],
   "repository": "github:Repigeons/NjnuClassroom",
-  "homepage": "https://classroom.njnu.xyz/",
+  "homepage": "https://classroom.njnu.repigeons.cn/",
   "bugs": "https://github.com/Repigeons/NjnuClassroom/issues",
-  "scripts": {
-    "compile": "./node_modules/typescript/bin/tsc",
-    "tsc": "node ./node_modules/typescript/lib/tsc.js"
-  },
   "devDependencies": {
-    "miniprogram-api-typings": "^3.4.3",
-    "typescript": "^3.3.3333"
+    "miniprogram-api-typings": "^3.4.3"
   }
 }
