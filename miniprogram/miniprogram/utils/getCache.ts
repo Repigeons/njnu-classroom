@@ -70,6 +70,7 @@ export function getZylxdm(request: boolean = false): Promise<Array<KeyValue>> {
             .catch(reject)
     })
 }
+
 export function getExploreGrids(request: boolean = false): Promise<Array<IGrid>> {
     return new Promise((resolve, reject) => {
         getCache({
@@ -81,7 +82,7 @@ export function getExploreGrids(request: boolean = false): Promise<Array<IGrid>>
     })
 }
 
-export function getShuttle(day: number): Promise<IShuttle> {
+export function getShuttle(day: string): Promise<IShuttle> {
     return new Promise((resolve, reject) => {
         getCache({
             path: `/explore/shuttle.json?day=${day}`,
