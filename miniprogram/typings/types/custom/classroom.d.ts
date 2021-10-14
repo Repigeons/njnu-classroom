@@ -83,7 +83,7 @@ interface IClassroomRow extends Record<string, any> {
   id: number,
   JXLMC: string,
   jsmph: string,
-  day: number,
+  day: string,
   jc_ks: number,
   jc_js: number,
   zylxdm: string,

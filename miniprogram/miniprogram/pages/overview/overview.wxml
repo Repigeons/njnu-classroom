@@ -7,7 +7,9 @@
 				<image src="/images/former.png" class="image" />
 			</view>
 			<view class="rp-picker">
-				<picker mode="multiSelector" range="{{[jxl_list,jas_picker_list]}}" range-key="text" value="{{[jxl_picker_selected,jas_picker_selected]}}" bindcolumnchange="onPickerChange" bindcancel="onPickerCancel" bindchange="onSubmit">
+				<picker mode="multiSelector" range="{{[jxl_list,jas_picker_list]}}" range-key="text"
+					value="{{[jxl_picker_selected,jas_picker_selected]}}" bindcolumnchange="onPickerChange"
+					bindcancel="onPickerCancel" bindchange="onSubmit">
 					<view class="rp-bd_text">{{jxl_list[jxl_display_selected].text}}</view>
 					<view class="rp-bd_text">{{jas_display_list[jas_display_selected].text}}</view>
 				</picker>
@@ -19,37 +21,44 @@
 		<!--~ 选择教室 -->
 
 		<!-- 概览界面 -->
-		<view class="rp-outerborder" style="top:{{topBorder}}px; left:{{leftBorder}}px; height:{{(cellHeight+1)*13-1}}px; width:{{(cellWidth+1)*8-1}}px">
+		<view class="rp-outerborder"
+			style="top:{{topBorder}}px; left:{{leftBorder}}px; height:{{(cellHeight+1)*13-1}}px; width:{{(cellWidth+1)*8-1}}px">
 			<!-- 左上角：空/非空教室 -->
 			<view wx:if="{{empty}}" class="title" style="height:{{cellHeight}}px; width:{{cellWidth}}px">
-				<image src="/images/yes.png" class="image"/>
+				<image src="/images/yes.png" class="image" />
 			</view>
 			<view wx:else class="title" style="height:{{cellHeight}}px; width:{{cellWidth}}px">
-				<image src="/images/no.png" class="image"/>
+				<image src="/images/no.png" class="image" />
 			</view>
 			<!--~ 左上角：空/非空教室 -->
 
 			<!-- 上方：周一~周五 -->
 			<block wx:for="一二三四五六日" wx:key="key">
-				<view class="title {{day==(index+1)%7 ? 'highlight_cell' : ''}}" style="left:{{(cellWidth+1)*(index+1)}}px; height:{{cellHeight}}px; width:{{cellWidth}}px;">
-					<text class="xq"  style="font-size:{{cellHeight/3}}px">周{{item}}</text>
+				<view class="title {{today==(index+1)%7 ? 'highlight_cell' : ''}}"
+					style="left:{{(cellWidth+1)*(index+1)}}px; height:{{cellHeight}}px; width:{{cellWidth}}px;">
+					<text class="xq" style="font-size:{{cellHeight/3}}px">周{{item}}</text>
 				</view>
 			</block>
 			<!--~ 上方：周一~周五 -->
 
 			<!-- 左侧：1~12节课 -->
 			<block wx:for="____________" wx:for-index="jc" wx:key="key">
-				<view class="title {{jc==dqjc ? 'highlight_cell' : ''}}" style="top:{{(cellHeight+1)*(jc+1)}}px; height:{{cellHeight}}px; width:{{cellWidth}}px; float:left;">
-					<text class="jc" style="top: {{cellHeight*0.15}}px; font-size:{{cellHeight*0.4}}px; line-height:{{cellHeight*0.3}}px">{{jc+1}}</text>
-					<text class="time" style="top: {{cellHeight*0.52}}px; font-size:{{cellHeight*0.2}}px; line-height:{{cellHeight*0.23}}px">{{time_array[jc][0]}}\n{{time_array[jc][1]}}</text>
+				<view class="title {{jc==dqjc ? 'highlight_cell' : ''}}"
+					style="top:{{(cellHeight+1)*(jc+1)}}px; height:{{cellHeight}}px; width:{{cellWidth}}px; float:left;">
+					<text class="jc"
+						style="top: {{cellHeight*0.15}}px; font-size:{{cellHeight*0.4}}px; line-height:{{cellHeight*0.3}}px">{{jc+1}}</text>
+					<text class="time"
+						style="top: {{cellHeight*0.52}}px; font-size:{{cellHeight*0.2}}px; line-height:{{cellHeight*0.23}}px">{{time_array[jc][0]}}\n{{time_array[jc][1]}}</text>
 				</view>
 			</block>
 			<!--~ 左侧：1~12节课 -->
 
 			<!-- 数据内容 -->
-			<view class="rp-data" style="position:absolute; top: {{cellHeight+1}}px; left: {{cellWidth+1}}px; height:{{(cellHeight+1)*12}}px; width:{{(cellWidth+1)*7}}px; z-index: 1">
+			<view class="rp-data"
+				style="position:absolute; top: {{cellHeight+1}}px; left: {{cellWidth+1}}px; height:{{(cellHeight+1)*12}}px; width:{{(cellWidth+1)*7}}px; z-index: 1">
 				<block wx:for="{{bar_list}}" wx:key="key">
-					<view class="bar {{item.usage}}" style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.day1-1}}px; top: {{(cellHeight+1)*(item.jc_ks-1)-1}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px" bindtap="showDialog" hover-class="active" data-index="{{index}}">
+					<view class="bar {{item.usage}}" hover-class="active" bindtap="showDialog" data-index="{{index}}"
+						style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.left-1}}px; top: {{(cellHeight+1)*(item.jc_ks-1)-1}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px">
 						<block wx:if="{{item.usage!='empty'}}">
 							<text>{{item.shortkcmc}}</text>
 						</block>

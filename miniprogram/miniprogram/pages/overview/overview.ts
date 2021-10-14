@@ -25,7 +25,7 @@ Page({
     barRatio: 0.8,
     dqjc: 1,
     // 周日->0
-    day: new Date().getDay(),
+    today: new Date().getDay(),
     time_array: [
       ['08:00', '08:40'], ['08:45', '09:25'], ['09:40', '10:20'], ['10:35', '11:15'], ['11:20', '12:00'],
       ['13:30', '14:10'], ['14:15', '14:55'], ['15:10', '15:50'], ['15:55', '16:35'],
@@ -174,6 +174,15 @@ Page({
         if (res.statusCode == 200) {
           const bar_list = data.data as Array<IClassroomRow>
           let kcmclimit = 0
+          const dayMapper: Record<string, number> = {
+            'Mon.': 0,
+            'Tue.': 1,
+            'Wed.': 2,
+            'Thu.': 3,
+            'Fri.': 4,
+            'Sat.': 5,
+            'Sun.': 6,
+          }
           for (let i = 0; i < bar_list.length; i++) {
             switch (bar_list[i].zylxdm) {
               case '00':
@@ -189,13 +198,12 @@ Page({
                 bar_list[i].usage = 'others'
                 break;
             }
-            if (bar_list[i].day == this.data.day)
+            if (dayMapper[bar_list[i].day] + 1 == this.data.today)
               if (bar_list[i].jc_ks <= this.data.dqjc + 1)
                 if (bar_list[i].jc_js >= this.data.dqjc + 1) {
                   this.setData({ empty: bar_list[i].zylxdm == '00' })
                 }
-            // day1: 周一~0
-            bar_list[i].day1 = (bar_list[i].day + 6) % 7
+            bar_list[i].left = dayMapper[bar_list[i].day]
             const info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
             if (info == null) continue
             for (const k in info) {
