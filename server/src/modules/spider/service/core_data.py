@@ -59,11 +59,20 @@ async def get_data(cookies: dict, time_info: dict, classroom: dict) -> list[dict
         except KeyError:
             pass
     result = []
+    day_mapper = {
+        0: 'Mon.',
+        1: 'Tue.',
+        2: 'Wed.',
+        3: 'Thu.',
+        4: 'Fri.',
+        5: 'Sat.',
+        6: 'Sun.',
+    }
     for day in range(7):
         for row in kcb[day]:
             jc = row['JC'].split(',')
             item = dict(
-                day=['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'][day],
+                day=day_mapper[day],
                 zylxdm='00' if row['ZYLXDM'] == '' else row['ZYLXDM'],
                 jc_ks=int(jc[0]),
                 jc_js=int(jc[-1]),
@@ -73,11 +82,6 @@ async def get_data(cookies: dict, time_info: dict, classroom: dict) -> list[dict
             for key in classroom:
                 item[key] = classroom[key]
             result.append(item)
-            # print([
-            #     item['day'], item['jc_ks'], item['jc_js'],
-            #     classroom['JXLMC'], classroom['jsmph'],
-            #     item['zylxdm'], item['jyytms'], item['kcm']
-            # ])
     return result
 
 

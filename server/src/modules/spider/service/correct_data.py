@@ -17,11 +17,6 @@ async def correct():
     res = await mysql.fetchall("SELECT * FROM `correction`")
     correction_list = [Correction(row) for row in res]
     for correction in correction_list:
-        # print([
-        #     correction.day, correction.jc_ks, correction.jc_js,
-        #     correction.JXLMC, correction.jsmph,
-        #     correction.zylxdm, correction.jyytms, correction.kcm
-        # ])
         data = [
             dict(
                 day=correction.day,

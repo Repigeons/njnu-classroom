@@ -17,14 +17,22 @@ async def merge():
     将`dev`表中连续的空教室记录合并为单条记录
     """
     mysql: aiomysql.MySQL = app['mysql']
-    days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+    day_mapper = {
+        0: 'Mon.',
+        1: 'Tue.',
+        2: 'Wed.',
+        3: 'Thu.',
+        4: 'Fri.',
+        5: 'Sat.',
+        6: 'Sun.',
+    }
     res = await mysql.fetchall("SELECT DISTINCT `JXLMC` FROM `dev`")
     jxl_list: list[str] = [row['JXLMC'] for row in res]
     # 全部缓存到redis
     for jxl in jxl_list:
         logging.info("[%s] Start merging...", jxl)
         jxl_classrooms = []
-        for day in days:
+        for day in day_mapper.values():
             classrooms = []
             res = await mysql.fetchall(
                 "SELECT * FROM `dev` WHERE `JXLMC`=%(jxlmc)s AND `day`=%(day)s ORDER BY `jsmph`,`jc_js`",
