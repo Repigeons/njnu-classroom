@@ -19,14 +19,11 @@ from ..service import ShuttleService
 @routes.get('/shuttle.json')
 async def shuttle(request: Request) -> JsonResponse:
     request = await RequestLoader.load(request)
-    day = request.args('day', int)
-    if not (0 <= day <= 6):
+    day = request.args('day', str)
+    if day not in ShuttleService.day_mapper.values():
         raise RequestParameterError('day')
     async with aioredis.start(app['redis']) as redis:
-        data = await redis.hget(
-            "shuttle",
-            request.args('day')
-        )
+        data = await redis.hget("shuttle", day)
     return JsonResponse(
         data=json.loads(data)
     )

@@ -11,6 +11,16 @@ from email.mime.application import MIMEApplication
 from app import app
 from ztxlib import *
 
+day_mapper = {
+    0: 'Mon.',
+    1: 'Tue.',
+    2: 'Wed.',
+    3: 'Thu.',
+    4: 'Fri.',
+    5: 'Sat.',
+    6: 'Sun.',
+}
+
 
 async def reset():
     try:
@@ -29,19 +39,19 @@ async def reset():
                 await redis.delete("shuttle")
 
             mysql: aiomysql.MySQL = app['mysql']
-            for day in range(7):  # [monday, ..., sunday]
+            for day_of_week in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
                 rows1 = await mysql.fetchall(
                     "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=%(route)s",
                     dict(
-                        day=1 << 6 >> day,
+                        day=1 << 6 >> day_of_week,
                         route=1
                     )
                 )
                 rows2 = await mysql.fetchall(
                     "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=%(route)s",
                     dict(
-                        day=1 << 6 >> day,
+                        day=1 << 6 >> day_of_week,
                         route=2
                     )
                 )
@@ -54,7 +64,7 @@ async def reset():
                 async with aioredis.start(app['redis']) as redis:
                     await redis.hset(
                         name="shuttle",
-                        key=str(day),
+                        key=day_mapper[day_of_week],
                         value=json.dumps(({
                             'direction1': direction1,
                             'direction2': direction2,
