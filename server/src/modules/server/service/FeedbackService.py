@@ -20,7 +20,7 @@ async def handle(
         results: list,
         index: int,
         jxlmc: str,
-        day: int,
+        day: str,
 ):
     item: dict = results[index]
     jsmph, jasdm = item['jsmph'], item['JASDM']
@@ -79,7 +79,7 @@ async def handle(
         )
 
 
-async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
+async def check_with_ehall(jasdm: str, day: str, jc: str, zylxdm: str):
     async with aioredis.lock(app['redis'], 'spider'):
         await save_cookies(), await save_time()
         async with aioredis.start(app['redis']) as redis:
@@ -97,14 +97,23 @@ async def check_with_ehall(jasdm: str, day: int, jc: str, zylxdm: str):
             )
     ) as resp:
         res = await resp.json(content_type=None)
-    kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[(day + 6) % 7]
+    day_mapper = {
+        'Mon.': 0,
+        'Tue.': 1,
+        'Wed.': 2,
+        'Thu.': 3,
+        'Fri.': 4,
+        'Sat.': 5,
+        'Sun.': 6,
+    }
+    kcb = json.loads(res['datas']['cxyzjskjyqk']['rows'][0]['BY1'])[day_mapper[day]]
     for row in kcb:
         if jc in row['JC'].split(',') and row['ZYLXDM'] in (zylxdm, ''):
             return True  # 数据一致，待纠错
     return False  # 数据不一致，待更新
 
 
-async def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
+async def auto_correct(jxl: str, jsmph: str, jasdm: str, day: str, jc: str):
     mysql: aiomysql.MySQL = app['mysql']
     await mysql.execute(
         "INSERT INTO `feedback_metadata` (jc, JASDM) VALUES (%(jc)s, %(jasdm)s)",
@@ -114,17 +123,26 @@ async def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
         )
     )
 
+    day_mapper = {
+        'Sun.': 1,
+        'Mon.': 2,
+        'Tue.': 3,
+        'Wed.': 4,
+        'Thu.': 5,
+        'Fri.': 6,
+        'Sat.': 7,
+    }
     statistic = await mysql.fetchall(
         "SELECT DATE_FORMAT(`feedback_metadata`.`time`, '%%Y-%%m-%%d') `date`, COUNT(*) `count` "
         "FROM `feedback_metadata` "
         "WHERE `JASDM`=%(jasdm)s "
-        "AND DAYOFWEEK(`feedback_metadata`.`time`)-1=%(day)s "
+        "AND DAYOFWEEK(time)=%(day_of_week)s "
         "AND `jc`=%(jc)s "
         "GROUP BY `date` "
         "ORDER BY `date`",
         dict(
             jasdm=jasdm,
-            day=day,
+            day_of_week=day_mapper[day],
             jc=jc
         )
     )
@@ -139,7 +157,7 @@ async def auto_correct(jxl: str, jsmph: str, jasdm: str, day: int, jc: str):
             "%(day)s, %(jxlmc)s, %(jsmph)s, %(jasdm)s,  %(jc)s, %(jc)s, '占用','####占用'"
             ")",
             dict(
-                day=['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][day],
+                day=day,
                 jxlmc=jxl,
                 jsmph=jsmph,
                 jasdm=jasdm,

@@ -10,7 +10,6 @@ import os
 
 from app import app
 from ztxlib import *
-from .static import day_mapper
 
 env: str
 
@@ -36,7 +35,7 @@ async def reset_empty():
             await asyncio.gather(*[
                 reset_empty_once(jxlmc, day)
                 for jxlmc in jxl_list
-                for day in range(7)
+                for day in ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.']
             ])
     except aioredis.exceptions.WaitingTimeoutError:
         pass
@@ -58,7 +57,7 @@ async def reset_overview():
         pass
 
 
-async def reset_empty_once(jxlmc: str, day: int):
+async def reset_empty_once(jxlmc: str, day: str):
     mysql: aiomysql.MySQL = app['mysql']
     rows = await mysql.fetchall(
         f"SELECT * FROM `{env}` "
@@ -66,13 +65,13 @@ async def reset_empty_once(jxlmc: str, day: int):
         "ORDER BY `zylxdm`, `jc_js` DESC, `jsmph`",
         dict(
             jxlmc=jxlmc,
-            day=day_mapper[day],
+            day=day,
         )
     )
     async with aioredis.start(app['redis']) as redis:
         await redis.hset(
             name="empty",
-            key=f"{jxlmc}_{day}",
+            key=f"{jxlmc}:{day}",
             value=json.dumps([
                 dict(
                     JASDM=row['JASDM'],
@@ -104,7 +103,7 @@ async def reset_overview_once(jasdm: str):
                     jsmph=row['jsmph'],
                     SKZWS=row['SKZWS'],
 
-                    day=day_mapper[row['day']],
+                    day=row['day'],
                     jc_ks=row['jc_ks'],
                     jc_js=row['jc_js'],
 

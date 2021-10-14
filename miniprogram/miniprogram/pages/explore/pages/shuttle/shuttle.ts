@@ -9,28 +9,15 @@ const app = getApp<IAppOption>()
 Page({
   data: {
     /**显示周几*/
-    days: [{
-      label: '星期一',
-      value: 'Mon.'
-    },{
-      label: '星期二',
-      value: 'Tue.'
-    },{
-      label: '星期三',
-      value: 'Wed.'
-    },{
-      label: '星期四',
-      value: 'Thu.'
-    },{
-      label: '星期五',
-      value: 'Fri.'
-    },{
-      label: '星期六',
-      value: 'Sat.'
-    },{
-      label: '星期日',
-      value: 'Sun.'
-    }],
+    rq_array: [
+      { key: 'Mon.', value: "周一" },
+      { key: 'Tue.', value: "周二" },
+      { key: 'Wed.', value: "周三" },
+      { key: 'Thu.', value: "周四" },
+      { key: 'Fri.', value: "周五" },
+      { key: 'Sat.', value: "周六" },
+      { key: 'Sun.', value: "周日" },
+    ] as Array<KeyValue>,
     day_selected: 0,
     /**显示的车站*/
     station_selected: 0,
@@ -58,7 +45,7 @@ Page({
     wx.getLocation({
       type: 'gcj02',
       success: async (res) => {
-        const iShuttle = await getShuttle(this.data.days[0].value)
+        const iShuttle = await getShuttle(this.data.rq_array[0].key)
         const stations: Array<IPosition> = iShuttle.stations.map((station: IPosition, index: number) => {
           const distance = Math.floor(getDistance({
             latitude1: station.position[0],
@@ -120,7 +107,7 @@ Page({
   bindWeekChange(e: { detail: { value: number } }): void {
     const day_selected = +e.detail.value
     this.setData({ day_selected: day_selected })
-    getShuttle(this.data.days[day_selected].value).then(iShuttle => {
+    getShuttle(this.data.rq_array[day_selected].key).then(iShuttle => {
       this.setData({
         direction1: iShuttle.direction1,
         direction2: iShuttle.direction2,

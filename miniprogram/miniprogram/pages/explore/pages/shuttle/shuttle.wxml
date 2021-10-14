@@ -15,9 +15,9 @@
 		</view>
 		<view class="arrow">
 			<image src="/images/arrow.png" class="image-arrow" />
-			<picker range="{{days}}" range-key="label" value="{{day_selected}}" bindchange="bindWeekChange">
+			<picker range="{{rq_array}}" range-key="value" value="{{day_selected}}" bindchange="bindWeekChange">
 				<view class="weekPicker">
-					<view>{{days[day_selected].label}}</view>
+					<view>{{rq_array[day_selected].value}}</view>
 					<view class="imagebox" style="padding-left: 2px">
 						<image src="/images/switch.png" class="image-switch" />
 					</view>

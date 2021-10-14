@@ -9,7 +9,6 @@ import os
 from app import app
 from exceptions import RequestParameterError
 from ztxlib import aiomysql
-from .static import day_mapper
 
 
 async def handle(day: str,
@@ -21,9 +20,7 @@ async def handle(day: str,
     if not (1 <= jc_ks <= jc_js <= 12):
         raise RequestParameterError('jc_ks,jc_js')
     if day != '#':
-        if day.isdigit():
-            day = day_mapper[int(day)]
-        else:
+        if day not in ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.']:
             raise RequestParameterError('day')
     keyword = '%' if keyword == '#' else f'%{keyword}%'
 
@@ -55,7 +52,7 @@ async def handle(day: str,
             jsmph=row['jsmph'],
             SKZWS=row['SKZWS'],
 
-            day=day_mapper[row['day']],
+            day=row['day'],
             jc_ks=row['jc_ks'],
             jc_js=row['jc_js'],
 

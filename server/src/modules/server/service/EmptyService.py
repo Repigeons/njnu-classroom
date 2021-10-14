@@ -11,15 +11,15 @@ from exceptions import RequestParameterError
 from ztxlib import aioredis
 
 
-async def handle(jxl: str, day: int, dqjc: int) -> list:
+async def handle(jxl: str, day: str, dqjc: int) -> list:
     async with aioredis.start(app['redis']) as redis:
-        if not (0 <= day <= 6):
+        if day not in ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thu.', 'Fri.', 'Sat.']:
             raise RequestParameterError('day')
         if not (1 <= dqjc <= 12):
             raise RequestParameterError('dqjc')
-        if not await redis.hexists("empty", f"{jxl}_{day}"):
+        if not await redis.hexists("empty", f"{jxl}:{day}"):
             raise RequestParameterError('jxl')
-        value = json.loads(await redis.hget("empty", f"{jxl}_{day}"))
+        value = json.loads(await redis.hget("empty", f"{jxl}:{day}"))
 
     classrooms = []
     for classroom in value:

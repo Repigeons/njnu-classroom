@@ -22,7 +22,7 @@ async def empty(request: Request) -> JsonResponse:
 
     request = await RequestLoader.load(request)
     jxl = request.args(name='jxl', typing=str)
-    day = request.args(name='day', typing=int)
+    day = request.args(name='day', typing=str)
     dqjc = request.args(name='dqjc', typing=int)
 
     result = await EmptyService.handle(jxl, day, dqjc)
