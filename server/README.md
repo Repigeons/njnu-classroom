@@ -87,7 +87,7 @@ docker exec -it mysql-for-njnu-classroom mysql -uroot -p
 # 第二次直接启动即可
 docker run -d \
   --restart=always \
-  --name mysql-for-njnu-classroom \
+  --name mysql \
   --network njnu-classroom \
   --network-alias mysql \
   --volume /opt/docker/mysql:/var/lib/mysql \
@@ -102,7 +102,7 @@ docker pull redis
 # 直接启动
 docker run -d \
   --restart=always \
-  --name redis-for-njnu-classroom \
+  --name redis \
   --network njnu-classroom \
   --network-alias redis \
   redis
