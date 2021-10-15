@@ -35,8 +35,11 @@ async def reset():
                         ]
                     ) for row in csv.DictReader(f)
                 ]
+            async with aioredis.start(app['redis']) as redis:
+                await redis.delete("shuttle")
+
             mysql: aiomysql.MySQL = app['mysql']
-            for day_of_week in range(7):
+            for day_of_week in range(7):  # [monday, ..., sunday]
                 direction1, direction2 = [], []
                 rows1 = await mysql.fetchall(
                     "SELECT * FROM `shuttle` WHERE (`working`& %(day)s) AND `route`=%(route)s",
