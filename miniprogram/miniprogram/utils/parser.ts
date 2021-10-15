@@ -86,14 +86,22 @@ export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
   }
 }
 
-export function item2dialog(item: Record<string, any>, rq: string) {
-  const title: string = item.title
+export function item2dialog(item: Record<string, any>, day: string) {
+  const dayMapper: Record<string, string> = {
+    'Mon.': '周一',
+    'Tue.': '周二',
+    'Wed.': '周三',
+    'Thu.': '周四',
+    'Fri.': '周五',
+    'Sat.': '周六',
+    'Sun.': '周日',
+  }
   const detail: Array<{
     field: string;
     value: string;
   }> = [
       { field: '教室门牌', value: `${item.JXLMC}${item.jsmph}` },
-      { field: '使用时间', value: `${rq}${item.jc_ks}-${item.jc_js}节` },
+      { field: '使用时间', value: `${dayMapper[day]}${item.jc_ks}-${item.jc_js}节` },
     ]
   if (item.KCMC) detail.push({ field: '课程名称', value: item.KCMC })
   if (item.SKJS) detail.push({ field: '上课教师', value: item.SKJS })
@@ -107,7 +115,7 @@ export function item2dialog(item: Record<string, any>, rq: string) {
   // if (item.LXDH) detail.push({ field: '联系电话', value: item.LXDH })
   if (item.JYYTMS) detail.push({ field: '借用说明', value: item.JYYTMS })
   else if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
-  return { title, detail }
+  return { detail, title: item.title }
 }
 
 export function parseTime(str: string): number {

@@ -226,11 +226,9 @@ Page({
    * 显示详细信息
    */
   showDialog(e: any): void {
-    const rq_array = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
-    const rq: string = rq_array[item.day]
-    this.setData({ dialog: item2dialog(item, rq) })
+    this.setData({ dialog: item2dialog(item, item.day) })
   },
 
   onShareAppMessage() {

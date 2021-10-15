@@ -4,12 +4,12 @@ import { getJxlPosition, getNotice } from '../../utils/getCache'
 import { getDistance, getJc } from '../../utils/util'
 // 获取应用实例
 const app = getApp<IAppOption>()
-const feedback_interval: number = 5000 // 间隔时间（毫秒）
+const feedbackInterval: number = 5000 // 间隔时间（毫秒）
 
 Page({
   data: {
     // 公告
-    notice: {} as INotice,
+    notice: Object() as INotice,
     dialog_buttons: Array<IButton>(),
     // 筛选
     jxl_array: {} as Array<IPosition>,
@@ -216,7 +216,7 @@ Page({
   feedback(): void {
     this.setData({ confirm_display: false })
     const now: number = new Date().getTime()
-    if (now < this.data.feedbackTime + feedback_interval) {
+    if (now < this.data.feedbackTime + feedbackInterval) {
       wx.showToast({
         title: '操作过于频繁',
         icon: 'loading',

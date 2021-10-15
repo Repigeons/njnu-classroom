@@ -163,10 +163,9 @@ Page({
     * 显示详细信息
     */
   showDialog(e: any): void {
-    const index: number = e.currentTarget.dataset.index,
-      item = this.data.result[index],
-      rq = this.data.rq_array[item.day ? item.day : 7].value
-    this.setData({ dialog: item2dialog(item, rq) })
+    const index: number = e.currentTarget.dataset.index
+    const item = this.data.result[index]
+    this.setData({ dialog: item2dialog(item, item.day) })
   },
 
   onShareAppMessage() {
