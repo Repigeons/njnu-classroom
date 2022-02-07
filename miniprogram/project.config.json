@@ -5,10 +5,10 @@
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
-  "libVersion": "2.17.0",
+  "libVersion": "2.19.6",
   "projectname": "NjnuClassroom",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": true,
     "enhance": true,
     "postcss": true,
@@ -16,7 +16,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": true,
+    "nodeModules": false,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -34,7 +34,7 @@
       "outputPath": ""
     },
     "enableEngineNative": false,
-    "useIsolateContext": true,
+    "useIsolateContext": false,
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [
@@ -45,6 +45,7 @@
     ],
     "minifyWXSS": true,
     "disableUseStrict": false,
+    "minifyWXML": true,
     "showES6CompileOption": false,
     "useCompilerPlugins": [
       "typescript",

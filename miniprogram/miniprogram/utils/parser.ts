@@ -1,11 +1,13 @@
-export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
+import { key2value } from "./constant"
+
+export function parseKcm(zylxdm: string, kcm: string): IClassroomInfo | null {
   let kcxx: Array<string>
   const pklysz: Record<string, string> = { '01': '研', '02': '成', '03': '本', '04': '借', '05': '本考', '11': '研考', '12': '成教' }
   switch (zylxdm) {
     case '01':
     case '03':
       // 课程占用
-      kcxx = KCM.replace(/%%/g, ',').split("#")
+      kcxx = kcm.replace(/%%/g, ',').split("#")
       return {
         KCZYFLAG: true,
         // 开课单位
@@ -28,11 +30,11 @@ export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
         //
         PKLY: pklysz['05'],
         //
-        title: KCM,
+        title: kcm,
       }
     case '04':
       // 普通教室借用占用
-      kcxx = KCM.split("#")
+      kcxx = kcm.split("#")
       return {
         PTJYZYFLAG: true,
         // 借用单位
@@ -59,7 +61,7 @@ export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
     case '10':
     case '11':
       // 课程占用
-      kcxx = KCM.split("#")
+      kcxx = kcm.split("#")
       return {
         FBKSPKZYFLAG: true,
         // 课程名称
@@ -86,22 +88,13 @@ export function parseKcm(zylxdm: string, KCM: string): IClassroomInfo | null {
   }
 }
 
-export function item2dialog(item: Record<string, any>, day: string) {
-  const dayMapper: Record<string, string> = {
-    'Mon.': '周一',
-    'Tue.': '周二',
-    'Wed.': '周三',
-    'Thu.': '周四',
-    'Fri.': '周五',
-    'Sat.': '周六',
-    'Sun.': '周日',
-  }
+export function classDetailItem2dialog(item: Record<string, any>, day: string): IClassDetailDialog {
   const detail: Array<{
     field: string;
     value: string;
   }> = [
-      { field: '教室门牌', value: `${item.JXLMC}${item.jsmph}` },
-      { field: '使用时间', value: `${dayMapper[day]}${item.jc_ks}-${item.jc_js}节` },
+      { field: '教室门牌', value: `${item.jxlmc}${item.jsmph}` },
+      { field: '使用时间', value: `${key2value(day)}${item.jcKs}-${item.jcJs}节` },
     ]
   if (item.KCMC) detail.push({ field: '课程名称', value: item.KCMC })
   if (item.SKJS) detail.push({ field: '上课教师', value: item.SKJS })
@@ -113,8 +106,7 @@ export function item2dialog(item: Record<string, any>, day: string) {
   if (item.JYRXM) detail.push({ field: '借用人姓名', value: item.JYRXM })
   if (item.FZLS) detail.push({ field: '负责老师', value: item.FZLS })
   // if (item.LXDH) detail.push({ field: '联系电话', value: item.LXDH })
-  if (item.JYYTMS) detail.push({ field: '借用说明', value: item.JYYTMS })
-  else if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
+  if (item.jyytms) detail.push({ field: '借用说明', value: item.jyytms })
   return { detail, title: item.title }
 }
 

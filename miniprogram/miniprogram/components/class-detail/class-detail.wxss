@@ -1,0 +1,4 @@
+/* components/class-detail/class-detail.wxss */
+.dialog-text {
+  text-align:left;
+}

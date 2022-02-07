@@ -41,7 +41,7 @@
 	<view class="rp-scrollzone">
 		<scroll-view class="rp-scrollzone__scrollview" scroll-y="true" scroll-into-view="{{scrollId}}" scroll-with-animation>
 			<block wx:for="{{routes}}" wx:key="key">
-				<rp-row id="row{{index}}" time="{{item[0]}}" from="{{item[1]}}" to="{{item[2]}}" via="{{stations[station_selected].number >= name2Number[item[1]] && stations[station_selected].number <= name2Number[item[2]] || stations[station_selected].number >= name2Number[item[2]] && stations[station_selected].number <= name2Number[item[1]]}}" />
+				<rp-row id="row{{index}}" time="{{item.startTime}}" from="{{item.startStation}}" to="{{item.endStation}}" via="{{stations[station_selected].number >= name2Number[item.startStation] && stations[station_selected].number <= name2Number[item.endStation] || stations[station_selected].number >= name2Number[item.endStation] && stations[station_selected].number <= name2Number[item.startStation]}}" />
 			</block>
 			<view class="rp-feedback" bindtap="uploadFile">
 				<view class="text">我有新版，</view>

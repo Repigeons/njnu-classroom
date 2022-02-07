@@ -1,8 +1,8 @@
 {
   "usingComponents": {
-    "rp-dialog": "/components/dialog/dialog",
     "rp-searchbar": "/components/searchbar/searchbar",
     "rp-picker": "/components/scroll-picker/scroll-picker",
-    "rp-row": "/components/search-row/search-row"
+    "rp-row": "/components/search-row/search-row",
+    "rp-class-detail": "/components/class-detail/class-detail"
   }
 }

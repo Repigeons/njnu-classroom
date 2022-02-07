@@ -19,7 +19,7 @@
   -->
 
   <view class="rp-footer">
-    <view class="rp-footer__link">©2019-{{fullYear}} | 复读鸽开发团队</view>
+    <view class="rp-footer__link">©2019-{{fullYear}} | 南师复读鸽开发团队</view>
     <view class="rp-footer__text" bindtap="copyQQGroupId">南师教室交流群：1150057272</view>
   </view>
 </view>

@@ -1,8 +1,7 @@
 export { }
 // explore/index
 import { getExploreGrids } from "../../../utils/getCache"
-// 获取应用实例
-const app = getApp<IAppOption>()
+import { server } from "../../../utils/http"
 let interstitialAd: WechatMiniprogram.InterstitialAd
 
 Page({
@@ -17,7 +16,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(/*options*/): void {
+  onLoad(/*options*/) {
     getExploreGrids().then(data => this.setData({ grids: data }))
     if (wx.createInterstitialAd) {
       interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-cbb4c40d86d77b8b' })
@@ -30,21 +29,21 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow(): void {
+  onShow() {
 
   },
 
-  onTapGrids(e: any): void {
+  onTapGrids(e: any) {
     const methods: Record<string, () => void> = {
       developing: () => wx.showToast({ title: "敬请期待", icon: 'none' }),
-      calendar: () => wx.previewImage({ urls: [`${app.globalData.server}/images/calendar.jpg`] }),
+      calendar: () => wx.previewImage({ urls: [`${server}/images/calendar.jpg`] }),
       support: () => interstitialAd?.show().catch(console.error),
-    },
-      method = methods[e.detail.method]
+    }
+    const method = methods[e.detail.method]
     if (typeof method == "function") method()
   },
 
-  copyQQGroupId(): void {
+  copyQQGroupId() {
     wx.setClipboardData({
       data: '1150057272',
       success: () => wx.showToast({ title: "已复制到剪贴板" })

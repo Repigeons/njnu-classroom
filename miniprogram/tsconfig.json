@@ -20,8 +20,7 @@
     "strictPropertyInitialization": true,
     "skipLibCheck": true,
     "lib": [
-      "ES6",
-      "ES2015"
+      "ES2019"
     ],
     "typeRoots": [
       "./typings"

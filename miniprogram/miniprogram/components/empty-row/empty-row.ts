@@ -6,8 +6,8 @@ Component({
   properties: {
     zylxdm: { type: String },
     jsmph: { type: String },
-    jc_ks: { type: Number },
-    jc_js: { type: Number },
+    jcKs: { type: Number },
+    jcJs: { type: Number },
     skzws: { type: Number },
   },
 
@@ -31,6 +31,5 @@ Component({
    * 组件的方法列表
    */
   methods: {
-
   }
 })

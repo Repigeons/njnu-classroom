@@ -3,8 +3,7 @@ export { }
 import { getDistance } from '../../../../utils/util'
 import { parseTime } from "../../../../utils/parser"
 import { getShuttle } from '../../../../utils/getCache'
-// 获取应用实例
-const app = getApp<IAppOption>()
+import { uploadFile } from '../../../../utils/http'
 
 Page({
   data: {
@@ -73,7 +72,7 @@ Page({
     })
   },
 
-  redirect(e?: boolean): void {
+  redirect(e?: boolean) {
     if (e) {
       this.setData({ direction: !this.data.direction })
     }
@@ -92,7 +91,7 @@ Page({
     const now = new Date()
     let scrollIndex = this.data.routes.length - 1
     while (scrollIndex > 0) {
-      if (parseTime(this.data.routes[scrollIndex][0]) - parseTime(`${now.getHours()}:${now.getMinutes()}`) < -15) {
+      if (parseTime(this.data.routes[scrollIndex].startTime) - parseTime(`${now.getHours()}:${now.getMinutes()}`) < -15) {
         break
       }
       scrollIndex--
@@ -100,11 +99,11 @@ Page({
     this.setData({ scrollId: `row${scrollIndex}` })
   },
 
-  bindStationChange(e: { detail: { value: number } }): void {
+  bindStationChange(e: { detail: { value: number } }) {
     this.setData({ station_selected: +e.detail.value })
   },
 
-  bindWeekChange(e: { detail: { value: number } }): void {
+  bindWeekChange(e: { detail: { value: number } }) {
     const day_selected = +e.detail.value
     this.setData({ day_selected: day_selected })
     getShuttle(this.data.rq_array[day_selected].key).then(iShuttle => {
@@ -122,15 +121,10 @@ Page({
       count: 1,
       fail: console.error,
       success: (res) => {
-        wx.uploadFile({
-          url: `${app.globalData.server}/explore/shuttle/upload`,
+        uploadFile({
+          path: "/explore/shuttle/upload",
           filePath: res.tempFiles[0].path,
-          name: 'file',
-          success: () => {
-            wx.showToast({ title: '上传成功！' })
-          },
-          fail: console.error,
-        })
+        }).then(() => wx.showToast({ title: '上传成功！' }))
       }
     })
   },

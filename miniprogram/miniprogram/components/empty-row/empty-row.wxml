@@ -4,7 +4,7 @@
     <view class="classroom-sign">{{jsmph}}</view>
     <view class="classroom-text">教室</view>
     <!-- <view class="vline vline_color{{zylxdm=='10'?1:0}}"></view> -->
-    <view class="section">{{jc_ks}}-{{jc_js}}节</view>
+    <view class="section">{{jcKs}}-{{jcJs}}节</view>
   </view>
   <view class="cell__ft">
     <view wx:if="{{zylxdm=='10'}}" class="yan-text">可能为空教室</view>

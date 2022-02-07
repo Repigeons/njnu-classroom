@@ -1,0 +1,7 @@
+<rp-dialog show="{{title}}" title="{{title}}" buttons="{{dialog_buttons}}">
+  <view class="dialog-text">
+    <block wx:for="{{detail}}" wx:key="key">
+      <view>{{item.field}}：{{item.value}}</view>
+    </block>
+  </view>
+</rp-dialog>

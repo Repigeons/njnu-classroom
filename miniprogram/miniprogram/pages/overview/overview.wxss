@@ -118,10 +118,6 @@
   opacity: 0.8;
 }
 
-.dialog-text {
-  text-align:left;
-}
-
 @media (prefers-color-scheme: dark) {
   /* DarkMode 下的样式 start */
   .rp-search-bar {

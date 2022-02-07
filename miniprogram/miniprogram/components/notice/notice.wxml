@@ -1,0 +1,5 @@
+<rp-dialog show="{{timestamp}}" title="{{date}} 公告" buttons="{{dialog_buttons}}">
+  <view class="dialog-text">
+    <text decode="true">{{text}}</text>
+  </view>
+</rp-dialog>

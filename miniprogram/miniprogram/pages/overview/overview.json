@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "rp-dialog": "/components/dialog/dialog"
+    "rp-class-detail": "/components/class-detail/class-detail"
   }
 }

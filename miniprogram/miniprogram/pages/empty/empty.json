@@ -1,6 +1,6 @@
 {
   "usingComponents": {
-    "rp-dialog": "/components/dialog/dialog",
+    "rp-notice": "/components/notice/notice",
     "rp-layer": "/components/layer/layer",
     "rp-row": "/components/empty-row/empty-row",
     "rp-picker": "/components/scroll-picker/scroll-picker"

@@ -30,12 +30,12 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    tap(e): void {
+    tap(e) {
       const index = e.target.dataset.button_index
       if (this.properties.buttons[index].tap)
         this.properties.buttons[index].tap(e)
     },
-    longpress(e): void {
+    longpress(e) {
       const index = e.target.dataset.button_index
       if (this.properties.buttons[index].longpress)
         this.properties.buttons[index].longpress(e)

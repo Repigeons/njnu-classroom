@@ -1,10 +1,9 @@
 export { }
+import { weekdays2 } from "../../../../utils/constant"
 // explore/search
 import { getClassrooms, getZylxdm } from "../../../../utils/getCache"
-import { item2dialog, parseKcm } from "../../../../utils/parser"
-// 获取应用实例
-const app = getApp<IAppOption>()
-const perPage = 50
+import { request } from "../../../../utils/http"
+import { classDetailItem2dialog, parseKcm } from "../../../../utils/parser"
 
 Page({
   /**
@@ -18,16 +17,7 @@ Page({
     // 筛选
     jxl_array: [{ key: '#', value: "不限" }] as Array<KeyValue>,
     jxl_selected: 0,
-    rq_array: [
-      { key: '#', value: "不限" },
-      { key: 'Mon.', value: "周一" },
-      { key: 'Tue.', value: "周二" },
-      { key: 'Wed.', value: "周三" },
-      { key: 'Thu.', value: "周四" },
-      { key: 'Fri.', value: "周五" },
-      { key: 'Sat.', value: "周六" },
-      { key: 'Sun.', value: "周日" },
-    ],
+    rq_array: weekdays2,
     rq_selected: 0,
     jc_array: ['第1节', '第2节', '第3节', '第4节', '第5节', '第6节', '第7节', '第8节', '第9节', '第10节', '第11节', '第12节'],
     jc_ks_selected: 0,
@@ -36,31 +26,18 @@ Page({
     zylxdm_selected: 0,
     // 结果
     serve: true,
+    pageNum: 0,
+    pageCount: -1,
+    totalCount: 0,
     result: Array<IClassroomRow>(),
-    results: Array<IClassroomRow>(),
-    dialog: {},
-    dialog_buttons: Array<IButton>(),
+    dialog: {} as IClassDetailDialog
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    getClassrooms().then(data => {
-      const jxl_array = this.data.jxl_array
-      Object.keys(data).forEach(jxlmc => {
-        jxl_array.push({ key: jxlmc, value: jxlmc })
-      })
-      this.setData({ jxl_array })
-    })
-    getZylxdm().then(zylxdm_array => this.setData({ zylxdm_array }))
-
-    this.setData({
-      dialog_buttons: [{
-        text: "关闭",
-        tap: () => this.setData({ dialog: {} })
-      }]
-    })
+    this.preloadInfo()
 
     if (options.page === "search") {
       const { keyword, jxl_selected, rq_selected, jc_ks_selected, jc_js_selected, zylxdm_selected } = options
@@ -76,7 +53,17 @@ Page({
     }
   },
 
-  onFocus(): void {
+  async preloadInfo() {
+    const zylxdm_array = await getZylxdm()
+    const classrooms = await getClassrooms()
+    const jxl_array = this.data.jxl_array
+    Object.keys(classrooms).forEach(jxlmc => {
+      jxl_array.push({ key: jxlmc, value: jxlmc })
+    })
+    this.setData({ zylxdm_array, jxl_array })
+  },
+
+  onFocus() {
     this.setData({
       showSearch: true,
       showResult: false,
@@ -110,62 +97,61 @@ Page({
     this.setData({ zylxdm_selected: e.detail.value })
   },
 
-  submit() {
+  async submit() {
     this.setData({ showSearch: false })
-    if (this.data.keyword) {
-      wx.request({
-        url: `${app.globalData.server}/api/search.json`,
-        data: {
-          day: this.data.rq_array[this.data.rq_selected].key,
-          jc_ks: this.data.jc_ks_selected + 1,
-          jc_js: this.data.jc_js_selected + 1,
-          jxl: this.data.jxl_array[this.data.jxl_selected].key,
-          zylxdm: this.data.zylxdm_array[this.data.zylxdm_selected].key,
-          kcm: this.data.keyword
-        },
-        success: res => {
-          const data = res.data as IJsonResponse
-          if (res.statusCode == 200 || res.statusCode == 418) {
-            const rows = data.data as Array<IClassroomRow>
-            for (let i = 0; i < rows.length; i++) {
-              const info = parseKcm(rows[i].zylxdm, rows[i].kcm)
-              if (info == null) continue
-              for (const k in info)
-                rows[i][k] = info[k]
-            }
-            this.setData({
-              serve: data.status == 200,
-              results: rows,
-              result: rows.slice(0, perPage),
-              showResult: true,
-            })
-          } else {
-            console.warn(data.message)
-            this.setData({ display_list: [] })
-          }
-        },
-        fail: res => {
-          console.error(res)
-          this.setData({ display_list: [] })
-        }
-      })
+    if (!this.data.keyword) return
+    this.setData({
+      pageCount: -1,
+      pageNum: 0,
+      result: []
+    })
+    this.requestData()
+  },
+
+  async requestData() {
+    this.data.pageNum += 1
+    if (this.data.pageCount >= 0 && this.data.pageCount < this.data.pageCount)
+      return
+    const res = await request({
+      path: "/api/search.json",
+      data: {
+        day: this.data.rq_array[this.data.rq_selected].key,
+        jcKs: this.data.jc_ks_selected + 1,
+        jcJs: this.data.jc_js_selected + 1,
+        jxl: this.data.jxl_array[this.data.jxl_selected].key,
+        zylxdm: this.data.zylxdm_array[this.data.zylxdm_selected].key,
+        kcm: this.data.keyword,
+        page: this.data.pageNum
+      },
+    })
+    const result = res.data as IPageResult
+    for (let i = 0; i < result.list.length; i++) {
+      const info = parseKcm(result.list[i].zylxdm, result.list[i].kcm)
+      if (info == null) continue
+      for (const k in info)
+        result.list[i][k] = info[k]
     }
+    this.setData({
+      showResult: true,
+      serve: res.status == 200,
+      totalCount: result.totalCount,
+      pageCount: result.pageCount,
+      result: this.data.result.concat(result.list)
+    })
   },
 
   onReachBottom() {
-    const { result, results } = this.data
-    this.setData({
-      result: result.concat(results.slice(result.length, result.length + perPage))
-    })
+    this.requestData()
   },
 
   /**
     * 显示详细信息
     */
-  showDialog(e: any): void {
+  showDialog(e: any) {
+    console.debug(e)
     const index: number = e.currentTarget.dataset.index
     const item = this.data.result[index]
-    this.setData({ dialog: item2dialog(item, item.day) })
+    this.setData({ dialog: classDetailItem2dialog(item, item.day) })
   },
 
   onShareAppMessage() {

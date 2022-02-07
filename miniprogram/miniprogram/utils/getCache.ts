@@ -1,97 +1,63 @@
-import encrypt from "./encrypt"
+import { request } from "./http"
 
-let app: WechatMiniprogram.App.Instance<IAppOption>
-export function initialize(appInstance: WechatMiniprogram.App.Instance<IAppOption>) { app = appInstance }
-
-function getCache(args: { path: string, request: boolean }): Promise<string | Record<string, any> | ArrayBuffer> {
-    const url = `${app.globalData.server}${args.path}`
-    const key = encrypt(url)
+async function getCache(args: { path: string, request: boolean }): Promise<string | Record<string, any> | ArrayBuffer> {
     if (args.request) {
-        wx.request({
-            url: url,
-            success: res => wx.setStorage({
-                key: key,
-                data: res.data
-            }),
-            fail: console.error
+        const res = await request({
+            path: args.path
+        })
+        wx.setStorage({
+            key: args.path,
+            data: res.data
         })
     }
-    return new Promise((resolve, reject) => wx.getStorage({
-        key: key,
-        success: res => resolve(res.data),
-        fail: () => wx.request({
-            url: url,
-            success: res => resolve(res.data),
-            fail: reject
+    try {
+        const res = await wx.getStorage({
+            key: args.path
+        }) as any
+        return res.data
+    } catch {
+        const res = await request({
+            path: args.path
         })
-    }))
+        wx.setStorage({
+            key: args.path,
+            data: res.data
+        })
+        return res.data
+    }
 }
 
-export function getNotice(): Promise<INotice> {
-    const url = `${app.globalData.server}/static/notice.json`
-    return new Promise((resolve, reject) => {
-        wx.request({
-            url: url,
-            success: res => resolve(res.data as INotice),
-            fail: reject
-        })
-    })
+export async function getClassrooms(request: boolean = false): Promise<Record<string, Array<IJasInfo>>> {
+    return await getCache({
+        path: '/api/classrooms.json',
+        request
+    }) as Record<string, Array<IJasInfo>>
 }
 
-export function getJxlPosition(request: boolean = false): Promise<Array<IPosition>> {
-    return new Promise((resolve, reject) => {
-        getCache({
-            path: '/static/classroom/position.json',
-            request
-        })
-            .then(data => resolve(data as Array<IPosition>))
-            .catch(reject)
-    })
+export async function getJxlPosition(request: boolean = false): Promise<Array<IPosition>> {
+    return await getCache({
+        path: '/api/position.json',
+        request
+    }) as Array<IPosition>
 }
 
-export function getClassrooms(request: boolean = false): Promise<Record<string, Array<IJasInfo>>> {
-    return new Promise((resolve, reject) => {
-        getCache({
-            path: '/static/classroom/list.json',
-            request
-        })
-            .then(data => resolve(data as Record<string, Array<IJasInfo>>))
-            .catch(reject)
-    })
+export async function getZylxdm(request: boolean = false): Promise<Array<KeyValue>> {
+    return await getCache({
+        path: '/api/zylxdm.json',
+        request
+    }) as Array<KeyValue>
 }
 
-export function getZylxdm(request: boolean = false): Promise<Array<KeyValue>> {
-    return new Promise((resolve, reject) => {
-        getCache({
-            path: '/static/classroom/zylxdm.json',
-            request
-        })
-            .then(data => resolve(data as Array<KeyValue>))
-            .catch(reject)
-    })
+export async function getExploreGrids(request: boolean = false): Promise<Array<IGrid>> {
+    return await getCache({
+        path: '/explore/grids.json',
+        request
+    }) as Array<IGrid>
 }
 
-export function getExploreGrids(request: boolean = false): Promise<Array<IGrid>> {
-    return new Promise((resolve, reject) => {
-        getCache({
-            path: '/static/explore/grids.json',
-            request
-        })
-            .then(data => resolve(data as Array<IGrid>))
-            .catch(reject)
-    })
-}
-
-export function getShuttle(day: string): Promise<IShuttle> {
-    return new Promise((resolve, reject) => {
-        getCache({
-            path: `/explore/shuttle.json?day=${day}`,
-            request: true
-        })
-            .then(data => {
-                data = data as IJsonResponse
-                resolve(data.data as IShuttle)
-            })
-            .catch(reject)
-    })
+export async function getShuttle(day: string, request: boolean = false): Promise<IShuttle> {
+    return await getCache({
+        path: `/explore/shuttle.json?day=${day}`,
+        request
+    }) as IShuttle
 }

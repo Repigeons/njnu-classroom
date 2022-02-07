@@ -1,6 +1,6 @@
 {
   "name": "NjnuClassroom",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "description": "南师教室",
   "keywords": [
     "NjnuClassroom",
@@ -16,6 +16,6 @@
   "homepage": "https://classroom.njnu.repigeons.cn/",
   "bugs": "https://github.com/Repigeons/NjnuClassroom/issues",
   "devDependencies": {
-    "miniprogram-api-typings": "^3.4.3"
+    "miniprogram-api-typings": "^3.4.5"
   }
 }

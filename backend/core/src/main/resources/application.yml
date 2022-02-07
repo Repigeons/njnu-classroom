@@ -1,0 +1,30 @@
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/NjnuClassroom
+    username: root
+    password: root
+  mail:
+    host: smtp.repigeons.cn
+    port: 465
+    username: info@repigeons.cn
+    password: ""
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+selenium:
+  driver: chromium
+
+account:
+  username: ""
+  password: ""
+  gid: ""
+
+env: dev

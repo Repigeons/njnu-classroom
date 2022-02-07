@@ -1,7 +1,7 @@
 interface IJasInfo extends Record<string, any> {
-  readonly JXLMC: string
-  readonly JSMPH: string
-  readonly JASDM: string
+  readonly jxlmc: string
+  readonly jsmph: string
+  readonly jasdm: string
 }
 
 interface IClassroomInfo extends Record<string, any> {
@@ -80,13 +80,12 @@ interface IClassroomInfo extends Record<string, any> {
 }
 
 interface IClassroomRow extends Record<string, any> {
-  id: number,
-  JXLMC: string,
-  jsmph: string,
-  day: string,
-  jc_ks: number,
-  jc_js: number,
-  zylxdm: string,
-  jyytms: string,
-  kcm: string,
+  readonly jxlmc: string,
+  readonly jsmph: string,
+  readonly day: string,
+  readonly jcKs: number,
+  readonly jcJs: number,
+  readonly zylxdm: string,
+  readonly jyytms: string,
+  readonly kcm: string,
 }

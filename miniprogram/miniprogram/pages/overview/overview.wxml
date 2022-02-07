@@ -9,7 +9,7 @@
 			<view class="rp-picker">
 				<picker mode="multiSelector" range="{{[jxl_list,jas_picker_list]}}" range-key="text"
 					value="{{[jxl_picker_selected,jas_picker_selected]}}" bindcolumnchange="onPickerChange"
-					bindcancel="onPickerCancel" bindchange="onSubmit">
+					bindcancel="onPickerCancel" bindchange="submit">
 					<view class="rp-bd_text">{{jxl_list[jxl_display_selected].text}}</view>
 					<view class="rp-bd_text">{{jas_display_list[jas_display_selected].text}}</view>
 				</picker>
@@ -42,7 +42,7 @@
 			<!--~ 上方：周一~周五 -->
 
 			<!-- 左侧：1~12节课 -->
-			<block wx:for="____________" wx:for-index="jc" wx:key="key">
+			<block wx:for="{{12}}" wx:for-index="jc" wx:key="key">
 				<view class="title {{jc==dqjc ? 'highlight_cell' : ''}}"
 					style="top:{{(cellHeight+1)*(jc+1)}}px; height:{{cellHeight}}px; width:{{cellWidth}}px; float:left;">
 					<text class="jc"
@@ -58,7 +58,7 @@
 				style="position:absolute; top: {{cellHeight+1}}px; left: {{cellWidth+1}}px; height:{{(cellHeight+1)*12}}px; width:{{(cellWidth+1)*7}}px; z-index: 1">
 				<block wx:for="{{bar_list}}" wx:key="key">
 					<view class="bar {{item.usage}}" hover-class="active" bindtap="showDialog" data-index="{{index}}"
-						style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jc_js-item.jc_ks+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.left-1}}px; top: {{(cellHeight+1)*(item.jc_ks-1)-1}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px">
+						style="width:{{cellWidth*barRatio}}px; height:{{(cellHeight+1)*(item.jcJs-item.jcKs+1)-1}}px; left: {{cellWidth*(1-barRatio)*0.5+(cellWidth+1)*item.left-1}}px; top: {{(cellHeight+1)*(item.jcKs-1)-1}}px; font-size:{{cellWidth*barRatio/3}}px; line-height:{{cellWidth*barRatio/3*1.3}}px">
 						<block wx:if="{{item.usage!='empty'}}">
 							<text>{{item.shortkcmc}}</text>
 						</block>
@@ -71,12 +71,5 @@
 	</view>
 	<!--~ body -->
 </view>
-<!-- Dialog -->
-<rp-dialog show="{{dialog.title}}" title="{{dialog.title}}" buttons="{{dialog_buttons}}">
-	<view class="dialog-text">
-		<block wx:for="{{dialog.detail}}" wx:key="key">
-			<view>{{item.field}}：{{item.value}}</view>
-		</block>
-	</view>
-</rp-dialog>
-<!-- Dialog -->
+
+<rp-class-detail title="{{dialog.title}}" detail="{{dialog.detail}}"></rp-class-detail>

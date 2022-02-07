@@ -1,10 +1,9 @@
 export { }
 // overview
 import { getClassrooms } from '../../utils/getCache'
-import { parseKcm, item2dialog } from '../../utils/parser'
+import { parseKcm, classDetailItem2dialog } from '../../utils/parser'
 import { getJc } from '../../utils/util'
-// 获取应用实例
-const app = getApp<IAppOption>()
+import { request } from '../../utils/http'
 
 Page({
   data: {
@@ -34,33 +33,19 @@ Page({
     // 结果集
     bar_list: Array<IClassroomRow>(),
     empty: true,
-    dialog: {},
-    dialog_buttons: Array<IButton>(),
+    dialog: {} as IClassDetailDialog
   },
 
   /**
    * 生命周期函数--监听页面加载
    * 生成教学楼名（仅用于列表显示）
    */
-  onLoad(options: Record<string, string>): void {
+  onLoad(options: Record<string, string>) {
     const { windowHeight, windowWidth } = wx.getSystemInfoSync()
     const cellHeight = (windowHeight - (this.data.topBorder + 20 + 2)) / 13
     const cellWidth = (windowWidth - (this.data.leftBorder * 2 + 2)) / 8 - 1
     this.setData({ cellHeight, cellWidth })
-
-    getClassrooms().then(data => {
-      this.setData({
-        classrooms: data,
-        jxl_list: Object.keys(data).map(v => Object({ text: v }))
-      })
-    })
-
-    this.setData({
-      dialog_buttons: [{
-        text: "关闭",
-        tap: () => this.setData({ dialog: {} })
-      }]
-    })
+    this.preloadInfo()
 
     if (options.page == 'overview') {
       const { jxlmc, jsmph } = options
@@ -68,7 +53,15 @@ Page({
     }
   },
 
-  onShow(): void {
+  async preloadInfo() {
+    const classrooms = await getClassrooms()
+    this.setData({
+      classrooms: classrooms,
+      jxl_list: Object.keys(classrooms).map(v => Object({ text: v }))
+    })
+  },
+
+  onShow() {
     this.setData({ dqjc: getJc(new Date()) })
     wx.getStorage({
       key: 'last_overview',
@@ -78,7 +71,7 @@ Page({
       },
       fail: () => {
         this.onPickerChange({ detail: { column: 0, value: 0 } })
-        this.onSubmit()
+        this.submit()
       }
     })
   },
@@ -98,7 +91,7 @@ Page({
         value: jas_picker_list.findIndex(item => item.text == jsmph)
       }
     })
-    this.onSubmit()
+    this.submit()
   },
 
   onPickerChange(e: any) {
@@ -106,7 +99,7 @@ Page({
     if (column == 0) {
       const jxl_name = this.data.jxl_list[value].text
       const jas_picker_list = this.data.classrooms[jxl_name].map(v => {
-        v.text = v.JSMPH
+        v.text = v.jsmph
         return v
       })
       this.setData({
@@ -122,26 +115,26 @@ Page({
   /**
    * 前一个教室
    */
-  bindFormer(): void {
+  bindFormer() {
     this.onPickerChange({
       detail: {
         column: 1,
         value: (this.data.jas_picker_selected + this.data.jas_picker_list.length - 1) % (this.data.jas_picker_list.length)
       }
     })
-    this.onSubmit()
+    this.submit()
   },
   /**
    * 后一个教室
    */
-  bindLatter(): void {
+  bindLatter() {
     this.onPickerChange({
       detail: {
         column: 1,
         value: (this.data.jas_picker_selected + 1) % (this.data.jas_picker_list.length)
       }
     })
-    this.onSubmit()
+    this.submit()
   },
 
   onPickerCancel() {
@@ -152,89 +145,76 @@ Page({
     })
   },
 
-  onSubmit() {
+  async submit() {
     this.setData({
       jxl_display_selected: this.data.jxl_picker_selected,
       jas_display_list: this.data.jas_picker_list,
       jas_display_selected: this.data.jas_picker_selected
     })
-    const jas = this.data.jas_display_list[this.data.jas_display_selected]
-    const jxlmc = jas.JXLMC
-    const jsmph = jas.JSMPH
-    const jasdm = jas.JASDM
+    const { jxlmc, jsmph, jasdm } = this.data.jas_display_list[this.data.jas_display_selected]
     wx.setStorage({
       key: 'last_overview',
       data: { jxlmc, jsmph }
     })
-    wx.request({
-      url: `${app.globalData.server}/api/overview.json`,
-      data: { jasdm },
-      success: res => {
-        const data = res.data as IJsonResponse
-        if (res.statusCode == 200) {
-          const bar_list = data.data as Array<IClassroomRow>
-          let kcmclimit = 0
-          const dayMapper: Record<string, number> = {
-            'Mon.': 0,
-            'Tue.': 1,
-            'Wed.': 2,
-            'Thu.': 3,
-            'Fri.': 4,
-            'Sat.': 5,
-            'Sun.': 6,
-          }
-          for (let i = 0; i < bar_list.length; i++) {
-            switch (bar_list[i].zylxdm) {
-              case '00':
-                bar_list[i].usage = 'empty'
-                break;
-              case '01':
-              case '03':
-              case '10':
-              case '11':
-                bar_list[i].usage = 'class'
-                break;
-              default:
-                bar_list[i].usage = 'others'
-                break;
-            }
-            if (dayMapper[bar_list[i].day] + 1 == this.data.today)
-              if (bar_list[i].jc_ks <= this.data.dqjc + 1)
-                if (bar_list[i].jc_js >= this.data.dqjc + 1) {
-                  this.setData({ empty: bar_list[i].zylxdm == '00' })
-                }
-            bar_list[i].left = dayMapper[bar_list[i].day]
-            const info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
-            if (info == null) continue
-            for (const k in info) {
-              bar_list[i][k] = info[k]
-            }
-            kcmclimit = (this.data.cellHeight * (bar_list[i].jc_js - bar_list[i].jc_ks + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
-            bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
-          }
-          this.setData({ bar_list })
-        } else {
-          console.warn(data.message)
-          this.setData({ bar_list: [] })
-        }
-      },
-      fail: console.error
+    const res = await request({
+      path: "/api/overview.json",
+      data: { jasdm }
     })
+    console.debug("overview.json", res)
+    const bar_list = res.data as Array<IClassroomRow>
+    let kcmclimit = 0
+    const dayMapper: Record<string, number> = {
+      'Mon.': 0,
+      'Tue.': 1,
+      'Wed.': 2,
+      'Thu.': 3,
+      'Fri.': 4,
+      'Sat.': 5,
+      'Sun.': 6,
+    }
+    for (let i = 0; i < bar_list.length; i++) {
+      switch (bar_list[i].zylxdm) {
+        case '00':
+          bar_list[i].usage = 'empty'
+          break;
+        case '01':
+        case '03':
+        case '10':
+        case '11':
+          bar_list[i].usage = 'class'
+          break;
+        default:
+          bar_list[i].usage = 'others'
+          break;
+      }
+      if (dayMapper[bar_list[i].day] + 1 == this.data.today)
+        if (bar_list[i].jcKs <= this.data.dqjc + 1)
+          if (bar_list[i].jcJs >= this.data.dqjc + 1) {
+            this.setData({ empty: bar_list[i].zylxdm == '00' })
+          }
+      bar_list[i].left = dayMapper[bar_list[i].day]
+      const info = parseKcm(bar_list[i].zylxdm, bar_list[i].kcm)
+      if (info == null) continue
+      for (const k in info) {
+        bar_list[i][k] = info[k]
+      }
+      kcmclimit = (this.data.cellHeight * (bar_list[i].jcJs - bar_list[i].jcKs + 1)) / (this.data.cellWidth * this.data.barRatio / 3 * 1.3) * 3
+      bar_list[i].shortkcmc = bar_list[i].title.length > kcmclimit ? bar_list[i].title.substring(0, kcmclimit - 3) + '...' : bar_list[i].title
+    }
+    this.setData({ bar_list })
   },
 
   /**
    * 显示详细信息
    */
-  showDialog(e: any): void {
+  showDialog(e: any) {
     const index: number = e.currentTarget.dataset.index
     const item = this.data.bar_list[index]
-    this.setData({ dialog: item2dialog(item, item.day) })
+    this.setData({ dialog: classDetailItem2dialog(item, item.day) })
   },
 
   onShareAppMessage() {
-    const jas = this.data.jas_display_list[this.data.jas_display_selected]
-    const jxlmc = jas.JXLMC
-    const jsmph = jas.JSMPH
+    const { jxlmc, jsmph } = this.data.jas_display_list[this.data.jas_display_selected]
     return {
       title: '教室概览',
       path: 'pages/overview/overview'

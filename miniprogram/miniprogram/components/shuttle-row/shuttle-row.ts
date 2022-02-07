@@ -25,7 +25,7 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    render(): void {
+    render() {
       const now = new Date()
       const deltaTime = parseTime(this.properties.time) - parseTime(`${now.getHours()}:${now.getMinutes()}`)
       if (!this.properties.via) {
@@ -42,21 +42,21 @@ Component({
     }
   },
   lifetimes: {
-    attached(): void {
+    attached() {
       if (!this.data.autoRefresh) {
         this.data.autoRefresh = setInterval(() => this.render(), 30000)
       }
     },
-    detached(): void {
+    detached() {
       clearInterval(this.data.autoRefresh as number)
       this.data.autoRefresh = 0
     }
   },
   observers: {
-    time(): void {
+    time() {
       this.render()
     },
-    via(): void {
+    via() {
       this.render()
     }
   }

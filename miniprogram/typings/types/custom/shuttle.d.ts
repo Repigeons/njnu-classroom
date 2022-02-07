@@ -1,4 +1,8 @@
-interface IShuttleRoute extends Array<string> { }
+interface IShuttleRoute {
+  readonly startTime: string
+  readonly startStation: string
+  readonly endStation: string
+}
 
 interface IShuttle {
   readonly stations: Array<IPosition>
