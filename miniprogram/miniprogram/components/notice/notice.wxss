@@ -1,1 +1,10 @@
 /* components/notice/notice.wxss */
+.dialog-text {
+  text-align:left;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dialog-text {
+    color: #ffffff88;
+  }
+}
