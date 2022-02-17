@@ -9,7 +9,6 @@ import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.RedisService
 import com.google.gson.Gson
-import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -18,6 +17,7 @@ import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 @Service
@@ -33,7 +33,22 @@ open class CacheServiceImpl(
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Async
-    override fun flush(lock: RLock?): Future<Void> {
+    override fun flush(): Future<Void> {
+        val rLock = redissonClient.getLock("lock:flush")
+        try {
+            if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+                logger.info("开始刷新缓存数据...")
+                this.actFlush()
+            } else {
+                logger.info("刷新缓存数据已处于运行中...")
+            }
+        } finally {
+            rLock?.unlock()
+        }
+        return AsyncResult(null)
+    }
+
+    private fun actFlush() {
         val startTime = Date()
 
         val t1 = thread { flushEmptyClassrooms() }
@@ -43,8 +58,6 @@ open class CacheServiceImpl(
 
         val endTime = Date()
         logger.info("缓存刷新完成. 共计耗时 {} 秒", (endTime.time - startTime.time) / 1000)
-        lock?.unlock()
-        return AsyncResult(null)
     }
 
     private fun flushEmptyClassrooms() {

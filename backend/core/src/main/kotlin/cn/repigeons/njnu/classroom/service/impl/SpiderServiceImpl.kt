@@ -19,7 +19,7 @@ import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
-import org.redisson.api.RLock
+import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
@@ -28,18 +28,20 @@ import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.Future
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 @Service
 open class SpiderServiceImpl(
     private val gson: Gson,
+    private val redissonClient: RedissonClient,
+    private val redisService: RedisService,
+    private val cookieService: CookieService,
     private val correctionMapper: CorrectionMapper,
     private val jasMapper: JasMapper,
     private val kcbMapper: KcbMapper,
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
-    private val redisService: RedisService,
-    private val cookieService: CookieService,
     @Value("env") private val env: String
 ) : SpiderService {
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -47,7 +49,22 @@ open class SpiderServiceImpl(
     private lateinit var httpClient: OkHttpClient
 
     @Async
-    override fun run(lock: RLock?): Future<Void> {
+    override fun run(): Future<Void> {
+        val rLock = redissonClient.getLock("lock:spider")
+        try {
+            if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+                logger.info("开始课程信息收集工作...")
+                this.actRun()
+            } else {
+                logger.info("课程信息收集工作已处于运行中...")
+            }
+        } finally {
+            rLock?.unlock()
+        }
+        return AsyncResult(null)
+    }
+
+    private fun actRun() {
         val startTime = Date()
 
         val cookies = cookieService.getCookies()
@@ -87,8 +104,6 @@ open class SpiderServiceImpl(
 
         val endTime = Date()
         logger.info("本轮课程信息收集工作成功完成. 共计耗时 {} 秒", (endTime.time - startTime.time) / 1000)
-        lock?.unlock()
-        return AsyncResult(null)
     }
 
     private fun getTimeInfo(): TimeInfo {

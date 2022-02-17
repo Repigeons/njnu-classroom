@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 @Service
 open class EmptyClassroomServiceImpl(
@@ -103,10 +102,7 @@ open class EmptyClassroomServiceImpl(
 
         // 检查数据库一致性
         if (!spiderService.checkWithEhall(item.jasdm, day, jc, item.zylxdm)) {
-            val rLock = redissonClient.getLock("spider")
-            if (rLock.tryLock(60, TimeUnit.MINUTES)) {
-                spiderService.run(rLock)
-            }
+            spiderService.run()
             val content = "验证一站式平台：数据不一致\n" +
                     "操作方案：更新数据库\n" +
                     "反馈数据详情：$detail"

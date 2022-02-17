@@ -53,7 +53,19 @@ class ShuttleController(
     fun uploadShuttleImage(
         @RequestParam file: MultipartFile
     ): JsonResponse {
+        if (!serviceSwitch.value) {
+            return JsonResponse(
+                status = Status.IM_A_TEAPOT,
+                message = "service off"
+            )
+        }
         shuttleService.sendShuttleImage(file)
+        return JsonResponse(status = Status.ACCEPTED)
+    }
+
+    @PostMapping("flush")
+    fun flushShuttleLine(): JsonResponse {
+        shuttleService.flush()
         return JsonResponse(status = Status.ACCEPTED)
     }
 }

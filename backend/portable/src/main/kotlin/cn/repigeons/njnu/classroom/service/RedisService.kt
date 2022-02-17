@@ -1,5 +1,6 @@
 package cn.repigeons.njnu.classroom.service
 
+import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -34,5 +35,17 @@ open class RedisService(
             bucket.getAndSet(value)
         else
             bucket.getAndSet(value, expire, TimeUnit.SECONDS)
+    }
+
+    fun lock(name: String): RLock {
+        val rLock = redissonClient.getLock(name)
+        rLock.lock()
+        return rLock
+    }
+
+    fun lock(name: String, time: Long, unit: TimeUnit): RLock {
+        val rLock = redissonClient.getLock(name)
+        rLock.lock(time, unit)
+        return rLock
     }
 }
