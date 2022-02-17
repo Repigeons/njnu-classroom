@@ -11,6 +11,7 @@ class ScheduledTask(
 ) {
     init {
         thread {
+            cacheService.flush()
             flushClassroomList()
         }
     }
