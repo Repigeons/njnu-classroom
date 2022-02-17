@@ -26,7 +26,7 @@ Component({
     onButton(e) {
       const index = +e.target.dataset.index
       const button = this.properties.buttons[index]
-      if (button.tap) {
+      if (typeof button.tap == 'function') {
         button.tap(e)
       } else {
         console.warn(`Button ["${button.text}"] does not have a method on handler "tap"`)

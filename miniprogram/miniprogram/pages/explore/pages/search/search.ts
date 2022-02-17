@@ -148,7 +148,6 @@ Page({
     * 显示详细信息
     */
   showDialog(e: any) {
-    console.debug(e)
     const index: number = e.currentTarget.dataset.index
     const item = this.data.result[index]
     this.setData({ dialog: classDetailItem2dialog(item, item.day) })

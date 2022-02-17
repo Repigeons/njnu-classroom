@@ -16,12 +16,12 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    close(_this: any) {
-      console.debug('data', _this.data)
+    close() {
+      console.debug('notice:', this.data)
       wx.setStorage({
         key: 'notice',
-        data: _this.data.timestamp,
-        success: () => _this.setData({ timestamp: 0, date: '', text: '' })
+        data: this.data.timestamp,
+        success: () => this.setData({ timestamp: 0, date: '', text: '' })
       })
     }
   },
@@ -30,7 +30,7 @@ Component({
       this.setData({
         dialog_buttons: [{
           text: '不再显示',
-          tap: () => this.close(this)
+          tap: () => this.close()
         }]
       })
       request({

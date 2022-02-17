@@ -6,6 +6,7 @@ const servers: Record<string, string> = {
 }
 const { envVersion } = wx.getAccountInfoSync().miniProgram as any
 export const server =  servers[envVersion as string]
+console.info("Using server", server)
 
 export function request(e: {
   path: string,

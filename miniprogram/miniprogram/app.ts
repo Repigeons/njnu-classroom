@@ -19,12 +19,13 @@ App<IAppOption>({
       "/api/position.json",
       "/api/classrooms.json",
       "/explore/grids.json",
+      "/explore/shuttle.json?day=",
     ]
     wx.getStorageInfo({
       success(res) {
         res.keys.forEach(key => {
           const del = !storageKeys.includes(key)
-          console.info("storage key", key, del)
+          console.info("delete storage", key, del)
           if (del) wx.removeStorage({ key })
         })
       }

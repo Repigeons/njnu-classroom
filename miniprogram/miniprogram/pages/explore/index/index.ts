@@ -26,17 +26,10 @@ Page({
     }
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow() {
-
-  },
-
   onTapGrids(e: any) {
     const methods: Record<string, () => void> = {
       developing: () => wx.showToast({ title: "敬请期待", icon: 'none' }),
-      calendar: () => wx.previewImage({ urls: [`${server}/images/calendar.jpg`] }),
+      calendar: () => wx.previewImage({ urls: [`${server}/images/calendar.jpg`], fail: console.error }),
       support: () => interstitialAd?.show().catch(console.error),
     }
     const method = methods[e.detail.method]

@@ -62,7 +62,6 @@ Page({
   async preloadInfo() {
     // 加载教学楼位置
     const jxl_array = await getJxlPosition()
-    console.debug(jxl_array)
     this.setData({ jxl_array })
     // 初始化至当前状态
     this.dangqianriqi()
@@ -85,7 +84,6 @@ Page({
     const res: WechatMiniprogram.GetLocationSuccessCallbackResult = await wx.getLocation({
       type: 'gcj02'
     }) as any as WechatMiniprogram.GetLocationSuccessCallbackResult
-    console.debug('location', res)
     let minIndex: number = 0
     let minDistance: number = 0xffffffff
     this.data.jxl_array.forEach((jxl, index) => {
