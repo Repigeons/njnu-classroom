@@ -10,6 +10,11 @@
     "url": "../pages/shuttle/shuttle"
   },
   {
+    "text": "校园地图",
+    "imgUrl": "/images/map.png",
+    "url": "../pages/map/map"
+  }
+  {
     "text": "校历",
     "imgUrl": "/images/calendar.png",
     "method": "calendar"

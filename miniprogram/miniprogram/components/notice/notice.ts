@@ -17,7 +17,6 @@ Component({
    */
   methods: {
     close() {
-      console.debug('notice:', this.data)
       wx.setStorage({
         key: 'notice',
         data: this.data.timestamp,

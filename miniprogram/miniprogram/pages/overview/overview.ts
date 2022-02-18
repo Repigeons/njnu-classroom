@@ -160,7 +160,7 @@ Page({
       path: "/api/overview.json",
       data: { jasdm }
     })
-    console.debug("overview.json", res)
+    console.debug("overview.json", res.data)
     const bar_list = res.data as Array<IClassroomRow>
     let kcmclimit = 0
     const dayMapper: Record<string, number> = {

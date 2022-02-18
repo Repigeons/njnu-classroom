@@ -10,7 +10,8 @@
       "root": "pages/explore/pages",
       "pages": [
         "search/search",
-        "shuttle/shuttle"
+        "shuttle/shuttle",
+        "map/map"
       ]
     }
   ],

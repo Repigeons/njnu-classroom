@@ -161,7 +161,7 @@ Page({
         jc: this.data.jc_selected + 1
       }
     })
-    console.debug("empty.json", res)
+    console.debug("empty.json", res.data)
     this.setData({
       serve: res.status == 200,
       result: res.data as Array<IClassroomRow>

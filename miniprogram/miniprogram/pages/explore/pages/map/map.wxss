@@ -1,0 +1,24 @@
+/* pages/explore/pages/map/map.wxss */
+.map {
+  height: calc(100vh - 50px);
+  width: 100%;
+}
+
+.pickers {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+}
+
+.picker {
+  line-height: 48px;
+  height: 48px;
+  width: 50%;
+  margin: 1px;
+  border-radius: 5px;
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 2px;
+  background-color: lightblue;
+}
