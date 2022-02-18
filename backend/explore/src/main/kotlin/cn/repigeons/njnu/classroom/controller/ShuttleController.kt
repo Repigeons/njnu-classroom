@@ -63,7 +63,7 @@ class ShuttleController(
         return JsonResponse(status = Status.ACCEPTED)
     }
 
-    @PostMapping("flush")
+    @PostMapping("shuttle/flush")
     fun flushShuttleLine(): JsonResponse {
         shuttleService.flush()
         return JsonResponse(status = Status.ACCEPTED)
