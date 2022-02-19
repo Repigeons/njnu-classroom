@@ -1,21 +1,18 @@
 package cn.repigeons.njnu.classroom.component
 
-import cn.repigeons.njnu.classroom.service.CacheService
+import cn.repigeons.njnu.classroom.service.SpiderService
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import kotlin.concurrent.thread
 
 @Component
 class ScheduledTask(
-    private val cacheService: CacheService
+    private val spiderService: SpiderService,
+    @Value("env") private val env: String
 ) {
-    init {
-        thread {
-            cacheService.flush()
-            flushClassroomList()
-        }
+    @Scheduled(cron = "0 0 8 * * *")
+    fun runSpider() {
+        if (env == "pro")
+            spiderService.run()
     }
-
-    @Scheduled(cron = "0 0 9 * * *")
-    fun flushClassroomList() = cacheService.flushClassroomList()
 }

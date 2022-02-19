@@ -1,10 +1,11 @@
 package cn.repigeons.njnu.classroom.service
 
-import java.util.concurrent.Future
-
 interface CacheService {
-    fun flush(): Future<*>
+    fun flush()
 
     fun flushClassroomList()
-    fun getClassroomList(): Map<String, *>
+    fun getClassroomList(): Map<*, *>
+
+    fun flushBuildingPosition()
+    fun getBuildingPosition(): List<*>
 }

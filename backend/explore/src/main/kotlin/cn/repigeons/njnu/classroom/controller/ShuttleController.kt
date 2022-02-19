@@ -4,19 +4,19 @@ import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.component.ServiceSwitch
-import cn.repigeons.njnu.classroom.component.StaticData
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import com.alibaba.fastjson.JSON
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
+import kotlin.concurrent.thread
 
 
 @RestController
 @RequestMapping("explore")
 class ShuttleController(
     private val serviceSwitch: ServiceSwitch,
-    private val staticData: StaticData,
     private val redisService: RedisService,
     private val shuttleService: ShuttleService
 ) {
@@ -33,7 +33,7 @@ class ShuttleController(
         if (day.isNullOrBlank())
             return JsonResponse(
                 data = mapOf(
-                    Pair("stations", staticData.shuttleStationPosition),
+                    Pair("stations", shuttleService.getStationPosition()),
                 )
             )
         val weekday = Weekday.parse(day)
@@ -42,7 +42,7 @@ class ShuttleController(
         val direction2 = JSON.parseArray(redisService["explore:shuttle:${weekday.value}:2"])
         return JsonResponse(
             data = mapOf(
-                Pair("stations", staticData.shuttleStationPosition),
+                Pair("stations", shuttleService.getStationPosition()),
                 Pair("direction1", direction1),
                 Pair("direction2", direction2)
             )
@@ -63,9 +63,16 @@ class ShuttleController(
         return JsonResponse(status = Status.ACCEPTED)
     }
 
-    @PostMapping("shuttle/flush")
+    @Scheduled(cron = "0 0 7 * * *")
+    @PostMapping("shuttle/reload")
     fun flushShuttleLine(): JsonResponse {
-        shuttleService.flush()
+        shuttleService.flushStationPosition()
+        shuttleService.flushRoute()
         return JsonResponse(status = Status.ACCEPTED)
+    }
+
+    init {
+        thread { shuttleService.flushStationPosition() }
+        thread { shuttleService.flushRoute() }
     }
 }

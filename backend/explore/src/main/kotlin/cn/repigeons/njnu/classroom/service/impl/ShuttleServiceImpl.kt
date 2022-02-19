@@ -1,30 +1,35 @@
 package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.mbg.mapper.PositionsDynamicSqlSupport
+import cn.repigeons.njnu.classroom.mbg.mapper.PositionsMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.ShuttleMapper
+import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.ShuttleRoute
 import cn.repigeons.njnu.classroom.service.MailService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import com.alibaba.fastjson.JSONArray
+import com.google.gson.Gson
+import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.util.concurrent.Future
 
 @Service
 open class ShuttleServiceImpl(
+    private val gson: Gson,
     private val mailService: MailService,
     private val redisService: RedisService,
-    private val shuttleMapper: ShuttleMapper
+    private val shuttleMapper: ShuttleMapper,
+    private val positionsMapper: PositionsMapper
 ) : ShuttleService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Async
-    override fun flush(): Future<Void> {
+    override fun flushRoute() {
         Weekday.values().forEachIndexed { index, weekday ->
             val direction1 = JSONArray()
             val direction2 = JSONArray()
@@ -52,7 +57,6 @@ open class ShuttleServiceImpl(
             redisService["explore:shuttle:${weekday.value}:1"] = direction1.toJSONString()
             redisService["explore:shuttle:${weekday.value}:2"] = direction2.toJSONString()
         }
-        return AsyncResult(null)
     }
 
     @Async
@@ -72,4 +76,21 @@ open class ShuttleServiceImpl(
             attachment
         )
     }
+
+    @Async
+    override fun flushStationPosition() {
+        val positions = positionsMapper.select {
+            where(PositionsDynamicSqlSupport.Positions.kind, isEqualTo(2))
+        }.map { record ->
+            mapOf(
+                Pair("name", record.name),
+                Pair("position", listOf(record.latitude, record.longitude))
+            )
+        }
+        redisService["static:position:shuttleStation"] = gson.toJson(positions)
+    }
+
+    override fun getStationPosition(): List<*> = gson.fromJson(
+        redisService["static:position:shuttleStation"], List::class.java
+    )
 }

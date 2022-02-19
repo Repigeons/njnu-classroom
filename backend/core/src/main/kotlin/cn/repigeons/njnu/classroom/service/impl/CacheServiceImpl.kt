@@ -1,22 +1,18 @@
 package cn.repigeons.njnu.classroom.service.impl
 
-import cn.repigeons.njnu.classroom.mbg.mapper.DevMapper
-import cn.repigeons.njnu.classroom.mbg.mapper.JasMapper
-import cn.repigeons.njnu.classroom.mbg.mapper.ProMapper
-import cn.repigeons.njnu.classroom.mbg.mapper.select
+import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.RedisService
 import com.google.gson.Gson
+import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import java.util.*
-import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -28,12 +24,13 @@ open class CacheServiceImpl(
     private val jasMapper: JasMapper,
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
+    private val positionsMapper: PositionsMapper,
     @Value("env") private val env: String
 ) : CacheService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @Async
-    override fun flush(): Future<Void> {
+    override fun flush() {
         val rLock = redissonClient.getLock("lock:flush")
         try {
             if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
@@ -45,7 +42,6 @@ open class CacheServiceImpl(
         } finally {
             rLock?.unlock()
         }
-        return AsyncResult(null)
     }
 
     private fun actFlush() {
@@ -147,7 +143,23 @@ open class CacheServiceImpl(
         redisService["static:classrooms"] = gson.toJson(classrooms)
     }
 
-    override fun getClassroomList(): Map<String, *> = gson.fromJson<Map<String, *>>(
+    override fun getClassroomList(): Map<*, *> = gson.fromJson(
         redisService["static:classrooms"], Map::class.java
+    )
+
+    override fun flushBuildingPosition() {
+        val positions = positionsMapper.select {
+            where(PositionsDynamicSqlSupport.Positions.kind, isEqualTo(1))
+        }.map {
+            mapOf(
+                Pair("name", it.name),
+                Pair("position", listOf(it.latitude, it.longitude))
+            )
+        }
+        redisService["static:position:building"] = gson.toJson(positions)
+    }
+
+    override fun getBuildingPosition(): List<*> = gson.fromJson(
+        redisService["static:position:building"], List::class.java
     )
 }

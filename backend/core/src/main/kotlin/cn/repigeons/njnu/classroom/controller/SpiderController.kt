@@ -5,7 +5,6 @@ import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.component.ServiceSwitch
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.SpiderService
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -17,7 +16,6 @@ class SpiderController(
     private val spiderService: SpiderService,
     private val cacheService: CacheService
 ) {
-    @Scheduled(cron = "0 0 8 * * *")
     @PostMapping("run")
     fun runSpider(): JsonResponse {
         if (!serviceSwitch.value) {

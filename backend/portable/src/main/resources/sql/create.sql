@@ -145,3 +145,13 @@ create table if not exists shuttle
 )
     comment '校车时刻表';
 create index if not exists shuttle_working_route_start_time_index on shuttle (working, route, start_time);
+
+create table if not exists positions
+(
+    id        int         not null primary key,
+    name      varchar(32) not null comment '名称',
+    latitude  float(7, 5) not null comment '纬度',
+    longitude float(8, 5) not null comment '经度',
+    kind      smallint    not null comment '1=教学楼 2=校车站'
+)
+    comment '位置坐标';

@@ -3,8 +3,8 @@ package cn.repigeons.njnu.classroom.controller
 import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.component.Resources
 import cn.repigeons.njnu.classroom.component.ServiceSwitch
-import cn.repigeons.njnu.classroom.component.StaticData
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.OverviewService
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("api")
 class QueryController(
     private val serviceSwitch: ServiceSwitch,
-    private val staticData: StaticData,
+    private val resources: Resources,
     private val cacheService: CacheService,
     private val emptyClassroomService: EmptyClassroomService,
     private val overviewService: OverviewService,
@@ -83,8 +83,8 @@ class QueryController(
     fun getClassroomList() = JsonResponse(data = cacheService.getClassroomList())
 
     @GetMapping("position.json")
-    fun getPosition() = JsonResponse(data = staticData.buildingPosition)
+    fun getPosition() = JsonResponse(data = cacheService.getBuildingPosition())
 
     @GetMapping("zylxdm.json")
-    fun getZylxdm() = JsonResponse(data = staticData.zylxdm)
+    fun getZylxdm() = JsonResponse(data = resources.zylxdm)
 }

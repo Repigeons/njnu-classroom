@@ -17,7 +17,7 @@ class NoticeServiceImpl(
 ) : NoticeService {
     private val df = SimpleDateFormat("yyyy-MM-dd")
 
-    override fun getNotice(): JSONObject {
+    override fun get(): JSONObject {
         return redisService["notice"]?.let {
             JSON.parseObject(it)
         } ?: let {
@@ -33,17 +33,17 @@ class NoticeServiceImpl(
         }
     }
 
-    override fun setNotice(id: Int): JSONObject {
+    override fun set(id: Int): JSONObject {
         val record = noticeMapper.selectByPrimaryKey(id)
         val data = record2data(record)
         record?.run {
             redisService["notice"] = data.toJSONString()
             return data
         }
-        return getNotice()
+        return get()
     }
 
-    override fun addNotice(text: String): JSONObject {
+    override fun add(text: String): JSONObject {
         val record = NoticeRecord(
             time = Date(),
             text = text
