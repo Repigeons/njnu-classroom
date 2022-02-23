@@ -25,7 +25,7 @@ open class RedisService(
         if (expire == null)
             bucket.set(value)
         else
-            bucket.set(value, expire, TimeUnit.MILLISECONDS)
+            bucket.set(value, expire, TimeUnit.SECONDS)
     }
 
     @Transactional

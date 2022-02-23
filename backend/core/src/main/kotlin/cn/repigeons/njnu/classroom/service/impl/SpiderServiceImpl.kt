@@ -167,7 +167,7 @@ open class SpiderServiceImpl(
                 redisService.set(
                     "spider:time",
                     gson.toJson(timeInfo),
-                    3 * 24 * 3600 * 1000
+                    3 * 24 * 3600
                 )
                 timeInfo
             }
@@ -192,7 +192,7 @@ open class SpiderServiceImpl(
                 redisService.set(
                     "spider:building",
                     gson.toJson(building),
-                    3 * 24 * 3600 * 1000
+                    3 * 24 * 3600
                 )
                 building
             }
@@ -263,7 +263,7 @@ open class SpiderServiceImpl(
                 redisService.set(
                     "spider:corrections",
                     gson.toJson(corrections),
-                    3 * 24 * 3600 * 1000
+                    3 * 24 * 3600
                 )
                 corrections
             }

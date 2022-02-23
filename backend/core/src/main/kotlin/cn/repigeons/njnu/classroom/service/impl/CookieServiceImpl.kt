@@ -71,7 +71,7 @@ class CookieServiceImpl(
                 redisService.set(
                     "spider:cookies",
                     gson.toJson(cookies),
-                    30 * 60 * 1000
+                    30 * 60
                 )
                 cookies
             }
