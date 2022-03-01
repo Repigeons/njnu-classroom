@@ -7,6 +7,7 @@ import cn.repigeons.njnu.classroom.mbg.model.DevRecord
 import cn.repigeons.njnu.classroom.mbg.model.JasRecord
 import cn.repigeons.njnu.classroom.mbg.model.KcbRecord
 import cn.repigeons.njnu.classroom.model.TimeInfo
+import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.CookieService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
@@ -23,11 +24,9 @@ import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
@@ -36,6 +35,7 @@ open class SpiderServiceImpl(
     private val gson: Gson,
     private val redissonClient: RedissonClient,
     private val redisService: RedisService,
+    private val cacheService: CacheService,
     private val cookieService: CookieService,
     private val correctionMapper: CorrectionMapper,
     private val jasMapper: JasMapper,
@@ -49,7 +49,7 @@ open class SpiderServiceImpl(
     private lateinit var httpClient: OkHttpClient
 
     @Async
-    override fun run(): Future<Void> {
+    override fun run() {
         val rLock = redissonClient.getLock("lock:spider")
         try {
             if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
@@ -61,7 +61,7 @@ open class SpiderServiceImpl(
         } finally {
             rLock?.unlock()
         }
-        return AsyncResult(null)
+        cacheService.flush()
     }
 
     private fun actRun() {
