@@ -35,7 +35,7 @@ Page({
     /**滚动位置*/
     scrollId: String(),
 
-    name2Number: {} as Record<string, number>,
+    name2Number: Object() as Record<string, number>,
 
     nearestHint: "(最近)",
   },
@@ -63,7 +63,7 @@ Page({
         stations.sort((a, b) => a.distance - b.distance)
         stations[0].rangeKey += this.data.nearestHint
         stations.sort((a, b) => a.number - b.number)
-        const name2Number: Record<string, number> = {}
+        const name2Number: Record<string, number> = Object()
         stations.forEach(v => name2Number[v.name] = v.number)
         this.setData({ stations, name2Number, station_selected: stations.findIndex(v => v.name != v.rangeKey) })
         this.bindWeekChange({ detail: { value: (new Date().getDay() + 6) % 7 } })
@@ -103,30 +103,24 @@ Page({
     this.setData({ station_selected: +e.detail.value })
   },
 
-  bindWeekChange(e: { detail: { value: number } }) {
+  async bindWeekChange(e: { detail: { value: number } }) {
     const day_selected = +e.detail.value
     this.setData({ day_selected: day_selected })
-    getShuttle(this.data.rq_array[day_selected].key).then(iShuttle => {
-      this.setData({
-        direction1: iShuttle.direction1,
-        direction2: iShuttle.direction2,
-      })
-      this.redirect()
+    const shuttle = await getShuttle(this.data.rq_array[day_selected].key)
+    this.setData({
+      direction1: shuttle.direction1,
+      direction2: shuttle.direction2,
     })
     this.redirect()
   },
 
-  uploadFile() {
-    wx.chooseImage({
-      count: 1,
-      fail: console.error,
-      success: (res) => {
-        uploadFile({
-          path: "/explore/shuttle/upload",
-          filePath: res.tempFiles[0].path,
-        }).then(() => wx.showToast({ title: '上传成功！' }))
-      }
+  async uploadFile() {
+    const res = await wx.chooseImage({ count: 1 }) as any
+    await uploadFile({
+      path: "/explore/shuttle/upload",
+      filePath: res.tempFiles[0].path,
     })
+    wx.showToast({ title: '上传成功！' })
   },
 
   onShareAppMessage() {

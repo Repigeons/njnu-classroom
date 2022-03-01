@@ -16,8 +16,9 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad(/*options*/) {
-    getExploreGrids().then(data => this.setData({ grids: data }))
+  async onLoad(/*options*/) {
+    const data = await getExploreGrids()
+    this.setData({ grids: data })
     if (wx.createInterstitialAd) {
       interstitialAd = wx.createInterstitialAd({ adUnitId: 'adunit-cbb4c40d86d77b8b' })
       interstitialAd.onLoad(() => { })

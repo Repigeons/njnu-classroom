@@ -11,10 +11,7 @@ async function getCache(args: { path: string, request: boolean }): Promise<strin
         })
     }
     try {
-        const res = await wx.getStorage({
-            key: args.path
-        }) as any
-        return res.data
+        return wx.getStorageSync(args.path)
     } catch {
         const res = await request({
             path: args.path

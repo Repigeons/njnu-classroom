@@ -10,7 +10,7 @@ const feedbackInterval: number = 5000 // 间隔时间（毫秒）
 Page({
   data: {
     // 筛选
-    jxl_array: {} as Array<IPosition>,
+    jxl_array: Array<IPosition>(),
     jxl_selected: 0,
     jxl_scroll: 0,
     rq_array: weekdays,
@@ -81,7 +81,7 @@ Page({
    * 获取当前定位并选择最近的教学楼
    */
   async dingwei() {
-    const res: WechatMiniprogram.GetLocationSuccessCallbackResult = await wx.getLocation({
+    const res = await wx.getLocation({
       type: 'gcj02'
     }) as any as WechatMiniprogram.GetLocationSuccessCallbackResult
     let minIndex: number = 0

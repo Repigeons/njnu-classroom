@@ -48,7 +48,7 @@ Component({
       }
     },
     detached() {
-      clearInterval(this.data.autoRefresh as number)
+      clearInterval(this.data.autoRefresh)
       this.data.autoRefresh = 0
     }
   },

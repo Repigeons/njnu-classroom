@@ -1,12 +1,12 @@
 const servers: Record<string, string> = {
-  local: "http://njnu-classroom.local",
-  develop: "https://t-classroom.njnu.xyz:8443",  // 开发版
-  trial: "https://t-classroom.njnu.xyz:8443",  // 体验版
-  release: "https://classroom.njnu.repigeons.cn",  // 正式版
+  local: "http://l-njnu-classroom.repigeons.cn",    // 本地版
+  develop: "https://t-njnu-classroom.repigeons.cn", // 开发版
+  trial: "https://t-njnu-classroom.repigeons.cn",   // 体验版
+  release: "https://njnu-classroom.repigeons.cn",   // 正式版
 }
 const { envVersion } = wx.getAccountInfoSync().miniProgram as any
 export const server =  servers[envVersion as string]
-console.info("Using server", server)
+console.info("# Using server", server)
 
 export function request(e: {
   path: string,

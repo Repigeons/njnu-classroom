@@ -33,7 +33,7 @@ Page({
     // 结果集
     bar_list: Array<IClassroomRow>(),
     empty: true,
-    dialog: {} as IClassDetailDialog
+    dialog: Object() as IClassDetailDialog
   },
 
   /**

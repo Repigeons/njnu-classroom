@@ -25,22 +25,21 @@ Component({
     }
   },
   lifetimes: {
-    attached() {
+    async attached() {
       this.setData({
         dialog_buttons: [{
           text: '不再显示',
           tap: () => this.close()
         }]
       })
-      request({
+      const res = await request({
         path: "/notice/get"
-      }).then(res => {
-        const { timestamp, date, text } = res.data
-        const notice = wx.getStorageSync('notice') as number
-        this.setData({
-          timestamp: (timestamp <= notice) ? 0 : timestamp,
-          date, text
-        })
+      })
+      const { timestamp, date, text } = res.data
+      const notice = wx.getStorageSync('notice') as number
+      this.setData({
+        timestamp: (timestamp <= notice) ? 0 : timestamp,
+        date, text
       })
     }
   }

@@ -30,7 +30,7 @@ Page({
     pageCount: -1,
     totalCount: 0,
     result: Array<IClassroomRow>(),
-    dialog: {} as IClassDetailDialog
+    dialog: Object() as IClassDetailDialog
   },
 
   /**
@@ -81,7 +81,7 @@ Page({
     this.setData({ jxl_selected: e.detail.value })
   },
   bindJcChange(e: any) {
-    const data: Record<string, string> = {}
+    const data: Record<string, string> = Object()
     data[`jc_${e.target.dataset.jc}_selected`] = e.detail.value
     this.setData(data)
 
