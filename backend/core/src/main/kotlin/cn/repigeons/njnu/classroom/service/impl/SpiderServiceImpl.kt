@@ -98,6 +98,7 @@ open class SpiderServiceImpl(
         logger.info("数据归并完成...")
 
         if (env == "pro") {
+            logger.info("Copy to `pro` from `dev`.")
             proMapper.truncate()
             proMapper.cloneFromDev()
         }
