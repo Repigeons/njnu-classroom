@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service
 class SearchServiceImpl(
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
-    @Value("env") private val env: String
+    @Value("\${env}") private val env: String
 ) : SearchService {
     override fun search(
         jcKs: Short,

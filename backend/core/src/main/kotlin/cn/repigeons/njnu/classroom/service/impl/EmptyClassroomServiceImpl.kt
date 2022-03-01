@@ -33,7 +33,7 @@ open class EmptyClassroomServiceImpl(
     private val proMapper: ProMapper,
     private val feedbackMetadataMapper: FeedbackMetadataMapper,
     private val correctionMapper: CorrectionMapper,
-    @Value("env") private val env: String
+    @Value("\${env}") private val env: String
 ) : EmptyClassroomService {
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
         if (day == null) return JsonResponse(

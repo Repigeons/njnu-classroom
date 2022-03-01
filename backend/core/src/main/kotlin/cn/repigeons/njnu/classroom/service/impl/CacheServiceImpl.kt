@@ -25,7 +25,7 @@ open class CacheServiceImpl(
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
     private val positionsMapper: PositionsMapper,
-    @Value("env") private val env: String
+    @Value("\${env}") private val env: String
 ) : CacheService {
     private val logger = LoggerFactory.getLogger(javaClass)
 

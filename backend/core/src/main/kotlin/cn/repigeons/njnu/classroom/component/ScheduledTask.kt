@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class ScheduledTask(
     private val spiderService: SpiderService,
-    @Value("env") private val env: String
+    @Value("\${env}") private val env: String
 ) {
     @Scheduled(cron = "0 0 8 * * *")
     fun runSpider() {
