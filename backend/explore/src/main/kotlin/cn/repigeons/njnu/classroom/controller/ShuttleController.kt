@@ -59,9 +59,25 @@ class ShuttleController(
                 message = "service off"
             )
         }
-        shuttleService.sendShuttleImage(file)
+        shuttleService.sendShuttleImage(file.originalFilename, file.bytes)
         return JsonResponse(status = Status.ACCEPTED)
     }
+
+    @PutMapping("shuttle/upload")
+    fun uploadShuttleImage(
+        @RequestParam(required = false) filename: String?,
+        @RequestBody bytes: ByteArray
+    ): JsonResponse {
+        if (!serviceSwitch.value) {
+            return JsonResponse(
+                status = Status.IM_A_TEAPOT,
+                message = "service off"
+            )
+        }
+        shuttleService.sendShuttleImage(filename, bytes)
+        return JsonResponse(status = Status.ACCEPTED)
+    }
+
 
     @Scheduled(cron = "0 0 7 * * *")
     @PostMapping("shuttle/reload")
