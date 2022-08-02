@@ -12,32 +12,39 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
-import org.openqa.selenium.firefox.FirefoxDriver
-import org.openqa.selenium.firefox.FirefoxOptions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.io.File
 
 @Service
 class CookieServiceImpl(
     private val gson: Gson,
     private val redisService: RedisService,
-    @Value("\${selenium.driver}") private val driver: String,
-    @Value("\${selenium.firefox.exec_path:}") firefox: String?,
-    @Value("\${selenium.firefox.geckodriver:}") geckodriver: String?,
-    @Value("\${account.username}") private val username: String,
-    @Value("\${account.password}") private val password: String,
-    @Value("\${account.gid}") private val gid: String,
+    @Value("\${browser-debugger.address:127.0.0.1}")
+    private val browserAddr: String,
+    @Value("\${browser-debugger.port:9222}")
+    private val browserPort: Int,
+    @Value("\${account.username}")
+    private val username: String,
+    @Value("\${account.password}")
+    private val password: String,
+    @Value("\${account.gid}")
+    private val gid: String,
 ) : CookieService {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val firefoxOptions = FirefoxOptions()
-    private val chromeOptions = ChromeOptions()
+    private val driver: WebDriver
 
     init {
-        System.getProperties().setProperty("webdriver.gecko.driver", geckodriver)
-        firefoxOptions.setBinary(firefox)
-        firefoxOptions.addArguments("-headless")
-        chromeOptions.addArguments("--headless", "--no-sandbox", "--disable-dev-shm-usage")
+        // 103.0.5060.134
+        javaClass.getResourceAsStream("/chromedriver")?.use { `in` ->
+            val file = File("/usr/bin/chromedriver")
+            if (!file.exists())
+                file.outputStream().use { `out` -> `in`.copyTo(`out`) }
+        }
+        val options = ChromeOptions()
+        options.setExperimentalOption("debuggerAddress", "$browserAddr:$browserPort")
+        driver = ChromeDriver(options)
     }
 
     override fun getCookies(): List<Cookie> {
@@ -46,18 +53,13 @@ class CookieServiceImpl(
                 gson.fromJson(it, object : TypeToken<List<Map<String, String>>>() {}.type)
             }
             ?: let {
-                val webDriver: WebDriver = when (driver) {
-                    "chromium" -> ChromeDriver(chromeOptions)
-                    "firefox" -> FirefoxDriver(firefoxOptions)
-                    else -> throw IllegalArgumentException()
-                }
-                webDriver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
+                driver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
                 Thread.sleep(5000)
-                webDriver.switchTo().defaultContent()
-                webDriver.findElement(By.id("username")).sendKeys(username)
-                webDriver.findElement(By.id("password")).sendKeys(password)
-                webDriver.findElement(By.id("login_submit")).click()
-                val cookies = webDriver.manage().cookies
+                driver.switchTo().defaultContent()
+                driver.findElement(By.id("username")).sendKeys(username)
+                driver.findElement(By.id("password")).sendKeys(password)
+                driver.findElement(By.id("login_submit")).click()
+                val cookies = driver.manage().cookies
                     .filter { it.name in listOf("MOD_AUTH_CAS", "_WEU") }
                     .map {
                         mapOf(
@@ -67,7 +69,6 @@ class CookieServiceImpl(
                             Pair("domain", it.domain),
                         )
                     }
-                webDriver.quit()
                 redisService.set(
                     "spider:cookies",
                     gson.toJson(cookies),
