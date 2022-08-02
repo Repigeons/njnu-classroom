@@ -40,7 +40,8 @@ open class SpiderServiceImpl(
     private val kcbMapper: KcbMapper,
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
-    @Value("\${env}") private val env: String
+    @Value("\${spring.profiles.active}")
+    private val env: String
 ) : SpiderService {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val rqDateFormat = SimpleDateFormat("yyyy-MM-dd")

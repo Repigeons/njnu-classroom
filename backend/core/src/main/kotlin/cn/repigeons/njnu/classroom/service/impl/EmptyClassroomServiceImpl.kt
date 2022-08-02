@@ -32,7 +32,8 @@ open class EmptyClassroomServiceImpl(
     private val correctionMapper: CorrectionMapper,
     @Value("\${spring.mail.receivers}")
     val receivers: Array<String>,
-    @Value("\${env}") private val env: String
+    @Value("\${spring.profiles.active}")
+    private val env: String
 ) : EmptyClassroomService {
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
         if (day == null) return JsonResponse(

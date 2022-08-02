@@ -22,5 +22,3 @@ account:
   username: ""
   password: ""
   gid: ""
-
-env: dev
