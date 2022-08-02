@@ -1,51 +1,27 @@
 package cn.repigeons.njnu.classroom.service
 
-import org.redisson.api.RLock
-import org.redisson.api.RedissonClient
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
-import java.util.concurrent.TimeUnit
+interface RedisService {
+    operator fun set(key: String, value: String)
+    operator fun get(key: String): String?
 
-@Service
-open class RedisService(
-    private val redissonClient: RedissonClient
-) {
-    operator fun get(key: String) = this.get<String>(key)
-    operator fun set(key: String, value: String) = this.set(key, value, null)
+    // String
+    fun <T> set(key: String, value: T, expire: Long? = null)
+    fun <T> get(key: String, clazz: Class<T>): T?
+    fun del(key: String): Boolean
+    fun hasKey(key: String): Boolean
 
-    @Transactional
-    open fun delete(key: String) = redissonClient.getBucket<Any>(key).delete()
+    // Hash
+    fun <T> hSet(key: String, field: String, value: T): T?
+    fun <T> hGet(key: String, field: String): T?
+    fun <T> hKeys(key: String): Set<String>
+    fun <T> hGetAll(key: String): MutableMap<String, T>
+    fun <T> hSet(key: String, values: Map<String, T>)
+    fun hDel(key: String, field: String): Boolean
 
-    @Transactional
-    open fun <T> get(key: String, clazz: Class<T>? = null): T? = redissonClient.getBucket<T>(key).get()
+    // List
 
-    @Transactional
-    open fun <T> set(key: String, value: T, expire: Long?) {
-        val bucket = redissonClient.getBucket<T>(key)
-        if (expire == null)
-            bucket.set(value)
-        else
-            bucket.set(value, expire, TimeUnit.SECONDS)
-    }
+    // Set
 
-    @Transactional
-    open fun <T> getAndSet(key: String, value: T, expire: Long? = null): T? {
-        val bucket = redissonClient.getBucket<T>(key)
-        return if (expire == null)
-            bucket.getAndSet(value)
-        else
-            bucket.getAndSet(value, expire, TimeUnit.SECONDS)
-    }
-
-    fun lock(name: String): RLock {
-        val rLock = redissonClient.getLock(name)
-        rLock.lock()
-        return rLock
-    }
-
-    fun lock(name: String, time: Long, unit: TimeUnit): RLock {
-        val rLock = redissonClient.getLock(name)
-        rLock.lock(time, unit)
-        return rLock
-    }
+    //
+    fun expire(key: String, expire: Long): Boolean
 }

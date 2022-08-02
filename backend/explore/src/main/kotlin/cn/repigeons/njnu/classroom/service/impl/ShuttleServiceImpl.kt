@@ -6,23 +6,25 @@ import cn.repigeons.njnu.classroom.mbg.mapper.PositionsMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.ShuttleMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.ShuttleRoute
-import cn.repigeons.njnu.classroom.service.MailService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
+import cn.repigeons.njnu.classroom.util.EmailUtil
 import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.alibaba.fastjson.JSONArray
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
 open class ShuttleServiceImpl(
-    private val mailService: MailService,
     private val redisService: RedisService,
     private val shuttleMapper: ShuttleMapper,
-    private val positionsMapper: PositionsMapper
+    private val positionsMapper: PositionsMapper,
+    @Value("\${spring.mail.receivers}")
+    val receivers: Array<String>
 ) : ShuttleService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -66,9 +68,11 @@ open class ShuttleServiceImpl(
             outputStream().use { it.write(bytes) }
         }
         logger.info("send shuttle image file: {}", attachment.name)
-        mailService.send(
+        EmailUtil.sendFile(
+            nickname = "南师教室",
             subject = "【南师教室】有人上传校车时刻表.${extension}",
             content = "",
+            receivers = receivers,
             attachment
         )
     }

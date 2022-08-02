@@ -11,12 +11,5 @@ spring:
   mail:
     host: smtp.repigeons.cn
     port: 465
-    username: info@repigeons.cn
-    password: ""
-    properties:
-      mail:
-        smtp:
-          ssl:
-            enable: true
-
-env: dev
+    username: ''
+    password: ''

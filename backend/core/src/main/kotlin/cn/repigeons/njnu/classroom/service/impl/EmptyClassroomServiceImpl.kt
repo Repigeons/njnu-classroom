@@ -9,8 +9,8 @@ import cn.repigeons.njnu.classroom.mbg.model.FeedbackMetadataRecord
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
-import cn.repigeons.njnu.classroom.service.MailService
 import cn.repigeons.njnu.classroom.service.SpiderService
+import cn.repigeons.njnu.classroom.util.EmailUtil
 import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
@@ -25,12 +25,13 @@ import java.util.*
 @Service
 open class EmptyClassroomServiceImpl(
     private val redissonClient: RedissonClient,
-    private val mailService: MailService,
     private val cacheService: CacheService,
     private val spiderService: SpiderService,
     private val proMapper: ProMapper,
     private val feedbackMetadataMapper: FeedbackMetadataMapper,
     private val correctionMapper: CorrectionMapper,
+    @Value("\${spring.mail.receivers}")
+    val receivers: Array<String>,
     @Value("\${env}") private val env: String
 ) : EmptyClassroomService {
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
@@ -101,7 +102,12 @@ open class EmptyClassroomServiceImpl(
             val content = "验证一站式平台：数据不一致\n" +
                     "操作方案：更新数据库\n" +
                     "反馈数据详情：$detail"
-            mailService.sendPlain(subject, content)
+            EmailUtil.send(
+                nickname = "南师教室",
+                subject = subject,
+                content = content,
+                receivers = receivers
+            )
             return
         }
 
@@ -110,7 +116,12 @@ open class EmptyClassroomServiceImpl(
             val content = "验证一站式平台：数据一致（非空教室）\n" +
                     "操作方案：${null}\n" +
                     "反馈数据详情：$detail"
-            mailService.sendPlain(subject, content)
+            EmailUtil.send(
+                nickname = "南师教室",
+                subject = subject,
+                content = content,
+                receivers = receivers
+            )
             return
         } else {
             val map = autoCorrect(
@@ -127,7 +138,12 @@ open class EmptyClassroomServiceImpl(
                     "本周计数：${weekCount}\n" +
                     "操作方案：${if (weekCount == totalCount) null else "自动纠错"}\n" +
                     "反馈数据详情：$detail"
-            mailService.sendPlain(subject, content)
+            EmailUtil.send(
+                nickname = "南师教室",
+                subject = subject,
+                content = content,
+                receivers = receivers
+            )
             return
         }
     }
