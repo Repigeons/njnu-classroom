@@ -11,11 +11,10 @@ import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.MailService
 import cn.repigeons.njnu.classroom.service.SpiderService
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import com.alibaba.fastjson.serializer.SerializerFeature
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.redisson.api.RedissonClient
 import org.springframework.beans.factory.annotation.Value
@@ -25,7 +24,6 @@ import java.util.*
 
 @Service
 open class EmptyClassroomServiceImpl(
-    private val gson: Gson,
     private val redissonClient: RedissonClient,
     private val mailService: MailService,
     private val cacheService: CacheService,
@@ -46,10 +44,7 @@ open class EmptyClassroomServiceImpl(
         )
         val rMap = redissonClient.getMap<String, String>("empty")
         val classrooms = rMap["$jxl:${day.value}"]?.let {
-            gson.fromJson<List<EmptyClassroom>>(
-                it,
-                object : TypeToken<List<EmptyClassroom>>() {}.type
-            )
+            GsonUtil.fromJson<List<EmptyClassroom>>(it)
         } ?: return JsonResponse(
             status = Status.BAD_REQUEST,
             message = "无效参数: [jxl]"

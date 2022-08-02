@@ -5,7 +5,7 @@ import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.RedisService
-import com.google.gson.Gson
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
@@ -18,7 +18,6 @@ import kotlin.concurrent.thread
 
 @Service
 open class CacheServiceImpl(
-    private val gson: Gson,
     private val redissonClient: RedissonClient,
     private val redisService: RedisService,
     private val jasMapper: JasMapper,
@@ -76,7 +75,7 @@ open class CacheServiceImpl(
                         item.zylxdm = record.zylxdm!!
                         item
                     }
-                    rMap[key] = gson.toJson(value)
+                    rMap[key] = GsonUtil.toJson(value)
                 }
         } else {
             proMapper.select {}
@@ -95,7 +94,7 @@ open class CacheServiceImpl(
                         item.zylxdm = record.zylxdm!!
                         item
                     }
-                    rMap[key] = gson.toJson(value)
+                    rMap[key] = GsonUtil.toJson(value)
                 }
         }
         logger.info("Flush empty classroom completed.")
@@ -113,7 +112,7 @@ open class CacheServiceImpl(
                     val classroomName = records.firstOrNull()?.let { it.jxlmc + it.jsmph }
                     logger.info("Flushing overview: {}", classroomName)
                     val value = records.map { QueryResultItem(it) }
-                    rMap[key] = gson.toJson(value)
+                    rMap[key] = GsonUtil.toJson(value)
                 }
         } else {
             proMapper.select {}
@@ -124,7 +123,7 @@ open class CacheServiceImpl(
                     val classroomName = records.firstOrNull()?.let { it.jxlmc + it.jsmph }
                     logger.info("Flushing overview: {}", classroomName)
                     val value = records.map { QueryResultItem(it) }
-                    rMap[key] = gson.toJson(value)
+                    rMap[key] = GsonUtil.toJson(value)
                 }
         }
         logger.info("Flush overview completed.")
@@ -140,11 +139,11 @@ open class CacheServiceImpl(
                 )
             }
             .groupBy { it["jxlmc"]!! }
-        redisService["static:classrooms"] = gson.toJson(classrooms)
+        redisService["static:classrooms"] = GsonUtil.toJson(classrooms)
     }
 
-    override fun getClassroomList(): Map<*, *> = gson.fromJson(
-        redisService["static:classrooms"], Map::class.java
+    override fun getClassroomList(): Map<*, *> = GsonUtil.fromJson(
+        redisService["static:classrooms"]!!, Map::class.java
     )
 
     override fun flushBuildingPosition() {
@@ -156,10 +155,10 @@ open class CacheServiceImpl(
                 Pair("position", listOf(it.latitude, it.longitude))
             )
         }
-        redisService["static:position:building"] = gson.toJson(positions)
+        redisService["static:position:building"] = GsonUtil.toJson(positions)
     }
 
-    override fun getBuildingPosition(): List<*> = gson.fromJson(
-        redisService["static:position:building"], List::class.java
+    override fun getBuildingPosition(): List<*> = GsonUtil.fromJson(
+        redisService["static:position:building"]!!, List::class.java
     )
 }

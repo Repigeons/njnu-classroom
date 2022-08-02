@@ -2,8 +2,7 @@ package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.service.CookieService
 import cn.repigeons.njnu.classroom.service.RedisService
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -19,7 +18,6 @@ import java.io.File
 
 @Service
 class CookieServiceImpl(
-    private val gson: Gson,
     private val redisService: RedisService,
     @Value("\${browser-debugger.address:127.0.0.1}")
     private val browserAddr: String,
@@ -48,34 +46,32 @@ class CookieServiceImpl(
     }
 
     override fun getCookies(): List<Cookie> {
-        val cookies = redisService["spider:cookies"]
-            ?.let {
-                gson.fromJson(it, object : TypeToken<List<Map<String, String>>>() {}.type)
-            }
-            ?: let {
-                driver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
-                Thread.sleep(5000)
-                driver.switchTo().defaultContent()
-                driver.findElement(By.id("username")).sendKeys(username)
-                driver.findElement(By.id("password")).sendKeys(password)
-                driver.findElement(By.id("login_submit")).click()
-                val cookies = driver.manage().cookies
-                    .filter { it.name in listOf("MOD_AUTH_CAS", "_WEU") }
-                    .map {
-                        mapOf(
-                            Pair("name", it.name),
-                            Pair("value", it.value),
-                            Pair("path", it.path),
-                            Pair("domain", it.domain),
-                        )
-                    }
-                redisService.set(
-                    "spider:cookies",
-                    gson.toJson(cookies),
-                    30 * 60
-                )
-                cookies
-            }
+        val cookies = redisService["spider:cookies"]?.let {
+            GsonUtil.fromJson<List<Map<String, String>>>(it)
+        } ?: let {
+            driver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
+            Thread.sleep(5000)
+            driver.switchTo().defaultContent()
+            driver.findElement(By.id("username")).sendKeys(username)
+            driver.findElement(By.id("password")).sendKeys(password)
+            driver.findElement(By.id("login_submit")).click()
+            val cookies = driver.manage().cookies
+                .filter { it.name in listOf("MOD_AUTH_CAS", "_WEU") }
+                .map {
+                    mapOf(
+                        Pair("name", it.name),
+                        Pair("value", it.value),
+                        Pair("path", it.path),
+                        Pair("domain", it.domain),
+                    )
+                }
+            redisService.set(
+                "spider:cookies",
+                GsonUtil.toJson(cookies),
+                30 * 60
+            )
+            cookies
+        }
         logger.info("Cookies = {}", cookies)
         return cookies.map {
             Cookie.Builder()

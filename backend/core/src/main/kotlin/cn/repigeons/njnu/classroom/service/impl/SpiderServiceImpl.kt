@@ -11,11 +11,10 @@ import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.CookieService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONArray
 import com.alibaba.fastjson.JSONObject
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -32,7 +31,6 @@ import kotlin.concurrent.thread
 
 @Service
 open class SpiderServiceImpl(
-    private val gson: Gson,
     private val redissonClient: RedissonClient,
     private val redisService: RedisService,
     private val cacheService: CacheService,
@@ -108,95 +106,91 @@ open class SpiderServiceImpl(
     }
 
     private fun getTimeInfo(): TimeInfo {
-        val result = redisService["spider:time"]
-            ?.let {
-                gson.fromJson(it, object : TypeToken<TimeInfo>() {}.type)
-            }
-            ?: let {
-                val timeInfo = TimeInfo()
-                val request1 = Request.Builder()
-                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do")
-                    .build()
-                val response1 = httpClient.newCall(request1).execute()
-                val result1 = response1.body()?.string()
-                val data1 = JSON.parseObject(result1)
-                    .getJSONObject("datas")
-                    .getJSONObject("cxdqxnxq")
-                    .getJSONArray("rows")
-                    .getJSONObject(0)
-                timeInfo.XNXQDM = data1.getString("DM")
-                timeInfo.XNDM = data1.getString("XNDM")
-                timeInfo.XQDM = data1.getString("XQDM")
+        val result = redisService["spider:time"]?.let {
+            GsonUtil.fromJson<TimeInfo>(it)
+        } ?: let {
+            val timeInfo = TimeInfo()
+            val request1 = Request.Builder()
+                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do")
+                .build()
+            val response1 = httpClient.newCall(request1).execute()
+            val result1 = response1.body()?.string()
+            val data1 = JSON.parseObject(result1)
+                .getJSONObject("datas")
+                .getJSONObject("cxdqxnxq")
+                .getJSONArray("rows")
+                .getJSONObject(0)
+            timeInfo.XNXQDM = data1.getString("DM")
+            timeInfo.XNDM = data1.getString("XNDM")
+            timeInfo.XQDM = data1.getString("XQDM")
 
-                val requestBody2 = FormBody.Builder()
-                    .add("XN", data1.getString("XNDM"))
-                    .add("XQ", data1.getString("XQDM"))
-                    .add("RQ", rqDateFormat.format(Date()))
-                    .build()
-                val request2 = Request.Builder()
-                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do")
-                    .post(requestBody2)
-                    .build()
-                val response2 = httpClient.newCall(request2).execute()
-                val result2 = response2.body()?.string()
-                val data2 = JSON.parseObject(result2)
-                    .getJSONObject("datas")
-                    .getJSONObject("cxrqdydzcxq")
-                    .getJSONArray("rows")
-                    .getJSONObject(0)
-                timeInfo.ZC = data2.getString("ZC").toInt()
-                timeInfo.ZZC = data2.getString("ZZC").toInt()
+            val requestBody2 = FormBody.Builder()
+                .add("XN", data1.getString("XNDM"))
+                .add("XQ", data1.getString("XQDM"))
+                .add("RQ", rqDateFormat.format(Date()))
+                .build()
+            val request2 = Request.Builder()
+                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do")
+                .post(requestBody2)
+                .build()
+            val response2 = httpClient.newCall(request2).execute()
+            val result2 = response2.body()?.string()
+            val data2 = JSON.parseObject(result2)
+                .getJSONObject("datas")
+                .getJSONObject("cxrqdydzcxq")
+                .getJSONArray("rows")
+                .getJSONObject(0)
+            timeInfo.ZC = data2.getString("ZC").toInt()
+            timeInfo.ZZC = data2.getString("ZZC").toInt()
 
-                val requestBody3 = FormBody.Builder()
-                    .add("XN", data1.getString("XNDM"))
-                    .add("XQ", data1.getString("XQDM"))
-                    .add("RQ", rqDateFormat.format(Date()))
-                    .build()
-                val request3 = Request.Builder()
-                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do")
-                    .post(requestBody3)
-                    .build()
-                val response3 = httpClient.newCall(request3).execute()
-                val result3 = response3.body()?.string()
-                val data3 = JSON.parseObject(result3)
-                    .getJSONObject("datas")
-                    .getJSONObject("cxxljc")
-                    .getJSONArray("rows")
-                    .getJSONObject(0)
-                timeInfo.ZJXZC = data3.getString("ZJXZC").toInt()
+            val requestBody3 = FormBody.Builder()
+                .add("XN", data1.getString("XNDM"))
+                .add("XQ", data1.getString("XQDM"))
+                .add("RQ", rqDateFormat.format(Date()))
+                .build()
+            val request3 = Request.Builder()
+                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do")
+                .post(requestBody3)
+                .build()
+            val response3 = httpClient.newCall(request3).execute()
+            val result3 = response3.body()?.string()
+            val data3 = JSON.parseObject(result3)
+                .getJSONObject("datas")
+                .getJSONObject("cxxljc")
+                .getJSONArray("rows")
+                .getJSONObject(0)
+            timeInfo.ZJXZC = data3.getString("ZJXZC").toInt()
 
-                redisService.set(
-                    "spider:time",
-                    gson.toJson(timeInfo),
-                    3 * 24 * 3600
-                )
-                timeInfo
-            }
+            redisService.set(
+                "spider:time",
+                GsonUtil.toJson(timeInfo),
+                3 * 24 * 3600
+            )
+            timeInfo
+        }
         logger.debug("Time info = {}", result)
         return result
     }
 
     private fun getAcademicBuildingInfo(): Map<String, List<JasRecord>> {
-        val result = redisService["spider:building"]
-            ?.let {
-                gson.fromJson(it, object : TypeToken<Map<String, List<JasRecord>>>() {}.type)
-            }
-            ?: let {
-                val building = jasMapper.select {}
-                    .groupBy { it.jxldmDisplay!! }
-                building.values.forEach {
-                    it.sortedBy { record ->
-                        record.jasmc
-                    }
+        val result = redisService["spider:building"]?.let {
+            GsonUtil.fromJson<Map<String, List<JasRecord>>>(it)
+        } ?: let {
+            val building = jasMapper.select {}
+                .groupBy { it.jxldmDisplay!! }
+            building.values.forEach {
+                it.sortedBy { record ->
+                    record.jasmc
                 }
-
-                redisService.set(
-                    "spider:building",
-                    gson.toJson(building),
-                    3 * 24 * 3600
-                )
-                building
             }
+
+            redisService.set(
+                "spider:building",
+                GsonUtil.toJson(building),
+                3 * 24 * 3600
+            )
+            building
+        }
         logger.debug("Building info = {}", result)
         return result
     }
@@ -255,19 +249,17 @@ open class SpiderServiceImpl(
     }
 
     private fun correctData() {
-        val corrections = redisService["spider:corrections"]
-            ?.let {
-                gson.fromJson(it, object : TypeToken<List<CorrectionRecord>>() {}.type)
-            }
-            ?: let {
-                val corrections = correctionMapper.select {}
-                redisService.set(
-                    "spider:corrections",
-                    gson.toJson(corrections),
-                    3 * 24 * 3600
-                )
-                corrections
-            }
+        val corrections = redisService["spider:corrections"]?.let {
+            GsonUtil.fromJson<List<CorrectionRecord>>(it)
+        } ?: let {
+            val corrections = correctionMapper.select {}
+            redisService.set(
+                "spider:corrections",
+                GsonUtil.toJson(corrections),
+                3 * 24 * 3600
+            )
+            corrections
+        }
         logger.debug("Corrections = {}", corrections)
 
         corrections.forEach { record ->

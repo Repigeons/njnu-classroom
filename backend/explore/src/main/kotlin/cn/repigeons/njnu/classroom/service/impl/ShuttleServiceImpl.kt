@@ -9,8 +9,8 @@ import cn.repigeons.njnu.classroom.model.ShuttleRoute
 import cn.repigeons.njnu.classroom.service.MailService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.alibaba.fastjson.JSONArray
-import com.google.gson.Gson
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
@@ -19,7 +19,6 @@ import java.io.File
 
 @Service
 open class ShuttleServiceImpl(
-    private val gson: Gson,
     private val mailService: MailService,
     private val redisService: RedisService,
     private val shuttleMapper: ShuttleMapper,
@@ -84,10 +83,10 @@ open class ShuttleServiceImpl(
                 Pair("position", listOf(record.latitude, record.longitude))
             )
         }
-        redisService["static:position:shuttleStation"] = gson.toJson(positions)
+        redisService["static:position:shuttleStation"] = GsonUtil.toJson(positions)
     }
 
-    override fun getStationPosition(): List<*> = gson.fromJson(
-        redisService["static:position:shuttleStation"], List::class.java
+    override fun getStationPosition() = GsonUtil.fromJson(
+        redisService["static:position:shuttleStation"]!!, List::class.java
     )
 }

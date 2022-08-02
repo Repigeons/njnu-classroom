@@ -14,7 +14,7 @@ class Resources(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    val zylxdm: JSONArray = JSON.parseArray(ResourceUtil.loadResource("/zylxdm.json"))
+    val zylxdm: JSONArray = JSON.parseArray(ResourceUtil.loadResourceText("/zylxdm.json"))
 
     init {
         thread { cacheService.flush() }

@@ -4,11 +4,10 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object ResourceUtil {
-    fun loadResource(name: String): String {
-        val stream = javaClass.getResourceAsStream(name)!!
-        val reader = BufferedReader(InputStreamReader(stream, "UTF-8"))
-        return reader.useLines { lines ->
-            lines.joinToString()
+    fun loadResourceText(name: String): String? =
+        javaClass.getResourceAsStream(name)?.use {
+            BufferedReader(InputStreamReader(it, "UTF-8"))
+        }?.useLines { lines ->
+            lines.joinToString("")
         }
-    }
 }
