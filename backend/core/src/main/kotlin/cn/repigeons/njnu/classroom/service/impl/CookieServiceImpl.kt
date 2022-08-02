@@ -14,7 +14,6 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
-import java.io.File
 
 @Service
 class CookieServiceImpl(
@@ -34,12 +33,6 @@ class CookieServiceImpl(
     private val driver: WebDriver
 
     init {
-        // 103.0.5060.134
-        javaClass.getResourceAsStream("/chromedriver")?.use { `in` ->
-            val file = File("/usr/bin/chromedriver")
-            if (!file.exists())
-                file.outputStream().use { `out` -> `in`.copyTo(`out`) }
-        }
         val options = ChromeOptions()
         options.setExperimentalOption("debuggerAddress", "$browserAddr:$browserPort")
         driver = ChromeDriver(options)
