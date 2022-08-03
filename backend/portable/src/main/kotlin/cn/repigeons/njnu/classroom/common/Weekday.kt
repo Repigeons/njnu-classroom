@@ -11,5 +11,6 @@ enum class Weekday(val value: String) {
 
     companion object {
         fun parse(value: String) = values().firstOrNull { it.value == value }
+        operator fun get(index: Int) = values()[index]
     }
 }

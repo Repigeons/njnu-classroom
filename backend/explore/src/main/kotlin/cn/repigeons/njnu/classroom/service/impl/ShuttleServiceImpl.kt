@@ -10,7 +10,6 @@ import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import cn.repigeons.njnu.classroom.util.EmailUtil
 import cn.repigeons.njnu.classroom.util.GsonUtil
-import com.alibaba.fastjson.JSONArray
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -31,8 +30,8 @@ open class ShuttleServiceImpl(
     @Async
     override fun flushRoute() {
         Weekday.values().forEachIndexed { index, weekday ->
-            val direction1 = JSONArray()
-            val direction2 = JSONArray()
+            val direction1 = mutableListOf<ShuttleRoute>()
+            val direction2 = mutableListOf<ShuttleRoute>()
             val day = (1 shl 6 shr index).toByte()
             val route1 = shuttleMapper.selectRoute(day, 1)
             val route2 = shuttleMapper.selectRoute(day, 2)
@@ -54,8 +53,8 @@ open class ShuttleServiceImpl(
                 for (i in 1..it.shuttleCount!!)
                     direction2.add(item)
             }
-            redisService["explore:shuttle:${weekday.value}:1"] = direction1.toJSONString()
-            redisService["explore:shuttle:${weekday.value}:2"] = direction2.toJSONString()
+            redisService["explore:shuttle:${weekday.value}:1"] = GsonUtil.toJson(direction1)
+            redisService["explore:shuttle:${weekday.value}:2"] = GsonUtil.toJson(direction2)
         }
     }
 

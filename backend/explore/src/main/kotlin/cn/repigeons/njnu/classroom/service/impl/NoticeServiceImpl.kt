@@ -4,8 +4,7 @@ import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.NoticeRecord
 import cn.repigeons.njnu.classroom.service.NoticeService
 import cn.repigeons.njnu.classroom.service.RedisService
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
+import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,9 +16,9 @@ class NoticeServiceImpl(
 ) : NoticeService {
     private val df = SimpleDateFormat("yyyy-MM-dd")
 
-    override fun get(): JSONObject {
+    override fun get(): Map<*, *> {
         return redisService["notice"]?.let {
-            JSON.parseObject(it)
+            GsonUtil.fromJson(it, Map::class.java)
         } ?: let {
             val record = noticeMapper.select {
                 orderBy(NoticeDynamicSqlSupport.Notice.time.descending())
@@ -27,41 +26,41 @@ class NoticeServiceImpl(
             }.firstOrNull()
             val data = record2data(record)
             record?.run {
-                redisService["notice"] = data.toJSONString()
+                redisService["notice"] = GsonUtil.toJson(data)
             }
             data
         }
     }
 
-    override fun set(id: Int): JSONObject {
+    override fun set(id: Int): Map<*, *> {
         val record = noticeMapper.selectByPrimaryKey(id)
         val data = record2data(record)
         record?.run {
-            redisService["notice"] = data.toJSONString()
+            redisService["notice"] = GsonUtil.toJson(data)
             return data
         }
         return get()
     }
 
-    override fun add(text: String): JSONObject {
+    override fun add(text: String): Map<*, *> {
         val record = NoticeRecord(
             time = Date(),
             text = text
         )
         noticeMapper.insert(record)
         val data = record2data(record)
-        redisService["notice"] = data.toJSONString()
+        redisService["notice"] = GsonUtil.toJson(data)
         return data
     }
 
     private fun record2data(record: NoticeRecord?) = record?.let {
-        val timestamp = it.time!!.time / 1000
-        val date = df.format(it.time)
-        JSONObject().apply {
-            put("id", it.id)
-            put("timestamp", timestamp)
-            put("date", date)
-            put("text", it.text)
-        }
-    } ?: JSONObject()
+        val timestamp = record.time!!.time / 1000
+        val date = df.format(record.time)
+        mapOf(
+            Pair("id", record.id),
+            Pair("timestamp", timestamp),
+            Pair("date", date),
+            Pair("text", record.text)
+        )
+    } ?: mapOf()
 }

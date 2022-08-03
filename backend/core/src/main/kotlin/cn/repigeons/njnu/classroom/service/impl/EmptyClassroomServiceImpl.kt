@@ -12,9 +12,6 @@ import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.EmailUtil
 import cn.repigeons.njnu.classroom.util.GsonUtil
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONObject
-import com.alibaba.fastjson.serializer.SerializerFeature
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.redisson.api.RedissonClient
 import org.springframework.beans.factory.annotation.Value
@@ -81,17 +78,13 @@ open class EmptyClassroomServiceImpl(
             return
         }
 
-        val obj = JSONObject().apply {
-            set("jc", jc)
-            set("item", item)
-            set("index", index)
-            set("results", results)
-        }
-        val detail = JSON.toJSONString(
-            obj,
-            SerializerFeature.PrettyFormat,
-            SerializerFeature.WriteMapNullValue
+        val obj = mapOf(
+            Pair("jc", jc),
+            Pair("item", item),
+            Pair("index", index),
+            Pair("results", results)
         )
+        val detail = GsonUtil.toJson(obj)
         val subject = "【南师教室】用户反馈：" +
                 "$jxl ${item.jsmph}教室 " +
                 "${item.jcKs}-${item.jcJs}节有误" +

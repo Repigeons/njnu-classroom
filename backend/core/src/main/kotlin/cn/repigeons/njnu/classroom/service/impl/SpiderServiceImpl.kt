@@ -12,9 +12,8 @@ import cn.repigeons.njnu.classroom.service.CookieService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.GsonUtil
-import com.alibaba.fastjson.JSON
-import com.alibaba.fastjson.JSONArray
-import com.alibaba.fastjson.JSONObject
+import com.google.gson.JsonArray
+import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -116,18 +115,20 @@ open class SpiderServiceImpl(
                 .build()
             val response1 = httpClient.newCall(request1).execute()
             val result1 = response1.body()?.string()
-            val data1 = JSON.parseObject(result1)
-                .getJSONObject("datas")
-                .getJSONObject("cxdqxnxq")
-                .getJSONArray("rows")
-                .getJSONObject(0)
-            timeInfo.XNXQDM = data1.getString("DM")
-            timeInfo.XNDM = data1.getString("XNDM")
-            timeInfo.XQDM = data1.getString("XQDM")
+            val data1 = JsonParser.parseString(result1)
+                .asJsonObject
+                .getAsJsonObject("datas")
+                .getAsJsonObject("cxdqxnxq")
+                .getAsJsonArray("rows")
+                .get(0)
+                .asJsonObject
+            timeInfo.XNXQDM = data1.get("DM").asString
+            timeInfo.XNDM = data1.get("XNDM").asString
+            timeInfo.XQDM = data1.get("XQDM").asString
 
             val requestBody2 = FormBody.Builder()
-                .add("XN", data1.getString("XNDM"))
-                .add("XQ", data1.getString("XQDM"))
+                .add("XN", data1.get("XNDM").asString)
+                .add("XQ", data1.get("XQDM").asString)
                 .add("RQ", rqDateFormat.format(Date()))
                 .build()
             val request2 = Request.Builder()
@@ -136,17 +137,19 @@ open class SpiderServiceImpl(
                 .build()
             val response2 = httpClient.newCall(request2).execute()
             val result2 = response2.body()?.string()
-            val data2 = JSON.parseObject(result2)
-                .getJSONObject("datas")
-                .getJSONObject("cxrqdydzcxq")
-                .getJSONArray("rows")
-                .getJSONObject(0)
-            timeInfo.ZC = data2.getString("ZC").toInt()
-            timeInfo.ZZC = data2.getString("ZZC").toInt()
+            val data2 = JsonParser.parseString(result2)
+                .asJsonObject
+                .getAsJsonObject("datas")
+                .getAsJsonObject("cxrqdydzcxq")
+                .getAsJsonArray("rows")
+                .get(0)
+                .asJsonObject
+            timeInfo.ZC = data2.get("ZC").asString.toInt()
+            timeInfo.ZZC = data2.get("ZZC").asString.toInt()
 
             val requestBody3 = FormBody.Builder()
-                .add("XN", data1.getString("XNDM"))
-                .add("XQ", data1.getString("XQDM"))
+                .add("XN", data1.get("XNDM").asString)
+                .add("XQ", data1.get("XQDM").asString)
                 .add("RQ", rqDateFormat.format(Date()))
                 .build()
             val request3 = Request.Builder()
@@ -155,12 +158,14 @@ open class SpiderServiceImpl(
                 .build()
             val response3 = httpClient.newCall(request3).execute()
             val result3 = response3.body()?.string()
-            val data3 = JSON.parseObject(result3)
-                .getJSONObject("datas")
-                .getJSONObject("cxxljc")
-                .getJSONArray("rows")
-                .getJSONObject(0)
-            timeInfo.ZJXZC = data3.getString("ZJXZC").toInt()
+            val data3 = JsonParser.parseString(result3)
+                .asJsonObject
+                .getAsJsonObject("datas")
+                .getAsJsonObject("cxxljc")
+                .getAsJsonArray("rows")
+                .get(0)
+                .asJsonObject
+            timeInfo.ZJXZC = data3.get("ZJXZC").asString.toInt()
 
             redisService.set(
                 "spider:time",
@@ -208,28 +213,28 @@ open class SpiderServiceImpl(
             }
         }
         for (day in 0..6) {
-            kcb.getJSONArray(day).forEach { row ->
-                row as JSONObject
-                val jc = row.getString("JC").split(',')
+            kcb[day].forEach {
+                val row = it.asJsonObject
+                val jc = row.get("JC").asString.split(',')
                 val kcbRecord = KcbRecord(
                     jxlmc = classroom.jxldmDisplay,
                     jsmph = classroom.jasmc?.replace(Regex("^${classroom.jxldmDisplay}"), "")?.trim(),
                     jasdm = classroom.jasdm,
                     skzws = classroom.skzws,
-                    zylxdm = if (row.getString("ZYLXDM").isNullOrBlank()) "00" else row.getString("ZYLXDM"),
+                    zylxdm = if (row.get("ZYLXDM").asString.isNullOrBlank()) "00" else row.get("ZYLXDM").asString,
                     jcKs = jc.firstOrNull()?.toShort(),
                     jcJs = jc.lastOrNull()?.toShort(),
-                    day = mapDay(day).value,
+                    day = Weekday[day].value,
                     sfyxzx = classroom.sfyxzx,
-                    jyytms = if (row.getString("JYYTMS").isNullOrBlank()) "" else row.getString("JYYTMS"),
-                    kcm = if (row.getString("KCM").isNullOrBlank()) "" else row.getString("KCM"),
+                    jyytms = if (row.get("JYYTMS").asString.isNullOrBlank()) "" else row.get("JYYTMS").asString,
+                    kcm = if (row.get("KCM").asString.isNullOrBlank()) "" else row.get("KCM").asString,
                 )
                 kcbMapper.insert(kcbRecord)
             }
         }
     }
 
-    private fun getKcb(xnxqdm: String, week: String, jasdm: String): JSONArray {
+    private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<JsonArray> {
         val requestBody = FormBody.Builder()
             .add("XNXQDM", xnxqdm)
             .add("ZC", week)
@@ -241,12 +246,14 @@ open class SpiderServiceImpl(
             .build()
         val response = httpClient.newCall(request).execute()
         val result = response.body()?.string()
-        val data = JSON.parseObject(result)
-            .getJSONObject("datas")
-            .getJSONObject("cxyzjskjyqk")
-            .getJSONArray("rows")
-            .getJSONObject(0)
-        return data.getJSONArray("BY1")
+        val data = JsonParser.parseString(result)
+            .asJsonObject
+            .getAsJsonObject("datas")
+            .getAsJsonObject("cxyzjskjyqk")
+            .getAsJsonArray("rows")
+            .get(0)
+            .asJsonObject
+        return data.getAsJsonArray("BY1").map { it.asJsonArray }.toMutableList()
     }
 
     private fun correctData() {
@@ -334,39 +341,12 @@ open class SpiderServiceImpl(
         httpClient = cookieService.getHttpClient(cookies)
         val timeInfo = getTimeInfo()
         val kcb = getKcb(timeInfo.XNXQDM, timeInfo.ZC.toString(), jasdm)
-        kcb.getJSONArray(mapDay(day)).forEach { row ->
-            row as JSONObject
-            val bool1 = jc.toString() in row.getString("JC").split(',')
-            val bool2 = row.getString("ZYLXDM") == zylxdm || row.getString("ZYLXDM").isBlank()
-            if (bool1 && bool2)
-                return true
+        kcb[day.ordinal].forEach {
+            val row = it.asJsonObject
+            val bool1 = jc.toString() in row.get("JC").asString.split(',')
+            val bool2 = row.get("ZYLXDM").asString == zylxdm || row.get("ZYLXDM").asString.isBlank()
+            if (bool1 && bool2) return true
         }
         return false
-    }
-
-    private fun mapDay(day: Int): Weekday {
-        return when (day) {
-            0 -> Weekday.Monday
-            1 -> Weekday.Tuesday
-            2 -> Weekday.Wednesday
-            3 -> Weekday.Thursday
-            4 -> Weekday.Friday
-            5 -> Weekday.Saturday
-            6 -> Weekday.Sunday
-            else -> throw IllegalArgumentException()
-        }
-    }
-
-    private fun mapDay(day: Weekday): Int {
-        return when (day) {
-            Weekday.Monday -> 0
-            Weekday.Tuesday -> 1
-            Weekday.Wednesday -> 2
-            Weekday.Thursday -> 3
-            Weekday.Friday -> 4
-            Weekday.Saturday -> 5
-            Weekday.Sunday -> 6
-            else -> throw IllegalArgumentException()
-        }
     }
 }
