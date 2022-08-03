@@ -12,6 +12,7 @@ import org.redisson.client.protocol.Decoder
 import org.redisson.client.protocol.Encoder
 import org.springframework.stereotype.Service
 import java.io.InputStreamReader
+import java.time.Duration
 import java.util.concurrent.TimeUnit
 
 @Service
@@ -73,7 +74,7 @@ open class RedisServiceImpl(
 
     override fun expire(key: String, expire: Long): Boolean {
         val bucket = redissonClient.getBucket<Any>(key, codec)
-        return bucket.expire(expire, TimeUnit.SECONDS)
+        return bucket.expire(Duration.ofSeconds(expire))
     }
 
     private val codec = object : BaseCodec() {
