@@ -28,7 +28,7 @@ services:
     image: njnu-classroom-core
     build:
       context: .
-      dockerfile: docker-core.dockerfile
+      dockerfile: docker-core.Dockerfile
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=pro"]
     restart: always
     depends_on:
@@ -51,7 +51,7 @@ services:
     image: njnu-classroom-explore
     build:
       context: .
-      dockerfile: docker-explore.dockerfile
+      dockerfile: docker-explore.Dockerfile
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=pro"]
     restart: always
     depends_on:

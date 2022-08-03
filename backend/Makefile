@@ -1,5 +1,5 @@
 package:
 	mvn clean kotlin:compile package
 
-rerun: package
+deploy: package
 	docker-compose up -d --build
