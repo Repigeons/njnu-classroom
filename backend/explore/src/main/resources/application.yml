@@ -14,7 +14,8 @@ spring:
     username: ''
     password: ''
     properties:
-      smtp:
-        ssl:
-          enable: true
+      mail:
+        smtp:
+          ssl:
+            enable: true
     receivers: ''
