@@ -13,4 +13,8 @@ spring:
     port: 465
     username: ''
     password: ''
+    properties:
+      smtp:
+        ssl:
+          enable: true
     receivers: ''
