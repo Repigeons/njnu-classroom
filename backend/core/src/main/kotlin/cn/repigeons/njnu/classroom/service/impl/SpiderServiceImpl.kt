@@ -6,13 +6,13 @@ import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.DevRecord
 import cn.repigeons.njnu.classroom.mbg.model.JasRecord
 import cn.repigeons.njnu.classroom.mbg.model.KcbRecord
+import cn.repigeons.njnu.classroom.model.KcbItem
 import cn.repigeons.njnu.classroom.model.TimeInfo
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.CookieService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.GsonUtil
-import com.google.gson.JsonArray
 import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -214,27 +214,26 @@ open class SpiderServiceImpl(
         }
         for (day in 0..6) {
             kcb[day].forEach {
-                val row = it.asJsonObject
-                val jc = row.get("JC").asString.split(',')
+                val jc = it.JC.split(',')
                 val kcbRecord = KcbRecord(
                     jxlmc = classroom.jxldmDisplay,
                     jsmph = classroom.jasmc?.replace(Regex("^${classroom.jxldmDisplay}"), "")?.trim(),
                     jasdm = classroom.jasdm,
                     skzws = classroom.skzws,
-                    zylxdm = if (row.get("ZYLXDM").asString.isNullOrBlank()) "00" else row.get("ZYLXDM").asString,
+                    zylxdm = it.ZYLXDM.ifEmpty { "00" },
                     jcKs = jc.firstOrNull()?.toShort(),
                     jcJs = jc.lastOrNull()?.toShort(),
                     day = Weekday[day].value,
                     sfyxzx = classroom.sfyxzx,
-                    jyytms = if (row.get("JYYTMS").asString.isNullOrBlank()) "" else row.get("JYYTMS").asString,
-                    kcm = if (row.get("KCM").asString.isNullOrBlank()) "" else row.get("KCM").asString,
+                    jyytms = if (it.JYYTMS.isNullOrEmpty()) "" else it.JYYTMS,
+                    kcm = it.KCM,
                 )
                 kcbMapper.insert(kcbRecord)
             }
         }
     }
 
-    private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<JsonArray> {
+    private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
         val requestBody = FormBody.Builder()
             .add("XNXQDM", xnxqdm)
             .add("ZC", week)
@@ -246,14 +245,16 @@ open class SpiderServiceImpl(
             .build()
         val response = httpClient.newCall(request).execute()
         val result = response.body()?.string()
-        val data = JsonParser.parseString(result)
+        val by1 = JsonParser.parseString(result)
             .asJsonObject
             .getAsJsonObject("datas")
             .getAsJsonObject("cxyzjskjyqk")
             .getAsJsonArray("rows")
             .get(0)
             .asJsonObject
-        return data.getAsJsonArray("BY1").map { it.asJsonArray }.toMutableList()
+            .get("BY1")
+            .asString
+        return GsonUtil.fromJson(by1)
     }
 
     private fun correctData() {
@@ -342,9 +343,8 @@ open class SpiderServiceImpl(
         val timeInfo = getTimeInfo()
         val kcb = getKcb(timeInfo.XNXQDM, timeInfo.ZC.toString(), jasdm)
         kcb[day.ordinal].forEach {
-            val row = it.asJsonObject
-            val bool1 = jc.toString() in row.get("JC").asString.split(',')
-            val bool2 = row.get("ZYLXDM").asString == zylxdm || row.get("ZYLXDM").asString.isBlank()
+            val bool1 = jc.toString() in it.JC.split(',')
+            val bool2 = it.ZYLXDM == zylxdm || it.ZYLXDM.isEmpty()
             if (bool1 && bool2) return true
         }
         return false
