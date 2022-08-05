@@ -21,8 +21,6 @@ services:
     image: repigeons/chromium
     container_name: chromium
     restart: always
-    ports:
-    - 19222:9222
 
   core:
     image: njnu-classroom-core
@@ -42,11 +40,7 @@ services:
         limits:
           memory: 512M
     healthcheck:
-      test: "curl http://localhost:8080/actuator/health"
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: "curl -sS http://localhost:8080/actuator/health || exit 1"
   explore:
     image: njnu-classroom-explore
     build:
@@ -64,8 +58,4 @@ services:
         limits:
           memory: 512M
     healthcheck:
-      test: "curl http://localhost:8080/actuator/health"
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: "curl -sS http://localhost:8080/actuator/health || exit 1"
