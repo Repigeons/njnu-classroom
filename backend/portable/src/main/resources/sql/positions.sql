@@ -1,4 +1,4 @@
-insert into NjnuClassroom.positions (id, name, latitude, longitude, kind)
+insert into positions (id, name, latitude, longitude, kind)
 values (101, '学明楼', 32.10202, 118.91082, 1),
        (102, '学正楼', 32.10259, 118.91246, 1),
        (103, '学海楼', 32.10201, 118.91417, 1),

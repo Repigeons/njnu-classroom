@@ -5,9 +5,9 @@ spring:
     database: 0
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/NjnuClassroom
-    username: root
-    password: root
+    url: jdbc:mariadb://127.0.0.1:3306/njnu_classroom
+    username: njnu_classroom_root
+    password: njnu-000
   mail:
     host: smtp.repigeons.cn
     port: 465
