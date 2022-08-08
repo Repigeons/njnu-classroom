@@ -1,18 +1,12 @@
-package: .pull
-	@mvn clean kotlin:compile package -Dmaven.test.skip=true
+push: build
+	@docker-compose -f dockerfile/docker-compose.build.yaml push
 
-core: .pull
-	@mvn clean kotlin:compile package -Dmaven.test.skip=true -pl core -am
-
-explore: .pull
-	@mvn clean kotlin:compile package -Dmaven.test.skip=true -pl explore -am
-
-deploy: package
-	@docker-compose up -d --build
+build: compile
+	@docker-compose -f dockerfile/docker-compose.build.yaml build
 	@docker images | grep '<none>' | awk '{print $$3}' | xargs docker rmi
 
-clean:
-	@mvn clean
+compile: .pull
+	@docker-compose -f dockerfile/docker-compose.build.yaml run compile
 
 .pull:
-	@git pull
+	@git reset --hard && git pull --prune
