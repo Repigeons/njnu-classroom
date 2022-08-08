@@ -1,6 +1,13 @@
 version: '3'
 
 services:
+  package:
+    image: maven
+    container_name: maven
+    command: ["mvn", "clean", "kotlin:compile", "package", "-Dmaven.test.skip=true"]
+    volumes:
+    - /root/.m2:/root/.m2
+    - /opt/NjnuClassroom/backend:/opt/workdir
   core:
     image: njnu-classroom-core:latest
     build:
