@@ -23,11 +23,8 @@ services:
     restart: always
 
   core:
-    image: njnu-classroom-core
-    build:
-      context: .
-      dockerfile: docker-core.Dockerfile
-    command: ["java", "-jar", "/server.jar", "--spring.profiles.active=pro"]
+    image: njnu-classroom-core:latest
+    command: ["java", "-jar", "/server.jar", "--spring.profiles.active="]
     restart: always
     depends_on:
     - mysql
@@ -42,11 +39,8 @@ services:
     healthcheck:
       test: "curl -sS http://localhost:8080/actuator/health || exit 1"
   explore:
-    image: njnu-classroom-explore
-    build:
-      context: .
-      dockerfile: docker-explore.Dockerfile
-    command: ["java", "-jar", "/server.jar", "--spring.profiles.active=pro"]
+    image: njnu-classroom-explore:latest
+    command: ["java", "-jar", "/server.jar", "--spring.profiles.active="]
     restart: always
     depends_on:
     - mysql
