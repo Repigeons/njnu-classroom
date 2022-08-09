@@ -1,12 +1,10 @@
-push: build
-	@docker-compose -f dockerfile/docker-compose.build.yaml push
-
 build: compile
 	@docker-compose -f dockerfile/docker-compose.build.yaml build
-	@docker images | grep '<none>' | awk '{print $$3}' | xargs docker rmi
+	@-docker images | grep '<none>' | awk '{print $$3}' | xargs -r docker rmi
 
 compile: .pull
-	@docker-compose -f dockerfile/docker-compose.build.yaml run compile
+	@rm .pull
+	@docker-compose -f dockerfile/docker-compose.build.yaml run --rm compile
 
 .pull:
-	@git reset --hard && git pull --prune
+	@git pull
