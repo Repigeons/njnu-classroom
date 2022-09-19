@@ -28,7 +28,7 @@ class NoticeController(
     fun addNotice(
         @RequestParam text: String
     ): JsonResponse {
-        val data = noticeService.add(text)
+        val data = noticeService.add(text.replace("\\n", "\n"))
         return JsonResponse(data = data)
     }
 
