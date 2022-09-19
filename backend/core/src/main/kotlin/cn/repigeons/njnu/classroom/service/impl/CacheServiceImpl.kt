@@ -31,16 +31,16 @@ open class CacheServiceImpl(
 
     @Async
     override fun flush() {
-        val rLock = redissonClient.getLock("lock:flush")
+        val lock = redissonClient.getLock("lock:flush")
+        if (lock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+            logger.info("刷新缓存数据已处于运行中...")
+            return
+        }
         try {
-            if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
-                logger.info("开始刷新缓存数据...")
-                this.actFlush()
-            } else {
-                logger.info("刷新缓存数据已处于运行中...")
-            }
+            logger.info("开始刷新缓存数据...")
+            this.actFlush()
         } finally {
-            rLock?.unlock()
+            lock.unlock()
         }
     }
 

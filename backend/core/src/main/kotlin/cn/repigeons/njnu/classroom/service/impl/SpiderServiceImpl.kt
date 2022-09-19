@@ -48,18 +48,18 @@ open class SpiderServiceImpl(
 
     @Async
     override fun run() {
-        val rLock = redissonClient.getLock("lock:spider")
-        try {
-            if (rLock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
-                logger.info("开始课程信息收集工作...")
-                this.actRun()
-            } else {
-                logger.info("课程信息收集工作已处于运行中...")
-            }
-        } finally {
-            rLock?.unlock()
+        val lock = redissonClient.getLock("lock:spider")
+        if (lock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+            logger.info("课程信息收集工作已处于运行中...")
+            return
         }
-        cacheService.flush()
+        try {
+            logger.info("开始课程信息收集工作...")
+            this.actRun()
+            cacheService.flush()
+        } finally {
+            lock.unlock()
+        }
     }
 
     private fun actRun() {
