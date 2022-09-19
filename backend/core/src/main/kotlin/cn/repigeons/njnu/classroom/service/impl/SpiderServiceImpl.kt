@@ -17,6 +17,8 @@ import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.ibatis.session.ExecutorType
+import org.apache.ibatis.session.SqlSessionFactory
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
@@ -39,6 +41,7 @@ open class SpiderServiceImpl(
     private val kcbMapper: KcbMapper,
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
+    private val sqlSessionFactory: SqlSessionFactory,
     @Value("\${spring.profiles.active}")
     private val env: String
 ) : SpiderService {
@@ -184,10 +187,9 @@ open class SpiderServiceImpl(
         } ?: let {
             val building = jasMapper.select {}
                 .groupBy { it.jxldmDisplay!! }
-            building.values.forEach {
-                it.sortedBy { record ->
-                    record.jasmc
-                }
+            building.values.forEach { jasRecords ->
+                jasRecords as MutableList
+                jasRecords.sortBy { it.jasmc }
             }
 
             redisService.set(
@@ -212,25 +214,29 @@ open class SpiderServiceImpl(
                 kcb[day] = kcb2[day]
             }
         }
+        val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
+        val kcbMapper = sqlSession.getMapper(KcbMapper::class.java)
         for (day in 0..6) {
-            kcb[day].forEach {
-                val jc = it.JC.split(',')
+            kcb[day].forEach { kcbItem ->
+                val jc = kcbItem.JC.split(',')
                 val kcbRecord = KcbRecord(
                     jxlmc = classroom.jxldmDisplay,
                     jsmph = classroom.jasmc?.replace(Regex("^${classroom.jxldmDisplay}"), "")?.trim(),
                     jasdm = classroom.jasdm,
                     skzws = classroom.skzws,
-                    zylxdm = it.ZYLXDM.ifEmpty { "00" },
+                    zylxdm = kcbItem.ZYLXDM.ifEmpty { "00" },
                     jcKs = jc.firstOrNull()?.toShort(),
                     jcJs = jc.lastOrNull()?.toShort(),
                     day = Weekday[day].value,
                     sfyxzx = classroom.sfyxzx,
-                    jyytms = if (it.JYYTMS.isNullOrEmpty()) "" else it.JYYTMS,
-                    kcm = it.KCM,
+                    jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
+                    kcm = kcbItem.KCM,
                 )
                 kcbMapper.insert(kcbRecord)
             }
         }
+        sqlSession.commit()
+        sqlSession.clearCache()
     }
 
     private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
@@ -329,12 +335,16 @@ open class SpiderServiceImpl(
         // 清空数据库
         devMapper.truncate()
         // 重新插入数据库
+        val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
+        val devMapper = sqlSession.getMapper(DevMapper::class.java)
         result.forEach { (jxlmc, records) ->
             records.forEach { record ->
                 devMapper.insert(record)
             }
             logger.info("[{}] 归并完成.", jxlmc)
         }
+        sqlSession.commit()
+        sqlSession.clearCache()
     }
 
     override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String): Boolean {
