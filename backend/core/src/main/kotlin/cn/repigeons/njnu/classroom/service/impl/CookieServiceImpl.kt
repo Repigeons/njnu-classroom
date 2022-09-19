@@ -33,9 +33,18 @@ class CookieServiceImpl(
     private val driver: WebDriver
 
     init {
+        var chromeDriver: ChromeDriver
         val options = ChromeOptions()
         options.setExperimentalOption("debuggerAddress", "$browserAddr:$browserPort")
-        driver = ChromeDriver(options)
+        while (true) {
+            try {
+                chromeDriver = ChromeDriver(options)
+                break
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        driver = chromeDriver
     }
 
     override fun getCookies(): List<Cookie> {
