@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import kotlin.concurrent.thread
 
 @RestController
 @RequestMapping("explore")
@@ -28,6 +27,6 @@ class GridsController(
     }
 
     init {
-        thread { gridsService.flushGrids() }
+        gridsService.flushGrids()
     }
 }

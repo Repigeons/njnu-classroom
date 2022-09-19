@@ -10,7 +10,6 @@ import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-import kotlin.concurrent.thread
 
 
 @RestController
@@ -88,7 +87,7 @@ class ShuttleController(
     }
 
     init {
-        thread { shuttleService.flushStationPosition() }
-        thread { shuttleService.flushRoute() }
+        shuttleService.flushStationPosition()
+        shuttleService.flushRoute()
     }
 }

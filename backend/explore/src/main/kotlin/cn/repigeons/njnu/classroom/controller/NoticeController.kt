@@ -2,12 +2,13 @@ package cn.repigeons.njnu.classroom.controller
 
 import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.service.NoticeService
+import org.springframework.core.task.TaskExecutor
 import org.springframework.web.bind.annotation.*
-import kotlin.concurrent.thread
 
 @RestController
 @RequestMapping("notice")
 class NoticeController(
+    taskExecutor: TaskExecutor,
     private val noticeService: NoticeService
 ) {
     @GetMapping("get")
@@ -33,6 +34,6 @@ class NoticeController(
     }
 
     init {
-        thread { noticeService.get() }
+        taskExecutor.execute { noticeService.get() }
     }
 }

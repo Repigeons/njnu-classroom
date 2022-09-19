@@ -5,20 +5,19 @@ import cn.repigeons.njnu.classroom.util.GsonUtil
 import cn.repigeons.njnu.classroom.util.ResourceUtil
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import kotlin.concurrent.thread
 
 @Component
 class Resources(
-    private val cacheService: CacheService
+    cacheService: CacheService
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     val zylxdm = GsonUtil.fromJson(ResourceUtil.loadResourceText("/zylxdm.json")!!, List::class.java)
 
     init {
-        thread { cacheService.flush() }
-        thread { cacheService.flushClassroomList() }
-        thread { cacheService.flushBuildingPosition() }
+        cacheService.flush()
+        cacheService.flushClassroomList()
+        cacheService.flushBuildingPosition()
         logger.info("zylxdm.json={}", zylxdm)
     }
 }

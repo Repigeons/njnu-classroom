@@ -11,10 +11,11 @@ import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
+import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
+import org.springframework.util.concurrent.ListenableFuture
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 @Service
 open class CacheServiceImpl(
@@ -46,9 +47,8 @@ open class CacheServiceImpl(
 
     private fun actFlush() {
         val startTime = Date()
-
-        val t1 = thread { flushEmptyClassrooms() }
-        val t2 = thread { flushOverview() }
+        val t1 = flushEmptyClassrooms().completable()
+        val t2 = flushOverview().completable()
         t1.join()
         t2.join()
 
@@ -56,7 +56,8 @@ open class CacheServiceImpl(
         logger.info("缓存刷新完成. 共计耗时 {} 秒", (endTime.time - startTime.time) / 1000)
     }
 
-    private fun flushEmptyClassrooms() {
+    @Async
+    open fun flushEmptyClassrooms(): ListenableFuture<*> {
         val rMap = redissonClient.getMap<String, String>("empty")
         rMap.delete()
         if (env == "pro") {
@@ -99,9 +100,11 @@ open class CacheServiceImpl(
                 }
         }
         logger.info("Flush empty classroom completed.")
+        return AsyncResult(null)
     }
 
-    private fun flushOverview() {
+    @Async
+    open fun flushOverview(): ListenableFuture<*> {
         val rMap = redissonClient.getMap<String, String>("overview")
         rMap.delete()
         if (env == "pro") {
@@ -128,8 +131,10 @@ open class CacheServiceImpl(
                 }
         }
         logger.info("Flush overview completed.")
+        return AsyncResult(null)
     }
 
+    @Async
     override fun flushClassroomList() {
         val classrooms = jasMapper.select {}
             .map {
@@ -147,6 +152,7 @@ open class CacheServiceImpl(
         redisService["static:classrooms"]!!, Map::class.java
     )
 
+    @Async
     override fun flushBuildingPosition() {
         val positions = positionsMapper.select {
             where(PositionsDynamicSqlSupport.Positions.kind, isEqualTo(1))

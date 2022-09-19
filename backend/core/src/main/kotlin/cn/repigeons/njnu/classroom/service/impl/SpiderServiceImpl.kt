@@ -22,11 +22,12 @@ import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
+import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
+import org.springframework.util.concurrent.ListenableFuture
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 @Service
 open class SpiderServiceImpl(
@@ -77,13 +78,9 @@ open class SpiderServiceImpl(
         buildingInfo.forEach { (buildingName, classroomList) ->
             logger.info("开始查询教学楼[{}]...", buildingName)
             classroomList.map { classroom ->
-                thread {
-                    logger.debug("正在查询教室[{}]...", classroom.jasmc)
-                    getClassInfo(classroom, timeInfo)
-                }
-            }.forEach { thread ->
-                thread.join()
-            }
+                logger.debug("正在查询教室[{}]...", classroom.jasmc)
+                getClassInfo(classroom, timeInfo).completable()
+            }.forEach { future -> future.join() }
         }
         logger.info("课程信息采集完成.")
         devMapper.truncate()
@@ -200,7 +197,8 @@ open class SpiderServiceImpl(
         return result
     }
 
-    private fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo) {
+    @Async
+    open fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): ListenableFuture<*> {
         val thisWeek = timeInfo.ZC
         val nextWeek = if (timeInfo.ZC < timeInfo.ZJXZC) timeInfo.ZC + 1 else timeInfo.ZJXZC
         val kcb = getKcb(timeInfo.XNXQDM, thisWeek.toString(), classroom.jasdm!!)
@@ -230,6 +228,7 @@ open class SpiderServiceImpl(
                 kcbMapper.insert(kcbRecord)
             }
         }
+        return AsyncResult(null)
     }
 
     private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
@@ -307,24 +306,8 @@ open class SpiderServiceImpl(
         }
         val result = mutableMapOf<String, MutableList<DevRecord>>()
         data.map { (jxlmc, records) ->
-            thread {
-                logger.info("[{}] 开始归并...", jxlmc)
-                val classrooms = mutableListOf<DevRecord>()
-                result[jxlmc] = classrooms
-                records.forEach { record ->
-                    if (classrooms.isNotEmpty()
-                        && record.jasdm == classrooms.last().jasdm
-                        && record.zylxdm == "00"
-                        && classrooms.last().zylxdm == "00"
-                    )
-                        classrooms.last().jcJs = record.jcJs
-                    else
-                        classrooms.add(record)
-                }
-            }
-        }.forEach { thread ->
-            thread.join()
-        }
+            mergeJxl(jxlmc, records, result).completable()
+        }.forEach { future -> future.join() }
         // 清空数据库
         devMapper.truncate()
         // 重新插入数据库
@@ -334,6 +317,28 @@ open class SpiderServiceImpl(
             }
             logger.info("[{}] 归并完成.", jxlmc)
         }
+    }
+
+    @Async
+    open fun mergeJxl(
+        jxlmc: String,
+        records: List<DevRecord>,
+        result: MutableMap<String, MutableList<DevRecord>>
+    ): ListenableFuture<*> {
+        logger.info("[{}] 开始归并...", jxlmc)
+        val classrooms = mutableListOf<DevRecord>()
+        result[jxlmc] = classrooms
+        records.forEach { record ->
+            if (classrooms.isNotEmpty()
+                && record.jasdm == classrooms.last().jasdm
+                && record.zylxdm == "00"
+                && classrooms.last().zylxdm == "00"
+            )
+                classrooms.last().jcJs = record.jcJs
+            else
+                classrooms.add(record)
+        }
+        return AsyncResult(null)
     }
 
     override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String): Boolean {

@@ -7,13 +7,15 @@ import cn.repigeons.njnu.classroom.service.GridsService
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 
 @Service
-class GridsServiceImpl(
+open class GridsServiceImpl(
     private val redisService: RedisService,
     private val gridsMapper: GridsMapper
 ) : GridsService {
+    @Async
     override fun flushGrids() {
         val grids = gridsMapper.select {
             where(GridsDynamicSqlSupport.Grids.active, isEqualTo(true))
