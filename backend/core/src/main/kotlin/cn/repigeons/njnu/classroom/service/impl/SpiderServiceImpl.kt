@@ -17,8 +17,6 @@ import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.apache.ibatis.session.ExecutorType
-import org.apache.ibatis.session.SqlSessionFactory
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
@@ -41,7 +39,6 @@ open class SpiderServiceImpl(
     private val kcbMapper: KcbMapper,
     private val devMapper: DevMapper,
     private val proMapper: ProMapper,
-    private val sqlSessionFactory: SqlSessionFactory,
     @Value("\${spring.profiles.active}")
     private val env: String
 ) : SpiderService {
@@ -214,8 +211,6 @@ open class SpiderServiceImpl(
                 kcb[day] = kcb2[day]
             }
         }
-        val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
-        val kcbMapper = sqlSession.getMapper(KcbMapper::class.java)
         for (day in 0..6) {
             kcb[day].forEach { kcbItem ->
                 val jc = kcbItem.JC.split(',')
@@ -235,8 +230,6 @@ open class SpiderServiceImpl(
                 kcbMapper.insert(kcbRecord)
             }
         }
-        sqlSession.commit()
-        sqlSession.clearCache()
     }
 
     private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
@@ -335,16 +328,12 @@ open class SpiderServiceImpl(
         // 清空数据库
         devMapper.truncate()
         // 重新插入数据库
-        val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
-        val devMapper = sqlSession.getMapper(DevMapper::class.java)
         result.forEach { (jxlmc, records) ->
             records.forEach { record ->
                 devMapper.insert(record)
             }
             logger.info("[{}] 归并完成.", jxlmc)
         }
-        sqlSession.commit()
-        sqlSession.clearCache()
     }
 
     override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String): Boolean {
