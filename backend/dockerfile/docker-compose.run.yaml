@@ -11,16 +11,20 @@ services:
     - 13306:3306
     volumes:
     - /opt/docker/mysql:/var/lib/mysql
+    environment:
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "mysqladmin" , "ping", "-h", "localhost"]
   redis:
     image: redis
     container_name: redis
     restart: always
     ports:
     - 16379:6379
-  chromium:
-    image: repigeons/chromium
-    container_name: chromium
-    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
 
   core:
     image: njnu-classroom-core:latest
@@ -29,15 +33,16 @@ services:
     depends_on:
     - mysql
     - redis
-    - chromium
     ports:
     - 18081:8080
+    environment:
+      TZ: Asia/Shanghai
     deploy:
       resources:
         limits:
           memory: 512M
     healthcheck:
-      test: "curl -sS http://localhost:8080/actuator/health || exit 1"
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
   explore:
     image: njnu-classroom-explore:latest
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active="]
@@ -47,9 +52,11 @@ services:
     - redis
     ports:
     - 18082:8080
+    environment:
+      TZ: Asia/Shanghai
     deploy:
       resources:
         limits:
           memory: 512M
     healthcheck:
-      test: "curl -sS http://localhost:8080/actuator/health || exit 1"
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
