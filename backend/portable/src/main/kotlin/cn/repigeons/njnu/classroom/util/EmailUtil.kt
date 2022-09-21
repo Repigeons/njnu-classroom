@@ -29,7 +29,7 @@ private open class EmailConfig {
     private var defaultEncoding = "UTF-8"
 
     private val javaMailProperties = Properties().apply {
-        this["mail.smtp.ssl.enable"] = "true"
+        this["mail.smtp.ssl.enable"] = true
     }
 
     val javaMailSender: JavaMailSender = JavaMailSenderImpl().apply {
