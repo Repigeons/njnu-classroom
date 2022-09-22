@@ -17,6 +17,8 @@ import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.ibatis.session.ExecutorType
+import org.apache.ibatis.session.SqlSessionFactory
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
@@ -35,7 +37,8 @@ open class SpiderServiceImpl(
     private val correctionMapper: CorrectionMapper,
     private val jasMapper: JasMapper,
     private val kcbMapper: KcbMapper,
-    private val timetableMapper: TimetableMapper
+    private val timetableMapper: TimetableMapper,
+    private val sqlSessionFactory: SqlSessionFactory
 ) : SpiderService {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val rqDateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -196,6 +199,8 @@ open class SpiderServiceImpl(
                     kcb[day] = kcb2[day]
                 }
             }
+            val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
+            val kcbMapper = sqlSession.getMapper(KcbMapper::class.java)
             for (day in 0..6) {
                 kcb[day].forEach { kcbItem ->
                     val jc = kcbItem.JC.split(',')
@@ -214,7 +219,9 @@ open class SpiderServiceImpl(
                     )
                     kcbMapper.insert(kcbRecord)
                 }
+                sqlSession.commit()
             }
+            sqlSession.clearCache()
         }
 
     private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
@@ -297,12 +304,16 @@ open class SpiderServiceImpl(
         // 清空数据库
         timetableMapper.truncate()
         // 重新插入数据库
+        val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
+        val timetableMapper = sqlSession.getMapper(TimetableMapper::class.java)
         result.forEach { (jxlmc, records) ->
             records.forEach { record ->
                 timetableMapper.insert(record)
             }
+            sqlSession.commit()
             logger.info("[{}] 归并完成.", jxlmc)
         }
+        sqlSession.clearCache()
     }
 
     open fun mergeJxl(
