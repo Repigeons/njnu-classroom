@@ -11,6 +11,6 @@ open class InterceptorConfiguration(
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(serviceSwitchInterceptor)
-            .excludePathPatterns("/*/switch")
+            .excludePathPatterns("/switch")
     }
 }
