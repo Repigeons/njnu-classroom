@@ -1,4 +1,2 @@
-bootstrap-*.yml
-application-*.yml
-bootstrap-*.properties
-application-*.properties
+bootstrap-*
+application-*

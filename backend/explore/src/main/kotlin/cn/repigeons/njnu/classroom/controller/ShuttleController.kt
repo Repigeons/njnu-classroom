@@ -3,14 +3,12 @@ package cn.repigeons.njnu.classroom.controller
 import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
-import cn.repigeons.njnu.classroom.component.ServiceSwitch
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
-
 
 @RestController
 @RequestMapping("explore")

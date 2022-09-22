@@ -10,14 +10,8 @@ spring:
     password: njnu-000
     hikari:
       maximum-pool-size: 50
-  mail:
-    host: smtp.repigeons.cn
-    port: 465
-    username: ''
-    password: ''
-    properties:
-      mail:
-        smtp:
-          ssl:
-            enable: true
-    receivers: ''
+
+account:
+  username: ''
+  password: ''
+  gid: ''

@@ -7,7 +7,6 @@ import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.FeedbackMetadataRecord
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
-import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.EmailUtil
@@ -22,7 +21,6 @@ import java.util.*
 @Service
 open class EmptyClassroomServiceImpl(
     private val redissonClient: RedissonClient,
-    private val cacheService: CacheService,
     private val spiderService: SpiderService,
     private val proMapper: ProMapper,
     private val feedbackMetadataMapper: FeedbackMetadataMapper,
@@ -74,7 +72,7 @@ open class EmptyClassroomServiceImpl(
             and(ProDynamicSqlSupport.Pro.zylxdm, isEqualTo(item.zylxdm))
         }
         if (count == 0L) {
-            cacheService.flush()
+            spiderService.flushCache()
             return
         }
 

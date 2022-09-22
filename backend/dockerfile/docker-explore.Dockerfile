@@ -1,6 +1,5 @@
-FROM fedora:latest
+FROM openjdk:18-slim
 
-RUN dnf install -y java-latest-openjdk-headless
-RUN dnf clean all
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' > /etc/timezone
 
 ADD ../explore/target/explore-1.0-SNAPSHOT.jar /server.jar

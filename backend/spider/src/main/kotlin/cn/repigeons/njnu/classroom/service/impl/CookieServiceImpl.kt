@@ -18,10 +18,6 @@ import org.springframework.stereotype.Service
 @Service
 class CookieServiceImpl(
     private val redisService: RedisService,
-    @Value("\${browser-debugger.address:127.0.0.1}")
-    private val browserAddr: String,
-    @Value("\${browser-debugger.port:9222}")
-    private val browserPort: Int,
     @Value("\${account.username}")
     private val username: String,
     @Value("\${account.password}")
