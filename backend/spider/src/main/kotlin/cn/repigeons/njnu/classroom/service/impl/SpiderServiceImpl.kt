@@ -21,11 +21,10 @@ import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
-import org.springframework.util.concurrent.ListenableFuture
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Service
 open class SpiderServiceImpl(
@@ -74,7 +73,7 @@ open class SpiderServiceImpl(
             logger.info("开始查询教学楼[{}]...", buildingName)
             classroomList.map { classroom ->
                 logger.debug("正在查询教室[{}]...", classroom.jasmc)
-                getClassInfo(classroom, timeInfo).completable()
+                getClassInfo(classroom, timeInfo)
             }.forEach { future -> future.join() }
         }
         logger.info("课程信息采集完成.")
@@ -185,40 +184,38 @@ open class SpiderServiceImpl(
         return result
     }
 
-    @Async
-    open fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): ListenableFuture<*> {
-        logger.debug("{}[{}/{}]", classroom.jasmc, timeInfo.ZC, timeInfo.ZZC)
-        val thisWeek = timeInfo.ZC
-        val nextWeek = if (timeInfo.ZC < timeInfo.ZJXZC) timeInfo.ZC + 1 else timeInfo.ZJXZC
-        val kcb = getKcb(timeInfo.XNXQDM, thisWeek.toString(), classroom.jasdm!!)
-        if (nextWeek != thisWeek) {
-            val kcb2 = getKcb(timeInfo.XNXQDM, nextWeek.toString(), classroom.jasdm!!)
-            val weekday = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 4) % 7
-            for (day in 0..weekday) {
-                kcb[day] = kcb2[day]
+    open fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): CompletableFuture<*> =
+        CompletableFuture.supplyAsync {
+            val thisWeek = timeInfo.ZC
+            val nextWeek = if (timeInfo.ZC < timeInfo.ZJXZC) timeInfo.ZC + 1 else timeInfo.ZJXZC
+            val kcb = getKcb(timeInfo.XNXQDM, thisWeek.toString(), classroom.jasdm!!)
+            if (nextWeek != thisWeek) {
+                val kcb2 = getKcb(timeInfo.XNXQDM, nextWeek.toString(), classroom.jasdm!!)
+                val weekday = (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) + 4) % 7
+                for (day in 0..weekday) {
+                    kcb[day] = kcb2[day]
+                }
+            }
+            for (day in 0..6) {
+                kcb[day].forEach { kcbItem ->
+                    val jc = kcbItem.JC.split(',')
+                    val kcbRecord = KcbRecord(
+                        jxlmc = classroom.jxldmDisplay,
+                        jsmph = classroom.jasmc?.replace(Regex("^${classroom.jxldmDisplay}"), "")?.trim(),
+                        jasdm = classroom.jasdm,
+                        skzws = classroom.skzws,
+                        zylxdm = kcbItem.ZYLXDM.ifEmpty { "00" },
+                        jcKs = jc.firstOrNull()?.toShort(),
+                        jcJs = jc.lastOrNull()?.toShort(),
+                        day = Weekday[day].value,
+                        sfyxzx = classroom.sfyxzx,
+                        jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
+                        kcm = kcbItem.KCM ?: if (kcbItem.KBID != null) "研究生课" else "未知",
+                    )
+                    kcbMapper.insert(kcbRecord)
+                }
             }
         }
-        for (day in 0..6) {
-            kcb[day].forEach { kcbItem ->
-                val jc = kcbItem.JC.split(',')
-                val kcbRecord = KcbRecord(
-                    jxlmc = classroom.jxldmDisplay,
-                    jsmph = classroom.jasmc?.replace(Regex("^${classroom.jxldmDisplay}"), "")?.trim(),
-                    jasdm = classroom.jasdm,
-                    skzws = classroom.skzws,
-                    zylxdm = kcbItem.ZYLXDM.ifEmpty { "00" },
-                    jcKs = jc.firstOrNull()?.toShort(),
-                    jcJs = jc.lastOrNull()?.toShort(),
-                    day = Weekday[day].value,
-                    sfyxzx = classroom.sfyxzx,
-                    jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
-                    kcm = kcbItem.KCM ?: if (kcbItem.KBID != null) "研究生课" else "未知",
-                )
-                kcbMapper.insert(kcbRecord)
-            }
-        }
-        return AsyncResult(null)
-    }
 
     private fun getKcb(xnxqdm: String, week: String, jasdm: String): MutableList<List<KcbItem>> {
         val requestBody = FormBody.Builder()
@@ -295,7 +292,7 @@ open class SpiderServiceImpl(
         }
         val result = mutableMapOf<String, MutableList<TimetableRecord>>()
         data.map { (jxlmc, records) ->
-            mergeJxl(jxlmc, records, result).completable()
+            mergeJxl(jxlmc, records, result)
         }.forEach { future -> future.join() }
         // 清空数据库
         timetableMapper.truncate()
@@ -308,12 +305,11 @@ open class SpiderServiceImpl(
         }
     }
 
-    @Async
     open fun mergeJxl(
         jxlmc: String,
         records: List<TimetableRecord>,
         result: MutableMap<String, MutableList<TimetableRecord>>
-    ): ListenableFuture<*> {
+    ): CompletableFuture<*> = CompletableFuture.supplyAsync {
         logger.info("[{}] 开始归并...", jxlmc)
         val classrooms = mutableListOf<TimetableRecord>()
         result[jxlmc] = classrooms
@@ -327,7 +323,6 @@ open class SpiderServiceImpl(
             else
                 classrooms.add(record)
         }
-        return AsyncResult(null)
     }
 
     override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String): Boolean {

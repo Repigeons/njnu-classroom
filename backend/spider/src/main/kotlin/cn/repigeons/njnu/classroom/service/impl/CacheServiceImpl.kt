@@ -9,10 +9,8 @@ import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
-import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
-import org.springframework.util.concurrent.ListenableFuture
-import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Service
 open class CacheServiceImpl(
@@ -30,25 +28,18 @@ open class CacheServiceImpl(
         }
         try {
             logger.info("开始刷新缓存数据...")
-            this.actFlush()
+            val startTime = System.currentTimeMillis()
+            val t1 = flushEmptyClassrooms()
+            val t2 = flushOverview()
+            t1.join(); t2.join()
+            val endTime = System.currentTimeMillis()
+            logger.info("缓存刷新完成. 共计耗时 {} 秒", (endTime - startTime) / 1000)
         } finally {
             lock.unlock()
         }
     }
 
-    private fun actFlush() {
-        val startTime = Date()
-        val t1 = flushEmptyClassrooms().completable()
-        val t2 = flushOverview().completable()
-        t1.join()
-        t2.join()
-
-        val endTime = Date()
-        logger.info("缓存刷新完成. 共计耗时 {} 秒", (endTime.time - startTime.time) / 1000)
-    }
-
-    @Async
-    open fun flushEmptyClassrooms(): ListenableFuture<*> {
+    open fun flushEmptyClassrooms(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val rMap = redissonClient.getMap<String, String>("empty")
         rMap.delete()
         timetableMapper.select {}
@@ -70,11 +61,9 @@ open class CacheServiceImpl(
                 rMap[key] = GsonUtil.toJson(value)
             }
         logger.info("Flush empty classroom completed.")
-        return AsyncResult(null)
     }
 
-    @Async
-    open fun flushOverview(): ListenableFuture<*> {
+    open fun flushOverview(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val rMap = redissonClient.getMap<String, String>("overview")
         rMap.delete()
         timetableMapper.select {}
@@ -88,6 +77,5 @@ open class CacheServiceImpl(
                 rMap[key] = GsonUtil.toJson(value)
             }
         logger.info("Flush overview completed.")
-        return AsyncResult(null)
     }
 }
