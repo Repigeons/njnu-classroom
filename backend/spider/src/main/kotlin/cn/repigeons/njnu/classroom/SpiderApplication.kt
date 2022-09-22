@@ -11,8 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @MapperScan("cn.repigeons.njnu.classroom.mbg.mapper")
 @EnableScheduling
 @EnableAsync
-open class CoreApplication
+open class SpiderApplication
 
 fun main(args: Array<String>) {
-    SpringContextHolder.context = runApplication<CoreApplication>(*args)
+    SpringContextHolder.context = runApplication<SpiderApplication>(*args)
 }
