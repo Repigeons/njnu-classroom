@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
 import org.springframework.util.concurrent.ListenableFuture
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 @Service
 open class CacheServiceImpl(
@@ -25,7 +24,7 @@ open class CacheServiceImpl(
     @Async
     override fun flush() {
         val lock = redissonClient.getLock("lock:flush")
-        if (lock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+        if (!lock.tryLock()) {
             logger.info("刷新缓存数据已处于运行中...")
             return
         }

@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service
 import org.springframework.util.concurrent.ListenableFuture
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 @Service
 open class SpiderServiceImpl(
@@ -46,7 +45,7 @@ open class SpiderServiceImpl(
     @Async
     override fun run() {
         val lock = redissonClient.getLock("lock:spider")
-        if (lock.tryLock(1, 60 * 60, TimeUnit.SECONDS)) {
+        if (!lock.tryLock()) {
             logger.info("课程信息收集工作已处于运行中...")
             return
         }
