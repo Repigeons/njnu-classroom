@@ -187,6 +187,7 @@ open class SpiderServiceImpl(
 
     @Async
     open fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): ListenableFuture<*> {
+        logger.debug("{}[{}/{}]", classroom.jasmc, timeInfo.ZC, timeInfo.ZZC)
         val thisWeek = timeInfo.ZC
         val nextWeek = if (timeInfo.ZC < timeInfo.ZJXZC) timeInfo.ZC + 1 else timeInfo.ZJXZC
         val kcb = getKcb(timeInfo.XNXQDM, thisWeek.toString(), classroom.jasdm!!)
