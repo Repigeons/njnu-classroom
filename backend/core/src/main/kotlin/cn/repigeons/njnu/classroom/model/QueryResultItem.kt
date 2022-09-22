@@ -1,22 +1,9 @@
 package cn.repigeons.njnu.classroom.model
 
-import cn.repigeons.njnu.classroom.mbg.model.DevRecord
-import cn.repigeons.njnu.classroom.mbg.model.ProRecord
+import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 
 class QueryResultItem() {
-    constructor(record: ProRecord) : this() {
-        this.jxlmc = record.jxlmc!!
-        this.jsmph = record.jsmph!!
-        this.skzws = record.skzws!!
-        this.day = record.day!!
-        this.jcKs = record.jcKs!!
-        this.jcJs = record.jcJs!!
-        this.zylxdm = record.zylxdm!!
-        this.jyytms = record.jyytms!!
-        this.kcm = record.kcm!!
-    }
-
-    constructor(record: DevRecord) : this() {
+    constructor(record: TimetableRecord) : this() {
         this.jxlmc = record.jxlmc!!
         this.jsmph = record.jsmph!!
         this.skzws = record.skzws!!

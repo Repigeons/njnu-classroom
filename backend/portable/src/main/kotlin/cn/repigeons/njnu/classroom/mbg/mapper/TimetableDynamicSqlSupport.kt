@@ -1,14 +1,14 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-09T16:02:51.369+08:00
+ * Generation date: 2022-09-22T23:33:05.781228+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
 import org.mybatis.dynamic.sql.SqlTable
 import java.sql.JDBCType
 
-object ProDynamicSqlSupport {
-    object Pro : SqlTable("pro") {
+object TimetableDynamicSqlSupport {
+    object Timetable : SqlTable("timetable") {
         val id = column<Int>("id", JDBCType.INTEGER)
 
         val jxlmc = column<String>("JXLMC", JDBCType.VARCHAR)

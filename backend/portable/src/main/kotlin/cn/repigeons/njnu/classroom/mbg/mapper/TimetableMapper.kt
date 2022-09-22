@@ -1,10 +1,10 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-09T16:02:51.366+08:00
+ * Generation date: 2022-09-22T23:33:05.7822294+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
-import cn.repigeons.njnu.classroom.mbg.model.DevRecord
+import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 import org.apache.ibatis.annotations.*
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider
@@ -14,7 +14,7 @@ import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
 
 @Mapper
-interface DevMapper {
+interface TimetableMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     fun count(selectStatement: SelectStatementProvider): Long
 
@@ -28,15 +28,15 @@ interface DevMapper {
         before = false,
         resultType = Int::class
     )
-    fun insert(insertStatement: InsertStatementProvider<DevRecord>): Int
+    fun insert(insertStatement: InsertStatementProvider<TimetableRecord>): Int
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
-    @ResultMap("DevRecordResult")
-    fun selectOne(selectStatement: SelectStatementProvider): DevRecord?
+    @ResultMap("TimetableRecordResult")
+    fun selectOne(selectStatement: SelectStatementProvider): TimetableRecord?
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @Results(
-        id = "DevRecordResult", value = [
+        id = "TimetableRecordResult", value = [
             Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
             Result(column = "JXLMC", property = "jxlmc", jdbcType = JdbcType.VARCHAR),
             Result(column = "jsmph", property = "jsmph", jdbcType = JdbcType.VARCHAR),
@@ -51,14 +51,14 @@ interface DevMapper {
             Result(column = "kcm", property = "kcm", jdbcType = JdbcType.LONGVARCHAR)
         ]
     )
-    fun selectMany(selectStatement: SelectStatementProvider): List<DevRecord>
+    fun selectMany(selectStatement: SelectStatementProvider): List<TimetableRecord>
 
     @UpdateProvider(type = SqlProviderAdapter::class, method = "update")
     fun update(updateStatement: UpdateStatementProvider): Int
 
-    @Update("TRUNCATE TABLE `dev`")
+    @Update("TRUNCATE TABLE `timetable`")
     fun truncate()
 
-    @Insert("INSERT INTO `dev` SELECT * FROM `KCB`")
+    @Insert("INSERT INTO `timetable` SELECT * FROM `KCB`")
     fun cloneFromKcb()
 }

@@ -34,13 +34,10 @@
         <table tableName="KCB">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="dev">
+        <table tableName="timetable">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="pro">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="feedback_metadata">
+        <table tableName="feedback">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
         <table tableName="correction">

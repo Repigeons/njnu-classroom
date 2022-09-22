@@ -1,40 +1,40 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-09T16:02:51.367+08:00
+ * Generation date: 2022-09-22T23:33:05.7832294+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.day
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.id
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jasdm
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jcJs
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jcKs
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jsmph
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jxlmc
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.jyytms
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.kcm
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.sfyxzx
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.skzws
-import cn.repigeons.njnu.classroom.mbg.mapper.DevDynamicSqlSupport.Dev.zylxdm
-import cn.repigeons.njnu.classroom.mbg.model.DevRecord
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.day
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.id
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jasdm
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jcJs
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jcKs
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jsmph
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jxlmc
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jyytms
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.kcm
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.sfyxzx
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.skzws
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.zylxdm
+import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.mybatis.dynamic.sql.util.kotlin.*
 import org.mybatis.dynamic.sql.util.kotlin.mybatis3.*
 
-fun DevMapper.count(completer: CountCompleter) =
-    countFrom(this::count, Dev, completer)
+fun TimetableMapper.count(completer: CountCompleter) =
+    countFrom(this::count, Timetable, completer)
 
-fun DevMapper.delete(completer: DeleteCompleter) =
-    deleteFrom(this::delete, Dev, completer)
+fun TimetableMapper.delete(completer: DeleteCompleter) =
+    deleteFrom(this::delete, Timetable, completer)
 
-fun DevMapper.deleteByPrimaryKey(id_: Int) =
+fun TimetableMapper.deleteByPrimaryKey(id_: Int) =
     delete {
         where(id, isEqualTo(id_))
     }
 
-fun DevMapper.insert(record: DevRecord) =
-    insert(this::insert, record, Dev) {
+fun TimetableMapper.insert(record: TimetableRecord) =
+    insert(this::insert, record, Timetable) {
         map(jxlmc).toProperty("jxlmc")
         map(jsmph).toProperty("jsmph")
         map(jasdm).toProperty("jasdm")
@@ -48,8 +48,8 @@ fun DevMapper.insert(record: DevRecord) =
         map(kcm).toProperty("kcm")
     }
 
-fun DevMapper.insertSelective(record: DevRecord) =
-    insert(this::insert, record, Dev) {
+fun TimetableMapper.insertSelective(record: TimetableRecord) =
+    insert(this::insert, record, Timetable) {
         map(jxlmc).toPropertyWhenPresent("jxlmc", record::jxlmc)
         map(jsmph).toPropertyWhenPresent("jsmph", record::jsmph)
         map(jasdm).toPropertyWhenPresent("jasdm", record::jasdm)
@@ -65,24 +65,24 @@ fun DevMapper.insertSelective(record: DevRecord) =
 
 private val columnList = listOf(id, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, day, sfyxzx, jyytms, kcm)
 
-fun DevMapper.selectOne(completer: SelectCompleter) =
-    selectOne(this::selectOne, columnList, Dev, completer)
+fun TimetableMapper.selectOne(completer: SelectCompleter) =
+    selectOne(this::selectOne, columnList, Timetable, completer)
 
-fun DevMapper.select(completer: SelectCompleter) =
-    selectList(this::selectMany, columnList, Dev, completer)
+fun TimetableMapper.select(completer: SelectCompleter) =
+    selectList(this::selectMany, columnList, Timetable, completer)
 
-fun DevMapper.selectDistinct(completer: SelectCompleter) =
-    selectDistinct(this::selectMany, columnList, Dev, completer)
+fun TimetableMapper.selectDistinct(completer: SelectCompleter) =
+    selectDistinct(this::selectMany, columnList, Timetable, completer)
 
-fun DevMapper.selectByPrimaryKey(id_: Int) =
+fun TimetableMapper.selectByPrimaryKey(id_: Int) =
     selectOne {
         where(id, isEqualTo(id_))
     }
 
-fun DevMapper.update(completer: UpdateCompleter) =
-    update(this::update, Dev, completer)
+fun TimetableMapper.update(completer: UpdateCompleter) =
+    update(this::update, Timetable, completer)
 
-fun KotlinUpdateBuilder.updateAllColumns(record: DevRecord) =
+fun KotlinUpdateBuilder.updateAllColumns(record: TimetableRecord) =
     apply {
         set(jxlmc).equalTo(record::jxlmc)
         set(jsmph).equalTo(record::jsmph)
@@ -97,7 +97,7 @@ fun KotlinUpdateBuilder.updateAllColumns(record: DevRecord) =
         set(kcm).equalTo(record::kcm)
     }
 
-fun KotlinUpdateBuilder.updateSelectiveColumns(record: DevRecord) =
+fun KotlinUpdateBuilder.updateSelectiveColumns(record: TimetableRecord) =
     apply {
         set(jxlmc).equalToWhenPresent(record::jxlmc)
         set(jsmph).equalToWhenPresent(record::jsmph)
@@ -112,7 +112,7 @@ fun KotlinUpdateBuilder.updateSelectiveColumns(record: DevRecord) =
         set(kcm).equalToWhenPresent(record::kcm)
     }
 
-fun DevMapper.updateByPrimaryKey(record: DevRecord) =
+fun TimetableMapper.updateByPrimaryKey(record: TimetableRecord) =
     update {
         set(jxlmc).equalTo(record::jxlmc)
         set(jsmph).equalTo(record::jsmph)
@@ -128,7 +128,7 @@ fun DevMapper.updateByPrimaryKey(record: DevRecord) =
         where(id, isEqualTo(record::id))
     }
 
-fun DevMapper.updateByPrimaryKeySelective(record: DevRecord) =
+fun TimetableMapper.updateByPrimaryKeySelective(record: TimetableRecord) =
     update {
         set(jxlmc).equalToWhenPresent(record::jxlmc)
         set(jsmph).equalToWhenPresent(record::jsmph)

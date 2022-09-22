@@ -9,7 +9,7 @@ spring:
     username: njnu_classroom_root
     password: njnu-000
     hikari:
-      maximum-pool-size: 50
+      maximum-pool-size: 100
   mail:
     host: smtp.repigeons.cn
     port: 465

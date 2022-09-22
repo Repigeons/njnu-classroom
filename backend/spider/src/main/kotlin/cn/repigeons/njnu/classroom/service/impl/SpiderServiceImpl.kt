@@ -3,9 +3,9 @@ package cn.repigeons.njnu.classroom.service.impl
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
-import cn.repigeons.njnu.classroom.mbg.model.DevRecord
 import cn.repigeons.njnu.classroom.mbg.model.JasRecord
 import cn.repigeons.njnu.classroom.mbg.model.KcbRecord
+import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 import cn.repigeons.njnu.classroom.model.KcbItem
 import cn.repigeons.njnu.classroom.model.TimeInfo
 import cn.repigeons.njnu.classroom.service.CacheService
@@ -20,7 +20,6 @@ import okhttp3.Request
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.AsyncResult
 import org.springframework.stereotype.Service
@@ -38,10 +37,7 @@ open class SpiderServiceImpl(
     private val correctionMapper: CorrectionMapper,
     private val jasMapper: JasMapper,
     private val kcbMapper: KcbMapper,
-    private val devMapper: DevMapper,
-    private val proMapper: ProMapper,
-    @Value("\${spring.profiles.active}")
-    private val env: String
+    private val timetableMapper: TimetableMapper
 ) : SpiderService {
     private val logger = LoggerFactory.getLogger(javaClass)
     private val rqDateFormat = SimpleDateFormat("yyyy-MM-dd")
@@ -83,21 +79,14 @@ open class SpiderServiceImpl(
             }.forEach { future -> future.join() }
         }
         logger.info("课程信息采集完成.")
-        devMapper.truncate()
-        devMapper.cloneFromKcb()
+        timetableMapper.truncate()
+        timetableMapper.cloneFromKcb()
         logger.info("开始校正数据...")
         correctData()
         logger.info("数据校正完成...")
         logger.info("开始归并数据...")
         mergeData()
         logger.info("数据归并完成...")
-
-        if (env == "pro") {
-            logger.info("Copy to `pro` from `dev`.")
-            proMapper.truncate()
-            proMapper.cloneFromDev()
-        }
-
         val endTime = Date()
         logger.info("本轮课程信息收集工作成功完成. 共计耗时 {} 秒", (endTime.time - startTime.time) / 1000)
     }
@@ -272,48 +261,48 @@ open class SpiderServiceImpl(
         corrections.forEach { record ->
             if (record.jcKs!! < record.jcJs!!) {
                 for (jc in record.jcKs!! until record.jcJs!!)
-                    devMapper.delete {
-                        where(DevDynamicSqlSupport.Dev.day, isEqualTo(record.day))
-                        and(DevDynamicSqlSupport.Dev.jasdm, isEqualTo(record.jasdm))
-                        and(DevDynamicSqlSupport.Dev.jcKs, isEqualTo(jc.toShort()))
-                        and(DevDynamicSqlSupport.Dev.jcJs, isEqualTo(jc.toShort()))
+                    timetableMapper.delete {
+                        where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(record.day))
+                        and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(record.jasdm))
+                        and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(jc.toShort()))
+                        and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(jc.toShort()))
                     }
             }
-            devMapper.update {
-                set(DevDynamicSqlSupport.Dev.skzws).equalTo(record.skzws)
-                set(DevDynamicSqlSupport.Dev.zylxdm).equalTo(record.zylxdm)
-                set(DevDynamicSqlSupport.Dev.jyytms).equalTo(record.jyytms)
-                set(DevDynamicSqlSupport.Dev.kcm).equalTo(record.kcm)
-                set(DevDynamicSqlSupport.Dev.jcKs).equalTo(record.jcKs)
-                where(DevDynamicSqlSupport.Dev.day, isEqualTo(record.day))
-                and(DevDynamicSqlSupport.Dev.jasdm, isEqualTo(record.jasdm))
-                and(DevDynamicSqlSupport.Dev.jcKs, isEqualTo(record.jcJs))
-                and(DevDynamicSqlSupport.Dev.jcJs, isEqualTo(record.jcJs))
+            timetableMapper.update {
+                set(TimetableDynamicSqlSupport.Timetable.skzws).equalTo(record.skzws)
+                set(TimetableDynamicSqlSupport.Timetable.zylxdm).equalTo(record.zylxdm)
+                set(TimetableDynamicSqlSupport.Timetable.jyytms).equalTo(record.jyytms)
+                set(TimetableDynamicSqlSupport.Timetable.kcm).equalTo(record.kcm)
+                set(TimetableDynamicSqlSupport.Timetable.jcKs).equalTo(record.jcKs)
+                where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(record.day))
+                and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(record.jasdm))
+                and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(record.jcJs))
+                and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(record.jcJs))
             }
         }
     }
 
     private fun mergeData() {
-        val data = devMapper.select {
+        val data = timetableMapper.select {
             orderBy(
-                DevDynamicSqlSupport.Dev.day,
-                DevDynamicSqlSupport.Dev.jxlmc,
-                DevDynamicSqlSupport.Dev.jsmph,
-                DevDynamicSqlSupport.Dev.jcJs,
+                TimetableDynamicSqlSupport.Timetable.day,
+                TimetableDynamicSqlSupport.Timetable.jxlmc,
+                TimetableDynamicSqlSupport.Timetable.jsmph,
+                TimetableDynamicSqlSupport.Timetable.jcJs,
             )
         }.groupBy {
             it.jxlmc!!
         }
-        val result = mutableMapOf<String, MutableList<DevRecord>>()
+        val result = mutableMapOf<String, MutableList<TimetableRecord>>()
         data.map { (jxlmc, records) ->
             mergeJxl(jxlmc, records, result).completable()
         }.forEach { future -> future.join() }
         // 清空数据库
-        devMapper.truncate()
+        timetableMapper.truncate()
         // 重新插入数据库
         result.forEach { (jxlmc, records) ->
             records.forEach { record ->
-                devMapper.insert(record)
+                timetableMapper.insert(record)
             }
             logger.info("[{}] 归并完成.", jxlmc)
         }
@@ -322,11 +311,11 @@ open class SpiderServiceImpl(
     @Async
     open fun mergeJxl(
         jxlmc: String,
-        records: List<DevRecord>,
-        result: MutableMap<String, MutableList<DevRecord>>
+        records: List<TimetableRecord>,
+        result: MutableMap<String, MutableList<TimetableRecord>>
     ): ListenableFuture<*> {
         logger.info("[{}] 开始归并...", jxlmc)
-        val classrooms = mutableListOf<DevRecord>()
+        val classrooms = mutableListOf<TimetableRecord>()
         result[jxlmc] = classrooms
         records.forEach { record ->
             if (classrooms.isNotEmpty()

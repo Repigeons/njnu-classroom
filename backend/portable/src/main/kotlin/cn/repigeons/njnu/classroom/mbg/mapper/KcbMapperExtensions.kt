@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-09T16:02:51.362+08:00
+ * Generation date: 2022-09-22T23:33:05.7772282+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 

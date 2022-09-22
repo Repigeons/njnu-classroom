@@ -5,7 +5,7 @@ import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
-import cn.repigeons.njnu.classroom.mbg.model.FeedbackMetadataRecord
+import cn.repigeons.njnu.classroom.mbg.model.FeedbackRecord
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.SpiderService
@@ -22,13 +22,11 @@ import java.util.*
 open class EmptyClassroomServiceImpl(
     private val redissonClient: RedissonClient,
     private val spiderService: SpiderService,
-    private val proMapper: ProMapper,
-    private val feedbackMetadataMapper: FeedbackMetadataMapper,
+    private val timetableMapper: TimetableMapper,
+    private val feedbackMapper: FeedbackMapper,
     private val correctionMapper: CorrectionMapper,
     @Value("\${spring.mail.receivers}")
-    val receivers: Array<String>,
-    @Value("\${spring.profiles.active}")
-    private val env: String
+    val receivers: Array<String>
 ) : EmptyClassroomService {
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
         if (day == null) return JsonResponse(
@@ -60,16 +58,15 @@ open class EmptyClassroomServiceImpl(
         results: List<EmptyClassroom>,
         index: Int
     ) {
-        if (env != "pro") return
         val item = results[index]
 
         // 检查缓存一致性
-        val count = proMapper.count {
-            where(ProDynamicSqlSupport.Pro.day, isEqualTo(day.value))
-            and(ProDynamicSqlSupport.Pro.jcKs, isEqualTo(item.jcKs))
-            and(ProDynamicSqlSupport.Pro.jcJs, isEqualTo(item.jcJs))
-            and(ProDynamicSqlSupport.Pro.jasdm, isEqualTo(item.jasdm))
-            and(ProDynamicSqlSupport.Pro.zylxdm, isEqualTo(item.zylxdm))
+        val count = timetableMapper.count {
+            where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(day.value))
+            and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(item.jcKs))
+            and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(item.jcJs))
+            and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(item.jasdm))
+            and(TimetableDynamicSqlSupport.Timetable.zylxdm, isEqualTo(item.zylxdm))
         }
         if (count == 0L) {
             spiderService.flushCache()
@@ -141,13 +138,13 @@ open class EmptyClassroomServiceImpl(
     }
 
     private fun autoCorrect(jxl: String, jasdm: String, jsmph: String, day: Weekday, jc: Short): Map<String, Long> {
-        val record = FeedbackMetadataRecord(
+        val record = FeedbackRecord(
             jc = jc,
             jasdm = jasdm,
             time = Date()
         )
-        feedbackMetadataMapper.insert(record)
-        val statistic = feedbackMetadataMapper.statistic(jasdm, mapDay(day), jc)
+        feedbackMapper.insert(record)
+        val statistic = feedbackMapper.statistic(jasdm, mapDay(day), jc)
         val weekCount = statistic.lastOrNull() ?: 0
         val totalCount = statistic.sumOf { it }
         if (weekCount != totalCount)

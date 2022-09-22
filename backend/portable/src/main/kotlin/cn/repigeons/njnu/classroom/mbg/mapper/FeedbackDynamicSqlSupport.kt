@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-13T01:36:08.482+08:00
+ * Generation date: 2022-09-22T23:33:05.786228+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -8,8 +8,8 @@ import org.mybatis.dynamic.sql.SqlTable
 import java.sql.JDBCType
 import java.util.*
 
-object FeedbackMetadataDynamicSqlSupport {
-    object FeedbackMetadata : SqlTable("feedback_metadata") {
+object FeedbackDynamicSqlSupport {
+    object Feedback : SqlTable("feedback") {
         val id = column<Int>("id", JDBCType.INTEGER)
 
         val time = column<Date>("time", JDBCType.TIMESTAMP)
