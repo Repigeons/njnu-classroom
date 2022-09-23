@@ -43,7 +43,7 @@ class CookieServiceImpl(
         val cookies = redisService["spider:cookies"]?.let { cookies ->
             redisService.set(
                 "spider:cookies",
-                GsonUtil.toJson(cookies),
+                cookies,
                 30 * 60
             )
             GsonUtil.fromJson<List<Map<String, String>>>(cookies)
