@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class ScheduledTask(
     private val spiderService: SpiderService,
 ) {
-    @Scheduled(cron = "0 0 8 * * *")
+    @Scheduled(cron = "0 0 8 * * ?")
     fun runSpider() {
         spiderService.run()
     }

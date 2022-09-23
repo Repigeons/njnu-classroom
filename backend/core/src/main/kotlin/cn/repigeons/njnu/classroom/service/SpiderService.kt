@@ -23,7 +23,7 @@ interface SpiderService {
         @RequestParam zylxdm: String
     ): Boolean
 
-    @GetMapping("/flushCache")
+    @GetMapping("/flush")
     fun flushCache()
 }
 
