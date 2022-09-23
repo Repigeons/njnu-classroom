@@ -200,8 +200,6 @@ open class SpiderServiceImpl(
                 }
             }
             for (day in 0..6) {
-                val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
-                val kcbMapper = sqlSession.getMapper(KcbMapper::class.java)
                 kcb[day].forEach { kcbItem ->
                     val jc = kcbItem.JC.split(',')
                     val kcbRecord = KcbRecord(
@@ -219,8 +217,6 @@ open class SpiderServiceImpl(
                     )
                     kcbMapper.insert(kcbRecord)
                 }
-                sqlSession.commit()
-                sqlSession.clearCache()
             }
         }
 
