@@ -40,8 +40,13 @@ class CookieServiceImpl(
     }
 
     override fun getCookies(): List<Cookie> {
-        val cookies = redisService["spider:cookies"]?.let {
-            GsonUtil.fromJson<List<Map<String, String>>>(it)
+        val cookies = redisService["spider:cookies"]?.let { cookies ->
+            redisService.set(
+                "spider:cookies",
+                GsonUtil.toJson(cookies),
+                30 * 60
+            )
+            GsonUtil.fromJson<List<Map<String, String>>>(cookies)
         } ?: let {
             driver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
             Thread.sleep(5000)
