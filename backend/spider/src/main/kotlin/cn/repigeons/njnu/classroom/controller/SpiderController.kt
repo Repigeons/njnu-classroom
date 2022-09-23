@@ -5,7 +5,10 @@ import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.SpiderService
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("spider")
@@ -25,7 +28,7 @@ class SpiderController(
         return JsonResponse(status = Status.ACCEPTED)
     }
 
-    @GetMapping("/checkWithEhall")
+    @PostMapping("/checkWithEhall")
     fun checkWithEhall(
         @RequestParam jasdm: String,
         @RequestParam day: Weekday,
