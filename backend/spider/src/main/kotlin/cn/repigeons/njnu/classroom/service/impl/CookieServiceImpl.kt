@@ -50,6 +50,7 @@ class CookieServiceImpl(
         } ?: let {
             driver.get("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/*default/index.do?amp_sec_version_=1&gid_=$gid")
             Thread.sleep(5000)
+            logger.info("Login with user {}", username)
             driver.switchTo().defaultContent()
             driver.findElement(By.id("username")).sendKeys(username)
             driver.findElement(By.id("password")).sendKeys(password)
