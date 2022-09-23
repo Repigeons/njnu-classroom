@@ -39,15 +39,16 @@ open class CacheServiceImpl(
         }
     }
 
-    open fun flushEmptyClassrooms(): CompletableFuture<*> = CompletableFuture.supplyAsync {
+    private fun flushEmptyClassrooms(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val rMap = redissonClient.getMap<String, String>("empty")
         rMap.delete()
+        logger.info("开始刷新空教室缓存...")
         timetableMapper.select {}
             .groupBy {
                 "${it.jxlmc}:${it.day}"
             }
             .forEach { (key, records) ->
-                logger.info("Flushing empty classroom: {}", key)
+                logger.debug("Flushing empty classroom: {}", key)
                 val value = records.map { record ->
                     val item = EmptyClassroom()
                     item.jasdm = record.jasdm!!
@@ -60,22 +61,23 @@ open class CacheServiceImpl(
                 }
                 rMap[key] = GsonUtil.toJson(value)
             }
-        logger.info("Flush empty classroom completed.")
+        logger.info("空教室缓存刷新完成")
     }
 
-    open fun flushOverview(): CompletableFuture<*> = CompletableFuture.supplyAsync {
+    private fun flushOverview(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val rMap = redissonClient.getMap<String, String>("overview")
         rMap.delete()
+        logger.info("开始刷新教室概览缓存...")
         timetableMapper.select {}
             .groupBy {
                 it.jasdm!!
             }
             .forEach { (key, records) ->
                 val classroomName = records.firstOrNull()?.let { it.jxlmc + it.jsmph }
-                logger.info("Flushing overview: {}", classroomName)
+                logger.debug("Flushing overview: {}", classroomName)
                 val value = records.map { QueryResultItem(it) }
                 rMap[key] = GsonUtil.toJson(value)
             }
-        logger.info("Flush overview completed.")
+        logger.info("教室概览缓存刷新完成")
     }
 }
