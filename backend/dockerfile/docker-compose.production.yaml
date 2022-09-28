@@ -16,6 +16,8 @@ services:
       dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.nginx.dockerfile
     environment:
       TZ: Asia/Shanghai
+    ports:
+    - 10080:80
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:443"]
 
