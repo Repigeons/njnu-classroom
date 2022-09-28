@@ -1,22 +1,22 @@
 init:
-	@if [ -d "/opt/njnu-classroom/application" ]; then ${error "Project has been initialized! Please go to '/opt/njnu_classroom' and see the details."}; fi
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
 	@mkdir -p /opt/njnu_classroom/application
 	@cd /opt/njnu_classroom && git clone --depth=1 https://github.com/Repigeons/NjnuClassroom.git
-	@cp /opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application.yml /opt/njnu_classroom/application/spider.yml
-	@cp /opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application.yml /opt/njnu_classroom/application/core.yml
-	@cp /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application.yml /opt/njnu_classroom/application/explore.yml
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application.yml 	/opt/njnu_classroom/application/spider.yml
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application.yml 		/opt/njnu_classroom/application/core.yml
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application.yml 	/opt/njnu_classroom/application/explore.yml
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 clone_develop:
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
-	@cd /opt/njnu_classroom && git clone -b develop --depth=1 https://github.com/Repigeons/NjnuClassroom.git
+	@cd /opt/njnu_classroom && git clone --depth=1 https://github.com/Repigeons/NjnuClassroom.git -b develop
 	@cp /opt/njnu_classroom/application/spider-dev.yml	/opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application-dev.yml
 	@cp /opt/njnu_classroom/application/core-dev.yml 	/opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application-dev.yml
 	@cp /opt/njnu_classroom/application/explore-dev.yml /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application-dev.yml
 
 clone_master:
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
-	@cd /opt/njnu_classroom && git clone -b master --depth=1 https://github.com/Repigeons/NjnuClassroom.git
+	@cd /opt/njnu_classroom && git clone --depth=1 https://github.com/Repigeons/NjnuClassroom.git -b master
 	@cp /opt/njnu_classroom/application/spider-pro.yml	/opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application-pro.yml
 	@cp /opt/njnu_classroom/application/core-pro.yml 	/opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application-pro.yml
 	@cp /opt/njnu_classroom/application/explore-pro.yml /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application-pro.yml
