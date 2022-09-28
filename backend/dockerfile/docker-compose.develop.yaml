@@ -12,8 +12,8 @@ services:
     restart: always
     image: njnu-classroom-nginx:develop
     build:
-      context: /opt/njnu_classroom/backend
-      dockerfile: /opt/njnu_classroom/backend/dockerfile/Dockerfile.nginx.dockerfile
+      context: /opt/njnu_classroom/NjnuClassroom/backend
+      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.nginx.dockerfile
     environment:
       TZ: Asia/Shanghai
     healthcheck:
@@ -23,8 +23,8 @@ services:
     restart: always
     image: njnu-classroom-spider:develop
     build:
-      context: /opt/njnu_classroom/backend
-      dockerfile: /opt/njnu_classroom/backend/dockerfile/Dockerfile.spider.dockerfile
+      context: /opt/njnu_classroom/NjnuClassroom/backend
+      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.spider.dockerfile
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=dev"]
     depends_on:
     - redis
@@ -38,8 +38,8 @@ services:
     restart: always
     image: njnu-classroom-core:develop
     build:
-      context: /opt/njnu_classroom/backend
-      dockerfile: /opt/njnu_classroom/backend/dockerfile/Dockerfile.core.dockerfile
+      context: /opt/njnu_classroom/NjnuClassroom/backend
+      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.core.dockerfile
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=dev"]
     depends_on:
     - redis
@@ -54,8 +54,8 @@ services:
     restart: always
     image: njnu-classroom-explore:develop
     build:
-      context: /opt/njnu_classroom/backend
-      dockerfile: /opt/njnu_classroom/backend/dockerfile/Dockerfile.explore.dockerfile
+      context: /opt/njnu_classroom/NjnuClassroom/backend
+      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.explore.dockerfile
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=dev"]
     depends_on:
     - redis

@@ -24,15 +24,15 @@ clone_master:
 build_develop: clone_develop
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml build
-	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 build_production: clone_master
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml build
-	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 deploy_develop: build_develop
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml up -d
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 deploy_production: build_production
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d
+	@rm -rf /opt/njnu_classroom/NjnuClassroom

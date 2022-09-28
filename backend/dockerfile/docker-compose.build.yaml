@@ -7,5 +7,5 @@ services:
     command: ["mvn", "clean", "kotlin:compile", "package", "-Dmaven.test.skip=true"]
     volumes:
     - /root/.m2:/root/.m2
-    - /opt/njnu_classroom/backend:/home
+    - /opt/njnu_classroom/NjnuClassroom/backend:/home
     working_dir: /home
