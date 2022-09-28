@@ -7,21 +7,5 @@ services:
     command: ["mvn", "clean", "kotlin:compile", "package", "-Dmaven.test.skip=true"]
     volumes:
     - /root/.m2:/root/.m2
-    - /opt/NjnuClassroom/backend:/home
+    - /opt/njnu_classroom/backend:/home
     working_dir: /home
-
-  core:
-    image: njnu-classroom-core:latest
-    build:
-      context: .
-      dockerfile: docker-core.Dockerfile
-  explore:
-    image: njnu-classroom-explore:latest
-    build:
-      context: .
-      dockerfile: docker-explore.Dockerfile
-  spider:
-    image: njnu-classroom-spider:latest
-    build:
-      context: .
-      dockerfile: docker-spider.Dockerfile

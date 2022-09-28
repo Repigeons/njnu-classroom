@@ -1,10 +1,38 @@
-master:
-	@git checkout master && git pull --prune
+init:
+	@if [ -d "/opt/njnu-classroom/application" ]; then ${error "Project has been initialized! Please go to '/opt/njnu_classroom' and see the details."}; fi
+	@mkdir -p /opt/njnu_classroom/application
+	@cd /opt/njnu_classroom && git clone --depth=1 https://github.com/Repigeons/NjnuClassroom.git
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application.yml /opt/njnu_classroom/application/spider.yml
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application.yml /opt/njnu_classroom/application/core.yml
+	@cp /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application.yml /opt/njnu_classroom/application/explore.yml
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
-build: compile
-	@docker-compose -f dockerfile/docker-compose.build.yaml build
-	@-docker images | grep '<none>' | awk '{print $$3}' | xargs -r docker rmi
+clone_develop:
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
+	@cd /opt/njnu_classroom && git clone -b develop --depth=1 https://github.com/Repigeons/NjnuClassroom.git
+	@cp /opt/njnu_classroom/application/spider-dev.yml	/opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application-dev.yml
+	@cp /opt/njnu_classroom/application/core-dev.yml 	/opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application-dev.yml
+	@cp /opt/njnu_classroom/application/explore-dev.yml /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application-dev.yml
 
-compile: master
-	@rm .pull
-	@docker-compose -f dockerfile/docker-compose.build.yaml run --rm compile
+clone_master:
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
+	@cd /opt/njnu_classroom && git clone -b master --depth=1 https://github.com/Repigeons/NjnuClassroom.git
+	@cp /opt/njnu_classroom/application/spider-pro.yml	/opt/njnu_classroom/NjnuClassroom/backend/spider/src/main/resources/application-pro.yml
+	@cp /opt/njnu_classroom/application/core-pro.yml 	/opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application-pro.yml
+	@cp /opt/njnu_classroom/application/explore-pro.yml /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application-pro.yml
+
+build_develop: clone_develop
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml build
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
+
+build_production: clone_master
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml build
+	@rm -rf /opt/njnu_classroom/NjnuClassroom
+
+deploy_develop: build_develop
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d
+
+deploy_production: build_production
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d

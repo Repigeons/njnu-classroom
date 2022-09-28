@@ -1,7 +1,0 @@
-#!/usr/bin/sh
-
-cd ${pwd}
-getopts d: OPT
-git checkout ${OPTARG}
-git pull
-touch .pull
