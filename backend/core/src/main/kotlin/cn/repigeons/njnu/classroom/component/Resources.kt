@@ -12,7 +12,7 @@ class Resources(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    val zylxdm = GsonUtil.fromJson(ResourceUtil.loadResourceText("/zylxdm.json")!!, List::class.java)
+    val zylxdm: List<*> = GsonUtil.fromJson(ResourceUtil.loadResourceText("/zylxdm.json")!!)
 
     init {
         cacheService.flushClassroomList()
