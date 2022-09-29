@@ -45,7 +45,6 @@ services:
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=dev"]
     depends_on:
     - redis
-    - spider
     environment:
       TZ: Asia/Shanghai
     deploy:
