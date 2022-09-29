@@ -344,4 +344,8 @@ open class SpiderServiceImpl(
         }
         return false
     }
+
+    init {
+        cacheService.flush()
+    }
 }

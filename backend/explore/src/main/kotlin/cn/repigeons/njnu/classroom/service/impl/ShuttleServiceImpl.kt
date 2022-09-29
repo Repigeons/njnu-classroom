@@ -89,7 +89,7 @@ open class ShuttleServiceImpl(
         redisService["static:position:shuttleStation"] = GsonUtil.toJson(positions)
     }
 
-    override fun getStationPosition() = GsonUtil.fromJson(
-        redisService["static:position:shuttleStation"]!!, List::class.java
+    override fun getStationPosition(): List<*> = GsonUtil.fromJson(
+        redisService["static:position:shuttleStation"]!!
     )
 }
