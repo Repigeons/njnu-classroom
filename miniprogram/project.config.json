@@ -1,7 +1,8 @@
 {
   "description": "项目配置文件",
   "packOptions": {
-    "ignore": []
+    "ignore": [],
+    "include": []
   },
   "miniprogramRoot": "miniprogram/",
   "compileType": "miniprogram",
@@ -55,6 +56,15 @@
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "appid": "wx42f3e578c5411a23",
-  "qqappid": "1110565565",
-  "condition": {}
+  "condition": {},
+  "scripts": {
+    "beforeCompile": "npm run tsc",
+    "beforePreview": "npm run tsc",
+    "beforeUpload": "npm run tsc"
+  },
+  "srcMiniprogramRoot": "miniprogram/",
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
 }

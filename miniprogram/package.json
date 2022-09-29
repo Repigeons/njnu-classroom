@@ -13,9 +13,9 @@
     "ZzDaniel <zzdaniel@repigeons.cn>"
   ],
   "repository": "github:Repigeons/NjnuClassroom",
-  "homepage": "https://classroom.njnu.repigeons.cn/",
+  "homepage": "https://njnu-classroom.repigeons.cn/",
   "bugs": "https://github.com/Repigeons/NjnuClassroom/issues",
   "devDependencies": {
-    "miniprogram-api-typings": "^3.4.5"
+    "miniprogram-api-typings": "^3.6.0"
   }
 }
