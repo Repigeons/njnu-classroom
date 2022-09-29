@@ -1,14 +1,10 @@
 <!--pages/explore/pages/map/map.wxml-->
-<map class="map" longitude="{{campusPosition[campusSelected].longitude}}" latitude="{{campusPosition[campusSelected].latitude}}" markers="{{markers}}" scale="15" show-location enable-3D show-compass show-scale bindcallouttap="startNavigation"></map>
-<view class="pickers">
-  <view class="picker">
-    <picker id="campus" bindchange="bindCampusChange" value="{{campusSelected}}" range="{{campusList}}">
-      <text>{{campusList[campusSelected]}}</text>
-    </picker>
+<map class="map" longitude="{{campusPosition[campusSelected].longitude}}" latitude="{{campusPosition[campusSelected].latitude}}" markers="{{markers}}" scale="15" show-location enable-3D show-compass enable-rotate enable-satellite enable-traffic enable-building show-scale bindmarkertap="startNavigation" bindcallouttap="startNavigation"></map>
+<view class="rp-search__pickers">
+  <view class="rp-search__picker">
+    <rp-picker list="{{campusList}}" key="value" selected="{{campusSelected}}" bindchange="bindCampusChange" />
   </view>
-  <view class="picker">
-    <picker id="entity" bindchange="bindEntityChange" value="{{entitySelected}}" range="{{entityList}}">
-      <text>{{entityList[entitySelected]}}</text>
-    </picker>
+  <view class="rp-search__picker">
+    <rp-picker list="{{entityList}}" key="value" selected="{{entitySelected}}" bindchange="bindEntityChange" />
   </view>
 </view>

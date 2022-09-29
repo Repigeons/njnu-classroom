@@ -18,4 +18,16 @@ class PageResult<T>() {
         this.totalCount = pageInfo.total
         this.list = pageInfo.list
     }
+
+    constructor(list: List<T>, pageInfo: PageInfo<*>) : this() {
+        this.page = pageInfo.pageNum
+        this.size = pageInfo.pageSize
+        this.pageCount = pageInfo.pages
+        this.totalCount = pageInfo.total
+        this.list = list
+    }
+
+    companion object {
+        fun <T> List<T>.pageInfo() = PageInfo(this)
+    }
 }

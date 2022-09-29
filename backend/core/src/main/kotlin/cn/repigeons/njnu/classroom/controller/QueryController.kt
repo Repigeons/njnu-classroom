@@ -4,7 +4,6 @@ import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.component.Resources
-import cn.repigeons.njnu.classroom.component.ServiceSwitch
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.OverviewService

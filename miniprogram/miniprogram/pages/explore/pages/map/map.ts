@@ -12,10 +12,16 @@ Page({
       { latitude: 32.10800, longitude: 118.90880, },
       { latitude: 32.05294, longitude: 118.76763, }
     ],
-    campusList: ["仙林校区", "随园校区"],
+    campusList: [
+      { key: "0", value: "仙林校区" },
+      { key: "1", value: "随园校区" },
+    ] as Array<KeyValue>,
     campusSelected: 0,
     jxlPosition: Array<IPosition>(),
-    entityList: ["教学楼", "校车站"],
+    entityList: [
+      { key: "0", value: "教学楼" },
+      { key: "1", value: "校车站" },
+    ] as Array<KeyValue>,
     entitySelected: 0,
     shuttlePosition: Array<IPosition>(),
   },
@@ -60,7 +66,13 @@ Page({
             id: index,
             latitude: item.position[0],
             longitude: item.position[1],
-            title: item.name
+            callout: {
+              content: item.name,
+              display: 'ALWAYS',
+              color: '#fff',
+              bgColor: '#000',
+              padding: 4,
+            }
           }
         })
         this.setData({ markers })
@@ -72,7 +84,13 @@ Page({
             id: index,
             latitude: item.position[0],
             longitude: item.position[1],
-            title: item.name
+            callout: {
+              content: item.name,
+              display: 'ALWAYS',
+              color: '#fff',
+              bgColor: '#000',
+              padding: 4,
+            }
           }
         })
         this.setData({ markers })
@@ -86,19 +104,27 @@ Page({
     switch (this.data.entitySelected) {
       case 0: {
         const position = this.data.jxlPosition[markerId]
-        wx.openLocation({
-          latitude: position.position[0],
-          longitude: position.position[1],
-          name: position.name
+        wx.showToast({
+          title: '正在启动导航...',
+          icon: 'loading',
+          success: () => wx.openLocation({
+            latitude: position.position[0],
+            longitude: position.position[1],
+            name: position.name
+          })
         })
         break
       }
       case 1: {
         const position = this.data.shuttlePosition[markerId]
-        wx.openLocation({
-          latitude: position.position[0],
-          longitude: position.position[1],
-          name: position.name
+        wx.showToast({
+          title: '正在启动导航...',
+          icon: 'loading',
+          success: () => wx.openLocation({
+            latitude: position.position[0],
+            longitude: position.position[1],
+            name: position.name
+          })
         })
         break
       }

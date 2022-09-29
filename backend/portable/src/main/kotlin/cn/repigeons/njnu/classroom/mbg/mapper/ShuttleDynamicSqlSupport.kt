@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-02-15T19:29:10.774+08:00
+ * Generation date: 2022-09-22T23:33:05.7982332+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -19,6 +19,6 @@ object ShuttleDynamicSqlSupport {
 
         val shuttleCount = column<Int>("shuttle_count", JDBCType.INTEGER)
 
-        val working = column<Byte>("working", JDBCType.BIT)
+        val working = column<ByteArray>("working", JDBCType.BIT)
     }
 }

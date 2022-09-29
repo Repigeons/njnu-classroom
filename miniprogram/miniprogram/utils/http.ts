@@ -1,5 +1,4 @@
 const servers: Record<string, string> = {
-  local: "http://l-njnu-classroom.repigeons.cn",    // 本地版
   develop: "https://t-njnu-classroom.repigeons.cn", // 开发版
   trial: "https://t-njnu-classroom.repigeons.cn",   // 体验版
   release: "https://njnu-classroom.repigeons.cn",   // 正式版

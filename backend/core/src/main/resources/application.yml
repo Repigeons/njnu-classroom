@@ -8,23 +8,11 @@ spring:
     url: jdbc:mariadb://127.0.0.1:3306/njnu_classroom
     username: njnu_classroom_root
     password: njnu-000
+    hikari:
+      maximum-pool-size: 100
   mail:
     host: smtp.repigeons.cn
     port: 465
     username: ''
     password: ''
-    properties:
-      mail:
-        smtp:
-          ssl:
-            enable: true
     receivers: ''
-
-browser-debugger:
-  address: 127.0.0.1
-  port: 9222
-
-account:
-  username: ""
-  password: ""
-  gid: ""

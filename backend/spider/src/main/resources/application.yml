@@ -1,0 +1,22 @@
+spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    database: 0
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/njnu_classroom
+    username: njnu_classroom_root
+    password: njnu-000
+    hikari:
+      maximum-pool-size: 100
+  mail:
+    host: smtp.repigeons.cn
+    port: 465
+    username: ''
+    password: ''
+
+account:
+  username: ''
+  password: ''
+  gid: ''
