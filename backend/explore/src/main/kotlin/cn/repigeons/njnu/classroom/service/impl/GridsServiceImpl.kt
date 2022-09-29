@@ -25,13 +25,13 @@ open class GridsServiceImpl(
                 Pair("imgUrl", record.imgUrl),
                 Pair("url", record.url),
                 Pair("method", record.method),
-                Pair("button", record.button?.let { GsonUtil.fromJson<Map<String, *>>(it) })
+                Pair("button", record.button?.let { GsonUtil.fromJson(it, Map::class.java) })
             )
         }
         redisService["static:grids"] = GsonUtil.toJson(grids)
     }
 
     override fun getGrids(): List<*> = GsonUtil.fromJson(
-        redisService["static:grids"]!!
+        redisService["static:grids"]!!, List::class.java
     )
 }

@@ -35,8 +35,8 @@ class ShuttleController(
             )
         val weekday = Weekday.parse(day)
             ?: return JsonResponse(status = Status.BAD_REQUEST)
-        val direction1: List<*> = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:1"]!!)
-        val direction2: List<*> = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:2"]!!)
+        val direction1 = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:1"]!!, List::class.java)
+        val direction2 = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:2"]!!, List::class.java)
         return JsonResponse(
             data = mapOf(
                 Pair("stations", shuttleService.getStationPosition()),
