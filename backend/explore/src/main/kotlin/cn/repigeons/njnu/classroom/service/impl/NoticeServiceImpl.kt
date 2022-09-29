@@ -16,9 +16,9 @@ class NoticeServiceImpl(
 ) : NoticeService {
     private val df = SimpleDateFormat("yyyy-MM-dd")
 
-    override fun get(): Map<String, *> {
+    override fun get(): Map<*, *> {
         return redisService["notice"]?.let {
-            GsonUtil.fromJson(it)
+            GsonUtil.fromJson(it, Map::class.java)
         } ?: let {
             val record = noticeMapper.select {
                 orderBy(NoticeDynamicSqlSupport.Notice.time.descending())

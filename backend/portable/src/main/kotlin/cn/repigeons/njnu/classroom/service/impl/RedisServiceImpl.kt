@@ -96,12 +96,13 @@ open class RedisServiceImpl(
         }
         private val valueDecoder = Decoder { byteBuf, _ ->
             try {
-                val data: Map<String, *> = InputStreamReader(ByteBufInputStream(byteBuf)).use { reader ->
-                    GsonUtil.fromJson(reader)
+                val data = InputStreamReader(ByteBufInputStream(byteBuf)).use { reader ->
+                    GsonUtil.fromJson(reader, Map::class.java)
                 }
-                GsonUtil.reload(
-                    data[DATA]!!,
-                    Class.forName(data[TYPE] as String)
+                val clazz = Class.forName(data[TYPE] as String)
+                GsonUtil.fromJson(
+                    GsonUtil.toJson(data[DATA]),
+                    clazz
                 )
             } catch (e: Exception) {
                 null
