@@ -46,7 +46,9 @@
         <table tableName="notice">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
-        <table tableName="shuttle"/>
+        <table tableName="shuttle">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
         <table tableName="positions">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>

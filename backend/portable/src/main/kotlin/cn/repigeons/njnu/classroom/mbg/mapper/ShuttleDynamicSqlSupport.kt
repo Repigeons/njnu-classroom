@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7982332+08:00
+ * Generation date: 2022-09-29T23:55:36.3237768+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -9,6 +9,8 @@ import java.sql.JDBCType
 
 object ShuttleDynamicSqlSupport {
     object Shuttle : SqlTable("shuttle") {
+        val id = column<Int>("id", JDBCType.INTEGER)
+
         val route = column<Short>("route", JDBCType.SMALLINT)
 
         val startTime = column<String>("start_time", JDBCType.VARCHAR)
@@ -19,6 +21,6 @@ object ShuttleDynamicSqlSupport {
 
         val shuttleCount = column<Int>("shuttle_count", JDBCType.INTEGER)
 
-        val working = column<ByteArray>("working", JDBCType.BIT)
+        val working = column<String>("working", JDBCType.CHAR)
     }
 }

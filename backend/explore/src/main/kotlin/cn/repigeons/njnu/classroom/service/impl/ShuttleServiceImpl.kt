@@ -32,7 +32,7 @@ open class ShuttleServiceImpl(
         Weekday.values().forEachIndexed { index, weekday ->
             val direction1 = mutableListOf<ShuttleRoute>()
             val direction2 = mutableListOf<ShuttleRoute>()
-            val day = (1 shl 6 shr index).toByte()
+            val day = if (index > 0) index else 7
             val route1 = shuttleMapper.selectRoute(day, 1)
             val route2 = shuttleMapper.selectRoute(day, 2)
             route1.forEach {
