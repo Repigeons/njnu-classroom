@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.79923+08:00
+ * Generation date: 2022-09-29T23:55:36.3337763+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.*
 import org.apache.ibatis.type.JdbcType
 import org.mybatis.dynamic.sql.delete.render.DeleteStatementProvider
 import org.mybatis.dynamic.sql.insert.render.InsertStatementProvider
-import org.mybatis.dynamic.sql.insert.render.MultiRowInsertStatementProvider
 import org.mybatis.dynamic.sql.select.render.SelectStatementProvider
 import org.mybatis.dynamic.sql.update.render.UpdateStatementProvider
 import org.mybatis.dynamic.sql.util.SqlProviderAdapter
@@ -23,10 +22,13 @@ interface ShuttleMapper {
     fun delete(deleteStatement: DeleteStatementProvider): Int
 
     @InsertProvider(type = SqlProviderAdapter::class, method = "insert")
+    @SelectKey(
+        statement = ["SELECT LAST_INSERT_ID()"],
+        keyProperty = "record.id",
+        before = false,
+        resultType = Int::class
+    )
     fun insert(insertStatement: InsertStatementProvider<ShuttleRecord>): Int
-
-    @InsertProvider(type = SqlProviderAdapter::class, method = "insertMultiple")
-    fun insertMultiple(multipleInsertStatement: MultiRowInsertStatementProvider<ShuttleRecord>): Int
 
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @ResultMap("ShuttleRecordResult")
@@ -35,12 +37,13 @@ interface ShuttleMapper {
     @SelectProvider(type = SqlProviderAdapter::class, method = "select")
     @Results(
         id = "ShuttleRecordResult", value = [
-            Result(column = "route", property = "route", jdbcType = JdbcType.SMALLINT, id = true),
-            Result(column = "start_time", property = "startTime", jdbcType = JdbcType.VARCHAR, id = true),
+            Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
+            Result(column = "route", property = "route", jdbcType = JdbcType.SMALLINT),
+            Result(column = "start_time", property = "startTime", jdbcType = JdbcType.VARCHAR),
             Result(column = "start_station", property = "startStation", jdbcType = JdbcType.VARCHAR),
             Result(column = "end_station", property = "endStation", jdbcType = JdbcType.VARCHAR),
             Result(column = "shuttle_count", property = "shuttleCount", jdbcType = JdbcType.INTEGER),
-            Result(column = "working", property = "working", jdbcType = JdbcType.BIT)
+            Result(column = "working", property = "working", jdbcType = JdbcType.CHAR)
         ]
     )
     fun selectMany(selectStatement: SelectStatementProvider): List<ShuttleRecord>
@@ -48,10 +51,10 @@ interface ShuttleMapper {
     @UpdateProvider(type = SqlProviderAdapter::class, method = "update")
     fun update(updateStatement: UpdateStatementProvider): Int
 
-    @Select("SELECT * FROM `shuttle` WHERE (`working`& #{day}) AND `route`=#{route}")
+    @Select("SELECT * FROM `shuttle` WHERE SUBSTR(working,#{day},1)='1' AND route=#{route}")
     @ResultMap("ShuttleRecordResult")
     fun selectRoute(
-        @Param("day") day: Byte,
+        @Param("day") day: Int,
         @Param("route") route: Short
     ): List<ShuttleRecord>
 }
