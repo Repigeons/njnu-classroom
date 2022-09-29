@@ -52,6 +52,9 @@
       "desc": "你的位置信息将用于计算离你最近的教学楼"
     }
   },
+  "requiredPrivateInfos":[
+    "getLocation"
+  ],
   "darkmode": true,
   "themeLocation": "theme.json",
   "style": "v2",
