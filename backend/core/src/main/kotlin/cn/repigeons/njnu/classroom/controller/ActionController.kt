@@ -4,6 +4,7 @@ import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.model.EmptyClassroomFeedbackDTO
+import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("api")
 class ActionController(
     private val serviceSwitch: ServiceSwitch,
+    private val cacheService: CacheService,
     private val emptyClassroomService: EmptyClassroomService
 ) {
     @PostMapping("empty/feedback")
@@ -31,6 +33,18 @@ class ActionController(
             dto.results,
             dto.index
         )
+        return JsonResponse(status = Status.ACCEPTED)
+    }
+
+    @PostMapping("flushCache/flushClassroomList")
+    fun flushClassroomList(): JsonResponse {
+        cacheService.flushClassroomList()
+        return JsonResponse(status = Status.ACCEPTED)
+    }
+
+    @PostMapping("flushCache/flushBuildingPosition")
+    fun flushBuildingPosition(): JsonResponse {
+        cacheService.flushBuildingPosition()
         return JsonResponse(status = Status.ACCEPTED)
     }
 }
