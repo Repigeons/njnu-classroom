@@ -6,6 +6,7 @@ import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.model.EmptyClassroomFeedbackDTO
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,13 +30,15 @@ class ActionController(
         return JsonResponse(status = Status.ACCEPTED)
     }
 
-    @PostMapping("flushCache/flushClassroomList")
+    @Scheduled(cron = "0 0 7 * * *")
+    @PostMapping("classrooms/reload")
     fun flushClassroomList(): JsonResponse {
         cacheService.flushClassroomList()
         return JsonResponse(status = Status.ACCEPTED)
     }
 
-    @PostMapping("flushCache/flushBuildingPosition")
+    @Scheduled(cron = "0 0 7 * * *")
+    @PostMapping("position/reload")
     fun flushBuildingPosition(): JsonResponse {
         cacheService.flushBuildingPosition()
         return JsonResponse(status = Status.ACCEPTED)
