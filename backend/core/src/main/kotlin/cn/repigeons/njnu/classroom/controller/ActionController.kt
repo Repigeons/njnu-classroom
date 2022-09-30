@@ -14,18 +14,11 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("api")
 class ActionController(
-    private val serviceSwitch: ServiceSwitch,
     private val cacheService: CacheService,
     private val emptyClassroomService: EmptyClassroomService
 ) {
     @PostMapping("empty/feedback")
     fun feedbackEmptyClassroom(@RequestBody dto: EmptyClassroomFeedbackDTO): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         emptyClassroomService.feedback(
             dto.jxl,
             Weekday.parse(dto.day)!!,

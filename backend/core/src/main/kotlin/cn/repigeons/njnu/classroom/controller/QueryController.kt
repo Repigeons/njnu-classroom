@@ -1,7 +1,6 @@
 package cn.repigeons.njnu.classroom.controller
 
 import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.component.Resources
 import cn.repigeons.njnu.classroom.service.CacheService
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("api")
 class QueryController(
-    private val serviceSwitch: ServiceSwitch,
     private val resources: Resources,
     private val cacheService: CacheService,
     private val emptyClassroomService: EmptyClassroomService,
@@ -29,12 +27,6 @@ class QueryController(
         @RequestParam day: String,
         @RequestParam jc: Short,
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         return emptyClassroomService.getEmptyClassrooms(jxl, Weekday.parse(day), jc)
     }
 
@@ -42,12 +34,6 @@ class QueryController(
     fun getOverview(
         @RequestParam jasdm: String
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         return overviewService.getOverview(jasdm)
     }
 
@@ -61,12 +47,6 @@ class QueryController(
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         return searchService.search(
             jcKs = jcKs,
             jcJs = jcJs,
