@@ -8,18 +8,6 @@ services:
       TZ: Asia/Shanghai
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-  nginx:
-    restart: always
-    image: njnu-classroom-nginx:production
-    build:
-      context: /opt/njnu_classroom/NjnuClassroom/backend
-      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.nginx.dockerfile
-    environment:
-      TZ: Asia/Shanghai
-    ports:
-    - 10080:80
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:443"]
 
   spider:
     restart: always
@@ -66,3 +54,20 @@ services:
       resources:
         limits:
           memory: 512M
+
+  nginx:
+    restart: always
+    image: njnu-classroom-nginx:production
+    build:
+      context: /opt/njnu_classroom/NjnuClassroom/backend
+      dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.nginx.dockerfile
+    depends_on:
+    - spider
+    - core
+    - explore
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+    - 10080:80
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:443"]
