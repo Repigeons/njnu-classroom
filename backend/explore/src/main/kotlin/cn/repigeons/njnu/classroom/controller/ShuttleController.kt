@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("explore")
 class ShuttleController(
-    private val serviceSwitch: ServiceSwitch,
     private val redisService: RedisService,
     private val shuttleService: ShuttleService
 ) {
@@ -21,12 +20,6 @@ class ShuttleController(
     fun getShuttle(
         @RequestParam day: String?
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         if (day.isNullOrBlank())
             return JsonResponse(
                 data = mapOf(
@@ -50,12 +43,6 @@ class ShuttleController(
     fun uploadShuttleImage(
         @RequestParam file: MultipartFile
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         shuttleService.sendShuttleImage(file.originalFilename, file.bytes)
         return JsonResponse(status = Status.ACCEPTED)
     }
@@ -65,16 +52,9 @@ class ShuttleController(
         @RequestParam(required = false) filename: String?,
         @RequestBody bytes: ByteArray
     ): JsonResponse {
-        if (!serviceSwitch.value) {
-            return JsonResponse(
-                status = Status.IM_A_TEAPOT,
-                message = "service off"
-            )
-        }
         shuttleService.sendShuttleImage(filename, bytes)
         return JsonResponse(status = Status.ACCEPTED)
     }
-
 
     @Scheduled(cron = "0 0 7 * * *")
     @PostMapping("shuttle/reload")

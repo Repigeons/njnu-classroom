@@ -13,21 +13,20 @@ import javax.servlet.http.HttpServletResponse
 class ServiceSwitchInterceptor(
     private val serviceSwitch: ServiceSwitch
 ) : HandlerInterceptor {
+    private val switchOffResponse = JsonResponse(
+        status = Status.IM_A_TEAPOT,
+        message = "service off"
+    ).let { GsonUtil.toJson(it) }.toByteArray()
+
     override fun preHandle(
         request: HttpServletRequest,
         response: HttpServletResponse,
         handler: Any
     ): Boolean {
         if (serviceSwitch.value) return true
-        val result = JsonResponse(
-            status = Status.IM_A_TEAPOT,
-            message = "service off"
-        )
         response.contentType = "application/json"
         response.outputStream.use { outputStream ->
-            outputStream.write(
-                GsonUtil.toJson(result).toByteArray()
-            )
+            outputStream.write(switchOffResponse)
         }
         return false
     }
