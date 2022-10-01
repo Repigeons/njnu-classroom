@@ -28,7 +28,7 @@ class GlobalExceptionHandler {
         request.parameterMap.forEach { (key: String, value: Array<String>) ->
             logger.error("*****请求参数*****:{},{}", key, value)
         }
-        logger.error("*********异常信息:{},{}", e.message, e)
+        logger.error("*********异常信息:{}", e.message, e)
         return when {
             e is HttpClientErrorException -> {
                 JsonResponse(
@@ -36,12 +36,14 @@ class GlobalExceptionHandler {
                     message = e.message
                 )
             }
+
             e is HttpRequestMethodNotSupportedException -> {
                 JsonResponse(
-                    status = Status.BAD_REQUEST,
+                    status = Status.METHOD_NOT_ALLOWED,
                     message = "请求方法错误[${request.method}]"
                 )
             }
+
             request.method in listOf("POST", "PUT", "DELETE") &&
                     (e is HttpMediaTypeException || e is HttpMessageConversionException) -> {
                 val contentType = request.getHeader("Content-Type")
@@ -50,16 +52,18 @@ class GlobalExceptionHandler {
                     message = "请求格式错误[${contentType}]"
                 )
             }
+
             e is MissingServletRequestParameterException || e is HttpMessageNotReadableException -> {
                 JsonResponse(
                     status = Status.BAD_REQUEST,
                     message = e.message
                 )
             }
+
             else -> {
                 JsonResponse(
                     status = Status.FAILED,
-                    message = if (e.message.isNullOrEmpty()) "服务器异常" else e.message
+                    message = e.message.takeUnless { it.isNullOrBlank() } ?: "服务器异常"
                 )
             }
         }
