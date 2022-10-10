@@ -2,7 +2,7 @@ version: '3'
 
 services:
   compile:
-    image: maven
+    image: maven:3.8-openjdk-18-slim
     container_name: maven
     command: ["mvn", "clean", "kotlin:compile", "package", "-Dmaven.test.skip=true"]
     volumes:

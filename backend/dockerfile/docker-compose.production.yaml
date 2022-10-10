@@ -3,7 +3,7 @@ version: '3'
 services:
   redis:
     restart: always
-    image: redis:latest
+    image: redis:7-alpine
     environment:
       TZ: Asia/Shanghai
     healthcheck:
