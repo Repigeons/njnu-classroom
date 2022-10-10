@@ -1,11 +1,13 @@
 package cn.repigeons.njnu.classroom.service.impl
 
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.util.GsonUtil
+import org.mybatis.dynamic.sql.util.kotlin.elements.isIn
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
@@ -43,7 +45,9 @@ open class CacheServiceImpl(
         val rMap = redissonClient.getMap<String, String>("empty")
         rMap.delete()
         logger.info("开始刷新空教室缓存...")
-        timetableMapper.select {}
+        timetableMapper.select {
+            where(TimetableDynamicSqlSupport.Timetable.zylxdm, isIn("00", "10", "11"))
+        }
             .groupBy {
                 "${it.jxlmc}:${it.day}"
             }

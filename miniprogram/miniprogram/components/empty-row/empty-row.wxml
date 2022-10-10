@@ -1,16 +1,16 @@
 <view class="cell" hover-class="cell_active">
   <view class="cell__hd">
-    <view class="mark mark_color{{zylxdm=='10'?1:0}}"></view>
+    <view class="mark mark_color{{zylxdm!=='00'?1:0}}"></view>
     <view class="classroom-sign">{{jsmph}}</view>
     <view class="classroom-text">教室</view>
-    <!-- <view class="vline vline_color{{zylxdm=='10'?1:0}}"></view> -->
+    <!-- <view class="vline vline_color{{zylxdm!=='00'?1:0}}"></view> -->
     <view class="section">{{jcKs}}-{{jcJs}}节</view>
   </view>
   <view class="cell__ft">
-    <view wx:if="{{zylxdm=='10'}}" class="yan-text">可能为空教室</view>
+    <view wx:if="{{zylxdm!=='00'}}" class="yan-text">可能为空教室</view>
     <view class="seat">
-      <image src="/images/seat{{zylxdm=='10'?2:1}}.png" class="seat__image" />
+      <image src="/images/seat{{zylxdm!=='00'?2:1}}.png" class="seat__image" />
     </view>
-    <view class="seat-number seat_color{{zylxdm=='10'?1:0}}">{{skzws}}</view>
+    <view class="seat-number seat_color{{zylxdm!=='00'?1:0}}">{{skzws}}</view>
   </view>
 </view>
