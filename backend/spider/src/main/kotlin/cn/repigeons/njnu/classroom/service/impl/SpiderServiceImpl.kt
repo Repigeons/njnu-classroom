@@ -213,7 +213,7 @@ open class SpiderServiceImpl(
                         day = Weekday[day].value,
                         sfyxzx = classroom.sfyxzx,
                         jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
-                        kcm = kcbItem.KCM ?: if (kcbItem.KBID != null) "研究生课" else "未知",
+                        kcm = kcbItem.KCM ?: kcbItem.KBID?.let { "研究生[$it]" } ?: "未知",
                     )
                     kcbMapper.insert(kcbRecord)
                 }
