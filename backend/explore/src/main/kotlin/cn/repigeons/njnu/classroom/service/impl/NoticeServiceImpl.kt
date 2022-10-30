@@ -18,7 +18,7 @@ class NoticeServiceImpl(
 
     override fun get(): Map<*, *> {
         return redisService["notice"]?.let {
-            GsonUtil.fromJson(it, Map::class.java)
+            GsonUtil.fromJson(it)
         } ?: let {
             val record = noticeMapper.select {
                 orderBy(NoticeDynamicSqlSupport.Notice.time.descending())

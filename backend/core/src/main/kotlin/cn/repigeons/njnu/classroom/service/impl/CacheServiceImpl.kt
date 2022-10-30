@@ -32,7 +32,7 @@ open class CacheServiceImpl(
     }
 
     override fun getClassroomList(): Map<*, *> = GsonUtil.fromJson(
-        redisService["static:classrooms"]!!, Map::class.java
+        redisService["static:classrooms"]!!
     )
 
     @Async
@@ -49,6 +49,6 @@ open class CacheServiceImpl(
     }
 
     override fun getBuildingPosition(): List<*> = GsonUtil.fromJson(
-        redisService["static:position:building"]!!, List::class.java
+        redisService["static:position:building"]!!
     )
 }
