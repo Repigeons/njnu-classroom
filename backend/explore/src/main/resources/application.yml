@@ -16,3 +16,11 @@ spring:
     username: ''
     password: ''
     receivers: ''
+
+jwt:
+  secret: ''
+  expire: 86400
+
+mp:
+  appid: wx42f3e578c5411a23
+  secret: ''

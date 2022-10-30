@@ -18,9 +18,9 @@ private open class JwtConfig(
 
 object JwtUtil {
     private val jwtConfig: JwtConfig = SpringContextHolder.getBean()
-    private const val TOKEN_HEAD = "Bearer"
+    const val TOKEN_HEAD = "Bearer"
 
-    private fun generate(claims: Claims): String {
+    fun generate(claims: Claims): String {
         val issuedAt = System.currentTimeMillis()
         val expireAt = issuedAt + jwtConfig.expire * 1000
         val builder = Jwts.builder()
@@ -33,12 +33,9 @@ object JwtUtil {
 
     fun parse(token: String): Claims? {
         try {
-            val claimsJws = if (token.startsWith(TOKEN_HEAD)) {
-                token.substring(TOKEN_HEAD.length)
-            } else token
             return Jwts.parser()
                 .setSigningKey(jwtConfig.secret)
-                .parseClaimsJws(claimsJws)
+                .parseClaimsJws(token)
                 .body
         } catch (e: Exception) {
             e.printStackTrace()

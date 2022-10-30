@@ -1,11 +1,13 @@
 package cn.repigeons.njnu.classroom.controller
 
 import cn.repigeons.njnu.classroom.common.JsonResponse
+import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.UserTimetableRecord
 import cn.repigeons.njnu.classroom.model.UserTimetableDTO
 import cn.repigeons.njnu.classroom.model.UserTimetableVO
 import cn.repigeons.njnu.classroom.util.GsonUtil
+import cn.repigeons.njnu.classroom.util.JwtUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.springframework.web.bind.annotation.*
 
@@ -22,8 +24,10 @@ class UserTimetableController(
      */
     @GetMapping("timetable.json")
     fun getTimeTable(
-        @RequestParam openid: String
+        @RequestHeader("Authorization") token: String
     ): JsonResponse {
+        val openid = token2openid(token)
+            ?: return JsonResponse(status = Status.UNAUTHORIZED)
         val records = userTimetableMapper.select {
             where(UserTimetableDynamicSqlSupport.UserTimetable.openid, isEqualTo(openid))
         }
@@ -46,11 +50,14 @@ class UserTimetableController(
      */
     @PostMapping("timetable/save")
     fun saveTimetable(
+        @RequestHeader("Authorization") token: String,
         @RequestBody payload: UserTimetableDTO
     ): JsonResponse {
+        val openid = token2openid(token)
+            ?: return JsonResponse(status = Status.UNAUTHORIZED)
         val record = UserTimetableRecord(
             id = payload.id,
-            openid = payload.openid,
+            openid = openid,
             weekday = payload.weekday,
             ksjc = payload.ksjc,
             jsjc = payload.jsjc,
@@ -68,10 +75,28 @@ class UserTimetableController(
 
     @PostMapping("timetable/delete")
     fun deleteTimetable(
+        @RequestHeader("Authorization") token: String,
         @RequestBody payload: Map<String, Long>
     ): JsonResponse {
+        val openid = token2openid(token)
+            ?: return JsonResponse(status = Status.UNAUTHORIZED)
         val id = requireNotNull(payload["id"]) { "请求参数缺失：id" }
-        userTimetableMapper.deleteByPrimaryKey(id)
+        val record = userTimetableMapper.selectByPrimaryKey(id)
+            ?: return JsonResponse(
+                status = Status.NOT_FOUND,
+                message = "记录不存在"
+            )
+        if (record.openid != openid)
+            return JsonResponse(
+                status = Status.FORBIDDEN
+            )
         return JsonResponse()
+    }
+
+    private fun token2openid(token: String): String? {
+        if (!token.startsWith(JwtUtil.TOKEN_HEAD)) return null
+        val claims = JwtUtil.parse(token.substring(JwtUtil.TOKEN_HEAD.length))
+            ?: return null
+        return claims.subject
     }
 }
