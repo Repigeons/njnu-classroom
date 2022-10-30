@@ -1,4 +1,4 @@
-FROM nginx:latest
+FROM nginx:1.23-alpine
 
 RUN echo 'server {\n\
   listen 80;\n\

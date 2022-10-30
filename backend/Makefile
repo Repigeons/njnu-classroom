@@ -30,17 +30,17 @@ compile_production: clone_master
 	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile
 
 deploy_develop: compile_develop
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml up -d --build
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml up -d --build --remove-orphans
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 deploy_spider: compile_production
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build spider
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans spider
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 deploy_core: compile_production
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build core
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans core
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
 deploy_explore: compile_production
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build explore
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans explore
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
