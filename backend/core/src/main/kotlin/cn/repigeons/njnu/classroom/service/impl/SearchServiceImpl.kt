@@ -34,18 +34,22 @@ class SearchServiceImpl(
         val pageInfo = timetableMapper.select {
             where(TimetableDynamicSqlSupport.Timetable.jcKs, isGreaterThanOrEqualTo(jcKs))
             and(TimetableDynamicSqlSupport.Timetable.jcJs, isLessThanOrEqualTo(jcJs))
-            if (day != null)
-                and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(day.value))
-            if (jxl != null)
-                and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(jxl))
-            if (keyword != null) {
-                val value = "%$keyword%"
+            day?.run {
+                and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(this.value))
+            }
+            jxl?.run {
+                and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))
+            }
+            keyword?.run {
+                val value = "%$this%"
                 and(TimetableDynamicSqlSupport.Timetable.kcm, isLike(value))
                     .or(TimetableDynamicSqlSupport.Timetable.jyytms, isLike(value))
-                if (day != null)
-                    and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(day.value))
-                if (jxl != null)
-                    and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(jxl))
+                day?.run {
+                    and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(this.value))
+                }
+                jxl?.run {
+                    and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))
+                }
                 and(TimetableDynamicSqlSupport.Timetable.jcJs, isLessThanOrEqualTo(jcJs))
                 and(TimetableDynamicSqlSupport.Timetable.jcKs, isGreaterThanOrEqualTo(jcKs))
             }

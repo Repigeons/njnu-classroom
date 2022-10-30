@@ -1,7 +1,6 @@
 package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
@@ -29,21 +28,12 @@ open class EmptyClassroomServiceImpl(
     val receivers: Array<String>
 ) : EmptyClassroomService {
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
-        if (day == null) return JsonResponse(
-            status = Status.BAD_REQUEST,
-            message = "无效参数: [day]"
-        )
-        if (jc !in 1..12) return JsonResponse(
-            status = Status.BAD_REQUEST,
-            message = "无效参数: [jc]"
-        )
+        requireNotNull(day) { "无效参数: [day]" }
+        require(jc in 1..12) { "无效参数: [jc]" }
         val rMap = redissonClient.getMap<String, String>("empty")
-        val classrooms = rMap["$jxl:${day.value}"]?.let {
+        val classrooms = requireNotNull(rMap["$jxl:${day.value}"]?.let {
             GsonUtil.fromJson<List<EmptyClassroom>>(it)
-        } ?: return JsonResponse(
-            status = Status.BAD_REQUEST,
-            message = "无效参数: [jxl]"
-        )
+        }) { "无效参数: [jxl]" }
         val result = classrooms.filter { classroom ->
             jc in classroom.jcKs..classroom.jcJs
         }

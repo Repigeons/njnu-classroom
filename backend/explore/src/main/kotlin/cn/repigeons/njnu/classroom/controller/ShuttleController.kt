@@ -26,8 +26,7 @@ class ShuttleController(
                     Pair("stations", shuttleService.getStationPosition()),
                 )
             )
-        val weekday = Weekday.parse(day)
-            ?: return JsonResponse(status = Status.BAD_REQUEST)
+        val weekday = requireNotNull(Weekday.parse(day)) { Status.BAD_REQUEST.message }
         val direction1 = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:1"]!!, List::class.java)
         val direction2 = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:2"]!!, List::class.java)
         return JsonResponse(

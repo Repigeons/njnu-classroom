@@ -53,7 +53,9 @@ class GlobalExceptionHandler {
                 )
             }
 
-            e is MissingServletRequestParameterException || e is HttpMessageNotReadableException -> {
+            e is MissingServletRequestParameterException ||
+                    e is HttpMessageNotReadableException ||
+                    e is IllegalArgumentException -> {
                 JsonResponse(
                     status = Status.BAD_REQUEST,
                     message = e.message
