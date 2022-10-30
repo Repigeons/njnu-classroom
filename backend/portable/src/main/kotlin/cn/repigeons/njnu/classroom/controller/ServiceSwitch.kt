@@ -13,7 +13,7 @@ class ServiceSwitch(
     private val logger = LoggerFactory.getLogger(javaClass)
     var value: Boolean
         private set(value) = redisService.set("serviceSwitch", value)
-        get() = redisService.get("serviceSwitch", Boolean::class.java) == true
+        get() = redisService.get<Boolean>("serviceSwitch") == true
 
     @PostMapping("switch")
     fun switch(value: Boolean?): JsonResponse {

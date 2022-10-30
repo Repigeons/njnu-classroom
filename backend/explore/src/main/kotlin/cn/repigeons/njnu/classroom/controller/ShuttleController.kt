@@ -5,7 +5,6 @@ import cn.repigeons.njnu.classroom.common.Status
 import cn.repigeons.njnu.classroom.common.Weekday
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
@@ -27,8 +26,8 @@ class ShuttleController(
                 )
             )
         val weekday = requireNotNull(Weekday.parse(day)) { Status.BAD_REQUEST.message }
-        val direction1: List<*> = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:1"]!!)
-        val direction2: List<*> = GsonUtil.fromJson(redisService["explore:shuttle:${weekday.value}:2"]!!)
+        val direction1: List<*> = redisService["explore:shuttle:${weekday.value}:1"]!!
+        val direction2: List<*> = redisService["explore:shuttle:${weekday.value}:2"]!!
         return JsonResponse(
             data = mapOf(
                 Pair("stations", shuttleService.getStationPosition()),

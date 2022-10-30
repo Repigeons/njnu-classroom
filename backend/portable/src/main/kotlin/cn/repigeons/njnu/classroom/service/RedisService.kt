@@ -1,8 +1,8 @@
 package cn.repigeons.njnu.classroom.service
 
 interface RedisService {
-    operator fun set(key: String, value: String)
-    operator fun get(key: String): String?
+    operator fun <T> set(key: String, value: T)
+    operator fun <T> get(key: String): T?
 
     // String
     fun <T> set(key: String, value: T, expire: Long? = null)

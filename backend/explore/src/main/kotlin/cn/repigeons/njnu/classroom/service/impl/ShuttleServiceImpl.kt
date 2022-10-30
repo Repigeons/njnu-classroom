@@ -9,7 +9,6 @@ import cn.repigeons.njnu.classroom.model.ShuttleRoute
 import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import cn.repigeons.njnu.classroom.util.EmailUtil
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -53,8 +52,8 @@ open class ShuttleServiceImpl(
                 for (i in 1..it.shuttleCount!!)
                     direction2.add(item)
             }
-            redisService["explore:shuttle:${weekday.value}:1"] = GsonUtil.toJson(direction1)
-            redisService["explore:shuttle:${weekday.value}:2"] = GsonUtil.toJson(direction2)
+            redisService["explore:shuttle:${weekday.value}:1"] = direction1
+            redisService["explore:shuttle:${weekday.value}:2"] = direction2
         }
     }
 
@@ -86,10 +85,8 @@ open class ShuttleServiceImpl(
                 Pair("position", listOf(record.latitude, record.longitude))
             )
         }
-        redisService["static:position:shuttleStation"] = GsonUtil.toJson(positions)
+        redisService["static:position:shuttleStation"] = positions
     }
 
-    override fun getStationPosition(): List<*> = GsonUtil.fromJson(
-        redisService["static:position:shuttleStation"]!!
-    )
+    override fun getStationPosition(): List<*> = redisService["static:position:shuttleStation"]!!
 }

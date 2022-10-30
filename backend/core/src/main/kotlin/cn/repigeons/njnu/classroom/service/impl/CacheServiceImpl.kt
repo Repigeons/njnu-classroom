@@ -6,7 +6,6 @@ import cn.repigeons.njnu.classroom.mbg.mapper.PositionsMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.RedisService
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -28,12 +27,10 @@ open class CacheServiceImpl(
                 )
             }
             .groupBy { it["jxlmc"]!! }
-        redisService["static:classrooms"] = GsonUtil.toJson(classrooms)
+        redisService["static:classrooms"] = classrooms
     }
 
-    override fun getClassroomList(): Map<*, *> = GsonUtil.fromJson(
-        redisService["static:classrooms"]!!
-    )
+    override fun getClassroomList(): Map<*, *> = redisService["static:classrooms"]!!
 
     @Async
     override fun flushBuildingPosition() {
@@ -45,10 +42,8 @@ open class CacheServiceImpl(
                 Pair("position", listOf(it.latitude, it.longitude))
             )
         }
-        redisService["static:position:building"] = GsonUtil.toJson(positions)
+        redisService["static:position:building"] = positions
     }
 
-    override fun getBuildingPosition(): List<*> = GsonUtil.fromJson(
-        redisService["static:position:building"]!!
-    )
+    override fun getBuildingPosition(): List<*> = redisService["static:position:building"]!!
 }

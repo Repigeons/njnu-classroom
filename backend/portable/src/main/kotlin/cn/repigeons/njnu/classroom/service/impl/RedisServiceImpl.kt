@@ -11,7 +11,6 @@ import org.redisson.client.codec.StringCodec
 import org.redisson.client.protocol.Decoder
 import org.redisson.client.protocol.Encoder
 import org.springframework.stereotype.Service
-import java.io.InputStreamReader
 import java.time.Duration
 import java.util.concurrent.TimeUnit
 
@@ -19,8 +18,8 @@ import java.util.concurrent.TimeUnit
 open class RedisServiceImpl(
     private val redissonClient: RedissonClient
 ) : RedisService {
-    override fun set(key: String, value: String) = this.set(key, value, null)
-    override fun get(key: String) = this.get(key, String::class.java)
+    override fun <T> set(key: String, value: T) = this.set(key, value, null)
+    override fun <T> get(key: String) = this.get(key, Any::class.java) as T?
 
     override fun <T> set(key: String, value: T, expire: Long?) {
         val bucket = redissonClient.getBucket<T>(key, codec)
@@ -84,7 +83,7 @@ open class RedisServiceImpl(
             try {
                 val data = mapOf(
                     Pair(TYPE, input.javaClass.name),
-                    Pair(DATA, input)
+                    Pair(DATA, GsonUtil.toJson(input))
                 )
                 ByteBufOutputStream(ByteBufAllocator.DEFAULT.buffer()).use { outputStream ->
                     outputStream.write(GsonUtil.toJson(data).encodeToByteArray())
@@ -96,14 +95,11 @@ open class RedisServiceImpl(
         }
         private val valueDecoder = Decoder { byteBuf, _ ->
             try {
-                val data: Map<*, *> = InputStreamReader(ByteBufInputStream(byteBuf)).use { reader ->
-                    GsonUtil.fromJson(reader)
+                val data: Map<String, String> = ByteBufInputStream(byteBuf).use { reader ->
+                    GsonUtil.fromJson(reader.reader())
                 }
                 val clazz = Class.forName(data[TYPE] as String)
-                GsonUtil.gson.fromJson(
-                    GsonUtil.toJson(data[DATA]),
-                    clazz
-                )
+                GsonUtil.gson.fromJson(data[DATA], clazz)
             } catch (e: Exception) {
                 null
             }

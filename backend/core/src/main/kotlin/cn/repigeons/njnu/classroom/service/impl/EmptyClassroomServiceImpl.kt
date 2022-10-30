@@ -7,11 +7,11 @@ import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.FeedbackRecord
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
+import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.EmailUtil
 import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
-import org.redisson.api.RedissonClient
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
@@ -19,7 +19,7 @@ import java.util.*
 
 @Service
 open class EmptyClassroomServiceImpl(
-    private val redissonClient: RedissonClient,
+    private val redisService: RedisService,
     private val spiderService: SpiderService,
     private val timetableMapper: TimetableMapper,
     private val feedbackMapper: FeedbackMapper,
@@ -30,10 +30,9 @@ open class EmptyClassroomServiceImpl(
     override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
         requireNotNull(day) { "无效参数: [day]" }
         require(jc in 1..12) { "无效参数: [jc]" }
-        val rMap = redissonClient.getMap<String, String>("empty")
-        val classrooms = requireNotNull(rMap["$jxl:${day.value}"]?.let {
-            GsonUtil.fromJson<List<EmptyClassroom>>(it)
-        }) { "无效参数: [jxl]" }
+        val classrooms = requireNotNull(redisService.hGet<List<EmptyClassroom>>("empty", "$jxl:${day.value}")) {
+            "无效参数: [jxl]"
+        }
         val result = classrooms.filter { classroom ->
             jc in classroom.jcKs..classroom.jcJs
         }

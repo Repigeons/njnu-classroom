@@ -6,7 +6,7 @@ import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
-import cn.repigeons.njnu.classroom.util.GsonUtil
+import cn.repigeons.njnu.classroom.service.RedisService
 import org.mybatis.dynamic.sql.util.kotlin.elements.isIn
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture
 
 @Service
 open class CacheServiceImpl(
+    private val redisService: RedisService,
     private val redissonClient: RedissonClient,
     private val timetableMapper: TimetableMapper
 ) : CacheService {
@@ -42,16 +43,15 @@ open class CacheServiceImpl(
     }
 
     private fun flushEmptyClassrooms(): CompletableFuture<*> = CompletableFuture.supplyAsync {
-        val rMap = redissonClient.getMap<String, String>("empty")
-        rMap.delete()
+        redisService.del("empty")
         logger.info("开始刷新空教室缓存...")
-        timetableMapper.select {
+        val map = timetableMapper.select {
             where(TimetableDynamicSqlSupport.Timetable.zylxdm, isIn("00", "10", "11"))
         }
             .groupBy {
                 "${it.jxlmc}:${it.day}"
             }
-            .forEach { (key, records) ->
+            .map { (key, records) ->
                 logger.debug("Flushing empty classroom: {}", key)
                 val value = records.map { record ->
                     val item = EmptyClassroom()
@@ -63,25 +63,30 @@ open class CacheServiceImpl(
                     item.zylxdm = record.zylxdm!!
                     item
                 }
-                rMap[key] = GsonUtil.toJson(value)
+                Pair(key, value)
             }
+            .toTypedArray()
+            .let { mapOf(*it) }
+        redisService.hSet("empty", map)
         logger.info("空教室缓存刷新完成")
     }
 
     private fun flushOverview(): CompletableFuture<*> = CompletableFuture.supplyAsync {
-        val rMap = redissonClient.getMap<String, String>("overview")
-        rMap.delete()
+        redisService.del("overview")
         logger.info("开始刷新教室概览缓存...")
-        timetableMapper.select {}
+        val map = timetableMapper.select {}
             .groupBy {
                 it.jasdm!!
             }
-            .forEach { (key, records) ->
+            .map { (key, records) ->
                 val classroomName = records.firstOrNull()?.let { it.jxlmc + it.jsmph }
                 logger.debug("Flushing overview: {}", classroomName)
                 val value = records.map { QueryResultItem(it) }
-                rMap[key] = GsonUtil.toJson(value)
+                Pair(key, value)
             }
+            .toTypedArray()
+            .let { mapOf(*it) }
+        redisService.hSet("overview", map)
         logger.info("教室概览缓存刷新完成")
     }
 }

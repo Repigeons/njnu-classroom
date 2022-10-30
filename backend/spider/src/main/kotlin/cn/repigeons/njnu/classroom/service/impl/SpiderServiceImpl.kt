@@ -93,96 +93,94 @@ open class SpiderServiceImpl(
     }
 
     private fun getTimeInfo(): TimeInfo {
-        val result = redisService["spider:time"]?.let {
-            GsonUtil.fromJson<TimeInfo>(it)
-        } ?: let {
-            val timeInfo = TimeInfo()
-            val request1 = Request.Builder()
-                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do")
-                .build()
-            val response1 = httpClient.newCall(request1).execute()
-            val result1 = response1.body()?.string()
-            val data1 = JsonParser.parseString(result1)
-                .asJsonObject
-                .getAsJsonObject("datas")
-                .getAsJsonObject("cxdqxnxq")
-                .getAsJsonArray("rows")
-                .get(0)
-                .asJsonObject
-            timeInfo.XNXQDM = data1.get("DM").asString
-            timeInfo.XNDM = data1.get("XNDM").asString
-            timeInfo.XQDM = data1.get("XQDM").asString
+        val result = redisService.get<TimeInfo>("spider:time")
+            ?: let {
+                val timeInfo = TimeInfo()
+                val request1 = Request.Builder()
+                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxdqxnxq.do")
+                    .build()
+                val response1 = httpClient.newCall(request1).execute()
+                val result1 = response1.body()?.string()
+                val data1 = JsonParser.parseString(result1)
+                    .asJsonObject
+                    .getAsJsonObject("datas")
+                    .getAsJsonObject("cxdqxnxq")
+                    .getAsJsonArray("rows")
+                    .get(0)
+                    .asJsonObject
+                timeInfo.XNXQDM = data1.get("DM").asString
+                timeInfo.XNDM = data1.get("XNDM").asString
+                timeInfo.XQDM = data1.get("XQDM").asString
 
-            val requestBody2 = FormBody.Builder()
-                .add("XN", data1.get("XNDM").asString)
-                .add("XQ", data1.get("XQDM").asString)
-                .add("RQ", rqDateFormat.format(Date()))
-                .build()
-            val request2 = Request.Builder()
-                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do")
-                .post(requestBody2)
-                .build()
-            val response2 = httpClient.newCall(request2).execute()
-            val result2 = response2.body()?.string()
-            val data2 = JsonParser.parseString(result2)
-                .asJsonObject
-                .getAsJsonObject("datas")
-                .getAsJsonObject("cxrqdydzcxq")
-                .getAsJsonArray("rows")
-                .get(0)
-                .asJsonObject
-            timeInfo.ZC = data2.get("ZC").asString.toInt()
-            timeInfo.ZZC = data2.get("ZZC").asString.toInt()
+                val requestBody2 = FormBody.Builder()
+                    .add("XN", data1.get("XNDM").asString)
+                    .add("XQ", data1.get("XQDM").asString)
+                    .add("RQ", rqDateFormat.format(Date()))
+                    .build()
+                val request2 = Request.Builder()
+                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxrqdydzcxq.do")
+                    .post(requestBody2)
+                    .build()
+                val response2 = httpClient.newCall(request2).execute()
+                val result2 = response2.body()?.string()
+                val data2 = JsonParser.parseString(result2)
+                    .asJsonObject
+                    .getAsJsonObject("datas")
+                    .getAsJsonObject("cxrqdydzcxq")
+                    .getAsJsonArray("rows")
+                    .get(0)
+                    .asJsonObject
+                timeInfo.ZC = data2.get("ZC").asString.toInt()
+                timeInfo.ZZC = data2.get("ZZC").asString.toInt()
 
-            val requestBody3 = FormBody.Builder()
-                .add("XN", data1.get("XNDM").asString)
-                .add("XQ", data1.get("XQDM").asString)
-                .add("RQ", rqDateFormat.format(Date()))
-                .build()
-            val request3 = Request.Builder()
-                .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do")
-                .post(requestBody3)
-                .build()
-            val response3 = httpClient.newCall(request3).execute()
-            val result3 = response3.body()?.string()
-            val data3 = JsonParser.parseString(result3)
-                .asJsonObject
-                .getAsJsonObject("datas")
-                .getAsJsonObject("cxxljc")
-                .getAsJsonArray("rows")
-                .get(0)
-                .asJsonObject
-            timeInfo.ZJXZC = data3.get("ZJXZC").asString.toInt()
+                val requestBody3 = FormBody.Builder()
+                    .add("XN", data1.get("XNDM").asString)
+                    .add("XQ", data1.get("XQDM").asString)
+                    .add("RQ", rqDateFormat.format(Date()))
+                    .build()
+                val request3 = Request.Builder()
+                    .url("http://ehallapp.nnu.edu.cn/jwapp/sys/jsjy/modules/jsjysq/cxxljc.do")
+                    .post(requestBody3)
+                    .build()
+                val response3 = httpClient.newCall(request3).execute()
+                val result3 = response3.body()?.string()
+                val data3 = JsonParser.parseString(result3)
+                    .asJsonObject
+                    .getAsJsonObject("datas")
+                    .getAsJsonObject("cxxljc")
+                    .getAsJsonArray("rows")
+                    .get(0)
+                    .asJsonObject
+                timeInfo.ZJXZC = data3.get("ZJXZC").asString.toInt()
 
-            redisService.set(
-                "spider:time",
-                GsonUtil.toJson(timeInfo),
-                3 * 24 * 3600
-            )
-            timeInfo
-        }
+                redisService.set(
+                    "spider:time",
+                    timeInfo,
+                    3 * 24 * 3600
+                )
+                timeInfo
+            }
         logger.debug("Time info = {}", result)
         return result
     }
 
     private fun getAcademicBuildingInfo(): Map<String, List<JasRecord>> {
-        val result = redisService["spider:building"]?.let {
-            GsonUtil.fromJson<Map<String, List<JasRecord>>>(it)
-        } ?: let {
-            val building = jasMapper.select {}
-                .groupBy { it.jxldmDisplay!! }
-            building.values.forEach { jasRecords ->
-                jasRecords as MutableList
-                jasRecords.sortBy { it.jasmc }
-            }
+        val result = redisService.get<Map<String, List<JasRecord>>>("spider:building")
+            ?: let {
+                val building = jasMapper.select {}
+                    .groupBy { it.jxldmDisplay!! }
+                building.values.forEach { jasRecords ->
+                    jasRecords as MutableList
+                    jasRecords.sortBy { it.jasmc }
+                }
 
-            redisService.set(
-                "spider:building",
-                GsonUtil.toJson(building),
-                3 * 24 * 3600
-            )
-            building
-        }
+                redisService.set(
+                    "spider:building",
+                    building,
+                    3 * 24 * 3600
+                )
+                building
+            }
         logger.debug("Building info = {}", result)
         return result
     }
@@ -245,17 +243,16 @@ open class SpiderServiceImpl(
     }
 
     private fun correctData() {
-        val corrections = redisService["spider:corrections"]?.let {
-            GsonUtil.fromJson<List<CorrectionRecord>>(it)
-        } ?: let {
-            val corrections = correctionMapper.select {}
-            redisService.set(
-                "spider:corrections",
-                GsonUtil.toJson(corrections),
-                3 * 24 * 3600
-            )
-            corrections
-        }
+        val corrections = redisService.get<List<CorrectionRecord>>("spider:corrections")
+            ?: let {
+                val corrections = correctionMapper.select {}
+                redisService.set(
+                    "spider:corrections",
+                    corrections,
+                    24 * 3600
+                )
+                corrections
+            }
         logger.debug("Corrections = {}", corrections)
 
         corrections.forEach { record ->
