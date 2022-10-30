@@ -1,3 +1,5 @@
+@file:JvmName("MainKt")
+
 package cn.repigeons.njnu.classroom
 
 import cn.repigeons.njnu.classroom.component.SpringContextHolder
@@ -13,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableFeignClients
 @EnableScheduling
 @EnableAsync
-open class CoreApplication
+class CoreApplication
 
 fun main(args: Array<String>) {
     SpringContextHolder.context = runApplication<CoreApplication>(*args)

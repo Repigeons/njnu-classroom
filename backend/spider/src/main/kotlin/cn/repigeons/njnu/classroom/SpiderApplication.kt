@@ -1,3 +1,5 @@
+@file:JvmName("MainKt")
+
 package cn.repigeons.njnu.classroom
 
 import cn.repigeons.njnu.classroom.component.SpringContextHolder
@@ -11,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @MapperScan("cn.repigeons.njnu.classroom.mbg.mapper")
 @EnableScheduling
 @EnableAsync
-open class SpiderApplication
+class SpiderApplication
 
 fun main(args: Array<String>) {
     SpringContextHolder.context = runApplication<SpiderApplication>(*args)

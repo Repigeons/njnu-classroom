@@ -18,8 +18,9 @@ import java.util.concurrent.TimeUnit
 open class RedisServiceImpl(
     private val redissonClient: RedissonClient
 ) : RedisService {
-    override fun <T> set(key: String, value: T) = this.set(key, value, null)
+    @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String) = this.get(key, Any::class.java) as T?
+    override fun <T> set(key: String, value: T) = this.set(key, value, null)
 
     override fun <T> set(key: String, value: T, expire: Long?) {
         val bucket = redissonClient.getBucket<T>(key, codec)
