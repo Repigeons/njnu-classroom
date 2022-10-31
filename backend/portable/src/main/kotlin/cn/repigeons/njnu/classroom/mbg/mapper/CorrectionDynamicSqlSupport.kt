@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7912291+08:00
+ * Generation date: 2022-10-31T13:24:44.515+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -11,7 +11,7 @@ object CorrectionDynamicSqlSupport {
     object Correction : SqlTable("correction") {
         val id = column<Int>("id", JDBCType.INTEGER)
 
-        val day = column<String>("day", JDBCType.VARCHAR)
+        val weekday = column<String>("weekday", JDBCType.VARCHAR)
 
         val jxlmc = column<String>("JXLMC", JDBCType.VARCHAR)
 

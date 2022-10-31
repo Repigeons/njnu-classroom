@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.786228+08:00
+ * Generation date: 2022-10-31T13:24:44.512+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -47,21 +47,4 @@ interface FeedbackMapper {
 
     @UpdateProvider(type = SqlProviderAdapter::class, method = "update")
     fun update(updateStatement: UpdateStatementProvider): Int
-
-    @Select(
-        """ SELECT COUNT(0)                      AS `count`,
-                   DATE_FORMAT(time, '%Y-%m-%d') AS `date` 
-            FROM `feedback`
-            WHERE `JASDM` = #{jasdm}
-            AND DAYOFWEEK(time) = #{day_of_week}
-            AND `jc` = #{jc}
-            GROUP BY `date`
-            ORDER BY `date`
-        """
-    )
-    fun statistic(
-        @Param("jasdm") jasdm: String,
-        @Param("day_of_week") dayOfWeek: Int,
-        @Param("jc") jc: Short
-    ): List<Long>
 }

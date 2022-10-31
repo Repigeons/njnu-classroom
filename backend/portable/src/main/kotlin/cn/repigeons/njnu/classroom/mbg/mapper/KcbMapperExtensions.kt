@@ -1,11 +1,10 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7772282+08:00
+ * Generation date: 2022-10-31T13:24:44.496+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb
-import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.day
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.id
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.jasdm
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.jcJs
@@ -16,6 +15,7 @@ import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.jyytms
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.kcm
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.sfyxzx
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.skzws
+import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.KcbDynamicSqlSupport.Kcb.zylxdm
 import cn.repigeons.njnu.classroom.mbg.model.KcbRecord
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
@@ -42,7 +42,7 @@ fun KcbMapper.insert(record: KcbRecord) =
         map(zylxdm).toProperty("zylxdm")
         map(jcKs).toProperty("jcKs")
         map(jcJs).toProperty("jcJs")
-        map(day).toProperty("day")
+        map(weekday).toProperty("weekday")
         map(sfyxzx).toProperty("sfyxzx")
         map(jyytms).toProperty("jyytms")
         map(kcm).toProperty("kcm")
@@ -57,13 +57,13 @@ fun KcbMapper.insertSelective(record: KcbRecord) =
         map(zylxdm).toPropertyWhenPresent("zylxdm", record::zylxdm)
         map(jcKs).toPropertyWhenPresent("jcKs", record::jcKs)
         map(jcJs).toPropertyWhenPresent("jcJs", record::jcJs)
-        map(day).toPropertyWhenPresent("day", record::day)
+        map(weekday).toPropertyWhenPresent("weekday", record::weekday)
         map(sfyxzx).toPropertyWhenPresent("sfyxzx", record::sfyxzx)
         map(jyytms).toPropertyWhenPresent("jyytms", record::jyytms)
         map(kcm).toPropertyWhenPresent("kcm", record::kcm)
     }
 
-private val columnList = listOf(id, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, day, sfyxzx, jyytms, kcm)
+private val columnList = listOf(id, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, weekday, sfyxzx, jyytms, kcm)
 
 fun KcbMapper.selectOne(completer: SelectCompleter) =
     selectOne(this::selectOne, columnList, Kcb, completer)
@@ -91,7 +91,7 @@ fun KotlinUpdateBuilder.updateAllColumns(record: KcbRecord) =
         set(zylxdm).equalTo(record::zylxdm)
         set(jcKs).equalTo(record::jcKs)
         set(jcJs).equalTo(record::jcJs)
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(sfyxzx).equalTo(record::sfyxzx)
         set(jyytms).equalTo(record::jyytms)
         set(kcm).equalTo(record::kcm)
@@ -106,7 +106,7 @@ fun KotlinUpdateBuilder.updateSelectiveColumns(record: KcbRecord) =
         set(zylxdm).equalToWhenPresent(record::zylxdm)
         set(jcKs).equalToWhenPresent(record::jcKs)
         set(jcJs).equalToWhenPresent(record::jcJs)
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(sfyxzx).equalToWhenPresent(record::sfyxzx)
         set(jyytms).equalToWhenPresent(record::jyytms)
         set(kcm).equalToWhenPresent(record::kcm)
@@ -121,7 +121,7 @@ fun KcbMapper.updateByPrimaryKey(record: KcbRecord) =
         set(zylxdm).equalTo(record::zylxdm)
         set(jcKs).equalTo(record::jcKs)
         set(jcJs).equalTo(record::jcJs)
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(sfyxzx).equalTo(record::sfyxzx)
         set(jyytms).equalTo(record::jyytms)
         set(kcm).equalTo(record::kcm)
@@ -137,7 +137,7 @@ fun KcbMapper.updateByPrimaryKeySelective(record: KcbRecord) =
         set(zylxdm).equalToWhenPresent(record::zylxdm)
         set(jcKs).equalToWhenPresent(record::jcKs)
         set(jcJs).equalToWhenPresent(record::jcJs)
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(sfyxzx).equalToWhenPresent(record::sfyxzx)
         set(jyytms).equalToWhenPresent(record::jyytms)
         set(kcm).equalToWhenPresent(record::kcm)

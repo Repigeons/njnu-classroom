@@ -2,6 +2,7 @@ package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.common.JsonResponse
 import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.mbg.dao.FeedbackDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.FeedbackRecord
@@ -18,11 +19,12 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-open class EmptyClassroomServiceImpl(
+class EmptyClassroomServiceImpl(
     private val redisService: RedisService,
     private val spiderService: SpiderService,
     private val timetableMapper: TimetableMapper,
     private val feedbackMapper: FeedbackMapper,
+    private val feedbackDAO: FeedbackDAO,
     private val correctionMapper: CorrectionMapper,
     @Value("\${spring.mail.receivers}")
     val receivers: Array<String>
@@ -51,7 +53,7 @@ open class EmptyClassroomServiceImpl(
 
         // 检查缓存一致性
         val count = timetableMapper.count {
-            where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(day.value))
+            where(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(day.value))
             and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(item.jcKs))
             and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(item.jcJs))
             and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(item.jasdm))
@@ -133,13 +135,13 @@ open class EmptyClassroomServiceImpl(
             time = Date()
         )
         feedbackMapper.insert(record)
-        val statistic = feedbackMapper.statistic(jasdm, mapDay(day), jc)
+        val statistic = feedbackDAO.statistic(jasdm, mapDay(day), jc)
         val weekCount = statistic.lastOrNull() ?: 0
         val totalCount = statistic.sumOf { it }
         if (weekCount != totalCount)
             correctionMapper.insertSelective(
                 CorrectionRecord(
-                    day = day.value,
+                    weekday = day.value,
                     jxlmc = jxl,
                     jsmph = jsmph,
                     jasdm = jasdm,

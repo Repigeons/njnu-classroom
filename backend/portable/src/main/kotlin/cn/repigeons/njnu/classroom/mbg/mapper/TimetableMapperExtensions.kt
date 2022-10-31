@@ -1,11 +1,10 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7832294+08:00
+ * Generation date: 2022-10-31T13:24:44.503+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable
-import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.day
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.id
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jasdm
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.jcJs
@@ -16,6 +15,7 @@ import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetab
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.kcm
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.sfyxzx
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.skzws
+import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport.Timetable.zylxdm
 import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
@@ -42,7 +42,7 @@ fun TimetableMapper.insert(record: TimetableRecord) =
         map(zylxdm).toProperty("zylxdm")
         map(jcKs).toProperty("jcKs")
         map(jcJs).toProperty("jcJs")
-        map(day).toProperty("day")
+        map(weekday).toProperty("weekday")
         map(sfyxzx).toProperty("sfyxzx")
         map(jyytms).toProperty("jyytms")
         map(kcm).toProperty("kcm")
@@ -57,13 +57,13 @@ fun TimetableMapper.insertSelective(record: TimetableRecord) =
         map(zylxdm).toPropertyWhenPresent("zylxdm", record::zylxdm)
         map(jcKs).toPropertyWhenPresent("jcKs", record::jcKs)
         map(jcJs).toPropertyWhenPresent("jcJs", record::jcJs)
-        map(day).toPropertyWhenPresent("day", record::day)
+        map(weekday).toPropertyWhenPresent("weekday", record::weekday)
         map(sfyxzx).toPropertyWhenPresent("sfyxzx", record::sfyxzx)
         map(jyytms).toPropertyWhenPresent("jyytms", record::jyytms)
         map(kcm).toPropertyWhenPresent("kcm", record::kcm)
     }
 
-private val columnList = listOf(id, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, day, sfyxzx, jyytms, kcm)
+private val columnList = listOf(id, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, weekday, sfyxzx, jyytms, kcm)
 
 fun TimetableMapper.selectOne(completer: SelectCompleter) =
     selectOne(this::selectOne, columnList, Timetable, completer)
@@ -91,7 +91,7 @@ fun KotlinUpdateBuilder.updateAllColumns(record: TimetableRecord) =
         set(zylxdm).equalTo(record::zylxdm)
         set(jcKs).equalTo(record::jcKs)
         set(jcJs).equalTo(record::jcJs)
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(sfyxzx).equalTo(record::sfyxzx)
         set(jyytms).equalTo(record::jyytms)
         set(kcm).equalTo(record::kcm)
@@ -106,7 +106,7 @@ fun KotlinUpdateBuilder.updateSelectiveColumns(record: TimetableRecord) =
         set(zylxdm).equalToWhenPresent(record::zylxdm)
         set(jcKs).equalToWhenPresent(record::jcKs)
         set(jcJs).equalToWhenPresent(record::jcJs)
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(sfyxzx).equalToWhenPresent(record::sfyxzx)
         set(jyytms).equalToWhenPresent(record::jyytms)
         set(kcm).equalToWhenPresent(record::kcm)
@@ -121,7 +121,7 @@ fun TimetableMapper.updateByPrimaryKey(record: TimetableRecord) =
         set(zylxdm).equalTo(record::zylxdm)
         set(jcKs).equalTo(record::jcKs)
         set(jcJs).equalTo(record::jcJs)
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(sfyxzx).equalTo(record::sfyxzx)
         set(jyytms).equalTo(record::jyytms)
         set(kcm).equalTo(record::kcm)
@@ -137,7 +137,7 @@ fun TimetableMapper.updateByPrimaryKeySelective(record: TimetableRecord) =
         set(zylxdm).equalToWhenPresent(record::zylxdm)
         set(jcKs).equalToWhenPresent(record::jcKs)
         set(jcJs).equalToWhenPresent(record::jcJs)
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(sfyxzx).equalToWhenPresent(record::sfyxzx)
         set(jyytms).equalToWhenPresent(record::jyytms)
         set(kcm).equalToWhenPresent(record::kcm)

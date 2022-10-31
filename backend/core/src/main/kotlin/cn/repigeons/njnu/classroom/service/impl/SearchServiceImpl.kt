@@ -35,7 +35,7 @@ class SearchServiceImpl(
             where(TimetableDynamicSqlSupport.Timetable.jcKs, isGreaterThanOrEqualTo(jcKs))
             and(TimetableDynamicSqlSupport.Timetable.jcJs, isLessThanOrEqualTo(jcJs))
             day?.run {
-                and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(this.value))
+                and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.value))
             }
             jxl?.run {
                 and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))
@@ -45,7 +45,7 @@ class SearchServiceImpl(
                 and(TimetableDynamicSqlSupport.Timetable.kcm, isLike(value))
                     .or(TimetableDynamicSqlSupport.Timetable.jyytms, isLike(value))
                 day?.run {
-                    and(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(this.value))
+                    and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.value))
                 }
                 jxl?.run {
                     and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))

@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-29T23:55:36.3337763+08:00
+ * Generation date: 2022-10-31T13:24:44.53+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -50,11 +50,4 @@ interface ShuttleMapper {
 
     @UpdateProvider(type = SqlProviderAdapter::class, method = "update")
     fun update(updateStatement: UpdateStatementProvider): Int
-
-    @Select("SELECT * FROM `shuttle` WHERE SUBSTR(working,#{day},1)='1' AND route=#{route}")
-    @ResultMap("ShuttleRecordResult")
-    fun selectRoute(
-        @Param("day") day: Int,
-        @Param("route") route: Short
-    ): List<ShuttleRecord>
 }

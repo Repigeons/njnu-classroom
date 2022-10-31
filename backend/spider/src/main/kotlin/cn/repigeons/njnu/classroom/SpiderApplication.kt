@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @SpringBootApplication(scanBasePackages = ["cn.repigeons.njnu.classroom"])
-@MapperScan("cn.repigeons.njnu.classroom.mbg.mapper")
+@MapperScan(value = ["cn.repigeons.njnu.classroom.mbg.mapper", "cn.repigeons.njnu.classroom.mbg.dao"])
 @EnableScheduling
 @EnableAsync
 class SpiderApplication

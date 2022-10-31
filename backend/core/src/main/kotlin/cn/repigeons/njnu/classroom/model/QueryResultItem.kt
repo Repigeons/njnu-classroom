@@ -7,7 +7,7 @@ class QueryResultItem() {
         this.jxlmc = record.jxlmc!!
         this.jsmph = record.jsmph!!
         this.skzws = record.skzws!!
-        this.day = record.day!!
+        this.day = record.weekday!!
         this.jcKs = record.jcKs!!
         this.jcJs = record.jcJs!!
         this.zylxdm = record.zylxdm!!

@@ -1,6 +1,8 @@
 package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.mbg.dao.KcbDAO
+import cn.repigeons.njnu.classroom.mbg.dao.TimetableDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.JasRecord
@@ -29,7 +31,7 @@ import java.util.*
 import java.util.concurrent.CompletableFuture
 
 @Service
-open class SpiderServiceImpl(
+class SpiderServiceImpl(
     private val redissonClient: RedissonClient,
     private val redisService: RedisService,
     private val cacheService: CacheService,
@@ -37,7 +39,9 @@ open class SpiderServiceImpl(
     private val correctionMapper: CorrectionMapper,
     private val jasMapper: JasMapper,
     private val kcbMapper: KcbMapper,
+    private val kcbDAO: KcbDAO,
     private val timetableMapper: TimetableMapper,
+    private val timetableDAO: TimetableDAO,
     private val sqlSessionFactory: SqlSessionFactory
 ) : SpiderService {
     private val logger = LoggerFactory.getLogger(javaClass)
@@ -71,7 +75,7 @@ open class SpiderServiceImpl(
         logger.info("基础信息采集完成.")
 
         logger.info("开始采集课程信息...")
-        kcbMapper.truncate()
+        kcbDAO.truncate()
         buildingInfo.forEach { (buildingName, classroomList) ->
             logger.info("开始查询教学楼[{}]...", buildingName)
             classroomList.map { classroom ->
@@ -80,8 +84,8 @@ open class SpiderServiceImpl(
             }.forEach { future -> future.join() }
         }
         logger.info("课程信息采集完成.")
-        timetableMapper.truncate()
-        timetableMapper.cloneFromKcb()
+        timetableDAO.truncate()
+        timetableDAO.cloneFromKcb()
         logger.info("开始校正数据...")
         correctData()
         logger.info("数据校正完成...")
@@ -185,7 +189,7 @@ open class SpiderServiceImpl(
         return result
     }
 
-    open fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): CompletableFuture<*> =
+    fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): CompletableFuture<*> =
         CompletableFuture.supplyAsync {
             val thisWeek = timeInfo.ZC
             val nextWeek = if (timeInfo.ZC < timeInfo.ZJXZC) timeInfo.ZC + 1 else timeInfo.ZJXZC
@@ -208,7 +212,7 @@ open class SpiderServiceImpl(
                         zylxdm = kcbItem.ZYLXDM.ifEmpty { "00" },
                         jcKs = jc.firstOrNull()?.toShort(),
                         jcJs = jc.lastOrNull()?.toShort(),
-                        day = Weekday[day].value,
+                        weekday = Weekday[day].value,
                         sfyxzx = classroom.sfyxzx,
                         jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
                         kcm = kcbItem.KCM ?: kcbItem.KBID?.let { "研究生[$it]" } ?: "未知",
@@ -259,7 +263,7 @@ open class SpiderServiceImpl(
             if (record.jcKs!! < record.jcJs!!) {
                 for (jc in record.jcKs!! until record.jcJs!!)
                     timetableMapper.delete {
-                        where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(record.day))
+                        where(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(record.weekday))
                         and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(record.jasdm))
                         and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(jc.toShort()))
                         and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(jc.toShort()))
@@ -271,7 +275,7 @@ open class SpiderServiceImpl(
                 set(TimetableDynamicSqlSupport.Timetable.jyytms).equalTo(record.jyytms)
                 set(TimetableDynamicSqlSupport.Timetable.kcm).equalTo(record.kcm)
                 set(TimetableDynamicSqlSupport.Timetable.jcKs).equalTo(record.jcKs)
-                where(TimetableDynamicSqlSupport.Timetable.day, isEqualTo(record.day))
+                where(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(record.weekday))
                 and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(record.jasdm))
                 and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(record.jcJs))
                 and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(record.jcJs))
@@ -282,7 +286,7 @@ open class SpiderServiceImpl(
     private fun mergeData() {
         val data = timetableMapper.select {
             orderBy(
-                TimetableDynamicSqlSupport.Timetable.day,
+                TimetableDynamicSqlSupport.Timetable.weekday,
                 TimetableDynamicSqlSupport.Timetable.jxlmc,
                 TimetableDynamicSqlSupport.Timetable.jsmph,
                 TimetableDynamicSqlSupport.Timetable.jcJs,
@@ -295,7 +299,7 @@ open class SpiderServiceImpl(
             mergeJxl(jxlmc, records, result)
         }.forEach { future -> future.join() }
         // 清空数据库
-        timetableMapper.truncate()
+        timetableDAO.truncate()
         // 重新插入数据库
         val sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)
         val timetableMapper = sqlSession.getMapper(TimetableMapper::class.java)
@@ -309,7 +313,7 @@ open class SpiderServiceImpl(
         sqlSession.clearCache()
     }
 
-    open fun mergeJxl(
+    fun mergeJxl(
         jxlmc: String,
         records: List<TimetableRecord>,
         result: MutableMap<String, MutableList<TimetableRecord>>

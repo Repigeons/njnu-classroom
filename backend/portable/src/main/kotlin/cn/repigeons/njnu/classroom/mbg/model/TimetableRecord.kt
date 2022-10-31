@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7802305+08:00
+ * Generation date: 2022-10-31T13:24:44.498+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.model
 
@@ -13,7 +13,7 @@ data class TimetableRecord(
     var zylxdm: String? = null,
     var jcKs: Short? = null,
     var jcJs: Short? = null,
-    var day: String? = null,
+    var weekday: String? = null,
     var sfyxzx: Boolean? = null,
     var jyytms: String? = null,
     var kcm: String? = null

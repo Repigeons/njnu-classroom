@@ -1,9 +1,9 @@
 package cn.repigeons.njnu.classroom.service.impl
 
 import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.mbg.dao.ShuttleDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.PositionsDynamicSqlSupport
 import cn.repigeons.njnu.classroom.mbg.mapper.PositionsMapper
-import cn.repigeons.njnu.classroom.mbg.mapper.ShuttleMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.ShuttleRoute
 import cn.repigeons.njnu.classroom.service.RedisService
@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
-open class ShuttleServiceImpl(
+class ShuttleServiceImpl(
     private val redisService: RedisService,
-    private val shuttleMapper: ShuttleMapper,
+    private val shuttleDAO: ShuttleDAO,
     private val positionsMapper: PositionsMapper,
     @Value("\${spring.mail.receivers}")
     val receivers: Array<String>
@@ -32,8 +32,8 @@ open class ShuttleServiceImpl(
             val direction1 = mutableListOf<ShuttleRoute>()
             val direction2 = mutableListOf<ShuttleRoute>()
             val day = if (index > 0) index else 7
-            val route1 = shuttleMapper.selectRoute(day, 1)
-            val route2 = shuttleMapper.selectRoute(day, 2)
+            val route1 = shuttleDAO.selectRoute(day, 1)
+            val route2 = shuttleDAO.selectRoute(day, 2)
             route1.forEach {
                 val item = ShuttleRoute(
                     startTime = it.startTime!!,

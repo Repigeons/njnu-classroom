@@ -1,12 +1,12 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7902286+08:00
+ * Generation date: 2022-10-31T13:24:44.514+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.model
 
 data class CorrectionRecord(
     var id: Int? = null,
-    var day: String? = null,
+    var weekday: String? = null,
     var jxlmc: String? = null,
     var jsmph: String? = null,
     var jasdm: String? = null,

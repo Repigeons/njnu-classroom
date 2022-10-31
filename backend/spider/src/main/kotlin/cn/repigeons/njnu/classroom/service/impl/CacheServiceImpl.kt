@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 
 @Service
-open class CacheServiceImpl(
+class CacheServiceImpl(
     private val redisService: RedisService,
     private val redissonClient: RedissonClient,
     private val timetableMapper: TimetableMapper
@@ -49,7 +49,7 @@ open class CacheServiceImpl(
             where(TimetableDynamicSqlSupport.Timetable.zylxdm, isIn("00", "10", "11"))
         }
             .groupBy {
-                "${it.jxlmc}:${it.day}"
+                "${it.jxlmc}:${it.weekday}"
             }
             .map { (key, records) ->
                 logger.debug("Flushing empty classroom: {}", key)

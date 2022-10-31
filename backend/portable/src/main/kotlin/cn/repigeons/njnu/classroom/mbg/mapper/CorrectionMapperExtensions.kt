@@ -1,11 +1,10 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7932279+08:00
+ * Generation date: 2022-10-31T13:24:44.517+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction
-import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.day
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.id
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.jasdm
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.jcJs
@@ -16,6 +15,7 @@ import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correc
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.kcm
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.sfyxzx
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.skzws
+import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.CorrectionDynamicSqlSupport.Correction.zylxdm
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
@@ -35,7 +35,7 @@ fun CorrectionMapper.deleteByPrimaryKey(id_: Int) =
 
 fun CorrectionMapper.insert(record: CorrectionRecord) =
     insert(this::insert, record, Correction) {
-        map(day).toProperty("day")
+        map(weekday).toProperty("weekday")
         map(jxlmc).toProperty("jxlmc")
         map(jsmph).toProperty("jsmph")
         map(jasdm).toProperty("jasdm")
@@ -50,7 +50,7 @@ fun CorrectionMapper.insert(record: CorrectionRecord) =
 
 fun CorrectionMapper.insertSelective(record: CorrectionRecord) =
     insert(this::insert, record, Correction) {
-        map(day).toPropertyWhenPresent("day", record::day)
+        map(weekday).toPropertyWhenPresent("weekday", record::weekday)
         map(jxlmc).toPropertyWhenPresent("jxlmc", record::jxlmc)
         map(jsmph).toPropertyWhenPresent("jsmph", record::jsmph)
         map(jasdm).toPropertyWhenPresent("jasdm", record::jasdm)
@@ -63,7 +63,7 @@ fun CorrectionMapper.insertSelective(record: CorrectionRecord) =
         map(kcm).toPropertyWhenPresent("kcm", record::kcm)
     }
 
-private val columnList = listOf(id, day, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, sfyxzx, jyytms, kcm)
+private val columnList = listOf(id, weekday, jxlmc, jsmph, jasdm, skzws, zylxdm, jcKs, jcJs, sfyxzx, jyytms, kcm)
 
 fun CorrectionMapper.selectOne(completer: SelectCompleter) =
     selectOne(this::selectOne, columnList, Correction, completer)
@@ -84,7 +84,7 @@ fun CorrectionMapper.update(completer: UpdateCompleter) =
 
 fun KotlinUpdateBuilder.updateAllColumns(record: CorrectionRecord) =
     apply {
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(jxlmc).equalTo(record::jxlmc)
         set(jsmph).equalTo(record::jsmph)
         set(jasdm).equalTo(record::jasdm)
@@ -99,7 +99,7 @@ fun KotlinUpdateBuilder.updateAllColumns(record: CorrectionRecord) =
 
 fun KotlinUpdateBuilder.updateSelectiveColumns(record: CorrectionRecord) =
     apply {
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(jxlmc).equalToWhenPresent(record::jxlmc)
         set(jsmph).equalToWhenPresent(record::jsmph)
         set(jasdm).equalToWhenPresent(record::jasdm)
@@ -114,7 +114,7 @@ fun KotlinUpdateBuilder.updateSelectiveColumns(record: CorrectionRecord) =
 
 fun CorrectionMapper.updateByPrimaryKey(record: CorrectionRecord) =
     update {
-        set(day).equalTo(record::day)
+        set(weekday).equalTo(record::weekday)
         set(jxlmc).equalTo(record::jxlmc)
         set(jsmph).equalTo(record::jsmph)
         set(jasdm).equalTo(record::jasdm)
@@ -130,7 +130,7 @@ fun CorrectionMapper.updateByPrimaryKey(record: CorrectionRecord) =
 
 fun CorrectionMapper.updateByPrimaryKeySelective(record: CorrectionRecord) =
     update {
-        set(day).equalToWhenPresent(record::day)
+        set(weekday).equalToWhenPresent(record::weekday)
         set(jxlmc).equalToWhenPresent(record::jxlmc)
         set(jsmph).equalToWhenPresent(record::jsmph)
         set(jasdm).equalToWhenPresent(record::jasdm)

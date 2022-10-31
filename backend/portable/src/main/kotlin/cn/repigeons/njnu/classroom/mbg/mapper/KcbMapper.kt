@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-09-22T23:33:05.7762284+08:00
+ * Generation date: 2022-10-31T13:24:44.495+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -45,7 +45,7 @@ interface KcbMapper {
             Result(column = "zylxdm", property = "zylxdm", jdbcType = JdbcType.CHAR),
             Result(column = "jc_ks", property = "jcKs", jdbcType = JdbcType.SMALLINT),
             Result(column = "jc_js", property = "jcJs", jdbcType = JdbcType.SMALLINT),
-            Result(column = "day", property = "day", jdbcType = JdbcType.VARCHAR),
+            Result(column = "weekday", property = "weekday", jdbcType = JdbcType.VARCHAR),
             Result(column = "SFYXZX", property = "sfyxzx", jdbcType = JdbcType.BIT),
             Result(column = "jyytms", property = "jyytms", jdbcType = JdbcType.LONGVARCHAR),
             Result(column = "kcm", property = "kcm", jdbcType = JdbcType.LONGVARCHAR)
@@ -55,7 +55,4 @@ interface KcbMapper {
 
     @UpdateProvider(type = SqlProviderAdapter::class, method = "update")
     fun update(updateStatement: UpdateStatementProvider): Int
-
-    @Update("TRUNCATE TABLE `KCB`")
-    fun truncate()
 }
