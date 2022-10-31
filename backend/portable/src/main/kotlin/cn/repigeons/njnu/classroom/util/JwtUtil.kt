@@ -12,7 +12,7 @@ import java.util.*
 private open class JwtConfig(
     @Value("\${jwt.secret:}")
     val secret: String,
-    @Value("\${jwt.expire:}")
+    @Value("\${jwt.expire:0}")
     val expire: Int,
 )
 
