@@ -15,6 +15,7 @@ services:
     build:
       context: /opt/njnu_classroom/NjnuClassroom/backend
       dockerfile: /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/Dockerfile.spider.dockerfile
+      cache_from: njnu-classroom-spider:cache
     command: ["java", "-jar", "/server.jar", "--spring.profiles.active=dev"]
     depends_on:
     - redis
