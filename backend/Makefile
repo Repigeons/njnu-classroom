@@ -23,28 +23,22 @@ clone_master:
 	@cp /opt/njnu_classroom/application/core-pro.yml 	/opt/njnu_classroom/NjnuClassroom/backend/core/src/main/resources/application-pro.yml
 	@cp /opt/njnu_classroom/application/explore-pro.yml /opt/njnu_classroom/NjnuClassroom/backend/explore/src/main/resources/application-pro.yml
 
-compile_develop: clone_develop
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_spider
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_core
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_explore
-
-compile_spider: clone_master
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_spider
-compile_core: clone_master
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_core
-compile_explore: clone_master
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.build.yaml run --rm compile_explore
-
-deploy_develop: compile_develop
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml up -d --build --remove-orphans
+deploy_develop: clone_develop
+	@./gradlew clean build -p spider -x test --parallel
+	@./gradlew clean build -p core -x test --parallel
+	@./gradlew clean build -p explore -x test --parallel
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.develop.yaml up -d --build
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
 
-deploy_spider: compile_spider
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans spider
+deploy_spider: clone_master
+	@./gradlew clean build -p spider -x test --parallel
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build spider
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
-deploy_core: compile_core
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans core
+deploy_core: clone_master
+	@./gradlew clean build -p core -x test --parallel
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build core
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
-deploy_explore: compile_explore
-	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build --remove-orphans explore
+deploy_explore: clone_master
+	@./gradlew clean build -p explore -x test --parallel
+	@docker-compose -f /opt/njnu_classroom/NjnuClassroom/backend/dockerfile/docker-compose.production.yaml up -d --build explore
 	@rm -rf /opt/njnu_classroom/NjnuClassroom
