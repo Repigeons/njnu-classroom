@@ -1,16 +1,15 @@
 package cn.repigeons.njnu.classroom.service.impl
 
+import cn.repigeons.commons.redisTemplate.RedisService
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.CacheService
-import cn.repigeons.njnu.classroom.service.RedisService
 import org.mybatis.dynamic.sql.util.kotlin.elements.isIn
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.concurrent.CompletableFuture
 
@@ -22,12 +21,11 @@ class CacheServiceImpl(
 ) : CacheService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    @Async
-    override fun flush() {
+    override fun flush(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val lock = redissonClient.getLock("lock:flush")
         if (!lock.tryLock()) {
             logger.info("刷新缓存数据已处于运行中...")
-            return
+            return@supplyAsync
         }
         try {
             logger.info("开始刷新缓存数据...")
@@ -63,11 +61,11 @@ class CacheServiceImpl(
                     item.zylxdm = record.zylxdm!!
                     item
                 }
-                Pair(key, value)
+                key to value
             }
             .toTypedArray()
             .let { mapOf(*it) }
-        redisService.hSet("empty", map)
+        redisService.hSetAll("empty", map)
         logger.info("空教室缓存刷新完成")
     }
 
@@ -86,7 +84,7 @@ class CacheServiceImpl(
             }
             .toTypedArray()
             .let { mapOf(*it) }
-        redisService.hSet("overview", map)
+        redisService.hSetAll("overview", map)
         logger.info("教室概览缓存刷新完成")
     }
 }

@@ -1,20 +1,20 @@
 package cn.repigeons.njnu.classroom.service.impl
 
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.redisTemplate.RedisService
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.mbg.dao.ShuttleDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.PositionsDynamicSqlSupport
 import cn.repigeons.njnu.classroom.mbg.mapper.PositionsMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
 import cn.repigeons.njnu.classroom.model.ShuttleRoute
-import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import cn.repigeons.njnu.classroom.util.EmailUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.io.File
+import java.util.concurrent.CompletableFuture
 
 @Service
 class ShuttleServiceImpl(
@@ -26,8 +26,7 @@ class ShuttleServiceImpl(
 ) : ShuttleService {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    @Async
-    override fun flushRoute() {
+    override fun flushRoute(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         Weekday.values().forEachIndexed { index, weekday ->
             val direction1 = mutableListOf<ShuttleRoute>()
             val direction2 = mutableListOf<ShuttleRoute>()
@@ -52,31 +51,30 @@ class ShuttleServiceImpl(
                 for (i in 1..it.shuttleCount!!)
                     direction2.add(item)
             }
-            redisService["explore:shuttle:${weekday.value}:1"] = direction1
-            redisService["explore:shuttle:${weekday.value}:2"] = direction2
+            redisService["explore:shuttle:${weekday.name}:1"] = direction1
+            redisService["explore:shuttle:${weekday.name}:2"] = direction2
         }
     }
 
-    @Async
-    override fun sendShuttleImage(filename: String?, bytes: ByteArray) {
-        logger.info("upload shuttle image: {}", filename)
-        val extension = filename?.split('.')?.lastOrNull()
-        val attachment = File.createTempFile("shuttle_", extension).apply {
-            deleteOnExit()
-            outputStream().use { it.write(bytes) }
+    override fun sendShuttleImage(filename: String?, bytes: ByteArray): CompletableFuture<*> =
+        CompletableFuture.supplyAsync {
+            logger.info("upload shuttle image: {}", filename)
+            val extension = filename?.split('.')?.lastOrNull()
+            val attachment = File.createTempFile("shuttle_", extension).apply {
+                deleteOnExit()
+                outputStream().use { it.write(bytes) }
+            }
+            logger.info("send shuttle image file: {}", attachment.name)
+            EmailUtil.sendFile(
+                nickname = "南师教室",
+                subject = "【南师教室】有人上传校车时刻表.${extension}",
+                content = "",
+                receivers = receivers,
+                attachment
+            )
         }
-        logger.info("send shuttle image file: {}", attachment.name)
-        EmailUtil.sendFile(
-            nickname = "南师教室",
-            subject = "【南师教室】有人上传校车时刻表.${extension}",
-            content = "",
-            receivers = receivers,
-            attachment
-        )
-    }
 
-    @Async
-    override fun flushStationPosition() {
+    override fun flushStationPosition(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val positions = positionsMapper.select {
             where(PositionsDynamicSqlSupport.Positions.kind, isEqualTo(2))
         }.map { record ->
@@ -88,5 +86,5 @@ class ShuttleServiceImpl(
         redisService["static:position:shuttleStation"] = positions
     }
 
-    override fun getStationPosition(): List<*> = redisService["static:position:shuttleStation"]!!
+    override fun getStationPosition() = redisService["static:position:shuttleStation"] as List<*>
 }

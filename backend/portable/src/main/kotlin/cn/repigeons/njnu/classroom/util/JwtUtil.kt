@@ -1,6 +1,6 @@
 package cn.repigeons.njnu.classroom.util
 
-import cn.repigeons.njnu.classroom.component.SpringContextHolder
+import cn.repigeons.commons.utils.SpringUtils
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -17,7 +17,7 @@ private open class JwtConfig(
 )
 
 object JwtUtil {
-    private val jwtConfig: JwtConfig = SpringContextHolder.getBean()
+    private val jwtConfig: JwtConfig = SpringUtils.getBean()
     const val TOKEN_HEAD = "Bearer"
 
     fun generate(claims: Claims): String {

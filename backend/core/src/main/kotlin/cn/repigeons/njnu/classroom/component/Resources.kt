@@ -1,8 +1,7 @@
 package cn.repigeons.njnu.classroom.component
 
+import cn.repigeons.commons.utils.GsonUtils
 import cn.repigeons.njnu.classroom.service.CacheService
-import cn.repigeons.njnu.classroom.util.GsonUtil
-import cn.repigeons.njnu.classroom.util.ResourceUtil
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -12,7 +11,8 @@ class Resources(
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    val zylxdm: List<*> = GsonUtil.fromJson(ResourceUtil.loadResourceText("/zylxdm.json")!!)
+    final val zylxdm: List<*> =
+        GsonUtils.fromJson(javaClass.getResourceAsStream("/zylxdm.json")!!.reader())
 
     init {
         cacheService.flushClassroomList()

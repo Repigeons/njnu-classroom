@@ -1,12 +1,11 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
+import cn.repigeons.commons.api.CommonResponse
+import cn.repigeons.commons.utils.GsonUtils
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.UserTimetableRecord
 import cn.repigeons.njnu.classroom.model.UserTimetableDTO
 import cn.repigeons.njnu.classroom.model.UserTimetableVO
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import cn.repigeons.njnu.classroom.util.JwtUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.springframework.web.bind.annotation.*
@@ -25,9 +24,9 @@ class UserTimetableController(
     @GetMapping("timetable.json")
     fun getTimeTable(
         @RequestHeader("Authorization") token: String
-    ): JsonResponse {
+    ): CommonResponse<*> {
         val openid = token2openid(token)
-            ?: return JsonResponse(status = Status.UNAUTHORIZED)
+            ?: return CommonResponse.unauthorized()
         val records = userTimetableMapper.select {
             where(UserTimetableDynamicSqlSupport.UserTimetable.openid, isEqualTo(openid))
         }
@@ -37,12 +36,10 @@ class UserTimetableController(
                 ksjc = record.ksjc!!,
                 jsjc = record.jsjc!!,
                 place = record.place!!,
-                remark = GsonUtil.fromJson(record.remark!!)
+                remark = GsonUtils.fromJson(record.remark!!)
             )
         }
-        return JsonResponse(
-            data = data
-        )
+        return CommonResponse.success(data)
     }
 
     /**
@@ -52,9 +49,9 @@ class UserTimetableController(
     fun saveTimetable(
         @RequestHeader("Authorization") token: String,
         @RequestBody payload: UserTimetableDTO
-    ): JsonResponse {
+    ): CommonResponse<*> {
         val openid = token2openid(token)
-            ?: return JsonResponse(status = Status.UNAUTHORIZED)
+            ?: return CommonResponse.unauthorized()
         val record = UserTimetableRecord(
             id = payload.id,
             openid = openid,
@@ -62,14 +59,16 @@ class UserTimetableController(
             ksjc = payload.ksjc,
             jsjc = payload.jsjc,
             place = payload.place,
-            remark = GsonUtil.toJson(payload.remark)
+            remark = GsonUtils.toJson(payload.remark)
         )
         if (record.id == null)
             userTimetableMapper.insert(record)
         else
             userTimetableMapper.updateByPrimaryKey(record)
-        return JsonResponse(
-            Pair("id", record.id)
+        return CommonResponse.success(
+            mapOf(
+                "id" to record.id
+            )
         )
     }
 
@@ -77,20 +76,15 @@ class UserTimetableController(
     fun deleteTimetable(
         @RequestHeader("Authorization") token: String,
         @RequestBody payload: Map<String, Long>
-    ): JsonResponse {
+    ): CommonResponse<*> {
         val openid = token2openid(token)
-            ?: return JsonResponse(status = Status.UNAUTHORIZED)
+            ?: return CommonResponse.unauthorized()
         val id = requireNotNull(payload["id"]) { "请求参数缺失：id" }
         val record = userTimetableMapper.selectByPrimaryKey(id)
-            ?: return JsonResponse(
-                status = Status.NOT_FOUND,
-                message = "记录不存在"
-            )
+            ?: return CommonResponse.failed("记录不存在")
         if (record.openid != openid)
-            return JsonResponse(
-                status = Status.FORBIDDEN
-            )
-        return JsonResponse()
+            return CommonResponse.forbidden()
+        return CommonResponse.success()
     }
 
     private fun token2openid(token: String): String? {

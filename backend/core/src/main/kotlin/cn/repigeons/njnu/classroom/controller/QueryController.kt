@@ -1,8 +1,8 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.api.CommonResponse
 import cn.repigeons.njnu.classroom.component.Resources
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
 import cn.repigeons.njnu.classroom.service.OverviewService
@@ -24,46 +24,49 @@ class QueryController(
     @GetMapping("empty.json")
     fun getEmpty(
         @RequestParam jxl: String,
-        @RequestParam day: String,
+        @RequestParam weekday: Weekday,
         @RequestParam jc: Short,
-    ): JsonResponse {
-        return emptyClassroomService.getEmptyClassrooms(jxl, Weekday.parse(day), jc)
+    ): CommonResponse<*> {
+        val result = emptyClassroomService.getEmptyClassrooms(jxl, weekday, jc)
+        return CommonResponse.success(result)
     }
 
     @GetMapping("overview.json")
     fun getOverview(
         @RequestParam jasdm: String
-    ): JsonResponse {
-        return overviewService.getOverview(jasdm)
+    ): CommonResponse<*> {
+        val result = overviewService.getOverview(jasdm)
+        return CommonResponse.success(result)
     }
 
     @GetMapping("search.json")
     fun getSearch(
-        @RequestParam day: String,
+        @RequestParam weekday: Weekday,
         @RequestParam jcKs: Short,
         @RequestParam jcJs: Short,
         @RequestParam jxl: String,
         @RequestParam("kcm") keyword: String,
         @RequestParam(defaultValue = "1") page: Int,
         @RequestParam(defaultValue = "10") size: Int
-    ): JsonResponse {
-        return searchService.search(
+    ): CommonResponse<*> {
+        val result = searchService.search(
             jcKs = jcKs,
             jcJs = jcJs,
-            day = Weekday.parse(day),
+            weekday = weekday,
             jxl = if (jxl == "#" || jxl.isEmpty()) null else jxl,
             keyword = if (keyword == "#" || keyword.isBlank()) null else keyword,
             page = page,
             size = size
         )
+        return CommonResponse.success(result)
     }
 
     @GetMapping("classrooms.json")
-    fun getClassroomList() = JsonResponse(data = cacheService.getClassroomList())
+    fun getClassroomList() = CommonResponse.success(cacheService.getClassroomList())
 
     @GetMapping("position.json")
-    fun getPosition() = JsonResponse(data = cacheService.getBuildingPosition())
+    fun getPosition() = CommonResponse.success(cacheService.getBuildingPosition())
 
     @GetMapping("zylxdm.json")
-    fun getZylxdm() = JsonResponse(data = resources.zylxdm)
+    fun getZylxdm() = CommonResponse.success(resources.zylxdm)
 }

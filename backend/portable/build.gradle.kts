@@ -3,8 +3,8 @@
  */
 
 plugins {
-    kotlin("jvm") version "1.7.20"
-    id("cn.repigeons.njnu.classroom.conventions")
+    kotlin("jvm") version "1.7.21"
+    id("conventions")
 }
 
 dependencies {

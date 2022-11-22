@@ -1,22 +1,21 @@
 package cn.repigeons.njnu.classroom.service.impl
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.redisTemplate.RedisService
+import cn.repigeons.commons.utils.GsonUtils
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.mbg.dao.FeedbackDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.*
 import cn.repigeons.njnu.classroom.mbg.model.CorrectionRecord
 import cn.repigeons.njnu.classroom.mbg.model.FeedbackRecord
 import cn.repigeons.njnu.classroom.model.EmptyClassroom
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
-import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import cn.repigeons.njnu.classroom.util.EmailUtil
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 @Service
 class EmptyClassroomServiceImpl(
@@ -29,31 +28,33 @@ class EmptyClassroomServiceImpl(
     @Value("\${spring.mail.receivers}")
     val receivers: Array<String>
 ) : EmptyClassroomService {
-    override fun getEmptyClassrooms(jxl: String, day: Weekday?, jc: Short): JsonResponse {
-        requireNotNull(day) { "无效参数: [day]" }
+    override fun getEmptyClassrooms(jxl: String, weekday: Weekday?, jc: Short): List<EmptyClassroom> {
+        requireNotNull(weekday) { "无效参数: [weekday]" }
         require(jc in 1..12) { "无效参数: [jc]" }
-        val classrooms = requireNotNull(redisService.hGet<List<EmptyClassroom>>("empty", "$jxl:${day.value}")) {
+        val classrooms = requireNotNull(redisService.hGet("empty", "$jxl:${weekday.name}") as List<*>?) {
             "无效参数: [jxl]"
         }
-        val result = classrooms.filter { classroom ->
-            jc in classroom.jcKs..classroom.jcJs
+        return classrooms.mapNotNull { classroom ->
+            classroom as EmptyClassroom
+            if (jc in classroom.jcKs..classroom.jcJs)
+                classroom
+            else
+                null
         }
-        return JsonResponse(data = result)
     }
 
-    @Async
     override fun feedback(
         jxl: String,
-        day: Weekday,
+        weekday: Weekday,
         jc: Short,
         results: List<EmptyClassroom>,
         index: Int
-    ) {
+    ): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val item = results[index]
 
         // 检查缓存一致性
         val count = timetableMapper.count {
-            where(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(day.value))
+            where(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(weekday.name))
             and(TimetableDynamicSqlSupport.Timetable.jcKs, isEqualTo(item.jcKs))
             and(TimetableDynamicSqlSupport.Timetable.jcJs, isEqualTo(item.jcJs))
             and(TimetableDynamicSqlSupport.Timetable.jasdm, isEqualTo(item.jasdm))
@@ -61,7 +62,7 @@ class EmptyClassroomServiceImpl(
         }
         if (count == 0L) {
             spiderService.flushCache()
-            return
+            return@supplyAsync
         }
 
         val obj = mapOf(
@@ -70,14 +71,14 @@ class EmptyClassroomServiceImpl(
             Pair("index", index),
             Pair("results", results)
         )
-        val detail = GsonUtil.toJson(obj)
+        val detail = GsonUtils.toJson(obj)
         val subject = "【南师教室】用户反馈：" +
                 "$jxl ${item.jsmph}教室 " +
                 "${item.jcKs}-${item.jcJs}节有误" +
                 "（当前为第${jc}节）"
 
         // 检查数据库一致性
-        if (!spiderService.checkWithEhall(item.jasdm, day, jc, item.zylxdm)) {
+        if (!spiderService.checkWithEhall(item.jasdm, weekday, jc, item.zylxdm)) {
             spiderService.run()
             val content = "验证一站式平台：数据不一致\n" +
                     "操作方案：更新数据库\n" +
@@ -88,7 +89,7 @@ class EmptyClassroomServiceImpl(
                 content = content,
                 receivers = receivers
             )
-            return
+            return@supplyAsync
         }
 
         // 记录反馈内容
@@ -102,13 +103,13 @@ class EmptyClassroomServiceImpl(
                 content = content,
                 receivers = receivers
             )
-            return
+            return@supplyAsync
         } else {
             val map = autoCorrect(
                 jxl = jxl,
                 jasdm = item.jasdm,
                 jsmph = item.jsmph,
-                day = day,
+                weekday = weekday,
                 jc = jc
             )
             val weekCount = map["weekCount"]!!
@@ -124,24 +125,24 @@ class EmptyClassroomServiceImpl(
                 content = content,
                 receivers = receivers
             )
-            return
+            return@supplyAsync
         }
     }
 
-    private fun autoCorrect(jxl: String, jasdm: String, jsmph: String, day: Weekday, jc: Short): Map<String, Long> {
+    private fun autoCorrect(jxl: String, jasdm: String, jsmph: String, weekday: Weekday, jc: Short): Map<String, Long> {
         val record = FeedbackRecord(
             jc = jc,
             jasdm = jasdm,
             time = Date()
         )
         feedbackMapper.insert(record)
-        val statistic = feedbackDAO.statistic(jasdm, mapDay(day), jc)
+        val statistic = feedbackDAO.statistic(jasdm, mapDay(weekday), jc)
         val weekCount = statistic.lastOrNull() ?: 0
         val totalCount = statistic.sumOf { it }
         if (weekCount != totalCount)
             correctionMapper.insertSelective(
                 CorrectionRecord(
-                    weekday = day.value,
+                    weekday = weekday.name,
                     jxlmc = jxl,
                     jsmph = jsmph,
                     jasdm = jasdm,
@@ -157,16 +158,13 @@ class EmptyClassroomServiceImpl(
         )
     }
 
-    private fun mapDay(day: Weekday): Int {
-        return when (day) {
-            Weekday.Sunday -> 1
-            Weekday.Monday -> 2
-            Weekday.Tuesday -> 3
-            Weekday.Wednesday -> 4
-            Weekday.Thursday -> 5
-            Weekday.Friday -> 6
-            Weekday.Saturday -> 7
-            else -> throw IllegalArgumentException()
-        }
+    private fun mapDay(weekday: Weekday) = when (weekday) {
+        Weekday.Sun -> 1
+        Weekday.Mon -> 2
+        Weekday.Tue -> 3
+        Weekday.Wed -> 4
+        Weekday.Thu -> 5
+        Weekday.Fri -> 6
+        Weekday.Sat -> 7
     }
 }

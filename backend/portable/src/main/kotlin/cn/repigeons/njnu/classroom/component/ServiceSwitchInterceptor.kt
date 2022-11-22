@@ -1,9 +1,9 @@
 package cn.repigeons.njnu.classroom.component
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
+import cn.repigeons.commons.api.CommonResponse
+import cn.repigeons.commons.utils.GsonUtils
 import cn.repigeons.njnu.classroom.controller.ServiceSwitch
-import cn.repigeons.njnu.classroom.util.GsonUtil
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.servlet.HandlerInterceptor
 import javax.servlet.http.HttpServletRequest
@@ -13,10 +13,16 @@ import javax.servlet.http.HttpServletResponse
 class ServiceSwitchInterceptor(
     private val serviceSwitch: ServiceSwitch
 ) : HandlerInterceptor {
-    private val switchOffResponse = JsonResponse(
-        status = Status.IM_A_TEAPOT,
-        message = "service off"
-    ).let { GsonUtil.toJson(it) }.toByteArray()
+    private val switchOffResponse = CommonResponse.success(
+        message = "service off",
+        data = null,
+    ).let { response ->
+        with(response.javaClass.getDeclaredField("status")) {
+            isAccessible = true
+            set(response, HttpStatus.I_AM_A_TEAPOT.value())
+        }
+        GsonUtils.toJson(response)
+    }.toByteArray()
 
     override fun preHandle(
         request: HttpServletRequest,

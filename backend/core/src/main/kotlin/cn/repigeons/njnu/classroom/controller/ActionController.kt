@@ -1,8 +1,6 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.api.CommonResponse
 import cn.repigeons.njnu.classroom.model.EmptyClassroomFeedbackDTO
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.EmptyClassroomService
@@ -19,28 +17,28 @@ class ActionController(
     private val emptyClassroomService: EmptyClassroomService
 ) {
     @PostMapping("empty/feedback")
-    fun feedbackEmptyClassroom(@RequestBody dto: EmptyClassroomFeedbackDTO): JsonResponse {
+    fun feedbackEmptyClassroom(@RequestBody dto: EmptyClassroomFeedbackDTO): CommonResponse<*> {
         emptyClassroomService.feedback(
             dto.jxl,
-            Weekday.parse(dto.day)!!,
+            dto.weekday,
             dto.jc,
             dto.results,
             dto.index
         )
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @Scheduled(cron = "0 0 7 * * *")
     @PostMapping("classrooms/reload")
-    fun flushClassroomList(): JsonResponse {
+    fun flushClassroomList(): CommonResponse<*> {
         cacheService.flushClassroomList()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @Scheduled(cron = "0 0 7 * * *")
     @PostMapping("position/reload")
-    fun flushBuildingPosition(): JsonResponse {
+    fun flushBuildingPosition(): CommonResponse<*> {
         cacheService.flushBuildingPosition()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 }

@@ -1,7 +1,6 @@
 package cn.repigeons.njnu.classroom.component
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
+import cn.repigeons.commons.api.CommonResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.converter.HttpMessageConversionException
 import org.springframework.http.converter.HttpMessageNotReadableException
@@ -23,51 +22,32 @@ class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(Exception::class)
-    fun handle(e: Exception, request: HttpServletRequest): JsonResponse {
+    fun handle(e: Exception, request: HttpServletRequest): CommonResponse<*> {
         logger.error("全局异常：{} {}", request.method, request.requestURI)
         request.parameterMap.forEach { (key: String, value: Array<String>) ->
             logger.error("*****请求参数*****:{},{}", key, value)
         }
         logger.error("*********异常信息:{}", e.message, e)
         return when {
-            e is HttpClientErrorException -> {
-                JsonResponse(
-                    status = Status.FAILED,
-                    message = e.message
-                )
-            }
+            e is HttpClientErrorException -> CommonResponse.failed(e.responseMessage)
 
-            e is HttpRequestMethodNotSupportedException -> {
-                JsonResponse(
-                    status = Status.METHOD_NOT_ALLOWED,
-                    message = "请求方法错误[${request.method}]"
-                )
-            }
+            e is HttpRequestMethodNotSupportedException -> CommonResponse.failed("请求方法错误[${request.method}]")
 
             request.method in listOf("POST", "PUT", "DELETE") &&
                     (e is HttpMediaTypeException || e is HttpMessageConversionException) -> {
                 val contentType = request.getHeader("Content-Type")
-                JsonResponse(
-                    status = Status.BAD_REQUEST,
-                    message = "请求格式错误[${contentType}]"
-                )
+                CommonResponse.failed("请求格式错误[${contentType}]")
             }
 
             e is MissingServletRequestParameterException ||
                     e is HttpMessageNotReadableException ||
-                    e is IllegalArgumentException -> {
-                JsonResponse(
-                    status = Status.BAD_REQUEST,
-                    message = e.message
-                )
-            }
+                    e is IllegalArgumentException ->
+                CommonResponse.failed(e.responseMessage)
 
-            else -> {
-                JsonResponse(
-                    status = Status.FAILED,
-                    message = e.message.takeUnless { it.isNullOrBlank() } ?: "服务器异常"
-                )
-            }
+            else -> CommonResponse.failed(e.responseMessage)
         }
     }
+
+    private val Exception.responseMessage: String
+        get() = message.takeUnless { it.isNullOrBlank() } ?: "服务器异常"
 }

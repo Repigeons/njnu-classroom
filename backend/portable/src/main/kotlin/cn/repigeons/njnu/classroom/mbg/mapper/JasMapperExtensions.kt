@@ -1,6 +1,6 @@
 /*
  * Auto-generated file. Created by MyBatis Generator
- * Generation date: 2022-10-31T13:24:44.372+08:00
+ * Generation date: 2022-11-24T19:04:19.957+08:00
  */
 package cn.repigeons.njnu.classroom.mbg.mapper
 
@@ -123,40 +123,7 @@ fun JasMapper.insertSelective(record: JasRecord) =
         map(bz).toPropertyWhenPresent("bz", record::bz)
     }
 
-private val columnList = listOf(
-    jasdm,
-    jasmc,
-    jxldm,
-    jxldmDisplay,
-    xxxqdm,
-    xxxqdmDisplay,
-    jaslxdm,
-    jaslxdmDisplay,
-    zt,
-    lc,
-    skzws,
-    kszws,
-    xnxqdm,
-    xnxqdm2,
-    dwdm,
-    dwdmDisplay,
-    zwsxdm,
-    syrq,
-    sysj,
-    sxlb,
-    sfypk,
-    sfyxpk,
-    pkyxj,
-    sfkswh,
-    sfyxks,
-    ksyxj,
-    sfyxcx,
-    sfyxjy,
-    sfyxzx,
-    jsyt,
-    xgdd,
-    bz
-)
+private val columnList = listOf(jasdm, jasmc, jxldm, jxldmDisplay, xxxqdm, xxxqdmDisplay, jaslxdm, jaslxdmDisplay, zt, lc, skzws, kszws, xnxqdm, xnxqdm2, dwdm, dwdmDisplay, zwsxdm, syrq, sysj, sxlb, sfypk, sfyxpk, pkyxj, sfkswh, sfyxks, ksyxj, sfyxcx, sfyxjy, sfyxzx, jsyt, xgdd, bz)
 
 fun JasMapper.selectOne(completer: SelectCompleter) =
     selectOne(this::selectOne, columnList, Jas, completer)

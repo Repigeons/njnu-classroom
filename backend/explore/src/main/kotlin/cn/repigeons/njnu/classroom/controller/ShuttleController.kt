@@ -1,9 +1,8 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
-import cn.repigeons.njnu.classroom.common.Weekday
-import cn.repigeons.njnu.classroom.service.RedisService
+import cn.repigeons.commons.api.CommonResponse
+import cn.repigeons.commons.redisTemplate.RedisService
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.service.ShuttleService
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.web.bind.annotation.*
@@ -17,22 +16,21 @@ class ShuttleController(
 ) {
     @GetMapping("shuttle.json")
     fun getShuttle(
-        @RequestParam day: String?
-    ): JsonResponse {
-        if (day.isNullOrBlank())
-            return JsonResponse(
-                data = mapOf(
-                    Pair("stations", shuttleService.getStationPosition()),
+        @RequestParam(required = false) weekday: Weekday?
+    ): CommonResponse<*> {
+        if (weekday == null)
+            return CommonResponse.success(
+                mapOf(
+                    "stations" to shuttleService.getStationPosition()
                 )
             )
-        val weekday = requireNotNull(Weekday.parse(day)) { Status.BAD_REQUEST.message }
-        val direction1: List<*> = redisService["explore:shuttle:${weekday.value}:1"]!!
-        val direction2: List<*> = redisService["explore:shuttle:${weekday.value}:2"]!!
-        return JsonResponse(
-            data = mapOf(
-                Pair("stations", shuttleService.getStationPosition()),
-                Pair("direction1", direction1),
-                Pair("direction2", direction2)
+        val direction1 = redisService["explore:shuttle:${weekday.name}:1"] as List<*>
+        val direction2 = redisService["explore:shuttle:${weekday.name}:2"] as List<*>
+        return CommonResponse.success(
+            mapOf(
+                "stations" to shuttleService.getStationPosition(),
+                "direction1" to direction1,
+                "direction2" to direction2,
             )
         )
     }
@@ -40,26 +38,26 @@ class ShuttleController(
     @PostMapping("shuttle/upload")
     fun uploadShuttleImage(
         @RequestParam file: MultipartFile
-    ): JsonResponse {
+    ): CommonResponse<*> {
         shuttleService.sendShuttleImage(file.originalFilename, file.bytes)
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @PutMapping("shuttle/upload")
     fun uploadShuttleImage(
         @RequestParam(required = false) filename: String?,
         @RequestBody bytes: ByteArray
-    ): JsonResponse {
+    ): CommonResponse<*> {
         shuttleService.sendShuttleImage(filename, bytes)
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @Scheduled(cron = "0 0 7 * * *")
     @PostMapping("shuttle/reload")
-    fun flushShuttleLine(): JsonResponse {
+    fun flushShuttleLine(): CommonResponse<*> {
         shuttleService.flushStationPosition()
         shuttleService.flushRoute()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     init {

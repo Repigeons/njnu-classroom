@@ -6,7 +6,7 @@ import org.apache.ibatis.type.JdbcType
 
 @Mapper
 interface ShuttleDAO {
-    @Select("SELECT * FROM `shuttle` WHERE SUBSTR(working,#{day},1)='1' AND route=#{route}")
+    @Select("SELECT * FROM `shuttle` WHERE SUBSTR(working,#{weekday},1)='1' AND route=#{route}")
     @Results(
         id = "ShuttleRecordResult", value = [
             Result(column = "id", property = "id", jdbcType = JdbcType.INTEGER, id = true),
@@ -19,7 +19,7 @@ interface ShuttleDAO {
         ]
     )
     fun selectRoute(
-        @Param("day") day: Int,
+        @Param("weekday") weekday: Int,
         @Param("route") route: Short
     ): List<ShuttleRecord>
 }

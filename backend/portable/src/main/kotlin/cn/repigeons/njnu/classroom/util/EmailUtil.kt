@@ -1,6 +1,6 @@
 package cn.repigeons.njnu.classroom.util
 
-import cn.repigeons.njnu.classroom.component.SpringContextHolder
+import cn.repigeons.commons.utils.SpringUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Configuration
@@ -44,7 +44,7 @@ private open class EmailConfig {
 
 object EmailUtil {
     private val logger = LoggerFactory.getLogger(javaClass)
-    private val emailConfig: EmailConfig = SpringContextHolder.getBean()
+    private val emailConfig: EmailConfig = SpringUtils.getBean()
     private val mailSender = emailConfig.javaMailSender
 
     /**

@@ -1,5 +1,6 @@
 package cn.repigeons.njnu.classroom.model
 
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 
 class QueryResultItem() {
@@ -7,7 +8,7 @@ class QueryResultItem() {
         this.jxlmc = record.jxlmc!!
         this.jsmph = record.jsmph!!
         this.skzws = record.skzws!!
-        this.day = record.weekday!!
+        this.weekday = Weekday.valueOf(record.weekday!!)
         this.jcKs = record.jcKs!!
         this.jcJs = record.jcJs!!
         this.zylxdm = record.zylxdm!!
@@ -33,7 +34,7 @@ class QueryResultItem() {
     /**
      * 星期
      */
-    lateinit var day: String
+    lateinit var weekday: Weekday
 
     /**
      * 开始节次

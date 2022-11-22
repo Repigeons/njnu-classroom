@@ -1,6 +1,8 @@
 package cn.repigeons.njnu.classroom.service.impl
 
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.redisTemplate.RedisService
+import cn.repigeons.commons.utils.GsonUtils
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.mbg.dao.KcbDAO
 import cn.repigeons.njnu.classroom.mbg.dao.TimetableDAO
 import cn.repigeons.njnu.classroom.mbg.mapper.*
@@ -12,9 +14,7 @@ import cn.repigeons.njnu.classroom.model.KcbItem
 import cn.repigeons.njnu.classroom.model.TimeInfo
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.CookieService
-import cn.repigeons.njnu.classroom.service.RedisService
 import cn.repigeons.njnu.classroom.service.SpiderService
-import cn.repigeons.njnu.classroom.util.GsonUtil
 import com.google.gson.JsonParser
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -24,7 +24,6 @@ import org.apache.ibatis.session.SqlSessionFactory
 import org.mybatis.dynamic.sql.SqlBuilder.isEqualTo
 import org.redisson.api.RedissonClient
 import org.slf4j.LoggerFactory
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
 import java.util.*
@@ -48,12 +47,11 @@ class SpiderServiceImpl(
     private val rqDateFormat = SimpleDateFormat("yyyy-MM-dd")
     private lateinit var httpClient: OkHttpClient
 
-    @Async
-    override fun run() {
+    override fun run(): CompletableFuture<*> = CompletableFuture.supplyAsync {
         val lock = redissonClient.getLock("lock:spider")
         if (!lock.tryLock()) {
             logger.info("课程信息收集工作已处于运行中...")
-            return
+            return@supplyAsync
         }
         try {
             logger.info("开始课程信息收集工作...")
@@ -97,7 +95,7 @@ class SpiderServiceImpl(
     }
 
     private fun getTimeInfo(): TimeInfo {
-        val result = redisService.get<TimeInfo>("spider:time")
+        val result = redisService.get("spider:time") as TimeInfo?
             ?: let {
                 val timeInfo = TimeInfo()
                 val request1 = Request.Builder()
@@ -169,7 +167,7 @@ class SpiderServiceImpl(
     }
 
     private fun getAcademicBuildingInfo(): Map<String, List<JasRecord>> {
-        val result = redisService.get<Map<String, List<JasRecord>>>("spider:building")
+        val result = redisService["spider:building"] as Map<*, *>?
             ?: let {
                 val building = jasMapper.select {}
                     .groupBy { it.jxldmDisplay!! }
@@ -186,7 +184,11 @@ class SpiderServiceImpl(
                 building
             }
         logger.debug("Building info = {}", result)
-        return result
+        return result.map { (k, v) ->
+            k as String
+            v as List<*>
+            k to v.map { it as JasRecord }
+        }.toTypedArray().let { mapOf(*it) }
     }
 
     fun getClassInfo(classroom: JasRecord, timeInfo: TimeInfo): CompletableFuture<*> =
@@ -212,7 +214,7 @@ class SpiderServiceImpl(
                         zylxdm = kcbItem.ZYLXDM.ifEmpty { "00" },
                         jcKs = jc.firstOrNull()?.toShort(),
                         jcJs = jc.lastOrNull()?.toShort(),
-                        weekday = Weekday[day].value,
+                        weekday = Weekday[day].name,
                         sfyxzx = classroom.sfyxzx,
                         jyytms = if (kcbItem.JYYTMS.isNullOrEmpty()) "" else kcbItem.JYYTMS,
                         kcm = kcbItem.KCM ?: kcbItem.KBID?.let { "研究生[$it]" } ?: "未知",
@@ -243,11 +245,11 @@ class SpiderServiceImpl(
             .asJsonObject
             .get("BY1")
             .asString
-        return GsonUtil.fromJson(by1)
+        return GsonUtils.fromJson(by1)
     }
 
     private fun correctData() {
-        val corrections = redisService.get<List<CorrectionRecord>>("spider:corrections")
+        val corrections = redisService["spider:corrections"] as List<*>?
             ?: let {
                 val corrections = correctionMapper.select {}
                 redisService.set(
@@ -260,6 +262,7 @@ class SpiderServiceImpl(
         logger.debug("Corrections = {}", corrections)
 
         corrections.forEach { record ->
+            record as CorrectionRecord
             if (record.jcKs!! < record.jcJs!!) {
                 for (jc in record.jcKs!! until record.jcJs!!)
                     timetableMapper.delete {
@@ -333,12 +336,12 @@ class SpiderServiceImpl(
         }
     }
 
-    override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String): Boolean {
+    override fun checkWithEhall(jasdm: String, weekday: Weekday, jc: Short, zylxdm: String): Boolean {
         val cookies = cookieService.getCookies()
         httpClient = cookieService.getHttpClient(cookies)
         val timeInfo = getTimeInfo()
         val kcb = getKcb(timeInfo.XNXQDM, timeInfo.ZC.toString(), jasdm)
-        kcb[day.ordinal].forEach {
+        kcb[weekday.ordinal].forEach {
             val bool1 = jc.toString() in it.JC.split(',')
             val bool2 = it.ZYLXDM == zylxdm || it.ZYLXDM.isEmpty()
             if (bool1 && bool2) return true

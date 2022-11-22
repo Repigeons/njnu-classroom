@@ -1,8 +1,7 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.api.CommonResponse
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.service.CacheService
 import cn.repigeons.njnu.classroom.service.SpiderService
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,24 +16,24 @@ class SpiderController(
     private val cacheService: CacheService
 ) {
     @PostMapping("run")
-    fun runSpider(): JsonResponse {
+    fun runSpider(): CommonResponse<*> {
         spiderService.run()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @PostMapping("flush")
-    fun flushCache(): JsonResponse {
+    fun flushCache(): CommonResponse<*> {
         cacheService.flush()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     @PostMapping("/checkWithEhall")
     fun checkWithEhall(
         @RequestParam jasdm: String,
-        @RequestParam day: Weekday,
+        @RequestParam weekday: Weekday,
         @RequestParam jc: Short,
         @RequestParam zylxdm: String
     ): Boolean {
-        return spiderService.checkWithEhall(jasdm, day, jc, zylxdm)
+        return spiderService.checkWithEhall(jasdm, weekday, jc, zylxdm)
     }
 }

@@ -1,9 +1,7 @@
 package cn.repigeons.njnu.classroom.service.impl
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.PageResult
-import cn.repigeons.njnu.classroom.common.PageResult.Companion.pageInfo
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.api.CommonPageable
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableDynamicSqlSupport
 import cn.repigeons.njnu.classroom.mbg.mapper.TimetableMapper
 import cn.repigeons.njnu.classroom.mbg.mapper.select
@@ -11,6 +9,7 @@ import cn.repigeons.njnu.classroom.mbg.model.TimetableRecord
 import cn.repigeons.njnu.classroom.model.QueryResultItem
 import cn.repigeons.njnu.classroom.service.SearchService
 import com.github.pagehelper.PageHelper
+import com.github.pagehelper.PageInfo
 import org.mybatis.dynamic.sql.util.kotlin.elements.isEqualTo
 import org.mybatis.dynamic.sql.util.kotlin.elements.isGreaterThanOrEqualTo
 import org.mybatis.dynamic.sql.util.kotlin.elements.isLessThanOrEqualTo
@@ -24,18 +23,18 @@ class SearchServiceImpl(
     override fun search(
         jcKs: Short,
         jcJs: Short,
-        day: Weekday?,
+        weekday: Weekday?,
         jxl: String?,
         keyword: String?,
         page: Int,
         size: Int,
-    ): JsonResponse {
+    ): CommonPageable<QueryResultItem> {
         PageHelper.startPage<TimetableRecord>(page, size)
-        val pageInfo = timetableMapper.select {
+        val records = timetableMapper.select {
             where(TimetableDynamicSqlSupport.Timetable.jcKs, isGreaterThanOrEqualTo(jcKs))
             and(TimetableDynamicSqlSupport.Timetable.jcJs, isLessThanOrEqualTo(jcJs))
-            day?.run {
-                and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.value))
+            weekday?.run {
+                and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.name))
             }
             jxl?.run {
                 and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))
@@ -44,8 +43,8 @@ class SearchServiceImpl(
                 val value = "%$this%"
                 and(TimetableDynamicSqlSupport.Timetable.kcm, isLike(value))
                     .or(TimetableDynamicSqlSupport.Timetable.jyytms, isLike(value))
-                day?.run {
-                    and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.value))
+                weekday?.run {
+                    and(TimetableDynamicSqlSupport.Timetable.weekday, isEqualTo(this.name))
                 }
                 jxl?.run {
                     and(TimetableDynamicSqlSupport.Timetable.jxlmc, isEqualTo(this))
@@ -53,11 +52,11 @@ class SearchServiceImpl(
                 and(TimetableDynamicSqlSupport.Timetable.jcJs, isLessThanOrEqualTo(jcJs))
                 and(TimetableDynamicSqlSupport.Timetable.jcKs, isGreaterThanOrEqualTo(jcKs))
             }
-        }.pageInfo()
+        }
+        val pageInfo = PageInfo(records)
         val list = pageInfo.list.map {
             QueryResultItem(it)
         }
-        val result = PageResult(list, pageInfo)
-        return JsonResponse(data = result)
+        return CommonPageable(list, pageInfo)
     }
 }

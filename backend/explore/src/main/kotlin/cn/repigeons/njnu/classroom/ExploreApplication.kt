@@ -2,7 +2,7 @@
 
 package cn.repigeons.njnu.classroom
 
-import cn.repigeons.njnu.classroom.component.SpringContextHolder
+import cn.repigeons.commons.utils.SpringUtils
 import org.mybatis.spring.annotation.MapperScan
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -16,5 +16,5 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class ExploreApplication
 
 fun main(args: Array<String>) {
-    SpringContextHolder.context = runApplication<ExploreApplication>(*args)
+    SpringUtils.context = runApplication<ExploreApplication>(*args)
 }

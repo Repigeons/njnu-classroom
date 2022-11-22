@@ -1,16 +1,16 @@
 package cn.repigeons.njnu.classroom.service
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.commons.api.CommonPageable
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 
 interface SearchService {
     fun search(
         jcKs: Short,
         jcJs: Short,
-        day: Weekday?,
+        weekday: Weekday?,
         jxl: String?,
         keyword: String?,
         page: Int,
         size: Int
-    ): JsonResponse
+    ): CommonPageable<*>
 }

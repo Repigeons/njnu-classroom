@@ -1,7 +1,6 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
+import cn.repigeons.commons.api.CommonResponse
 import cn.repigeons.njnu.classroom.model.Code2SessionResp
 import cn.repigeons.njnu.classroom.util.JwtUtil
 import io.jsonwebtoken.impl.DefaultClaims
@@ -26,7 +25,7 @@ class PortalController(
     @GetMapping("login")
     fun login(
         @RequestParam js_code: String
-    ): JsonResponse {
+    ): CommonResponse<*> {
         val url = UriComponentsBuilder
             .fromHttpUrl("https://api.weixin.qq.com/sns/jscode2session")
             .queryParam("appid", appid)
@@ -36,14 +35,13 @@ class PortalController(
             .toUriString()
         val resp: Code2SessionResp = restTemplate.getForObject(url)
         if (resp.errcode != 0) {
-            return JsonResponse(
-                status = Status.FAILED,
-                message = resp.errmsg
-            )
+            return CommonResponse.failed(resp.errmsg)
         }
         val token = JwtUtil.generate(DefaultClaims().setSubject(resp.openid))
-        return JsonResponse(
-            Pair("token", token)
+        return CommonResponse.success(
+            mapOf(
+                "token" to token
+            )
         )
     }
 }

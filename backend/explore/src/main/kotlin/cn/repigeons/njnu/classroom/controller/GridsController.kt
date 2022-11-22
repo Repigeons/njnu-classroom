@@ -1,7 +1,6 @@
 package cn.repigeons.njnu.classroom.controller
 
-import cn.repigeons.njnu.classroom.common.JsonResponse
-import cn.repigeons.njnu.classroom.common.Status
+import cn.repigeons.commons.api.CommonResponse
 import cn.repigeons.njnu.classroom.service.GridsService
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,16 +13,16 @@ class GridsController(
     private val gridsService: GridsService
 ) {
     @GetMapping("grids.json")
-    fun getGrids(): JsonResponse {
-        return JsonResponse(
-            data = gridsService.getGrids()
+    fun getGrids(): CommonResponse<*> {
+        return CommonResponse.success(
+            gridsService.getGrids()
         )
     }
 
     @PostMapping("grids/reload")
-    fun flushShuttleLine(): JsonResponse {
+    fun flushShuttleLine(): CommonResponse<*> {
         gridsService.flushGrids()
-        return JsonResponse(status = Status.ACCEPTED)
+        return CommonResponse.success()
     }
 
     init {

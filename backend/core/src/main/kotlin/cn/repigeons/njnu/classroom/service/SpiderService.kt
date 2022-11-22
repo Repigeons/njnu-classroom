@@ -1,6 +1,6 @@
 package cn.repigeons.njnu.classroom.service
 
-import cn.repigeons.njnu.classroom.common.Weekday
+import cn.repigeons.njnu.classroom.enumerate.Weekday
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -18,7 +18,7 @@ interface SpiderService {
     @PostMapping("/checkWithEhall")
     fun checkWithEhall(
         @RequestParam jasdm: String,
-        @RequestParam day: Weekday,
+        @RequestParam weekday: Weekday,
         @RequestParam jc: Short,
         @RequestParam zylxdm: String
     ): Boolean
@@ -29,6 +29,6 @@ interface SpiderService {
 
 class SpiderServiceFallback : SpiderService {
     override fun run() {}
-    override fun checkWithEhall(jasdm: String, day: Weekday, jc: Short, zylxdm: String) = true
+    override fun checkWithEhall(jasdm: String, weekday: Weekday, jc: Short, zylxdm: String) = true
     override fun flushCache() {}
 }
