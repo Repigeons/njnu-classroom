@@ -52,14 +52,14 @@ class CacheServiceImpl(
             .map { (key, records) ->
                 logger.debug("Flushing empty classroom: {}", key)
                 val value = records.map { record ->
-                    val item = EmptyClassroom()
-                    item.jasdm = record.jasdm!!
-                    item.jsmph = record.jsmph!!
-                    item.skzws = record.skzws!!
-                    item.jcKs = record.jcKs!!
-                    item.jcJs = record.jcJs!!
-                    item.zylxdm = record.zylxdm!!
-                    item
+                    EmptyClassroom(
+                        jasdm = record.jasdm!!,
+                        jsmph = record.jsmph!!,
+                        skzws = record.skzws!!,
+                        jcKs = record.jcKs!!,
+                        jcJs = record.jcJs!!,
+                        zylxdm = record.zylxdm!!,
+                    )
                 }
                 key to value
             }
