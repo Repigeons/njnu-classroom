@@ -5,17 +5,17 @@ import cn.repigeons.njnu.classroom.service.NoticeService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("notice")
+//@RequestMapping("notice")
 class NoticeController(
     private val noticeService: NoticeService
 ) {
-    @GetMapping("get")
+    @GetMapping("notice")
     fun getNotice(): CommonResponse<*> {
         val data = noticeService.get()
         return CommonResponse.success(data)
     }
 
-    @PostMapping("set")
+    @PostMapping("notice")
     fun setNotice(
         @RequestParam id: Int
     ): CommonResponse<*> {
@@ -23,7 +23,7 @@ class NoticeController(
         return CommonResponse.success(data)
     }
 
-    @PutMapping("add")
+    @PutMapping("notice")
     fun addNotice(
         @RequestParam text: String
     ): CommonResponse<*> {
