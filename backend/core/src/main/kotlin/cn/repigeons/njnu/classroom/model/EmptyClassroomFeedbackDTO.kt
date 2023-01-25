@@ -7,5 +7,5 @@ data class EmptyClassroomFeedbackDTO(
     val results: List<EmptyClassroom>,
     val index: Int,
     val weekday: Weekday,
-    val jxl: String,
+    val jxlmc: String,
 )

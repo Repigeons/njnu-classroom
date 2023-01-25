@@ -44,7 +44,7 @@ class EmptyClassroomServiceImpl(
     }
 
     override fun feedback(
-        jxl: String,
+        jxlmc: String,
         weekday: Weekday,
         jc: Short,
         results: List<EmptyClassroom>,
@@ -73,7 +73,7 @@ class EmptyClassroomServiceImpl(
         )
         val detail = GsonUtils.toJson(obj)
         val subject = "【南师教室】用户反馈：" +
-                "$jxl ${item.jsmph}教室 " +
+                "$jxlmc ${item.jsmph}教室 " +
                 "${item.jcKs}-${item.jcJs}节有误" +
                 "（当前为第${jc}节）"
 
@@ -106,7 +106,7 @@ class EmptyClassroomServiceImpl(
             return@supplyAsync
         } else {
             val map = autoCorrect(
-                jxl = jxl,
+                jxl = jxlmc,
                 jasdm = item.jasdm,
                 jsmph = item.jsmph,
                 weekday = weekday,

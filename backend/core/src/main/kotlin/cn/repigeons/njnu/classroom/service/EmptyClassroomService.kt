@@ -7,7 +7,7 @@ import java.util.concurrent.Future
 interface EmptyClassroomService {
     fun getEmptyClassrooms(jxl: String, weekday: Weekday?, jc: Short): List<EmptyClassroom>
     fun feedback(
-        jxl: String,
+        jxlmc: String,
         weekday: Weekday,
         jc: Short,
         results: List<EmptyClassroom>,

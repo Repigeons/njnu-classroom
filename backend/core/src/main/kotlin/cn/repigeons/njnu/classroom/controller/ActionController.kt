@@ -19,11 +19,11 @@ class ActionController(
     @PostMapping("empty/feedback")
     fun feedbackEmptyClassroom(@RequestBody dto: EmptyClassroomFeedbackDTO): CommonResponse<*> {
         emptyClassroomService.feedback(
-            dto.jxl,
-            dto.weekday,
-            dto.jc,
-            dto.results,
-            dto.index
+            jxlmc = dto.jxlmc,
+            weekday = dto.weekday,
+            jc = dto.jc,
+            results = dto.results,
+            index = dto.index,
         )
         return CommonResponse.success()
     }
