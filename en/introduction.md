@@ -1,0 +1,13 @@
+# Welcome to NjnuClassroom
+
+This project (NjnuClassroom) was designed and developed by Njnu Repigeons. It aims to provide more convenient services for the students of Nanjing Normal University. It can help students find suitable classrooms quickly, improve efficiency, reduce trouble, and enable students to put more energy into learning.
+
+NjnuClassroom strives to achieve real-time updates of data to provide students with the most accurate and reliable classroom information. Through regular automatic acquisition and real-time processing, NjnuClassroom achieves real-time data update; in the empty classroom recommendation order, a multi-dimensional intelligent sorting algorithm is used to calculate the recommendation coefficient, and the activity borrowing, class adjustment, examination, etc. are taken into account, So that students get the best experience.
+
+In addition to querying empty classrooms, NjnuClassroom also has a classroom schedule (classroom overview) and custom query functions, allowing students to accurately grasp the time and location of any course and any activity in a week. This is also the power of the project.
+
+The concept of NjnuClassroom started in 2018, at first it was just a simple "timetable" form; at the beginning of 2019, we developed the original NjnuClassroom WeChat applet, and continued to update and iterate it in the following days; as of November 2020, NjnuClassroom has a total of 1,400 users, with an average daily visit volume of over 400 times, and has a certain reputation throughout the school.
+
+Nonetheless, NjnuClassroom still insists on being free and pure. It adheres to the principle of "serving students", insists on using love to generate electricity, and opens the pure version of the mini program to all students free of charge; with the concept of "let students spend more energy on learning", Deal with user feedback in a timely manner and continuously optimize user experience; be diligent in thinking, innovative, and use data capture technology to achieve real-time updates and intelligent recommendations. Strive to respond to the call of the era of "smart education" through NjnuClassroom and provide students with the greatest convenience.
+
+This project is completely open source and adopts the GNU General Public License v3.0 open source license. I hope to provide you with an idea. At the same time, we welcome more people to join our community to maintain this project together and continuously optimize it for As many students as possible provide as much help as possible. Thank you again for your concern and support.
